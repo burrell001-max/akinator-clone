@@ -2,22 +2,23 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict
+import random  # <-- Added to handle randomness
 
 app = FastAPI()
 
-# --- CORS SECURITY PASS (ALLOWS GITHUB PAGES TO TALK TO RENDER) ---
+# --- CORS SECURITY PASS ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows any website (like your GitHub Pages) to access the API
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all actions (GET, POST, etc.)
-    allow_headers=["*"],  # Allows all security headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# In-memory session database to track ongoing games
+# In-memory session database
 sessions: Dict[str, Dict] = {}
 
-# Hardcoded game engine matrices
+# Game engine database
 QUESTIONS = {
     "q1": "Is your character from a sci-fi universe or galaxy far, far away?",
     "q2": "Is your character a marvel superhero who wears a mask?",
@@ -45,10 +46,18 @@ def home():
 
 @app.get("/start-game")
 def start_game(session_id: str):
+    # Grab all the question IDs
+    randomized_queue = list(QUESTIONS.keys())
+    
+    # Randomly shuffle the order of the questions for this specific player
+    random.shuffle(randomized_queue)
+    
     sessions[session_id] = {
         "answers": {},
-        "remaining_questions": list(QUESTIONS.keys())
+        "remaining_questions": randomized_queue
     }
+    
+    # Pick the first question out of the newly scrambled deck
     next_q = sessions[session_id]["remaining_questions"][0]
     return {
         "status": "game_started",
@@ -69,7 +78,7 @@ def submit_answer(data: AnswerInput):
     if data.question_id in session["remaining_questions"]:
         session["remaining_questions"].remove(data.question_id)
     
-    # If we have remaining questions left, send the next one
+    # If we have remaining questions left, send the next scrambled one
     if session["remaining_questions"]:
         next_q = session["remaining_questions"][0]
         return {
@@ -78,7 +87,7 @@ def submit_answer(data: AnswerInput):
             "question_text": QUESTIONS[next_q]
         }
     
-    # Out of questions! Run the linear distance calculation to find closest character match
+    # Out of questions! Run the linear distance calculation to find closest match
     best_match = None
     smallest_distance = float('inf')
     
