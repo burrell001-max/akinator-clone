@@ -7,14 +7,16 @@
     <style>
         body {
             margin: 0;
-            padding: 0;
+            padding: 20px 0;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
+            flex-direction: column; /* Stacks the game and the affiliate section vertically */
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             color: #fff;
+            box-sizing: border-box;
         }
         .game-container {
             background: rgba(255, 255, 255, 0.1);
@@ -26,6 +28,7 @@
             text-align: center;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 25px; /* Adds breathing room between game and banners */
         }
         h1 {
             font-size: 2.5rem;
@@ -78,8 +81,53 @@
         .btn-opt:hover {
             background: rgba(255,255,255,0.3);
         }
-        .btn-wide {
-            grid-column: span 2;
+
+        /* --- STANDALONE AFFILIATE DISPLAY STYLES --- */
+        .affiliate-section {
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .affiliate-title {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 10px;
+        }
+        .affiliate-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns side-by-side */
+            gap: 15px;
+        }
+        .affiliate-card {
+            background: rgba(40, 167, 69, 0.15);
+            border: 2px dashed rgba(40, 167, 69, 0.5);
+            border-radius: 12px;
+            padding: 15px;
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+        .affiliate-card:hover {
+            background: rgba(40, 167, 69, 0.3);
+            border-color: #28a745;
+            transform: translateY(-3px);
+        }
+        .affiliate-card h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.1rem;
+            color: #63ff85;
+        }
+        .affiliate-card p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #e0e0e0;
+            line-height: 1.3;
         }
     </style>
 </head>
@@ -94,18 +142,32 @@
         </div>
     </div>
 
+    <div class="affiliate-section">
+        <div class="affiliate-title">Featured Deals & Merch</div>
+        <div class="affiliate-grid">
+            
+            <a href="https://amzn.to/YOUR_LINK_HERE" target="_blank" class="affiliate-card">
+                <h3>Top Pop Culture Merch</h3>
+                <p>Check out trending collectibles, action figures, and apparel deals.</p>
+            </a>
+            
+            <a href="https://amzn.to/YOUR_LINK_HERE" target="_blank" class="affiliate-card">
+                <h3>Best Selling Books</h3>
+                <p>Grab the top fantasy novels, historic biographies, and graphic novels.</p>
+            </a>
+
+        </div>
+    </div>
+
     <script>
-        // BACKEND CONFIGURATION
         const API_URL = "https://akinator-clone-0uf6.onrender.com";
         let sessionId = "";
         let currentQuestionId = "";
 
-        // Generate a clean session ID tracking key
         function generateSessionId() {
             return Math.random().toString(36).substring(2, 15);
         }
 
-        // Start a brand new gameplay run
         async function startGame() {
             sessionId = generateSessionId();
             document.getElementById("gameText").innerText = "Summoning the Genie questions...";
@@ -120,12 +182,11 @@
                     renderQuestion(data.question_text);
                 }
             } catch (error) {
-                document.getElementById("gameText").innerText = "Engine connection error. Verify your Render backend is live!";
+                document.getElementById("gameText").innerText = "Connection error. Make sure backend is live!";
                 document.getElementById("interactionArea").innerHTML = `<button class="btn" onclick="startGame()">Try Again</button>`;
             }
         }
 
-        // Display current question text and the weight evaluation buttons
         function renderQuestion(questionText) {
             document.getElementById("gameText").innerText = questionText;
             document.getElementById("interactionArea").innerHTML = `
@@ -134,12 +195,11 @@
                     <button class="btn-opt" onclick="submitAnswer(0.0)">No</button>
                     <button class="btn-opt" onclick="submitAnswer(0.75)">Probably</button>
                     <button class="btn-opt" onclick="submitAnswer(0.25)">Probably Not</button>
-                    <button class="btn-opt" class="btn-opt btn-wide" onclick="submitAnswer(0.5)">I Don't Know</button>
+                    <button class="btn-opt" onclick="submitAnswer(0.5)">I Don't Know</button>
                 </div>
             `;
         }
 
-        // Send user option value to engine and fetch the next step
         async function submitAnswer(weight) {
             document.getElementById("interactionArea").innerHTML = `<p>Processing thought...</p>`;
             
@@ -163,11 +223,10 @@
                     renderGuess(data.character_guess);
                 }
             } catch (error) {
-                console.error("Error submitting step choice:", error);
+                console.error("Error:", error);
             }
         }
 
-        // Display Final AI Evaluation Results
         function renderGuess(character) {
             document.getElementById("gameText").innerHTML = `I guess you're thinking of... <br><br><span style="font-size:2rem;color:#ffa042;font-weight:bold;">${character}</span>`;
             document.getElementById("interactionArea").innerHTML = `
