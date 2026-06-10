@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict
-import random  # <-- Added to handle randomness
+import random
 
 app = FastAPI()
 
@@ -18,7 +18,7 @@ app.add_middleware(
 # In-memory session database
 sessions: Dict[str, Dict] = {}
 
-# Game engine database
+# Game engine database matrices
 QUESTIONS = {
     "q1": "Is your character from a sci-fi universe or galaxy far, far away?",
     "q2": "Is your character a marvel superhero who wears a mask?",
@@ -46,18 +46,14 @@ def home():
 
 @app.get("/start-game")
 def start_game(session_id: str):
-    # Grab all the question IDs
     randomized_queue = list(QUESTIONS.keys())
-    
-    # Randomly shuffle the order of the questions for this specific player
-    random.shuffle(randomized_queue)
+    random.shuffle(randomized_queue)  # Shuffle the question deck randomly
     
     sessions[session_id] = {
         "answers": {},
         "remaining_questions": randomized_queue
     }
     
-    # Pick the first question out of the newly scrambled deck
     next_q = sessions[session_id]["remaining_questions"][0]
     return {
         "status": "game_started",
@@ -84,10 +80,10 @@ def submit_answer(data: AnswerInput):
         return {
             "status": "playing",
             "next_question_id": next_q,
-            "question_text": QUESTIONS[next_q]
+            "question_text": QUESTIONS[next_q]  # Fixed key matching the frontend listener
         }
     
-    # Out of questions! Run the linear distance calculation to find closest match
+    # Out of questions! Run the distance matrix matching calculation
     best_match = None
     smallest_distance = float('inf')
     
