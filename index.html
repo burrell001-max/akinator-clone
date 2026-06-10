@@ -1,1 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Genie Guesser</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .game-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 { margin-top: 0; font-size: 2.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .question-box { font-size: 1.4rem; min-height: 80px; margin: 20px 0; display: flex; justify-content: center; align-items: center; }
+        .btn-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media(min-width: 400px) { .btn-grid { grid-template-columns: 1fr 1fr; } .full-width { grid-column: span 2; } }
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        button:hover { background: #fff; color: #1e3c72; transform: translateY(-2px); }
+        .start-btn { background: #ff9f43; border: none; font-size: 1.3rem; padding: 15px 30px; width: 100%; font-weight: bold; }
+        .start-btn:hover { background: #ffb167; color: white; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
 
+<div class="game-container">
+    <h1>The AI Genie</h1>
+    <hr style="border-color: rgba(255,255,255,0.2)">
+    
+    <div id="start-screen">
+        <p>Think of a character: Spider-Man, SpongeBob, Abraham Lincoln, Harry Potter, or Yoda. I will guess it!</p>
+        <button class="start-btn" onclick="startGame()">Play Game</button>
+    </div>
+
+    <div id="game-screen" class="hidden">
+        <div class="question-box" id="question-text">Loading question...</div>
+        <div class="btn-grid">
+            <button onclick="submitAnswer(1.0)">Yes</button>
+            <button onclick="submitAnswer(0.0)">No</button>
+            <button onclick="submitAnswer(0.75)">Probably</button>
+            <button onclick="submitAnswer(0.25)">Probably Not</button>
+            <button class="full-width" onclick="submitAnswer(0.5)">I Don't Know</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden">
+        <h2>I guess you're thinking of...</h2>
+        <h1 id="guess-character" style="color: #ff9f43;">[Character]</h1>
+        <button class="start-btn" onclick="resetGame()">Play Again</button>
+    </div>
+</div>
+
+<script>
+    // --- CONNECT TO YOUR LIVE ENGINE ---
+    const BACKEND_URL = "https://akinator-clone-0uf6.onrender.com";
+    
+    let sessionId = "";
+    let currentQuestionId = "";
+
+    function generateSessionId() {
+        return 'session_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    async function startGame() {
+        sessionId = generateSessionId();
+        document.getElementById("start-screen").classList.add("hidden");
+        document.getElementById("game-screen").classList.remove("hidden");
+        
+        const response = await fetch(`${BACKEND_URL}/start-game?session_id=${sessionId}`);
+        const data = await response.json();
+        
+        currentQuestionId = data.next_question_id;
+        document.getElementById("question-text").innerText = data.question_text;
+    }
+
+    async function submitAnswer(weight) {
+        document.getElementById("question-text").innerText = "Processing trends...";
+        
+        const response = await fetch(`${BACKEND_URL}/submit-answer`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                session_id: sessionId,
+                question_id: currentQuestionId,
+                answer_weight: weight
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === "guess") {
+            document.getElementById("game-screen").classList.add("hidden");
+            document.getElementById("result-screen").classList.remove("hidden");
+            document.getElementById("guess-character").innerText = data.character_guess;
+        } else {
+            currentQuestionId = data.next_question_id;
+            document.getElementById("question-text").innerText = data.question_text;
+        }
+    }
+
+    function resetGame() {
+        document.getElementById("result-screen").classList.add("hidden");
+        document.getElementById("start-screen").classList.remove("hidden");
+    }
+</script>
+
+</body>
+</html>
