@@ -1,37 +1,43 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Dict, List
-import copy
+from typing import Dict
 
 app = FastAPI()
 
-# --- THE GAME DATA (The Character Matrix) ---
-# Weights: 1.0 = Yes, 0.75 = Probably, 0.5 = Don't Know, 0.25 = Probably Not, 0.0 = No
-CHARACTERS = [
-    {"name": "Spider-Man", "weights": {"1": 1.0, "2": 1.0, "3": 0.0, "4": 1.0, "5": 0.0}},
-    {"name": "SpongeBob SquarePants", "weights": {"1": 0.0, "2": 1.0, "3": 1.0, "4": 0.0, "5": 1.0}},
-    {"name": "Abraham Lincoln", "weights": {"1": 1.0, "2": 0.0, "3": 0.0, "4": 0.0, "5": 0.0}},
-    {"name": "Harry Potter", "weights": {"1": 1.0, "2": 1.0, "3": 0.0, "4": 0.0, "5": 1.0}},
-    {"name": "Yoda", "weights": {"1": 1.0, "2": 0.0, "3": 1.0, "4": 0.0, "5": 0.0}}
-]
+# --- CORS SECURITY PASS (ALLOWS GITHUB PAGES TO TALK TO RENDER) ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows any website (like your GitHub Pages) to access the API
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all actions (GET, POST, etc.)
+    allow_headers=["*"],  # Allows all security headers
+)
 
+# In-memory session database to track ongoing games
+sessions: Dict[str, Dict] = {}
+
+# Hardcoded game engine matrices
 QUESTIONS = {
-    "1": "Is your character real?",
-    "2": "Is your character a fictional hero?",
-    "3": "Is your character non-human or an alien?",
-    "4": "Does your character wear a mask?",
-    "5": "Does your character use magic or special items?"
+    "q1": "Is your character from a sci-fi universe or galaxy far, far away?",
+    "q2": "Is your character a marvel superhero who wears a mask?",
+    "q3": "Does your character live in a pineapple under the sea?",
+    "q4": "Was your character a real-life historic President of the United States?",
+    "q5": "Is your character a wizard who went to Hogwarts School?"
 }
 
-# --- ACTIVE SESSION STORAGE ---
-# For a basic setup, we store live sessions in a dictionary.
-# In production, you would use a fast cache like Redis.
-sessions: Dict[str, dict] = {}
+CHARACTERS = {
+    "Yoda": {"q1": 1.0, "q2": 0.0, "q3": 0.0, "q4": 0.0, "q5": 0.0},
+    "Spider-Man": {"q1": 0.0, "q2": 1.0, "q3": 0.0, "q4": 0.0, "q5": 0.0},
+    "SpongeBob": {"q1": 0.0, "q2": 0.0, "q3": 1.0, "q4": 0.0, "q5": 0.0},
+    "Abraham Lincoln": {"q1": 0.0, "q2": 0.0, "q3": 0.0, "q4": 1.0, "q5": 0.0},
+    "Harry Potter": {"q1": 0.0, "q2": 0.0, "q3": 0.0, "q4": 0.0, "q5": 1.0}
+}
 
-class AnswerPayload(BaseModel):
+class AnswerInput(BaseModel):
     session_id: str
     question_id: str
-    answer_weight: float  # 0.0 to 1.0 passed from frontend buttons
+    answer_weight: float
 
 @app.get("/")
 def home():
@@ -39,66 +45,54 @@ def home():
 
 @app.get("/start-game")
 def start_game(session_id: str):
-    """Initializes a brand new session game state."""
     sessions[session_id] = {
-        "answers": {},  # Stores {question_id: weight}
-        "asked_questions": []
+        "answers": {},
+        "remaining_questions": list(QUESTIONS.keys())
     }
-    
-    # Select the optimal first question (Question 1 is a great broad separator)
+    next_q = sessions[session_id]["remaining_questions"][0]
     return {
         "status": "game_started",
-        "next_question_id": "1",
-        "question_text": QUESTIONS["1"]
+        "next_question_id": next_q,
+        "question_text": QUESTIONS[next_q]
     }
 
 @app.post("/submit-answer")
-def submit_answer(payload: AnswerPayload):
-    """Processes an answer, updates probabilities, and returns the next question or final guess."""
-    session = sessions.get(payload.session_id)
+def submit_answer(data: AnswerInput):
+    session = sessions.get(data.session_id)
     if not session:
-        raise HTTPException(status_code=404, detail="Game session expired or not found.")
+        return {"status": "error", "message": "Session not found."}
     
-    # Save the user's input weight
-    session["answers"][payload.question_id] = payload.answer_weight
-    session["asked_questions"].append(payload.question_id)
+    # Record answer weight
+    session["answers"][data.question_id] = data.answer_weight
     
-    # --- MATH ENGINE: Recalculate Character Scores ---
-    current_scores = []
-    for char in CHARACTERS:
-        score = 1.0
-        for q_id, user_ans in session["answers"].items():
-            expected_ans = char["weights"].get(q_id, 0.5)
-            # Calculate how closely user choice matches profile configuration
-            closeness = 1.0 - abs(user_ans - expected_ans)
-            score *= max(closeness, 0.01) # Avoid complete zero-out from one weird answer
-        
-        current_scores.append({"name": char["name"], "probability_score": score})
+    # Remove answered question from queue
+    if data.question_id in session["remaining_questions"]:
+        session["remaining_questions"].remove(data.question_id)
     
-    # Sort characters by highest probability match
-    current_scores.sort(key=lambda x: x["probability_score"], reverse=True)
-    top_guess = current_scores[0]
-    
-    # --- DETERMINATION: Keep asking or make final guess? ---
-    # Win condition: If top guess is significantly higher than second place, or all questions are exhausted
-    if len(session["asked_questions"]) >= len(QUESTIONS) or (len(session["asked_questions"]) >= 3 and top_guess["probability_score"] > 0.6):
+    # If we have remaining questions left, send the next one
+    if session["remaining_questions"]:
+        next_q = session["remaining_questions"][0]
         return {
-            "status": "guess",
-            "character_guess": top_guess["name"]
+            "status": "playing",
+            "next_question_id": next_q,
+            "question_text": QUESTIONS[next_q]
         }
     
-    # --- SELECTION: Pick the next best question ---
-    next_q_id = None
-    for q_id in QUESTIONS.keys():
-        if q_id not in session["asked_questions"]:
-            next_q_id = q_id
-            break
-            
-    if not next_q_id:
-        return {"status": "guess", "character_guess": top_guess["name"]}
+    # Out of questions! Run the linear distance calculation to find closest character match
+    best_match = None
+    smallest_distance = float('inf')
+    
+    for character, profile in CHARACTERS.items():
+        total_distance = 0.0
+        for q_id, target_weight in profile.items():
+            user_weight = session["answers"].get(q_id, 0.5)
+            total_distance += abs(target_weight - user_weight)
         
+        if total_distance < smallest_distance:
+            smallest_distance = total_distance
+            best_match = character
+            
     return {
-        "status": "continue",
-        "next_question_id": next_q_id,
-        "question_text": QUESTIONS[next_q_id]
+        "status": "guess",
+        "character_guess": best_match
     }
