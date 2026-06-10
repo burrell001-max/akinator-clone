@@ -18,21 +18,53 @@ app.add_middleware(
 # In-memory session database
 sessions: Dict[str, Dict] = {}
 
-# Game engine database matrices
+# --- BROAD TRAIT QUESTIONS ---
 QUESTIONS = {
-    "q1": "Is your character from a sci-fi universe or galaxy far, far away?",
-    "q2": "Is your character a marvel superhero who wears a mask?",
-    "q3": "Does your character live in a pineapple under the sea?",
-    "q4": "Was your character a real-life historic President of the United States?",
-    "q5": "Is your character a wizard who went to Hogwarts School?"
+    "q1": "Is your character a completely fictional/made-up being?",
+    "q2": "Does your character possess magical powers, the Force, or superhuman abilities?",
+    "q3": "Is your character closely associated with the color blue or wearing a mask?",
+    "q4": "Is your character human?",
+    "q5": "Does your character live or work primarily in/under water?"
 }
 
+# --- THE SMART DECISION MATRIX ---
+# 1.0 = Yes, 0.0 = No. The engine calculates who matches your overall profile best!
 CHARACTERS = {
-    "Yoda": {"q1": 1.0, "q2": 0.0, "q3": 0.0, "q4": 0.0, "q5": 0.0},
-    "Spider-Man": {"q1": 0.0, "q2": 1.0, "q3": 0.0, "q4": 0.0, "q5": 0.0},
-    "SpongeBob": {"q1": 0.0, "q2": 0.0, "q3": 1.0, "q4": 0.0, "q5": 0.0},
-    "Abraham Lincoln": {"q1": 0.0, "q2": 0.0, "q3": 0.0, "q4": 1.0, "q5": 0.0},
-    "Harry Potter": {"q1": 0.0, "q2": 0.0, "q3": 0.0, "q4": 0.0, "q5": 1.0}
+    "Yoda": {
+        "q1": 1.0,  # Fictional
+        "q2": 1.0,  # Has the Force
+        "q3": 0.0,  # Not blue/masked (Green)
+        "q4": 0.0,  # Not human (Alien)
+        "q5": 0.0   # Doesn't live underwater
+    },
+    "Spider-Man": {
+        "q1": 1.0,  # Fictional
+        "q2": 1.0,  # Superhuman powers
+        "q3": 1.0,  # Wears a blue/red mask
+        "q4": 1.0,  # Is human
+        "q5": 0.0   # Doesn't live underwater
+    },
+    "SpongeBob": {
+        "q1": 1.0,  # Fictional
+        "q2": 0.0,  # No real superpowers
+        "q3": 0.0,  # Yellow, no mask
+        "q4": 0.0,  # Not human (Sea Sponge)
+        "q5": 1.0   # Lives under the sea
+    },
+    "Harry Potter": {
+        "q1": 1.0,  # Fictional
+        "q2": 1.0,  # Has magical powers
+        "q3": 0.0,  # No mask
+        "q4": 1.0,  # Is human
+        "q5": 0.0   # Doesn't live underwater
+    },
+    "Abraham Lincoln": {
+        "q1": 0.0,  # NOT fictional (Real person)
+        "q2": 0.0,  # No superpowers
+        "q3": 0.0,  # No mask
+        "q4": 1.0,  # Is human
+        "q5": 0.0   # Didn't live underwater
+    }
 }
 
 class AnswerInput(BaseModel):
@@ -47,7 +79,7 @@ def home():
 @app.get("/start-game")
 def start_game(session_id: str):
     randomized_queue = list(QUESTIONS.keys())
-    random.shuffle(randomized_queue)  # Shuffle the question deck randomly
+    random.shuffle(randomized_queue)  # Shuffles question sequence
     
     sessions[session_id] = {
         "answers": {},
@@ -67,23 +99,21 @@ def submit_answer(data: AnswerInput):
     if not session:
         return {"status": "error", "message": "Session not found."}
     
-    # Record answer weight
+    # Record current choice score
     session["answers"][data.question_id] = data.answer_weight
     
-    # Remove answered question from queue
     if data.question_id in session["remaining_questions"]:
         session["remaining_questions"].remove(data.question_id)
     
-    # If we have remaining questions left, send the next scrambled one
     if session["remaining_questions"]:
         next_q = session["remaining_questions"][0]
         return {
             "status": "playing",
             "next_question_id": next_q,
-            "question_text": QUESTIONS[next_q]  # Fixed key matching the frontend listener
+            "question_text": QUESTIONS[next_q]
         }
     
-    # Out of questions! Run the distance matrix matching calculation
+    # --- MATCH CALCULATION ---
     best_match = None
     smallest_distance = float('inf')
     
@@ -91,6 +121,7 @@ def submit_answer(data: AnswerInput):
         total_distance = 0.0
         for q_id, target_weight in profile.items():
             user_weight = session["answers"].get(q_id, 0.5)
+            # Find total gap difference between choice and profile
             total_distance += abs(target_weight - user_weight)
         
         if total_distance < smallest_distance:
