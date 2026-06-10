@@ -82,18 +82,20 @@
             background: rgba(255,255,255,0.3);
         }
 
-        /* --- STANDALONE STORE BANNER STYLES --- */
+        /* --- STORES & SOCIAL DISPLAY CONTAINER --- */
         .affiliate-section {
             width: 90%;
             max-width: 500px;
             text-align: center;
+            margin-bottom: 25px;
         }
-        .affiliate-title {
+        .section-title {
             font-size: 1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: rgba(255,255,255,0.7);
-            margin-bottom: 10px;
+            margin-top: 10px;
+            margin-bottom: 12px;
         }
         .affiliate-grid {
             display: grid;
@@ -129,6 +131,50 @@
             color: #e0e0e0;
             line-height: 1.3;
         }
+
+        /* --- SOCIAL MEDIA BUTTON STYLES --- */
+        .social-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .btn-social {
+            padding: 12px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .btn-facebook {
+            background: #1877f2;
+        }
+        .btn-facebook:hover {
+            background: #145dbf;
+            transform: translateY(-2px);
+        }
+        .btn-pinterest {
+            background: #e60023;
+        }
+        .btn-pinterest:hover {
+            background: #b8001c;
+            transform: translateY(-2px);
+        }
+        .btn-share {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            grid-column: span 2;
+        }
+        .btn-share:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -143,19 +189,31 @@
     </div>
 
     <div class="affiliate-section">
-        <div class="affiliate-title">Featured Partner Stores</div>
+        <div class="section-title">Featured Partner Stores</div>
         <div class="affiliate-grid">
-            
             <a href="https://payhip.com/NextUpGoods" target="_blank" class="affiliate-card">
                 <h3>NextUpGoods</h3>
                 <p>Explore exclusive digital products, premium tools, and hot trending deals.</p>
             </a>
-            
             <a href="https://payhip.com/TheComfortCart" target="_blank" class="affiliate-card">
                 <h3>TheComfortCart</h3>
                 <p>Discover high-quality home finds, cozy lifestyle goods, and curated essentials.</p>
             </a>
+        </div>
+    </div>
 
+    <div class="affiliate-section">
+        <div class="section-title">Follow Our Community</div>
+        <div class="social-grid">
+            <a href="https://www.facebook.com/AmazeCentral1" target="_blank" class="btn-social btn-facebook">
+                👍 AmazeCentral Facebook
+            </a>
+            <a href="https://www.pinterest.com/FashionTrendsforward/" target="_blank" class="btn-social btn-pinterest">
+                📌 TrendsForward Pinterest
+            </a>
+            <a href="#" onclick="shareGame(event)" class="btn-social btn-share">
+                📢 Share This Game With Friends
+            </a>
         </div>
     </div>
 
@@ -163,6 +221,26 @@
         const API_URL = "https://akinator-clone-0uf6.onrender.com";
         let sessionId = "";
         let currentQuestionId = "";
+
+        // Interactive dynamic share engine function
+        function shareGame(e) {
+            e.preventDefault();
+            const shareUrl = window.location.href;
+            const shareText = "Can this AI guess your favorite character in 5 questions? Play The AI Genie game live right now!";
+            
+            // Checks if the device/phone supports native modern menu pop-up sharing
+            if (navigator.share) {
+                navigator.share({
+                    title: 'The AI Genie Game',
+                    text: shareText,
+                    url: shareUrl,
+                }).catch(console.error);
+            } else {
+                // Fallback action: Copies link to clipboard if native dialogue drawer isn't available
+                navigator.clipboard.writeText(shareUrl);
+                alert("Game link copied to clipboard! Share it anywhere you'd like.");
+            }
+        }
 
         function generateSessionId() {
             return Math.random().toString(36).substring(2, 15);
