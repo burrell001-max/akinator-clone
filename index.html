@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The AI Genie</title>
+    
+    <title>MindGenie AI - Free Online Character Guessing Game</title>
+    <meta name="description" content="Play MindGenie AI character guessing game! Think of a character, answer a few simple questions, and watch our advanced AI mind reader guess exactly who it is.">
+    <meta name="keywords" content="MindGenie AI, AI character guessing game, mind reader AI, online akinator clone, free AI game, web games">
+    <meta name="robots" content="index, follow">
+    
     <style>
         body {
             margin: 0;
@@ -21,10 +26,37 @@
         /* Unified Layout Wrapper */
         .page-wrapper {
             width: 100%;
-            max-width: 480px; /* Forces uniform alignment for all sections */
+            max-width: 480px;
             display: flex;
             flex-direction: column;
-            gap: 24px; /* Perfectly equal spacing between all sections */
+            gap: 24px;
+        }
+
+        /* --- SEO HERO TITLE STYLES --- */
+        .seo-hero {
+            text-align: center;
+            padding: 10px 0 5px 0;
+        }
+
+        .seo-hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin: 0 0 8px 0;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #ffffff 30%, #ffbe76 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .seo-hero h2 {
+            font-size: 1.05rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #34d399;
+            margin: 0;
         }
 
         /* Sleek Glassmorphism Card Style */
@@ -38,16 +70,6 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-sizing: border-box;
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin: 0 0 5px 0;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #fff 0%, #e0e6ed 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
         .divider {
@@ -81,10 +103,6 @@
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255, 127, 17, 0.4);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
         }
 
         /* Option Grid and Buttons */
@@ -155,7 +173,7 @@
             margin: 0;
             font-size: 1rem;
             font-weight: 600;
-            color: #34d399; /* Smooth, modern emerald mint accent */
+            color: #34d399;
         }
 
         .store-card p {
@@ -165,7 +183,7 @@
             line-height: 1.4;
         }
 
-        /* Social Channel Button Array */
+        /* Social Layouts */
         .social-grid {
             display: flex;
             flex-direction: column;
@@ -235,10 +253,13 @@
 
     <div class="page-wrapper">
         
+        <div class="seo-hero">
+            <h1>MindGenie AI</h1>
+            <h2>The Ultimate Character Guessing Game</h2>
+        </div>
+        
         <div class="glass-card" id="gameBox">
-            <h1>The AI Genie</h1>
-            <div class="divider"></div>
-            <p id="gameText">Think of a character: Spider-Man, SpongeBob, Abraham Lincoln, Harry Potter, or Yoda. I will guess it!</p>
+            <p id="gameText" style="margin-top: 10px;">Think of a character: Spider-Man, SpongeBob, Abraham Lincoln, Harry Potter, or Yoda. I will guess it!</p>
             <div id="interactionArea">
                 <button class="btn-primary" onclick="startGame()">Play Game</button>
             </div>
@@ -285,11 +306,11 @@
         function shareGame(e) {
             e.preventDefault();
             const shareUrl = window.location.href;
-            const shareText = "Can this AI guess your favorite character? Play The AI Genie game live right now!";
+            const shareText = "Can this AI guess your favorite character? Play MindGenie AI live right now!";
             
             if (navigator.share) {
                 navigator.share({
-                    title: 'The AI Genie Game',
+                    title: 'MindGenie AI Game',
                     text: shareText,
                     url: shareUrl,
                 }).catch(console.error);
