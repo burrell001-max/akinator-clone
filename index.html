@@ -3,131 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Genie Guesser</title>
+    <title>The AI Genie</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            color: #fff;
         }
         .game-container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
+            border-radius: 16px;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            text-align: center;
-            max-width: 500px;
             width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        h1 { margin-top: 0; font-size: 2.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-        .question-box { font-size: 1.4rem; min-height: 80px; margin: 20px 0; display: flex; justify-content: center; align-items: center; }
-        .btn-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        @media(min-width: 400px) { .btn-grid { grid-template-columns: 1fr 1fr; } .full-width { grid-column: span 2; } }
-        button {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+        }
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.2);
+            margin: 20px 0;
+        }
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        .btn {
+            background: #ffa042;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .btn:hover {
+            background: #ff8814;
+            transform: translateY(-2px);
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .btn-opt {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
             padding: 12px;
             font-size: 1rem;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background 0.2s;
         }
-        button:hover { background: #fff; color: #1e3c72; transform: translateY(-2px); }
-        .start-btn { background: #ff9f43; border: none; font-size: 1.3rem; padding: 15px 30px; width: 100%; font-weight: bold; }
-        .start-btn:hover { background: #ffb167; color: white; }
-        .hidden { display: none !important; }
+        .btn-opt:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .btn-wide {
+            grid-column: span 2;
+        }
     </style>
 </head>
 <body>
 
-<div class="game-container">
-    <h1>The AI Genie</h1>
-    <hr style="border-color: rgba(255,255,255,0.2)">
-    
-    <div id="start-screen">
-        <p>Think of a character: Spider-Man, SpongeBob, Abraham Lincoln, Harry Potter, or Yoda. I will guess it!</p>
-        <button class="start-btn" onclick="startGame()">Play Game</button>
-    </div>
-
-    <div id="game-screen" class="hidden">
-        <div class="question-box" id="question-text">Loading question...</div>
-        <div class="btn-grid">
-            <button onclick="submitAnswer(1.0)">Yes</button>
-            <button onclick="submitAnswer(0.0)">No</button>
-            <button onclick="submitAnswer(0.75)">Probably</button>
-            <button onclick="submitAnswer(0.25)">Probably Not</button>
-            <button class="full-width" onclick="submitAnswer(0.5)">I Don't Know</button>
+    <div class="game-container" id="gameBox">
+        <h1>The AI Genie</h1>
+        <div class="divider"></div>
+        <p id="gameText">Think of a character: Spider-Man, SpongeBob, Abraham Lincoln, Harry Potter, or Yoda. I will guess it!</p>
+        <div id="interactionArea">
+            <button class="btn" onclick="startGame()">Play Game</button>
         </div>
     </div>
 
-    <div id="result-screen" class="hidden">
-        <h2>I guess you're thinking of...</h2>
-        <h1 id="guess-character" style="color: #ff9f43;">[Character]</h1>
-        <button class="start-btn" onclick="resetGame()">Play Again</button>
-    </div>
-</div>
+    <script>
+        // BACKEND CONFIGURATION
+        const API_URL = "https://akinator-clone-0uf6.onrender.com";
+        let sessionId = "";
+        let currentQuestionId = "";
 
-<script>
-    // --- CONNECT TO YOUR LIVE ENGINE ---
-    const BACKEND_URL = "https://akinator-clone-0uf6.onrender.com";
-    
-    let sessionId = "";
-    let currentQuestionId = "";
-
-    function generateSessionId() {
-        return 'session_' + Math.random().toString(36).substr(2, 9);
-    }
-
-    async function startGame() {
-        sessionId = generateSessionId();
-        document.getElementById("start-screen").classList.add("hidden");
-        document.getElementById("game-screen").classList.remove("hidden");
-        
-        const response = await fetch(`${BACKEND_URL}/start-game?session_id=${sessionId}`);
-        const data = await response.json();
-        
-        currentQuestionId = data.next_question_id;
-        document.getElementById("question-text").innerText = data.question_text;
-    }
-
-    async function submitAnswer(weight) {
-        document.getElementById("question-text").innerText = "Processing trends...";
-        
-        const response = await fetch(`${BACKEND_URL}/submit-answer`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                session_id: sessionId,
-                question_id: currentQuestionId,
-                answer_weight: weight
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (data.status === "guess") {
-            document.getElementById("game-screen").classList.add("hidden");
-            document.getElementById("result-screen").classList.remove("hidden");
-            document.getElementById("guess-character").innerText = data.character_guess;
-        } else {
-            currentQuestionId = data.next_question_id;
-            document.getElementById("question-text").innerText = data.question_text;
+        // Generate a clean session ID tracking key
+        function generateSessionId() {
+            return Math.random().toString(36).substring(2, 15);
         }
-    }
 
-    function resetGame() {
-        document.getElementById("result-screen").classList.add("hidden");
-        document.getElementById("start-screen").classList.remove("hidden");
-    }
-</script>
+        // Start a brand new gameplay run
+        async function startGame() {
+            sessionId = generateSessionId();
+            document.getElementById("gameText").innerText = "Summoning the Genie questions...";
+            document.getElementById("interactionArea").innerHTML = `<p>Loading...</p>`;
 
+            try {
+                const response = await fetch(`${API_URL}/start-game?session_id=${sessionId}`);
+                const data = await response.json();
+                
+                if (data.status === "game_started") {
+                    currentQuestionId = data.next_question_id;
+                    renderQuestion(data.question_text);
+                }
+            } catch (error) {
+                document.getElementById("gameText").innerText = "Engine connection error. Verify your Render backend is live!";
+                document.getElementById("interactionArea").innerHTML = `<button class="btn" onclick="startGame()">Try Again</button>`;
+            }
+        }
+
+        // Display current question text and the weight evaluation buttons
+        function renderQuestion(questionText) {
+            document.getElementById("gameText").innerText = questionText;
+            document.getElementById("interactionArea").innerHTML = `
+                <div class="options-grid">
+                    <button class="btn-opt" onclick="submitAnswer(1.0)">Yes</button>
+                    <button class="btn-opt" onclick="submitAnswer(0.0)">No</button>
+                    <button class="btn-opt" onclick="submitAnswer(0.75)">Probably</button>
+                    <button class="btn-opt" onclick="submitAnswer(0.25)">Probably Not</button>
+                    <button class="btn-opt" class="btn-opt btn-wide" onclick="submitAnswer(0.5)">I Don't Know</button>
+                </div>
+            `;
+        }
+
+        // Send user option value to engine and fetch the next step
+        async function submitAnswer(weight) {
+            document.getElementById("interactionArea").innerHTML = `<p>Processing thought...</p>`;
+            
+            try {
+                const response = await fetch(`${API_URL}/submit-answer`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        question_id: currentQuestionId,
+                        answer_weight: weight
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === "playing") {
+                    currentQuestionId = data.next_question_id;
+                    renderQuestion(data.question_text);
+                } else if (data.status === "guess") {
+                    renderGuess(data.character_guess);
+                }
+            } catch (error) {
+                console.error("Error submitting step choice:", error);
+            }
+        }
+
+        // Display Final AI Evaluation Results
+        function renderGuess(character) {
+            document.getElementById("gameText").innerHTML = `I guess you're thinking of... <br><br><span style="font-size:2rem;color:#ffa042;font-weight:bold;">${character}</span>`;
+            document.getElementById("interactionArea").innerHTML = `
+                <button class="btn" onclick="startGame()">Play Again</button>
+            `;
+        }
+    </script>
 </body>
 </html>
