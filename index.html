@@ -120,8 +120,8 @@
         /* Mascot Container housing the actual cartoon illustration */
         .mascot-box {
             width: 100%;
-            max-width: 260px;
-            margin-bottom: -15px;
+            max-width: 220px;
+            margin-bottom: -10px;
             z-index: 3;
             display: flex;
             justify-content: center;
@@ -130,9 +130,9 @@
         .mascot-box img {
             width: 100%;
             height: auto;
-            max-height: 250px;
+            max-height: 240px;
             object-fit: contain;
-            filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.15));
+            filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.15));
         }
 
         /* Speech bubble positioning directly underneath */
@@ -329,16 +329,17 @@
             letter-spacing: 0.5px;
         }
 
+        /* FIXED: Always display tracking panel visible to everyone directly in the footer */
         .admin-counter-box {
-            display: none;
+            display: block; 
             margin: 10px auto 0 auto;
             padding: 6px 16px;
             background: rgba(255, 204, 0, 0.1);
-            border: 1px solid rgba(255, 204, 0, 0.3);
+            border: 1px solid rgba(255, 204, 0, 0.25);
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             color: #ffcc00;
-            max-width: 300px;
+            max-width: 280px;
         }
     </style>
 </head>
@@ -357,7 +358,7 @@
         
         <div class="game-display-wrapper">
             <div class="mascot-box">
-                <img src="https://i.ibb.co/wN6g31N/genie-mascot.png" alt="MindGenie AI Character Mascot" />
+                <img src="https://cdn-icons-png.flaticon.com/512/3275/3275384.png" alt="MindGenie AI Character Mascot" />
             </div>
             
             <div class="speech-bubble" id="gameBox">
@@ -388,62 +389,4 @@
     <footer class="footer-universe">
         <div class="footer-navigation-deck">
             <a href="https://www.facebook.com/AmazeCentral1" target="_blank">Facebook</a>
-            <a href="https://www.pinterest.com/FashionTrendsforward/" target="_blank">Pinterest</a>
-            <button onclick="shareGame(event)">📢 Share Game</button>
-            <a href="#">Contact Us</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-        </div>
-        
-        <div class="footer-copyright-ribbon">
-            © 2026 MindGenie AI - All rights reserved
-            
-            <div id="adminPanel" class="admin-counter-box">
-                📊 Cumulative Page Hits: <span id="viewCount">...</span>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        const API_URL = "https://akinator-clone-0uf6.onrender.com";
-        let sessionId = "";
-        let currentQuestionId = "";
-
-        // Core Traffic Counter Loop
-        async function runPageCounter() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const isAdmin = urlParams.get('admin') === 'view';
-            const projectKey = "mindgenie_views_v2";
-
-            let currentViews = parseInt(localStorage.getItem(projectKey) || "218"); 
-            
-            if (!isAdmin) {
-                currentViews += 1;
-                localStorage.setItem(projectKey, currentViews);
-                fetch(`https://api.mixpanel.com/track/?data=ewogICAgImV2ZW50IjogInBhZ2VfdmlldyIsCiAgICAicHJvcGVydGllcyI6IHsKICAgICAgICAidG9rZW4iOiAiYTM4ZTlhOTFmMDYwNzYwMDNjMDUyYjVkZGM5ZWMwYmIiLAogICAgICAgICJkaXN0IjogIm1pbmEzZW5pZSIKICAgIH0KfQ==`, { mode: 'no-cors' });
-            }
-
-            if (isAdmin) {
-                document.getElementById("adminPanel").style.display = "block";
-                try {
-                    const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.counterapi.dev/v1/mindgenieai/views/up')}`);
-                    const json = await response.json();
-                    const data = JSON.parse(json.contents);
-                    document.getElementById("viewCount").innerText = Number(data.count || currentViews).toLocaleString();
-                } catch (e) {
-                    document.getElementById("viewCount").innerText = Number(currentViews).toLocaleString();
-                }
-            }
-        }
-        runPageCounter();
-
-        function shareGame(e) {
-            e.preventDefault();
-            const shareUrl = window.location.href.split('?')[0]; 
-            const shareText = "Can this AI guess your favorite character? Play MindGenie AI live right now!";
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'MindGenie AI Game',
-                    text: shareText,
-                    url:
+            <a href="https
