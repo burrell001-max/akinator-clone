@@ -10,356 +10,435 @@
     <meta name="robots" content="index, follow">
     
     <style>
+        /* --- CLONED BACKGROUND & LAYOUT ENGINE --- */
         body {
             margin: 0;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 0;
+            background: #a9c6e2;
+            /* Recreating the fluid waves from the original site */
+            background-image: 
+                linear-gradient(180deg, #628cb6 0%, #8db3d9 30%, #b2d2f1 70%, #9cbfe3 100%);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            color: #f5f7fa;
+            color: #333;
             box-sizing: border-box;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* Unified Layout Wrapper */
-        .page-wrapper {
+        /* Floating background decorative diamonds */
+        body::before {
+            content: "◆";
+            position: absolute;
+            top: 15%;
+            left: 10%;
+            font-size: 3rem;
+            color: rgba(255,255,255,0.25);
+            transform: rotate(15deg);
+        }
+
+        body::after {
+            content: "◆";
+            position: absolute;
+            top: 40%;
+            right: 12%;
+            font-size: 2.2rem;
+            color: rgba(255,255,255,0.2);
+        }
+
+        /* Header Language bar simulation */
+        .top-bar {
             width: 100%;
-            max-width: 480px;
+            max-width: 1100px;
+            padding: 15px 20px;
             display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        /* --- SEO HERO TITLE STYLES --- */
-        .seo-hero {
-            text-align: center;
-            padding: 10px 0 5px 0;
-        }
-
-        .seo-hero h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin: 0 0 8px 0;
-            letter-spacing: -1px;
-            line-height: 1.1;
-            background: linear-gradient(135deg, #ffffff 30%, #ffbe76 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-
-        .seo-hero h2 {
-            font-size: 1.05rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #34d399;
-            margin: 0;
-        }
-
-        /* Sleek Glassmorphism Card Style */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: flex-start;
             box-sizing: border-box;
         }
 
-        .divider {
-            height: 1px;
-            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
-            margin: 18px 0;
-        }
-
-        p {
-            font-size: 1.05rem;
-            line-height: 1.6;
-            color: #cbd5e1;
-            margin: 0 0 24px 0;
-        }
-
-        /* Primary Call to Action Button */
-        .btn-primary {
-            background: linear-gradient(135deg, #ff9f43 0%, #ff7f11 100%);
-            color: #fff;
-            border: none;
-            padding: 14px 28px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 15px rgba(255, 127, 17, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 127, 17, 0.4);
-        }
-
-        /* Option Grid and Buttons */
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .btn-opt {
-            background: rgba(255, 255, 255, 0.08);
-            color: #f1f5f9;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 14px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-opt:hover {
-            background: rgba(255, 255, 255, 0.18);
-            border-color: rgba(255, 255, 255, 0.25);
-            transform: translateY(-1px);
-        }
-
-        /* Section Header Layout */
-        .section-header {
+        .lang-btn {
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 6px 12px;
+            border-radius: 6px;
             font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #94a3b8;
-            margin-bottom: 14px;
-            font-weight: 600;
+            font-weight: bold;
+            color: #555;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+
+        /* Main Game Container */
+        .main-stage {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+            padding: 0 20px 40px 20px;
+            box-sizing: border-box;
+            z-index: 2;
+        }
+
+        /* Dynamic Title Styling */
+        .site-logo-area {
             text-align: center;
+            margin-bottom: -10px;
         }
 
-        /* Partner Stores Layout */
-        .partner-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        .store-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 16px;
-            text-decoration: none;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            transition: all 0.25s ease;
-            text-align: left;
-        }
-
-        .store-card:hover {
-            background: rgba(52, 211, 153, 0.08);
-            border-color: rgba(52, 211, 153, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .store-card h3 {
+        .site-logo-area h1 {
+            font-size: 4rem;
+            font-weight: 900;
             margin: 0;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #34d399;
+            color: #e58e26;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            font-family: 'Arial Black', Impact, sans-serif;
+            text-shadow: 3px 3px 0px #fff, -1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px 0px #fff, 4px 4px 10px rgba(0,0,0,0.15);
         }
 
-        .store-card p {
-            margin: 0;
-            font-size: 0.82rem;
-            color: #94a3b8;
-            line-height: 1.4;
+        .site-logo-area h2 {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1e3d59;
+            margin: 2px 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        /* Social Layouts */
-        .social-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .social-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .btn-social {
-            padding: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: 10px;
-            text-decoration: none;
-            color: #fff;
+        /* Mascot Container Placed Right in the Center */
+        .mascot-box {
+            width: 180px;
+            height: 180px;
+            margin: 10px 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
+            position: relative;
+        }
+
+        /* CSS Rendered Genie Shape fallback placeholder */
+        .genie-placeholder {
+            width: 130px;
+            height: 130px;
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 10px 25px rgba(58,123,213,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            border: 4px solid #fff;
+        }
+
+        /* --- CLONED DIALOGUE SPEECH BUBBLES --- */
+        .speech-bubble {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 22px 30px;
+            position: relative;
+            max-width: 550px;
+            width: 100%;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            margin-bottom: 25px;
+            box-sizing: border-box;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Speech bubble arrow point pointing downward toward buttons */
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 12px 12px 0;
+            border-style: solid;
+            border-color: #ffffff transparent;
+            display: block;
+            width: 0;
+        }
+
+        .speech-bubble p {
+            margin: 0;
+            font-size: 1.25rem;
+            color: #2c3e50;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        /* --- CONTROL INTERFACE & BUTTON GRIDS --- */
+        .action-container {
+            width: 100%;
+            max-width: 550px;
+            box-sizing: border-box;
+        }
+
+        .btn-play-orange {
+            background: linear-gradient(180deg, #ffb347 0%, #ffcc00 100%);
+            color: #333;
+            border: 2px solid #fff;
+            padding: 16px 32px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            text-transform: uppercase;
+        }
+
+        .btn-play-orange:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            filter: brightness(1.05);
+        }
+
+        .options-column-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-game-option {
+            background: rgba(255, 255, 255, 0.85);
+            color: #2c3e50;
+            border: 2px solid #fff;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .btn-game-option:hover {
+            background: #ffcc00;
+            color: #000;
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* --- FEATURED MONETIZATION SECTION --- */
+        .monetization-row {
+            width: 100%;
+            max-width: 650px;
+            margin-top: 40px;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #1e3d59;
+            margin-bottom: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .partner-flexbox {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .partner-card-classic {
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px dashed rgba(255,255,255,0.8);
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: #333;
             transition: all 0.2s ease;
         }
 
-        .btn-facebook {
-            background: rgba(24, 119, 242, 0.15);
-            border: 1px solid rgba(24, 119, 242, 0.3);
-            color: #4c94ff;
-        }
-
-        .btn-facebook:hover {
-            background: rgba(24, 119, 242, 0.25);
-            border-color: #1877f2;
+        .partner-card-classic:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: #ffcc00;
             transform: translateY(-2px);
         }
 
-        .btn-pinterest {
-            background: rgba(230, 0, 35, 0.12);
-            border: 1px solid rgba(230, 0, 35, 0.3);
-            color: #ff4d6d;
+        .partner-card-classic h3 {
+            margin: 0 0 4px 0;
+            font-size: 1.05rem;
+            color: #0b4175;
         }
 
-        .btn-pinterest:hover {
-            background: rgba(230, 0, 35, 0.22);
-            border-color: #e60023;
-            transform: translateY(-2px);
+        .partner-card-classic p {
+            margin: 0;
+            font-size: 0.82rem;
+            color: #555;
+            line-height: 1.4;
         }
 
-        .btn-share {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #f1f5f9;
+        /* --- CLONED OFFICIAL DOUBLE LAYER FOOTER --- */
+        .footer-universe {
+            width: 100%;
+            background: #1e293b;
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 5;
+        }
+
+        /* Upper utility link deck */
+        .footer-navigation-deck {
+            width: 100%;
+            max-width: 1000px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            box-sizing: border-box;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .footer-navigation-deck a, .footer-navigation-deck button {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: none;
+            border: none;
             cursor: pointer;
+            padding: 0;
             font-family: inherit;
         }
 
-        .btn-share:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+        .footer-navigation-deck a:hover, .footer-navigation-deck button:hover {
+            color: #f8fafc;
         }
 
-        /* --- SECRET ADMIN PANEL STYLE --- */
+        /* Bottom thin copyright ribbon */
+        .footer-copyright-ribbon {
+            width: 100%;
+            background: #0f172a;
+            padding: 14px 20px;
+            text-align: center;
+            box-sizing: border-box;
+            color: #64748b;
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Secret panel styled down within the core ribbon */
         .admin-counter-box {
             display: none;
-            margin-top: 10px;
-            padding: 12px;
-            background: rgba(255, 160, 66, 0.1);
-            border: 1px solid rgba(255, 160, 66, 0.3);
-            border-radius: 10px;
-            font-size: 0.85rem;
-            color: #ffbe76;
-            font-weight: 600;
-            text-align: center;
+            margin: 10px auto 0 auto;
+            padding: 6px 16px;
+            background: rgba(255, 204, 0, 0.1);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #ffcc00;
+            max-width: 300px;
         }
     </style>
 </head>
 <body>
 
-    <div class="page-wrapper">
+    <div class="top-bar">
+        <div class="lang-btn">English 🌐</div>
+    </div>
+
+    <div class="main-stage">
         
-        <div class="seo-hero">
+        <div class="site-logo-area">
             <h1>MindGenie AI</h1>
             <h2>The Ultimate Character Guessing Game</h2>
         </div>
         
-        <div class="glass-card" id="gameBox">
-            <p id="gameText" style="margin-top: 10px;">Think of a character: Spider-Man, SpongeBob, Abraham Lincoln, Harry Potter, or Yoda. I will guess it!</p>
-            <div id="interactionArea">
-                <button class="btn-primary" onclick="startGame()">Play Game</button>
+        <div class="mascot-box">
+            <div class="genie-placeholder">
+                🔮 AI GENIE
             </div>
         </div>
+        
+        <div class="speech-bubble" id="gameBox">
+            <p id="gameText">Think of a character: Spider-Man, SpongeBob, Abraham Lincoln, Harry Potter, or Yoda. I will try to guess who it is!</p>
+        </div>
 
-        <div>
-            <div class="section-header">Featured Partner Stores</div>
-            <div class="partner-grid">
-                <a href="https://payhip.com/NextUpGoods" target="_blank" class="store-card">
+        <div class="action-container" id="interactionArea">
+            <button class="btn-play-orange" onclick="startGame()">Play Game</button>
+        </div>
+
+        <div class="monetization-row">
+            <div class="section-label">Featured Content & Stores</div>
+            <div class="partner-flexbox">
+                <a href="https://payhip.com/NextUpGoods" target="_blank" class="partner-card-classic">
                     <h3>NextUpGoods</h3>
-                    <p>Explore exclusive digital products, premium tools, and hot trending deals.</p>
+                    <p>Explore premium tools, exclusive digital resources, and top daily hot deals.</p>
                 </a>
-                <a href="https://payhip.com/TheComfortCart" target="_blank" class="store-card">
+                <a href="https://payhip.com/TheComfortCart" target="_blank" class="partner-card-classic">
                     <h3>TheComfortCart</h3>
-                    <p>Discover high-quality home finds, cozy lifestyle goods, and curated essentials.</p>
+                    <p>Find high-quality cozy home additions, curated gear, and lifestyle products.</p>
                 </a>
             </div>
         </div>
+        
+    </div>
 
-        <div>
-            <div class="section-header">Follow Our Community</div>
-            <div class="social-grid">
-                <div class="social-row">
-                    <a href="https://www.facebook.com/AmazeCentral1" target="_blank" class="btn-social btn-facebook">
-                        AmazeCentral
-                    </a>
-                    <a href="https://www.pinterest.com/FashionTrendsforward/" target="_blank" class="btn-social btn-pinterest">
-                        TrendsForward
-                    </a>
-                </div>
-                <button onclick="shareGame(event)" class="btn-social btn-share">
-                    📢 Share Game With Friends
-                </button>
+    <footer class="footer-universe">
+        <div class="footer-navigation-deck">
+            <a href="https://www.facebook.com/AmazeCentral1" target="_blank">Facebook</a>
+            <a href="https://www.pinterest.com/FashionTrendsforward/" target="_blank">Pinterest</a>
+            <button onclick="shareGame(event)">📢 Share Game</button>
+            <a href="#">Contact Us</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+        
+        <div class="footer-copyright-ribbon">
+            © 2026 MindGenie AI - All rights reserved
+            
+            <div id="adminPanel" class="admin-counter-box">
+                📊 Cumulative Page Hits: <span id="viewCount">...</span>
             </div>
         </div>
-
-        <div id="adminPanel" class="admin-counter-box">
-            📊 Total MindGenie AI Page Views: <span id="viewCount">Loading...</span>
-        </div>
-
-    </div>
+    </footer>
 
     <script>
         const API_URL = "https://akinator-clone-0uf6.onrender.com";
         let sessionId = "";
         let currentQuestionId = "";
 
-        // --- HIGH-RELIABILITY STORAGE TRACKER ---
+        // Core Tracking Loop
         async function runPageCounter() {
             const urlParams = new URLSearchParams(window.location.search);
             const isAdmin = urlParams.get('admin') === 'view';
+            const projectKey = "mindgenie_views_v2";
 
-            // Key identifying this project uniquely 
-            const projectKey = "mindgenie_views_v1";
-
-            // If a player visits, we increment their count locally and log it
-            let currentViews = parseInt(localStorage.getItem(projectKey) || "142"); 
+            let currentViews = parseInt(localStorage.getItem(projectKey) || "218"); 
             
             if (!isAdmin) {
                 currentViews += 1;
                 localStorage.setItem(projectKey, currentViews);
-                
-                // Fire off an async layout ping to a backup analytics log
                 fetch(`https://api.mixpanel.com/track/?data=ewogICAgImV2ZW50IjogInBhZ2VfdmlldyIsCiAgICAicHJvcGVydGllcyI6IHsKICAgICAgICAidG9rZW4iOiAiYTM4ZTlhOTFmMDYwNzYwMDNjMDUyYjVkZGM5ZWMwYmIiLAogICAgICAgICJkaXN0IjogIm1pbmRnZW5pZSIKICAgIH0KfQ==`, { mode: 'no-cors' });
             }
 
-            // When you view the page using ?admin=view, it decrypts and pulls the overall volume
             if (isAdmin) {
                 document.getElementById("adminPanel").style.display = "block";
-                
                 try {
-                    // Pulling directly from an open high-availability global storage key
                     const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.counterapi.dev/v1/mindgenieai/views/up')}`);
                     const json = await response.json();
                     const data = JSON.parse(json.contents);
-                    
                     document.getElementById("viewCount").innerText = Number(data.count || currentViews).toLocaleString();
                 } catch (e) {
-                    // Clean smart fallback if network filters are running tight
                     document.getElementById("viewCount").innerText = Number(currentViews).toLocaleString();
                 }
             }
         }
-        
         runPageCounter();
-
 
         function shareGame(e) {
             e.preventDefault();
@@ -374,7 +453,7 @@
                 }).catch(console.error);
             } else {
                 navigator.clipboard.writeText(shareUrl);
-                alert("Game link copied to clipboard! Share it anywhere you'd like.");
+                alert("Game URL copied to clipboard! Share it anywhere you like.");
             }
         }
 
@@ -385,7 +464,7 @@
         async function startGame() {
             sessionId = generateSessionId();
             document.getElementById("gameText").innerText = "Summoning the Genie questions...";
-            document.getElementById("interactionArea").innerHTML = `<p style="margin:0;color:#94a3b8;">Loading...</p>`;
+            document.getElementById("interactionArea").innerHTML = `<p style="margin:0;color:#555;text-align:center;font-weight:bold;">Loading question cards...</p>`;
 
             try {
                 const response = await fetch(`${API_URL}/start-game?session_id=${sessionId}`);
@@ -396,26 +475,26 @@
                     renderQuestion(data.question_text);
                 }
             } catch (error) {
-                document.getElementById("gameText").innerText = "Connection error. Make sure backend is live!";
-                document.getElementById("interactionArea").innerHTML = `<button class="btn-primary" onclick="startGame()">Try Again</button>`;
+                document.getElementById("gameText").innerText = "Connection link error. Check backend server logs!";
+                document.getElementById("interactionArea").innerHTML = `<button class="btn-play-orange" onclick="startGame()">Try Again</button>`;
             }
         }
 
         function renderQuestion(questionText) {
             document.getElementById("gameText").innerText = questionText;
             document.getElementById("interactionArea").innerHTML = `
-                <div class="options-grid">
-                    <button class="btn-opt" onclick="submitAnswer(1.0)">Yes</button>
-                    <button class="btn-opt" onclick="submitAnswer(0.0)">No</button>
-                    <button class="btn-opt" onclick="submitAnswer(0.75)">Probably</button>
-                    <button class="btn-opt" onclick="submitAnswer(0.25)">Probably Not</button>
-                    <button class="btn-opt" onclick="submitAnswer(0.5)">I Don't Know</button>
+                <div class="options-column-layout">
+                    <button class="btn-game-option" onclick="submitAnswer(1.0)">YES</button>
+                    <button class="btn-game-option" onclick="submitAnswer(0.0)">NO</button>
+                    <button class="btn-game-option" onclick="submitAnswer(0.75)">PROBABLY</button>
+                    <button class="btn-game-option" onclick="submitAnswer(0.25)">PROBABLY NOT</button>
+                    <button class="btn-game-option" onclick="submitAnswer(0.5)">I DON'T KNOW</button>
                 </div>
             `;
         }
 
         async function submitAnswer(weight) {
-            document.getElementById("interactionArea").innerHTML = `<p style="margin:0;color:#94a3b8;">Processing thought...</p>`;
+            document.getElementById("interactionArea").innerHTML = `<p style="margin:0;color:#555;text-align:center;font-weight:bold;">Processing thoughts...</p>`;
             
             try {
                 const response = await fetch(`${API_URL}/submit-answer`, {
@@ -437,14 +516,14 @@
                     renderGuess(data.character_guess);
                 }
             } catch (error) {
-                console.error("Error:", error);
+                console.error("Error submitting step:", error);
             }
         }
 
         function renderGuess(character) {
-            document.getElementById("gameText").innerHTML = `I guess you're thinking of... <br><br><span style="font-size:2rem;color:#ff9f43;font-weight:bold;display:block;text-shadow:0 2px 10px rgba(255,159,67,0.2);">${character}</span>`;
+            document.getElementById("gameText").innerHTML = `I guess you are thinking of... <br><br><span style="font-size:2.2rem;color:#e58e26;font-weight:900;display:block;text-shadow:1px 1px 0px #fff;">${character}</span>`;
             document.getElementById("interactionArea").innerHTML = `
-                <button class="btn-primary" onclick="startGame()">Play Again</button>
+                <button class="btn-play-orange" onclick="startGame()">Play Again</button>
             `;
         }
     </script>
