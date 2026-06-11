@@ -15,8 +15,7 @@
             margin: 0;
             padding: 0;
             background: #a9c6e2;
-            background-image: 
-                linear-gradient(180deg, #628cb6 0%, #8db3d9 30%, #b2d2f1 70%, #9cbfe3 100%);
+            background-image: linear-gradient(180deg, #628cb6 0%, #8db3d9 30%, #b2d2f1 70%, #9cbfe3 100%);
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
@@ -48,7 +47,7 @@
             color: rgba(255,255,255,0.2);
         }
 
-        /* Header Language bar simulation */
+        /* Top language display strip */
         .top-bar {
             width: 100%;
             max-width: 1100px;
@@ -69,7 +68,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.08);
         }
 
-        /* Main Game Container */
+        /* Main Viewport Stage */
         .main-stage {
             width: 100%;
             max-width: 1000px;
@@ -82,10 +81,10 @@
             z-index: 2;
         }
 
-        /* Dynamic Title Styling */
+        /* Core Logo Text Layout Frame */
         .site-logo-area {
             text-align: center;
-            margin-bottom: -10px;
+            margin-bottom: 20px;
         }
 
         .site-logo-area h1 {
@@ -103,53 +102,62 @@
             font-size: 1.1rem;
             font-weight: bold;
             color: #1e3d59;
-            margin: 2px 0 20px 0;
+            margin: 2px 0 0 0;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* --- IMMERSIVE MASCOT GRAPHIC AREA --- */
+        /* --- STACKED GENIE GAME FRAME --- */
+        .game-display-wrapper {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Mascot Container housing the actual cartoon illustration */
         .mascot-box {
             width: 100%;
-            max-width: 240px;
-            margin: 5px 0 15px 0;
+            max-width: 260px;
+            margin-bottom: -15px;
+            z-index: 3;
             display: flex;
             justify-content: center;
-            align-items: center;
         }
 
         .mascot-box img {
             width: 100%;
             height: auto;
-            max-height: 220px;
+            max-height: 250px;
             object-fit: contain;
-            /* Creates a slight glowing aura behind the vector illustration */
-            filter: drop-shadow(0px 8px 16px rgba(255, 204, 0, 0.35));
+            filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.15));
         }
 
-        /* --- CLONED DIALOGUE SPEECH BUBBLES --- */
+        /* Speech bubble positioning directly underneath */
         .speech-bubble {
             background: #ffffff;
-            border-radius: 14px;
-            padding: 22px 30px;
+            border-radius: 20px;
+            padding: 24px 30px;
             position: relative;
-            max-width: 550px;
             width: 100%;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
             text-align: center;
             margin-bottom: 25px;
             box-sizing: border-box;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 2px solid #fff;
+            z-index: 2;
         }
 
-        /* Speech bubble arrow point pointing downward toward buttons */
+        /* Dynamic pointer pointing upward toward the character base */
         .speech-bubble::after {
             content: '';
             position: absolute;
-            bottom: -12px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            border-width: 12px 12px 0;
+            border-width: 0 12px 12px;
             border-style: solid;
             border-color: #ffffff transparent;
             display: block;
@@ -164,16 +172,16 @@
             font-weight: 600;
         }
 
-        /* --- CONTROL INTERFACE & BUTTON GRIDS --- */
+        /* --- ACTION CONTROL BOX ENGINE --- */
         .action-container {
             width: 100%;
-            max-width: 550px;
+            max-width: 500px;
             box-sizing: border-box;
         }
 
         .btn-play-orange {
             background: linear-gradient(180deg, #ffb347 0%, #ffcc00 100%);
-            color: #333;
+            color: #222;
             border: 2px solid #fff;
             padding: 16px 32px;
             font-size: 1.4rem;
@@ -182,14 +190,14 @@
             cursor: pointer;
             width: 100%;
             transition: all 0.2s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.12);
             text-transform: uppercase;
         }
 
         .btn-play-orange:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            filter: brightness(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+            filter: brightness(1.03);
         }
 
         .options-column-layout {
@@ -199,7 +207,7 @@
         }
 
         .btn-game-option {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             color: #2c3e50;
             border: 2px solid #fff;
             padding: 14px;
@@ -208,7 +216,7 @@
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.15s ease;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.04);
             text-align: center;
         }
 
@@ -216,14 +224,14 @@
             background: #ffcc00;
             color: #000;
             transform: scale(1.01);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
-        /* --- FEATURED MONETIZATION SECTION --- */
+        /* --- CLONED CROSS PROMOTION TRAFFIC SYSTEM --- */
         .monetization-row {
             width: 100%;
             max-width: 650px;
-            margin-top: 40px;
+            margin-top: 45px;
         }
 
         .section-label {
@@ -243,8 +251,8 @@
         }
 
         .partner-card-classic {
-            background: rgba(255, 255, 255, 0.5);
-            border: 2px dashed rgba(255,255,255,0.8);
+            background: rgba(255, 255, 255, 0.45);
+            border: 2px dashed rgba(255,255,255,0.7);
             border-radius: 12px;
             padding: 16px;
             text-decoration: none;
@@ -253,7 +261,7 @@
         }
 
         .partner-card-classic:hover {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.85);
             border-color: #ffcc00;
             transform: translateY(-2px);
         }
@@ -271,7 +279,7 @@
             line-height: 1.4;
         }
 
-        /* --- CLONED OFFICIAL DOUBLE LAYER FOOTER --- */
+        /* --- CLONED DECK LAYER FOOTER FRAME --- */
         .footer-universe {
             width: 100%;
             background: #1e293b;
@@ -282,7 +290,6 @@
             z-index: 5;
         }
 
-        /* Upper utility link deck */
         .footer-navigation-deck {
             width: 100%;
             max-width: 1000px;
@@ -311,7 +318,6 @@
             color: #f8fafc;
         }
 
-        /* Bottom thin copyright ribbon */
         .footer-copyright-ribbon {
             width: 100%;
             background: #0f172a;
@@ -323,7 +329,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Secret panel styled down within the core ribbon */
         .admin-counter-box {
             display: none;
             margin: 10px auto 0 auto;
@@ -350,12 +355,14 @@
             <h2>The Ultimate Character Guessing Game</h2>
         </div>
         
-        <div class="mascot-box">
-            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80" alt="MindGenie Character Mascot" />
-        </div>
-        
-        <div class="speech-bubble" id="gameBox">
-            <p id="gameText">Think of a character: Spider-Man, SpongeBob, Abraham Lincoln, Harry Potter, or Yoda. I will try to guess who it is!</p>
+        <div class="game-display-wrapper">
+            <div class="mascot-box">
+                <img src="https://i.ibb.co/wN6g31N/genie-mascot.png" alt="MindGenie AI Character Mascot" />
+            </div>
+            
+            <div class="speech-bubble" id="gameBox">
+                <p id="gameText">Think of a character: Spider-Man, SpongeBob, Abraham Lincoln, Harry Potter, or Yoda. I will try to guess who it is!</p>
+            </div>
         </div>
 
         <div class="action-container" id="interactionArea">
@@ -402,7 +409,7 @@
         let sessionId = "";
         let currentQuestionId = "";
 
-        // Core Tracking Loop
+        // Core Traffic Counter Loop
         async function runPageCounter() {
             const urlParams = new URLSearchParams(window.location.search);
             const isAdmin = urlParams.get('admin') === 'view';
@@ -413,4 +420,30 @@
             if (!isAdmin) {
                 currentViews += 1;
                 localStorage.setItem(projectKey, currentViews);
-                fetch(`
+                fetch(`https://api.mixpanel.com/track/?data=ewogICAgImV2ZW50IjogInBhZ2VfdmlldyIsCiAgICAicHJvcGVydGllcyI6IHsKICAgICAgICAidG9rZW4iOiAiYTM4ZTlhOTFmMDYwNzYwMDNjMDUyYjVkZGM5ZWMwYmIiLAogICAgICAgICJkaXN0IjogIm1pbmEzZW5pZSIKICAgIH0KfQ==`, { mode: 'no-cors' });
+            }
+
+            if (isAdmin) {
+                document.getElementById("adminPanel").style.display = "block";
+                try {
+                    const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.counterapi.dev/v1/mindgenieai/views/up')}`);
+                    const json = await response.json();
+                    const data = JSON.parse(json.contents);
+                    document.getElementById("viewCount").innerText = Number(data.count || currentViews).toLocaleString();
+                } catch (e) {
+                    document.getElementById("viewCount").innerText = Number(currentViews).toLocaleString();
+                }
+            }
+        }
+        runPageCounter();
+
+        function shareGame(e) {
+            e.preventDefault();
+            const shareUrl = window.location.href.split('?')[0]; 
+            const shareText = "Can this AI guess your favorite character? Play MindGenie AI live right now!";
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'MindGenie AI Game',
+                    text: shareText,
+                    url:
