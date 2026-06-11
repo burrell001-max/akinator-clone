@@ -3,390 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>MindGenie AI - Free Online Character Guessing Game</title>
-    <meta name="description" content="Play MindGenie AI character guessing game! Think of a character, answer a few simple questions, and watch our advanced AI mind reader guess exactly who it is.">
-    <meta name="keywords" content="MindGenie AI, AI character guessing game, mind reader AI, online akinator clone, free AI game, web games">
-    <meta name="robots" content="index, follow">
-    
+    <title>The AI Genie</title>
     <style>
-        /* --- CLONED BACKGROUND & LAYOUT ENGINE --- */
         body {
             margin: 0;
             padding: 0;
-            background: #a9c6e2;
-            background-image: linear-gradient(180deg, #628cb6 0%, #8db3d9 30%, #b2d2f1 70%, #9cbfe3 100%);
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #1e3a6a; /* Dark blue background from image 1 */
+            font-family: 'Arial', sans-serif;
+            color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
-            color: #333;
-            box-sizing: border-box;
-            position: relative;
-            overflow-x: hidden;
         }
 
-        /* Floating background decorative diamonds */
-        body::before {
-            content: "◆";
-            position: absolute;
-            top: 15%;
-            left: 10%;
-            font-size: 3rem;
-            color: rgba(255,255,255,0.25);
-            transform: rotate(15deg);
-        }
-
-        body::after {
-            content: "◆";
-            position: absolute;
-            top: 40%;
-            right: 12%;
-            font-size: 2.2rem;
-            color: rgba(255,255,255,0.2);
-        }
-
-        /* Top language display strip */
-        .top-bar {
-            width: 100%;
-            max-width: 1100px;
-            padding: 15px 20px;
+        .main-content {
             display: flex;
-            justify-content: flex-start;
-            box-sizing: border-box;
-        }
-
-        .lang-btn {
-            background: #fff;
-            border: 1px solid #ccc;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #555;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-        }
-
-        /* Main Viewport Stage */
-        .main-stage {
-            width: 100%;
-            max-width: 1000px;
-            display: flex;
-            flex-direction: column;
             align-items: center;
-            flex-grow: 1;
-            padding: 0 20px 40px 20px;
-            box-sizing: border-box;
-            z-index: 2;
-        }
-
-        /* Core Logo Text Layout Frame */
-        .site-logo-area {
-            text-align: center;
+            justify-content: center;
             margin-bottom: 20px;
         }
 
-        .site-logo-area h1 {
-            font-size: 4rem;
-            font-weight: 900;
-            margin: 0;
-            color: #e58e26;
-            text-transform: uppercase;
-            letter-spacing: -1px;
-            font-family: 'Arial Black', Impact, sans-serif;
-            text-shadow: 3px 3px 0px #fff, -1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px 0px #fff, 4px 4px 10px rgba(0,0,0,0.15);
+        .genie-image {
+            margin-right: 20px;
         }
 
-        .site-logo-area h2 {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #1e3d59;
-            margin: 2px 0 0 0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* --- STACKED GENIE GAME FRAME --- */
-        .game-display-wrapper {
-            width: 100%;
-            max-width: 600px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-
-        /* Mascot Container housing the actual cartoon illustration */
-        .mascot-box {
-            width: 100%;
-            max-width: 220px;
-            margin-bottom: -10px;
-            z-index: 3;
-            display: flex;
-            justify-content: center;
-        }
-
-        .mascot-box img {
-            width: 100%;
-            height: auto;
-            max-height: 240px;
-            object-fit: contain;
-            filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.15));
-        }
-
-        /* Speech bubble positioning directly underneath */
-        .speech-bubble {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 24px 30px;
-            position: relative;
-            width: 100%;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-            text-align: center;
-            margin-bottom: 25px;
-            box-sizing: border-box;
-            border: 2px solid #fff;
-            z-index: 2;
-        }
-
-        /* Dynamic pointer pointing upward toward the character base */
-        .speech-bubble::after {
-            content: '';
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 0 12px 12px;
-            border-style: solid;
-            border-color: #ffffff transparent;
-            display: block;
-            width: 0;
-        }
-
-        .speech-bubble p {
-            margin: 0;
-            font-size: 1.25rem;
-            color: #2c3e50;
-            line-height: 1.5;
-            font-weight: 600;
-        }
-
-        /* --- ACTION CONTROL BOX ENGINE --- */
-        .action-container {
-            width: 100%;
-            max-width: 500px;
-            box-sizing: border-box;
-        }
-
-        .btn-play-orange {
-            background: linear-gradient(180deg, #ffb347 0%, #ffcc00 100%);
-            color: #222;
-            border: 2px solid #fff;
-            padding: 16px 32px;
-            font-size: 1.4rem;
-            font-weight: 800;
-            border-radius: 30px;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.12);
-            text-transform: uppercase;
-        }
-
-        .btn-play-orange:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.18);
-            filter: brightness(1.03);
-        }
-
-        .options-column-layout {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn-game-option {
-            background: rgba(255, 255, 255, 0.9);
-            color: #2c3e50;
-            border: 2px solid #fff;
-            padding: 14px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.04);
-            text-align: center;
-        }
-
-        .btn-game-option:hover {
-            background: #ffcc00;
-            color: #000;
-            transform: scale(1.01);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        /* --- CLONED CROSS PROMOTION TRAFFIC SYSTEM --- */
-        .monetization-row {
-            width: 100%;
-            max-width: 650px;
-            margin-top: 45px;
-        }
-
-        .section-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #1e3d59;
-            margin-bottom: 12px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .partner-flexbox {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .partner-card-classic {
-            background: rgba(255, 255, 255, 0.45);
-            border: 2px dashed rgba(255,255,255,0.7);
-            border-radius: 12px;
-            padding: 16px;
-            text-decoration: none;
-            color: #333;
-            transition: all 0.2s ease;
-        }
-
-        .partner-card-classic:hover {
-            background: rgba(255, 255, 255, 0.85);
-            border-color: #ffcc00;
-            transform: translateY(-2px);
-        }
-
-        .partner-card-classic h3 {
-            margin: 0 0 4px 0;
-            font-size: 1.05rem;
-            color: #0b4175;
-        }
-
-        .partner-card-classic p {
-            margin: 0;
-            font-size: 0.82rem;
-            color: #555;
-            line-height: 1.4;
-        }
-
-        /* --- CLONED DECK LAYER FOOTER FRAME --- */
-        .footer-universe {
-            width: 100%;
-            background: #1e293b;
-            margin-top: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 5;
-        }
-
-        .footer-navigation-deck {
-            width: 100%;
-            max-width: 1000px;
+        .game-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
             padding: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 25px;
-            box-sizing: border-box;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .footer-navigation-deck a, .footer-navigation-deck button {
-            color: #94a3b8;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            font-family: inherit;
-        }
-
-        .footer-navigation-deck a:hover, .footer-navigation-deck button:hover {
-            color: #f8fafc;
-        }
-
-        .footer-copyright-ribbon {
-            width: 100%;
-            background: #0f172a;
-            padding: 14px 20px;
             text-align: center;
-            box-sizing: border-box;
-            color: #64748b;
-            font-size: 0.82rem;
-            letter-spacing: 0.5px;
+            max-width: 400px;
         }
 
-        /* FIXED: Always display tracking panel visible to everyone directly in the footer */
-        .admin-counter-box {
-            display: block; 
-            margin: 10px auto 0 auto;
-            padding: 6px 16px;
-            background: rgba(255, 204, 0, 0.1);
-            border: 1px solid rgba(255, 204, 0, 0.25);
-            border-radius: 6px;
-            font-size: 0.82rem;
-            color: #ffcc00;
-            max-width: 280px;
+        .game-container h1 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        .game-container p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .btn-play {
+            background-color: #ffa500;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .affiliate-section, .social-section {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        .affiliate-card, .social-button, .share-button {
+            border: 2px dashed rgba(40, 167, 69, 0.5);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            background-color: rgba(40, 167, 69, 0.1);
+            transition: background-color 0.3s;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .affiliate-card:hover, .social-button:hover, .share-button:hover {
+            background-color: rgba(40, 167, 69, 0.2);
+        }
+
+        .social-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .social-button-facebook {
+            background-color: #3b5998;
+        }
+
+        .social-button-pinterest {
+            background-color: #bd081c;
+        }
+
+        .share-button {
+            background-color: #4a6fa1;
+        }
+
+        .social-section {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .social-buttons-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="top-bar">
-        <div class="lang-btn">English 🌐</div>
+    <div class="main-content">
+        <div class="genie-image">
+            <img src="your-genie-image-source.png" alt="Genie" width="200">
+        </div>
+
+        <div class="game-container" id="gameBox">
+            <h1>The AI Genie</h1>
+            <p id="gameText">Think of a character: Spider-Man, SpongeBob, Abraham Lincoln, Harry Potter, or Yoda. I will guess it!</p>
+            <div id="interactionArea">
+                <button class="btn-play" onclick="startGame()">Play Game</button>
+            </div>
+        </div>
     </div>
 
-    <div class="main-stage">
-        
-        <div class="site-logo-area">
-            <h1>MindGenie AI</h1>
-            <h2>The Ultimate Character Guessing Game</h2>
-        </div>
-        
-        <div class="game-display-wrapper">
-            <div class="mascot-box">
-                <img src="https://cdn-icons-png.flaticon.com/512/3275/3275384.png" alt="MindGenie AI Character Mascot" />
-            </div>
-            
-            <div class="speech-bubble" id="gameBox">
-                <p id="gameText">Think of a character: Spider-Man, SpongeBob, Abraham Lincoln, Harry Potter, or Yoda. I will try to guess who it is!</p>
-            </div>
-        </div>
-
-        <div class="action-container" id="interactionArea">
-            <button class="btn-play-orange" onclick="startGame()">Play Game</button>
-        </div>
-
-        <div class="monetization-row">
-            <div class="section-label">Featured Content & Stores</div>
-            <div class="partner-flexbox">
-                <a href="https://payhip.com/NextUpGoods" target="_blank" class="partner-card-classic">
-                    <h3>NextUpGoods</h3>
-                    <p>Explore premium tools, exclusive digital resources, and top daily hot deals.</p>
-                </a>
-                <a href="https://payhip.com/TheComfortCart" target="_blank" class="partner-card-classic">
-                    <h3>TheComfortCart</h3>
-                    <p>Find high-quality cozy home additions, curated gear, and lifestyle products.</p>
-                </a>
-            </div>
-        </div>
-        
+    <div class="affiliate-section">
+        <a href="#" class="affiliate-card">
+            <h3>NextUpGoods</h3>
+            <p>Explore exclusive digital products, premium tools, and hot trending deals.</p>
+        </a>
+        <a href="#" class="affiliate-card">
+            <h3>TheComfortCart</h3>
+            <p>Discover high-quality home finds, cozy lifestyle goods, and curated essentials.</p>
+        </a>
     </div>
 
-    <footer class="footer-universe">
-        <div class="footer-navigation-deck">
-            <a href="https://www.facebook.com/AmazeCentral1" target="_blank">Facebook</a>
-            <a href="https
+    <div class="social-section">
+        <div class="social-buttons-container">
+            <a href="#" class="social-button social-button-facebook">
+                👍 AmazeCentral Facebook
+            </a>
+            <a href="#" class="social-button social-button-pinterest">
+                📌 TrendsForward Pinterest
+            </a>
+        </div>
+        <a href="#" class="share-button">
+            📢 Share This Game With Friends
+        </a>
+    </div>
+
+</body>
+</html>
