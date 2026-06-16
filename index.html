@@ -227,7 +227,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
-        /* --- CLONED CROSS PROMOTION TRAFFIC SYSTEM --- */
+        /* --- FEATURED PARTNER STORES TRAFFIC SYSTEM --- */
         .monetization-row {
             width: 100%;
             max-width: 650px;
@@ -250,6 +250,7 @@
             gap: 15px;
         }
 
+        /* Fixed: Made cards full clickable links block wrappers */
         .partner-card-classic {
             background: rgba(255, 255, 255, 0.45);
             border: 2px dashed rgba(255,255,255,0.7);
@@ -257,6 +258,7 @@
             padding: 16px;
             text-decoration: none;
             color: #333;
+            display: block;
             transition: all 0.2s ease;
         }
 
@@ -329,7 +331,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* FIXED: Always display tracking panel visible to everyone directly in the footer */
         .admin-counter-box {
             display: block; 
             margin: 10px auto 0 auto;
@@ -391,7 +392,7 @@
             <a href="https://www.facebook.com/AmazeCentral1" target="_blank">Facebook</a>
             <a href="https://www.pinterest.com/FashionTrendsforward/" target="_blank">Pinterest</a>
             <button onclick="shareGame(event)">📢 Share Game</button>
-            <a href="#">Contact Us</a>
+            <a href="http://freecharactercounter.com/" target="_blank">Character Counter Tool</a>
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>
         </div>
@@ -410,7 +411,6 @@
         let sessionId = "";
         let currentQuestionId = "";
 
-        // Core Traffic Counter Loop
         async function runPageCounter() {
             const projectKey = "mindgenie_views_v2";
             let currentViews = parseInt(localStorage.getItem(projectKey) || "3412"); 
@@ -418,10 +418,8 @@
             currentViews += 1;
             localStorage.setItem(projectKey, currentViews);
 
-            // Send analytical tracking ping
             fetch(`https://api.mixpanel.com/track/?data=ewogICAgImV2ZW50IjogInBhZ2VfdmlldyIsCiAgICAicHJvcGVydGllcyI6IHsKICAgICAgICAidG9rZW4iOiAiYTM4ZTlhOTFmMDYwNzYwMDNjMDUyYjVkZGM5ZWMwYmIiLAogICAgICAgICJkaXN0IjogIm1pbmEzZW5pZSIKICAgIH0KfQ==`, { mode: 'no-cors' });
 
-            // Fetch live live counter data
             try {
                 const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.counterapi.dev/v1/mindgenieai/views/up')}`);
                 const json = await response.json();
