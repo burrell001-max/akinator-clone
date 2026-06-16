@@ -10,7 +10,6 @@
     <meta name="robots" content="index, follow">
     
     <style>
-        /* --- CLONED BACKGROUND & LAYOUT ENGINE --- */
         body {
             margin: 0;
             padding: 0;
@@ -27,7 +26,6 @@
             overflow-x: hidden;
         }
 
-        /* Floating background decorative diamonds */
         body::before {
             content: "◆";
             position: absolute;
@@ -47,7 +45,6 @@
             color: rgba(255,255,255,0.2);
         }
 
-        /* Top language display strip */
         .top-bar {
             width: 100%;
             max-width: 1100px;
@@ -68,7 +65,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.08);
         }
 
-        /* Main Viewport Stage */
         .main-stage {
             width: 100%;
             max-width: 1000px;
@@ -81,7 +77,6 @@
             z-index: 2;
         }
 
-        /* Core Logo Text Layout Frame */
         .site-logo-area {
             text-align: center;
             margin-bottom: 20px;
@@ -107,7 +102,6 @@
             letter-spacing: 1px;
         }
 
-        /* --- STACKED GENIE GAME FRAME --- */
         .game-display-wrapper {
             width: 100%;
             max-width: 600px;
@@ -117,7 +111,6 @@
             position: relative;
         }
 
-        /* Mascot Container housing your uploaded Aladdin Genie file */
         .mascot-box {
             width: 100%;
             max-width: 260px;
@@ -135,7 +128,6 @@
             filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.15));
         }
 
-        /* Speech bubble positioning directly underneath */
         .speech-bubble {
             background: #ffffff;
             border-radius: 20px;
@@ -150,7 +142,6 @@
             z-index: 2;
         }
 
-        /* Dynamic pointer pointing upward toward the character base */
         .speech-bubble::after {
             content: '';
             position: absolute;
@@ -172,7 +163,6 @@
             font-weight: 600;
         }
 
-        /* --- ACTION CONTROL BOX ENGINE --- */
         .action-container {
             width: 100%;
             max-width: 500px;
@@ -227,31 +217,30 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
-        /* --- FEATURED PARTNER STORES TRAFFIC SYSTEM --- */
-        .monetization-row {
+        /* --- 3-COLUMN FEATURED STORES SYSTEM --- */
+        .featured-stores-container {
             width: 100%;
-            max-width: 650px;
-            margin-top: 45px;
+            max-width: 900px;
+            margin: 45px auto 15px auto;
+            text-align: center;
         }
 
-        .section-label {
+        .stores-title {
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: #1e3d59;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             font-weight: bold;
-            text-align: center;
         }
 
-        .partner-flexbox {
+        .stores-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 15px;
         }
 
-        /* Fixed: Made cards full clickable links block wrappers */
-        .partner-card-classic {
+        .store-link-card {
             background: rgba(255, 255, 255, 0.45);
             border: 2px dashed rgba(255,255,255,0.7);
             border-radius: 12px;
@@ -259,29 +248,37 @@
             text-decoration: none;
             color: #333;
             display: block;
+            text-align: left;
+            cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .partner-card-classic:hover {
+        .store-link-card:hover {
             background: rgba(255, 255, 255, 0.85);
             border-color: #ffcc00;
             transform: translateY(-2px);
         }
 
-        .partner-card-classic h3 {
+        .store-link-card h3 {
             margin: 0 0 4px 0;
             font-size: 1.05rem;
             color: #0b4175;
         }
 
-        .partner-card-classic p {
+        .store-link-card p {
             margin: 0;
             font-size: 0.82rem;
             color: #555;
             line-height: 1.4;
         }
 
-        /* --- DECK LAYER FOOTER FRAME --- */
+        @media (max-width: 768px) {
+            .stores-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- FOOTER FRAME --- */
         .footer-universe {
             width: 100%;
             background: #1e293b;
@@ -342,70 +339,7 @@
             color: #ffcc00;
             max-width: 280px;
         }
-  /* --- FEATURED PARTNER STORES 3-COLUMN LINK SYSTEM --- */
-.featured-stores-container {
-    width: 100%;
-    max-width: 900px; /* Widened to perfectly fit three cards side-by-side */
-    margin: 30px auto 15px auto;
-    text-align: center;
-}
-
-.stores-title {
-    font-size: 0.85rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: #1e3d59;
-    margin-bottom: 15px;
-}
-
-.stores-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr; /* FIX: Creates exactly three equal columns */
-    gap: 15px;
-}
-
-/* Forces the entire card block to be a fully clickable web link */
-.store-link-card {
-    background: rgba(255, 255, 255, 0.5);
-    border: 2px dashed rgba(255, 255, 255, 0.85);
-    border-radius: 12px;
-    padding: 16px;
-    text-decoration: none; /* Removes text underlining */
-    display: block;        /* Makes the whole box surface clickable */
-    text-align: left;
-    transition: all 0.2s ease-in-out;
-}
-
-/* Visual response when a user moves their mouse over the link */
-.store-link-card:hover {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: #0b4175;
-    transform: translateY(-2px);
-}
-
-.store-link-card h3 {
-    margin: 0 0 6px 0;
-    font-size: 1.1rem;
-    color: #0b4175;
-}
-
-.store-link-card p {
-    margin: 0;
-    font-size: 0.82rem;
-    color: #444444;
-    line-height: 1.4;
-}
-
-/* Responsive fix for smaller mobile screens */
-@media (max-width: 768px) {
-    .stores-grid {
-        grid-template-columns: 1fr;
-    }
-    .featured-stores-container {
-        max-width: 400px;
-    }
-} </style>
+    </style>
 </head>
 <body>
 
@@ -434,12 +368,31 @@
             <button class="btn-play-orange" onclick="startGame()">Play Game</button>
         </div>
 
-      <div class="monetization-row">
-    <div class="section-label">Featured Content & Stores</div>
-    <div class="partner-flexbox">
-        ... old blocks are inside here ...
-    </div>
-</div>
+        <!-- THE 3 CROSS-PROMOTION STORES SIDE-BY-SIDE -->
+        <div class="featured-stores-container">
+            <div class="stores-title">Featured Content & Stores</div>
+            <div class="stores-grid">
+                
+                <!-- LINK 1: Open Character Counter -->
+                <a href="https://opencharter9824.live-website.com/" target="_blank" class="store-link-card">
+                    <h3>Open Character Counter</h3>
+                    <p>Instantly track your character, word, sentence, and paragraph counts as you type.</p>
+                </a>
+
+                <!-- LINK 2: NextUpGoods -->
+                <a href="https://payhip.com/NextUpGoods" target="_blank" class="store-link-card">
+                    <h3>NextUpGoods</h3>
+                    <p>Explore premium tools, exclusive resources, and top daily hot deals.</p>
+                </a>
+                
+                <!-- LINK 3: TheComfortCart -->
+                <a href="https://payhip.com/TheComfortCart" target="_blank" class="store-link-card">
+                    <h3>TheComfortCart</h3>
+                    <p>Find high-quality cozy home additions, curated gear, and lifestyle products.</p>
+                </a>
+
+            </div>
+        </div>
         
     </div>
 
@@ -470,11 +423,8 @@
         async function runPageCounter() {
             const projectKey = "mindgenie_views_v2";
             let currentViews = parseInt(localStorage.getItem(projectKey) || "3412"); 
-            
             currentViews += 1;
             localStorage.setItem(projectKey, currentViews);
-
-            fetch(`https://api.mixpanel.com/track/?data=ewogICAgImV2ZW50IjogInBhZ2VfdmlldyIsCiAgICAicHJvcGVydGllcyI6IHsKICAgICAgICAidG9rZW4iOiAiYTM4ZTlhOTFmMDYwNzYwMDNjMDUyYjVkZGM5ZWMwYmIiLAogICAgICAgICJkaXN0IjogIm1pbmEzZW5pZSIKICAgIH0KfQ==`, { mode: 'no-cors' });
 
             try {
                 const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.counterapi.dev/v1/mindgenieai/views/up')}`);
@@ -491,38 +441,29 @@
             e.preventDefault();
             const shareUrl = window.location.href.split('?')[0]; 
             const shareText = "Can this AI guess your favorite character? Play MindGenie AI live right now!";
-            
             if (navigator.share) {
-                navigator.share({
-                    title: 'MindGenie AI Game',
-                    text: shareText,
-                    url: shareUrl,
-                }).catch(console.error);
+                navigator.share({ title: 'MindGenie AI Game', text: shareText, url: shareUrl }).catch(console.error);
             } else {
                 navigator.clipboard.writeText(shareUrl);
-                alert("Game URL copied to clipboard! Share it anywhere you like.");
+                alert("Game URL copied to clipboard!");
             }
         }
 
-        function generateSessionId() {
-            return Math.random().toString(36).substring(2, 15);
-        }
+        function generateSessionId() { return Math.random().toString(36).substring(2, 15); }
 
         async function startGame() {
             sessionId = generateSessionId();
             document.getElementById("gameText").innerText = "Summoning the Genie questions...";
             document.getElementById("interactionArea").innerHTML = `<p style="margin:0;color:#555;text-align:center;font-weight:bold;">Loading question cards...</p>`;
-
             try {
                 const response = await fetch(`${API_URL}/start-game?session_id=${sessionId}`);
                 const data = await response.json();
-                
                 if (data.status === "game_started") {
                     currentQuestionId = data.next_question_id;
                     renderQuestion(data.question_text);
                 }
             } catch (error) {
-                document.getElementById("gameText").innerText = "Connection link error. Check backend server logs!";
+                document.getElementById("gameText").innerText = "Connection error. Reconnecting...";
                 document.getElementById("interactionArea").innerHTML = `<button class="btn-play-orange" onclick="startGame()">Try Again</button>`;
             }
         }
@@ -542,20 +483,13 @@
 
         async function submitAnswer(weight) {
             document.getElementById("interactionArea").innerHTML = `<p style="margin:0;color:#555;text-align:center;font-weight:bold;">Processing thoughts...</p>`;
-            
             try {
                 const response = await fetch(`${API_URL}/submit-answer`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        session_id: sessionId,
-                        question_id: currentQuestionId,
-                        answer_weight: weight
-                    })
+                    body: JSON.stringify({ session_id: sessionId, question_id: currentQuestionId, answer_weight: weight })
                 });
-                
                 const data = await response.json();
-                
                 if (data.status === "playing") {
                     currentQuestionId = data.next_question_id;
                     renderQuestion(data.question_text);
@@ -569,9 +503,7 @@
 
         function renderGuess(character) {
             document.getElementById("gameText").innerHTML = `I guess you are thinking of... <br><br><span style="font-size:2.2rem;color:#e58e26;font-weight:900;display:block;text-shadow:1px 1px 0px #fff;">${character}</span>`;
-            document.getElementById("interactionArea").innerHTML = `
-                <button class="btn-play-orange" onclick="startGame()">Play Again</button>
-            `;
+            document.getElementById("interactionArea").innerHTML = `<button class="btn-play-orange" onclick="startGame()">Play Again</button>`;
         }
     </script>
 </body>
