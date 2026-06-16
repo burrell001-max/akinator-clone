@@ -342,7 +342,60 @@
             color: #ffcc00;
             max-width: 280px;
         }
-    </style>
+   /* --- FEATURED PARTNER STORES LINK SYSTEM --- */
+.featured-stores-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 30px auto 15px auto;
+    text-align: center;
+}
+
+.stores-title {
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #1e3d59;
+    margin-bottom: 15px;
+}
+
+.stores-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Forces the entire card block to be a fully clickable web link */
+.store-link-card {
+    background: rgba(255, 255, 255, 0.5);
+    border: 2px dashed rgba(255, 255, 255, 0.85);
+    border-radius: 12px;
+    padding: 16px;
+    text-decoration: none; /* Removes text underlining */
+    display: block;        /* Makes the whole box surface clickable */
+    text-align: left;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Subtle visual response when a user moves their mouse over the link */
+.store-link-card:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #0b4175;
+    transform: translateY(-2px);
+}
+
+.store-link-card h3 {
+    margin: 0 0 6px 0;
+    font-size: 1.1rem;
+    color: #0b4175;
+}
+
+.store-link-card p {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #444444;
+    line-height: 1.4;
+} </style>
 </head>
 <body>
 
