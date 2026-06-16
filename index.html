@@ -342,10 +342,10 @@
             color: #ffcc00;
             max-width: 280px;
         }
-   /* --- FEATURED PARTNER STORES LINK SYSTEM --- */
+  /* --- FEATURED PARTNER STORES 3-COLUMN LINK SYSTEM --- */
 .featured-stores-container {
     width: 100%;
-    max-width: 600px;
+    max-width: 900px; /* Widened to perfectly fit three cards side-by-side */
     margin: 30px auto 15px auto;
     text-align: center;
 }
@@ -361,7 +361,7 @@
 
 .stores-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr; /* FIX: Creates exactly three equal columns */
     gap: 15px;
 }
 
@@ -377,7 +377,7 @@
     transition: all 0.2s ease-in-out;
 }
 
-/* Subtle visual response when a user moves their mouse over the link */
+/* Visual response when a user moves their mouse over the link */
 .store-link-card:hover {
     background: rgba(255, 255, 255, 0.9);
     border-color: #0b4175;
@@ -395,6 +395,16 @@
     font-size: 0.82rem;
     color: #444444;
     line-height: 1.4;
+}
+
+/* Responsive fix for smaller mobile screens */
+@media (max-width: 768px) {
+    .stores-grid {
+        grid-template-columns: 1fr;
+    }
+    .featured-stores-container {
+        max-width: 400px;
+    }
 } </style>
 </head>
 <body>
