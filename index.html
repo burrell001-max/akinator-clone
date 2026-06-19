@@ -41,7 +41,6 @@
             position: relative;
         }
 
-        /* ── STARFIELD ── */
         .stars {
             position: fixed;
             inset: 0;
@@ -61,7 +60,6 @@
             100% { opacity: var(--o, 0.7); transform: scale(1.2); }
         }
 
-        /* ── NEBULA BLOBS ── */
         .nebula {
             position: fixed;
             border-radius: 50%;
@@ -74,7 +72,6 @@
         .nebula-2 { width: 400px; height: 400px; background: #3a1f8c; bottom: 10%; right: -100px; }
         .nebula-3 { width: 300px; height: 300px; background: var(--gold-dim); top: 40%; left: 30%; opacity: 0.08; }
 
-        /* ── LAYOUT ── */
         .page-wrap {
             position: relative;
             z-index: 2;
@@ -86,7 +83,6 @@
             align-items: center;
         }
 
-        /* ── TOP BAR ── */
         .top-bar {
             width: 100%;
             padding: 18px 0 0;
@@ -104,7 +100,6 @@
             cursor: pointer;
         }
 
-        /* ── LOGO ── */
         .logo-area {
             text-align: center;
             margin: 30px 0 10px;
@@ -139,7 +134,6 @@
             font-weight: 500;
         }
 
-        /* ── MASCOT ── */
         .mascot-wrap {
             width: 200px;
             margin: 20px 0 -10px;
@@ -168,7 +162,6 @@
             border-radius: 50%;
         }
 
-        /* ── SPEECH BUBBLE ── */
         .speech-bubble {
             background: rgba(20, 14, 50, 0.85);
             border: 1px solid rgba(108, 63, 200, 0.4);
@@ -211,11 +204,8 @@
             min-height: 60px;
             transition: opacity 0.3s ease;
         }
-        #gameText.fade {
-            opacity: 0;
-        }
+        #gameText.fade { opacity: 0; }
 
-        /* ── BUTTONS ── */
         .btn-play {
             background: linear-gradient(135deg, var(--violet) 0%, #9b59d6 100%);
             color: #fff;
@@ -286,7 +276,6 @@
             50%       { opacity: 1; }
         }
 
-        /* ── GUESS REVEAL ── */
         .guess-name {
             font-family: 'Cinzel', serif;
             font-size: 2.2rem;
@@ -301,7 +290,6 @@
             to   { opacity: 1; transform: scale(1) translateY(0);      letter-spacing: 2px; }
         }
 
-        /* ── DIVIDER ── */
         .section-divider {
             width: 100%;
             display: flex;
@@ -324,7 +312,6 @@
             white-space: nowrap;
         }
 
-        /* ── FEATURED ── */
         .featured-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -361,7 +348,6 @@
             .featured-grid { grid-template-columns: 1fr; }
         }
 
-        /* ── FOOTER ── */
         footer {
             width: 100%;
             background: rgba(0,0,0,0.4);
@@ -410,10 +396,7 @@
 </head>
 <body>
 
-    <!-- Stars -->
     <div class="stars" id="stars"></div>
-
-    <!-- Nebula atmosphere -->
     <div class="nebula nebula-1"></div>
     <div class="nebula nebula-2"></div>
     <div class="nebula nebula-3"></div>
@@ -442,7 +425,6 @@
             <button class="btn-play" onclick="startGame()">Enter the Lair</button>
         </div>
 
-        <!-- Featured -->
         <div class="section-divider"><span>From the Genie's realm</span></div>
 
         <div class="featured-grid">
@@ -481,7 +463,7 @@
     </footer>
 
     <script>
-        // ── STARFIELD ──
+        // Starfield
         const starsEl = document.getElementById('stars');
         for (let i = 0; i < 120; i++) {
             const s = document.createElement('div');
@@ -497,42 +479,17 @@
             starsEl.appendChild(s);
         }
 
-        // ── DIALOGUE ──
-        const D = {
-            earlyGame: [
-                "Focus on your character... Is this person real, or born from imagination?",
-                "Interesting. Does this character exist in a world of fantasy and magic?",
-                "Shadows are forming. Is your character known for being a hero?",
-                "The mind never lies. Is your character more feared than loved?",
-                "Something ancient stirs... Has this character existed for more than 50 years?",
-            ],
-            midGame: [
-                "The image grows clearer. Does your character have a signature power or weapon?",
-                "I sense great cunning. Is your character human — or something else entirely?",
-                "Does your character walk alone, or do they need others to fulfil their destiny?",
-                "I feel conflict. Has your character ever crossed between good and evil?",
-                "The veil grows thin. Is your character more famous for what they say or what they do?",
-                "Something familiar stirs... Does your character have a nemesis?",
-                "I'm closing in. Does your character wear a costume, uniform, or disguise?",
-                "One last shadow to lift. Is this character known to almost everyone on Earth?",
-            ],
-            closingIn: [
-                "Wait... yes. The pieces are falling into place.",
-                "I've sensed this soul before. Just a moment longer...",
-                "The mist is clearing. I can almost see the face now...",
-            ],
-            loading:   "The Genie reaches into the void...",
-            thinking:  "I feel the answer forming in the ether...",
-            error:     "The connection to the spirit realm was lost. Try again.",
-        };
-
-        // ── GAME STATE ──
         const API_URL = "https://akinator-clone-0uf6.onrender.com";
         let sessionId = "";
         let currentQuestionId = "";
         let questionCount = 0;
 
-        // ── HELPERS ──
+        const D = {
+            loading:  "The Genie reaches into the void...",
+            thinking: "I feel the answer forming in the ether...",
+            error:    "The connection to the spirit realm was lost. Try again.",
+        };
+
         function setDialogue(html) {
             const el = document.getElementById('gameText');
             el.classList.add('fade');
@@ -550,7 +507,6 @@
             return Math.random().toString(36).substring(2, 15);
         }
 
-        // ── PAGE COUNTER ──
         async function runPageCounter() {
             const key = "mindgenie_views_v2";
             let v = parseInt(localStorage.getItem(key) || "3412");
@@ -567,7 +523,6 @@
         }
         runPageCounter();
 
-        // ── SHARE ──
         function shareGame(e) {
             e.preventDefault();
             const url  = window.location.href.split('?')[0];
@@ -580,13 +535,11 @@
             }
         }
 
-        // ── GAME FLOW ──
         async function startGame() {
             sessionId = generateSessionId();
             questionCount = 0;
             setDialogue("Good... I'm already sensing something.<br>Answer honestly. I'll know if you don't. 👁️");
             setInteraction(`<div class="loading-text">${D.loading}</div>`);
-
             try {
                 const res  = await fetch(`${API_URL}/start-game?session_id=${sessionId}`);
                 const data = await res.json();
@@ -602,20 +555,18 @@
 
         function renderQuestion(text) {
             questionCount++;
-            // inject suspense lines at key moments
             let prefix = "";
-            if (questionCount === 6)  prefix = "The image grows clearer...<br><br>";
-            if (questionCount === 12) prefix = "I'm very close now...<br><br>";
-            if (questionCount === 16) prefix = D.closingIn[Math.floor(Math.random() * D.closingIn.length)] + "<br><br>";
-
+            if (questionCount === 4)  prefix = "The image grows clearer...<br><br>";
+            if (questionCount === 7)  prefix = "I'm very close now...<br><br>";
+            if (questionCount === 9)  prefix = "Almost there. One final veil to lift...<br><br>";
             setDialogue(prefix + text);
             setInteraction(`
                 <div class="options-grid">
-                    <button class="btn-option yes"          onclick="submitAnswer(1.0)">✓ Yes</button>
-                    <button class="btn-option no"           onclick="submitAnswer(0.0)">✗ No</button>
-                    <button class="btn-option"              onclick="submitAnswer(0.75)">Probably</button>
-                    <button class="btn-option"              onclick="submitAnswer(0.25)">Probably not</button>
-                    <button class="btn-option"              onclick="submitAnswer(0.5)">I'm not sure...</button>
+                    <button class="btn-option yes" onclick="submitAnswer(1.0)">✓ Yes</button>
+                    <button class="btn-option no"  onclick="submitAnswer(0.0)">✗ No</button>
+                    <button class="btn-option"     onclick="submitAnswer(0.75)">Probably</button>
+                    <button class="btn-option"     onclick="submitAnswer(0.25)">Probably not</button>
+                    <button class="btn-option"     onclick="submitAnswer(0.5)">I'm not sure...</button>
                 </div>
             `);
         }
