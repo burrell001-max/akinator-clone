@@ -8,6 +8,8 @@
     <meta name="keywords" content="MindGenie AI, AI character guessing game, mind reader AI, online akinator clone, free AI game, web games">
     <meta name="robots" content="index, follow">
 
+    <script data-goatcounter="https://kbwill41.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -211,8 +213,6 @@
             text-transform: uppercase;
             transition: all 0.2s ease;
             box-shadow: 0 4px 30px rgba(108,63,200,0.45);
-            position: relative;
-            overflow: hidden;
         }
         .btn-play:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(108,63,200,0.6); }
 
@@ -445,7 +445,7 @@
         <div class="footer-copy">
             © 2026 MindGenie AI — All rights reserved
             <br>
-            <span class="view-counter" id="adminPanel">
+            <span class="view-counter">
                 👁 Total Seers: <span id="viewCount">Loading...</span>
             </span>
         </div>
@@ -470,7 +470,6 @@
         let serverReady = false;
 
         // ── WAKE UP BACKEND ON PAGE LOAD ──
-        // Render free tier sleeps after inactivity — ping it immediately so it's ready
         function wakeServer() {
             fetch(`${API_URL}/`)
                 .then(() => {
@@ -478,12 +477,10 @@
                     document.getElementById('wakeBanner').style.display = 'none';
                 })
                 .catch(() => {
-                    // Try again in 5 seconds if it didn't respond
                     setTimeout(wakeServer, 5000);
                 });
         }
 
-        // Show the banner after 3 seconds if server hasn't woken up yet
         setTimeout(() => {
             if (!serverReady) {
                 document.getElementById('wakeBanner').style.display = 'block';
@@ -492,10 +489,26 @@
 
         wakeServer();
 
-        // Keep server awake every 10 minutes while page is open
+        // Keep server awake every 10 minutes
         setInterval(() => {
             fetch(`${API_URL}/`).catch(() => {});
         }, 600000);
+
+        // ── GOATCOUNTER VISITOR DISPLAY ──
+        // Fetches the real public visitor count from your GoatCounter dashboard
+        async function loadVisitorCount() {
+            try {
+                const res  = await fetch('https://kbwill41.goatcounter.com/counter//visits.json');
+                const data = await res.json();
+                document.getElementById('viewCount').innerText = Number(data.count).toLocaleString();
+            } catch(e) {
+                // Fallback to localStorage if GoatCounter can't be reached
+                const local = parseInt(localStorage.getItem('mindgenie_views') || '0') + 1;
+                localStorage.setItem('mindgenie_views', local);
+                document.getElementById('viewCount').innerText = Number(local).toLocaleString();
+            }
+        }
+        loadVisitorCount();
 
         // ── HELPERS ──
         function setDialogue(html) {
@@ -514,23 +527,6 @@
         function generateSessionId() {
             return Math.random().toString(36).substring(2, 15);
         }
-
-        // ── PAGE VIEW COUNTER ──
-        async function runPageCounter() {
-            const key = "mindgenie_views_v2";
-            let v = parseInt(localStorage.getItem(key) || "3412");
-            v += 1;
-            localStorage.setItem(key, v);
-            try {
-                const res  = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.counterapi.dev/v1/mindgenieai/views/up')}`);
-                const json = await res.json();
-                const data = JSON.parse(json.contents);
-                document.getElementById("viewCount").innerText = Number(data.count || v).toLocaleString();
-            } catch(e) {
-                document.getElementById("viewCount").innerText = Number(v).toLocaleString();
-            }
-        }
-        runPageCounter();
 
         // ── SHARE ──
         function shareGame(e) {
@@ -554,7 +550,6 @@
             if (!serverReady) {
                 setDialogue("The Genie is still awakening from slumber...<br>Please wait just a moment. 👁️");
                 setInteraction(`<div class="loading-text">Contacting the spirit realm...</div>`);
-                // Wait and retry
                 setTimeout(startGame, 4000);
                 return;
             }
