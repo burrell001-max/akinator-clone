@@ -15,14 +15,10 @@
 
         :root {
             --deep:     #0a0a1a;
-            --void:     #10102a;
-            --indigo:   #1a1a4e;
-            --purple:   #2d1b69;
             --violet:   #6c3fc8;
             --gold:     #f0c040;
             --gold-dim: #c9993a;
             --glow:     #b97fff;
-            --mist:     rgba(180,140,255,0.12);
             --white:    #f5f0ff;
             --smoke:    #a89bc2;
         }
@@ -110,9 +106,7 @@
             font-weight: 900;
             color: var(--gold);
             letter-spacing: 2px;
-            text-shadow:
-                0 0 20px rgba(240,192,64,0.5),
-                0 0 60px rgba(240,192,64,0.2);
+            text-shadow: 0 0 20px rgba(240,192,64,0.5), 0 0 60px rgba(240,192,64,0.2);
             line-height: 1;
         }
         .logo-area .logo-eye {
@@ -169,10 +163,7 @@
             padding: 28px 32px;
             width: 100%;
             text-align: center;
-            box-shadow:
-                0 0 0 1px rgba(108,63,200,0.1),
-                0 8px 40px rgba(0,0,0,0.4),
-                inset 0 1px 0 rgba(255,255,255,0.05);
+            box-shadow: 0 0 0 1px rgba(108,63,200,0.1), 0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
             position: relative;
             margin-bottom: 22px;
         }
@@ -223,16 +214,7 @@
             position: relative;
             overflow: hidden;
         }
-        .btn-play::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
         .btn-play:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(108,63,200,0.6); }
-        .btn-play:hover::after { opacity: 1; }
 
         .options-grid {
             display: flex;
@@ -256,12 +238,11 @@
             background: rgba(108,63,200,0.3);
             border-color: var(--violet);
             transform: translateX(4px);
-            box-shadow: 0 0 20px rgba(108,63,200,0.25);
         }
         .btn-option.yes  { border-color: rgba(80,200,120,0.4); }
         .btn-option.no   { border-color: rgba(200,80,80,0.4); }
-        .btn-option.yes:hover  { background: rgba(80,200,120,0.15); border-color: #50c878; }
-        .btn-option.no:hover   { background: rgba(200,80,80,0.15);  border-color: #c85050; }
+        .btn-option.yes:hover { background: rgba(80,200,120,0.15); border-color: #50c878; }
+        .btn-option.no:hover  { background: rgba(200,80,80,0.15); border-color: #c85050; }
 
         .loading-text {
             text-align: center;
@@ -276,6 +257,19 @@
             50%       { opacity: 1; }
         }
 
+        .wake-banner {
+            background: rgba(240,192,64,0.08);
+            border: 1px solid rgba(240,192,64,0.25);
+            border-radius: 10px;
+            padding: 10px 16px;
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--gold-dim);
+            margin-bottom: 14px;
+            width: 100%;
+            display: none;
+        }
+
         .guess-name {
             font-family: 'Cinzel', serif;
             font-size: 2.2rem;
@@ -287,7 +281,7 @@
         }
         @keyframes reveal-name {
             from { opacity: 0; transform: scale(0.8) translateY(10px); letter-spacing: 10px; }
-            to   { opacity: 1; transform: scale(1) translateY(0);      letter-spacing: 2px; }
+            to   { opacity: 1; transform: scale(1) translateY(0); letter-spacing: 2px; }
         }
 
         .section-divider {
@@ -332,17 +326,8 @@
             border-color: rgba(108,63,200,0.4);
             transform: translateY(-3px);
         }
-        .store-card h3 {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 5px;
-        }
-        .store-card p {
-            font-size: 0.78rem;
-            color: var(--smoke);
-            line-height: 1.5;
-        }
+        .store-card h3 { font-size: 0.9rem; font-weight: 700; color: var(--gold); margin-bottom: 5px; }
+        .store-card p  { font-size: 0.78rem; color: var(--smoke); line-height: 1.5; }
 
         @media (max-width: 560px) {
             .featured-grid { grid-template-columns: 1fr; }
@@ -417,11 +402,15 @@
             <div class="mascot-glow"></div>
         </div>
 
+        <div id="wakeBanner" class="wake-banner">
+            ⏳ Summoning the Genie for the first time today — this may take up to 30 seconds...
+        </div>
+
         <div class="speech-bubble" id="gameBox">
             <p id="gameText">Someone is in your mind right now. A character.<br>I can feel it.<br><br>Shall we begin?</p>
         </div>
 
-        <div class="action-container" id="interactionArea" style="width:100%">
+        <div id="interactionArea" style="width:100%">
             <button class="btn-play" onclick="startGame()">Enter the Lair</button>
         </div>
 
@@ -463,33 +452,52 @@
     </footer>
 
     <script>
-        // Starfield
+        // ── STARFIELD ──
         const starsEl = document.getElementById('stars');
         for (let i = 0; i < 120; i++) {
             const s = document.createElement('div');
             s.className = 'star';
             const size = Math.random() * 2.5 + 0.5;
-            s.style.cssText = `
-                width:${size}px; height:${size}px;
-                top:${Math.random()*100}%; left:${Math.random()*100}%;
-                --d:${(Math.random()*4+2).toFixed(1)}s;
-                --o:${(Math.random()*0.6+0.2).toFixed(2)};
-                animation-delay:${(Math.random()*5).toFixed(1)}s;
-            `;
+            s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;--o:${(Math.random()*0.6+0.2).toFixed(2)};animation-delay:${(Math.random()*5).toFixed(1)}s;`;
             starsEl.appendChild(s);
         }
 
+        // ── CONFIG ──
         const API_URL = "https://akinator-clone-0uf6.onrender.com";
         let sessionId = "";
         let currentQuestionId = "";
         let questionCount = 0;
+        let serverReady = false;
 
-        const D = {
-            loading:  "The Genie reaches into the void...",
-            thinking: "I feel the answer forming in the ether...",
-            error:    "The connection to the spirit realm was lost. Try again.",
-        };
+        // ── WAKE UP BACKEND ON PAGE LOAD ──
+        // Render free tier sleeps after inactivity — ping it immediately so it's ready
+        function wakeServer() {
+            fetch(`${API_URL}/`)
+                .then(() => {
+                    serverReady = true;
+                    document.getElementById('wakeBanner').style.display = 'none';
+                })
+                .catch(() => {
+                    // Try again in 5 seconds if it didn't respond
+                    setTimeout(wakeServer, 5000);
+                });
+        }
 
+        // Show the banner after 3 seconds if server hasn't woken up yet
+        setTimeout(() => {
+            if (!serverReady) {
+                document.getElementById('wakeBanner').style.display = 'block';
+            }
+        }, 3000);
+
+        wakeServer();
+
+        // Keep server awake every 10 minutes while page is open
+        setInterval(() => {
+            fetch(`${API_URL}/`).catch(() => {});
+        }, 600000);
+
+        // ── HELPERS ──
         function setDialogue(html) {
             const el = document.getElementById('gameText');
             el.classList.add('fade');
@@ -507,6 +515,7 @@
             return Math.random().toString(36).substring(2, 15);
         }
 
+        // ── PAGE VIEW COUNTER ──
         async function runPageCounter() {
             const key = "mindgenie_views_v2";
             let v = parseInt(localStorage.getItem(key) || "3412");
@@ -523,6 +532,7 @@
         }
         runPageCounter();
 
+        // ── SHARE ──
         function shareGame(e) {
             e.preventDefault();
             const url  = window.location.href.split('?')[0];
@@ -535,11 +545,23 @@
             }
         }
 
+        // ── GAME FLOW ──
         async function startGame() {
             sessionId = generateSessionId();
             questionCount = 0;
+            document.getElementById('wakeBanner').style.display = 'none';
+
+            if (!serverReady) {
+                setDialogue("The Genie is still awakening from slumber...<br>Please wait just a moment. 👁️");
+                setInteraction(`<div class="loading-text">Contacting the spirit realm...</div>`);
+                // Wait and retry
+                setTimeout(startGame, 4000);
+                return;
+            }
+
             setDialogue("Good... I'm already sensing something.<br>Answer honestly. I'll know if you don't. 👁️");
-            setInteraction(`<div class="loading-text">${D.loading}</div>`);
+            setInteraction(`<div class="loading-text">The Genie reaches into the void...</div>`);
+
             try {
                 const res  = await fetch(`${API_URL}/start-game?session_id=${sessionId}`);
                 const data = await res.json();
@@ -548,7 +570,7 @@
                     renderQuestion(data.question_text);
                 }
             } catch(err) {
-                setDialogue(D.error);
+                setDialogue("The connection to the spirit realm was lost.<br>Try again in a moment.");
                 setInteraction(`<button class="btn-play" onclick="startGame()">Try Again</button>`);
             }
         }
@@ -556,9 +578,9 @@
         function renderQuestion(text) {
             questionCount++;
             let prefix = "";
-            if (questionCount === 4)  prefix = "The image grows clearer...<br><br>";
-            if (questionCount === 7)  prefix = "I'm very close now...<br><br>";
-            if (questionCount === 9)  prefix = "Almost there. One final veil to lift...<br><br>";
+            if (questionCount === 4) prefix = "The image grows clearer...<br><br>";
+            if (questionCount === 7) prefix = "I'm very close now...<br><br>";
+            if (questionCount === 9) prefix = "Almost there. One final veil to lift...<br><br>";
             setDialogue(prefix + text);
             setInteraction(`
                 <div class="options-grid">
@@ -572,7 +594,7 @@
         }
 
         async function submitAnswer(weight) {
-            setInteraction(`<div class="loading-text">${D.thinking}</div>`);
+            setInteraction(`<div class="loading-text">I feel the answer forming in the ether...</div>`);
             try {
                 const res  = await fetch(`${API_URL}/submit-answer`, {
                     method: 'POST',
@@ -587,7 +609,8 @@
                     renderGuess(data.character_guess);
                 }
             } catch(err) {
-                console.error(err);
+                setDialogue("The vision slipped away...<br>The spirits lost the connection.");
+                setInteraction(`<button class="btn-play" onclick="startGame()">Try Again</button>`);
             }
         }
 
