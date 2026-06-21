@@ -500,7 +500,7 @@
         // in GoatCounter Settings, or this will fall back to localStorage below.
         async function loadVisitorCount() {
             try {
-                const res  = await fetch('https://kbwill41.goatcounter.com/counter/%2F.json');
+                const res  = await fetch('https://kbwill41.goatcounter.com/counter//.json');
                 const data = await res.json();
                 document.getElementById('viewCount').innerText = Number(data.count).toLocaleString();
             } catch(e) {
