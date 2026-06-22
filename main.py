@@ -164,6 +164,66 @@ CHARACTERS = {
         "q11": 0.5, "q12": 1.0, "q13": 1.0, "q14": 1.0, "q15": 0.0,
         "q16": 1.0, "q17": 1.0, "q18": 0.0, "q19": 1.0, "q20": 1.0,
     },
+    "Wonder Woman": {
+        "q1": 1.0, "q2": 1.0, "q3": 1.0, "q4": 0.5, "q5": 0.0,
+        "q6": 0.5, "q7": 0.0, "q8": 0.0, "q9": 0.0, "q10": 0.5,
+        "q11": 1.0, "q12": 1.0, "q13": 1.0, "q14": 0.0, "q15": 1.0,
+        "q16": 0.0, "q17": 1.0, "q18": 0.5, "q19": 0.0, "q20": 1.0,
+    },
+    "Shrek": {
+        "q1": 1.0, "q2": 0.0, "q3": 1.0, "q4": 0.0, "q5": 0.0,
+        "q6": 0.0, "q7": 0.0, "q8": 0.0, "q9": 0.0, "q10": 1.0,
+        "q11": 0.0, "q12": 0.5, "q13": 1.0, "q14": 1.0, "q15": 0.0,
+        "q16": 0.0, "q17": 0.5, "q18": 0.0, "q19": 0.0, "q20": 1.0,
+    },
+    "Captain Jack Sparrow": {
+        "q1": 1.0, "q2": 0.0, "q3": 0.5, "q4": 1.0, "q5": 0.5,
+        "q6": 0.0, "q7": 0.0, "q8": 0.0, "q9": 0.0, "q10": 0.0,
+        "q11": 1.0, "q12": 0.5, "q13": 1.0, "q14": 0.5, "q15": 0.0,
+        "q16": 0.0, "q17": 1.0, "q18": 0.5, "q19": 0.0, "q20": 0.5,
+    },
+    "Albus Dumbledore": {
+        "q1": 1.0, "q2": 1.0, "q3": 1.0, "q4": 1.0, "q5": 0.0,
+        "q6": 0.0, "q7": 0.0, "q8": 0.0, "q9": 0.0, "q10": 0.0,
+        "q11": 1.0, "q12": 1.0, "q13": 1.0, "q14": 0.5, "q15": 1.0,
+        "q16": 1.0, "q17": 1.0, "q18": 1.0, "q19": 0.0, "q20": 1.0,
+    },
+    "Katniss Everdeen": {
+        "q1": 1.0, "q2": 0.0, "q3": 1.0, "q4": 1.0, "q5": 0.0,
+        "q6": 0.0, "q7": 0.0, "q8": 0.0, "q9": 0.0, "q10": 0.0,
+        "q11": 1.0, "q12": 0.5, "q13": 1.0, "q14": 0.5, "q15": 0.0,
+        "q16": 1.0, "q17": 1.0, "q18": 0.0, "q19": 1.0, "q20": 0.0,
+    },
+    "Buzz Lightyear": {
+        "q1": 1.0, "q2": 0.0, "q3": 1.0, "q4": 0.0, "q5": 0.0,
+        "q6": 0.5, "q7": 1.0, "q8": 0.5, "q9": 0.0, "q10": 1.0,
+        "q11": 0.5, "q12": 1.0, "q13": 1.0, "q14": 1.0, "q15": 0.0,
+        "q16": 0.0, "q17": 0.5, "q18": 0.0, "q19": 1.0, "q20": 0.0,
+    },
+    "Maleficent": {
+        "q1": 1.0, "q2": 1.0, "q3": 0.0, "q4": 0.5, "q5": 0.0,
+        "q6": 0.0, "q7": 0.0, "q8": 0.0, "q9": 1.0, "q10": 0.5,
+        "q11": 0.0, "q12": 0.0, "q13": 1.0, "q14": 0.0, "q15": 1.0,
+        "q16": 0.0, "q17": 1.0, "q18": 0.5, "q19": 0.5, "q20": 1.0,
+    },
+    "Thor": {
+        "q1": 1.0, "q2": 1.0, "q3": 1.0, "q4": 0.5, "q5": 0.0,
+        "q6": 0.0, "q7": 0.0, "q8": 1.0, "q9": 0.0, "q10": 0.5,
+        "q11": 1.0, "q12": 1.0, "q13": 1.0, "q14": 0.5, "q15": 1.0,
+        "q16": 0.0, "q17": 1.0, "q18": 0.0, "q19": 1.0, "q20": 1.0,
+    },
+    "Cinderella": {
+        "q1": 1.0, "q2": 0.5, "q3": 1.0, "q4": 1.0, "q5": 0.0,
+        "q6": 0.0, "q7": 0.0, "q8": 0.0, "q9": 0.0, "q10": 1.0,
+        "q11": 0.0, "q12": 0.0, "q13": 1.0, "q14": 0.5, "q15": 1.0,
+        "q16": 0.0, "q17": 0.5, "q18": 0.0, "q19": 1.0, "q20": 1.0,
+    },
+    "Deadpool": {
+        "q1": 1.0, "q2": 1.0, "q3": 0.5, "q4": 1.0, "q5": 0.0,
+        "q6": 1.0, "q7": 0.0, "q8": 0.0, "q9": 0.5, "q10": 0.0,
+        "q11": 1.0, "q12": 0.5, "q13": 1.0, "q14": 0.0, "q15": 0.0,
+        "q16": 0.0, "q17": 1.0, "q18": 0.0, "q19": 0.0, "q20": 0.0,
+    },
 }
 
 
@@ -178,6 +238,24 @@ def get_daily_question_set():
     rng = random.Random(today_str)        # seeded RNG -> same shuffle all day
     rng.shuffle(all_q)
     return all_q[:10]
+
+
+DAILY_CHARACTER_COUNT = 15  # how many of the full roster are "in play" each day
+
+
+def get_daily_character_pool():
+    """
+    Returns a subset of the full character roster that's "in play" today.
+    Same subset for every player today; automatically changes tomorrow
+    because the seed is derived from today's date (offset so it doesn't
+    pick the exact same day-string as the questions, for more variety).
+    """
+    all_chars = list(CHARACTERS.keys())
+    today_str = date.today().isoformat() + "-characters"
+    rng = random.Random(today_str)
+    rng.shuffle(all_chars)
+    pool = all_chars[:DAILY_CHARACTER_COUNT]
+    return {name: CHARACTERS[name] for name in pool}
 
 
 class AnswerInput(BaseModel):
@@ -230,10 +308,12 @@ def submit_answer(data: AnswerInput):
 
     # --- WEIGHTED MATCH CALCULATION ---
     # Characters with more answered questions get scored fairly
+    # Only today's rotating character pool is considered
+    todays_characters = get_daily_character_pool()
     best_match = None
     best_score = float('inf')
 
-    for character, profile in CHARACTERS.items():
+    for character, profile in todays_characters.items():
         total_distance = 0.0
         answered = 0
         for q_id, user_weight in session["answers"].items():
