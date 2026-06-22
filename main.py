@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict
 import random
+from datetime import date
 
 app = FastAPI()
 
@@ -166,6 +167,19 @@ CHARACTERS = {
 }
 
 
+def get_daily_question_set():
+    """
+    Returns the same 10 questions, in the same order, for every player
+    on a given calendar day. The set automatically changes the next day
+    because the random seed is derived from today's date.
+    """
+    all_q = list(QUESTIONS.keys())
+    today_str = date.today().isoformat()  # e.g. "2026-06-21"
+    rng = random.Random(today_str)        # seeded RNG -> same shuffle all day
+    rng.shuffle(all_q)
+    return all_q[:10]
+
+
 class AnswerInput(BaseModel):
     session_id: str
     question_id: str
@@ -179,14 +193,12 @@ def home():
 
 @app.get("/start-game")
 def start_game(session_id: str):
-    # Pick 10 random questions from the 20 for variety each game
-    all_q = list(QUESTIONS.keys())
-    random.shuffle(all_q)
-    selected = all_q[:10]
+    # Same 10 questions for everyone today; changes automatically tomorrow
+    selected = get_daily_question_set()
 
     sessions[session_id] = {
         "answers": {},
-        "remaining_questions": selected,
+        "remaining_questions": list(selected),
     }
 
     next_q = selected[0]
