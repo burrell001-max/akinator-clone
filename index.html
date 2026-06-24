@@ -13,8 +13,6 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667"
      crossorigin="anonymous"></script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667"
-     crossorigin="anonymous"></script>
 <!-- williams -->
 <ins class="adsbygoogle"
      style="display:block"
@@ -100,7 +98,8 @@
             width: 100%;
             padding: 18px 0 0;
             display: flex;
-            justify-content: flex-start;
+            justify-content: space-between;
+            align-items: center;
         }
         .lang-btn {
             background: rgba(255,255,255,0.07);
@@ -112,6 +111,16 @@
             letter-spacing: 0.5px;
             cursor: pointer;
         }
+        .top-nav {
+            display: flex;
+            gap: 14px;
+        }
+        .top-nav a {
+            color: var(--smoke);
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+        .top-nav a:hover { color: var(--white); }
 
         .logo-area {
             text-align: center;
@@ -321,9 +330,45 @@
             white-space: nowrap;
         }
 
+        /* ── Content sections (About / How to Play / FAQ) ── */
+        .content-section {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .content-section h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            color: var(--gold);
+            margin-bottom: 14px;
+        }
+        .content-section p {
+            color: var(--smoke);
+            line-height: 1.75;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+        .content-section ol, .content-section ul {
+            color: var(--smoke);
+            line-height: 1.8;
+            font-size: 0.95rem;
+            margin: 0 0 14px 20px;
+        }
+        .faq-item {
+            margin-bottom: 18px;
+        }
+        .faq-item h3 {
+            color: var(--white);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .faq-item p {
+            margin-bottom: 0;
+        }
+
         .featured-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 12px;
             width: 100%;
         }
@@ -343,6 +388,16 @@
         }
         .store-card h3 { font-size: 0.9rem; font-weight: 700; color: var(--gold); margin-bottom: 5px; }
         .store-card p  { font-size: 0.78rem; color: var(--smoke); line-height: 1.5; }
+        .sponsored-label {
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            display: block;
+            margin-bottom: 10px;
+            text-align: center;
+            opacity: 0.7;
+        }
 
         @media (max-width: 560px) {
             .featured-grid { grid-template-columns: 1fr; }
@@ -405,6 +460,12 @@
 
         <div class="top-bar">
             <div class="lang-btn">English 🌐</div>
+            <nav class="top-nav">
+                <a href="#about">About</a>
+                <a href="#how-to-play">How to Play</a>
+                <a href="#faq">FAQ</a>
+                <a href="contact.html">Contact</a>
+            </nav>
         </div>
 
         <div class="logo-area">
@@ -429,20 +490,70 @@
             <button class="btn-play" onclick="startGame()">Enter the Lair</button>
         </div>
 
-        <div class="section-divider"><span>From the Genie's realm</span></div>
+        <!-- ── ABOUT ── -->
+        <div class="section-divider" id="about"><span>About the Genie</span></div>
+        <div class="content-section">
+            <p>MindGenie AI is a free browser-based guessing game inspired by classic "20 questions" style mind-reading games. Think of any character — real, fictional, historical, or from pop culture — and the Genie will ask you a short series of simple yes-or-no style questions. Using your answers, our guessing engine narrows down the possibilities and reveals its best guess at who you were thinking of.</p>
+            <p>The game was built as a fun, lightweight way to test how well a simple question-and-answer model can "read your mind." No account, download, or payment is required — just open the page and start playing in your browser, on desktop or mobile.</p>
+        </div>
 
+        <!-- ── HOW TO PLAY ── -->
+        <div class="section-divider" id="how-to-play"><span>How to Play</span></div>
+        <div class="content-section">
+            <ol>
+                <li>Think of any character — a person, fictional hero, villain, celebrity, or historical figure.</li>
+                <li>Click "Enter the Lair" to begin a new round.</li>
+                <li>Answer each question with Yes, No, Probably, Probably not, or I'm not sure.</li>
+                <li>Keep answering as the Genie asks more questions and narrows down its guess.</li>
+                <li>After a series of questions, the Genie reveals who it thinks you were picturing.</li>
+                <li>Click "Challenge Me Again" to play another round with a new character in mind.</li>
+            </ol>
+            <p>The more honestly and consistently you answer, the better the Genie's guess will be. Some rounds it gets it right away — others it takes a wrong guess and learns from the round.</p>
+        </div>
+
+        <!-- ── FAQ ── -->
+        <div class="section-divider" id="faq"><span>Frequently Asked Questions</span></div>
+        <div class="content-section">
+            <div class="faq-item">
+                <h3>Is MindGenie AI free to play?</h3>
+                <p>Yes. The game is completely free, with no sign-up, download, or in-game purchases required.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Why does the game say it's "waking up" sometimes?</h3>
+                <p>Our guessing engine runs on a free-tier server that goes to sleep when it isn't being used. The first game of the day can take up to 30 seconds to "wake up" — after that, rounds load quickly.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What kinds of characters can I think of?</h3>
+                <p>Almost anything — fictional characters from movies, TV, books, and games, as well as well-known historical figures or celebrities. The wider known the character, the more likely the Genie will guess correctly.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Does the Genie always guess correctly?</h3>
+                <p>No — it's a fun guessing model, not a perfect mind reader. Obscure or very similar characters can trip it up, which is part of the fun.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Does MindGenie AI store who I'm thinking of?</h3>
+                <p>We don't ask for or store any personal information to play. See our <a href="privacy-policy.html" style="color:var(--gold-dim);">Privacy Policy</a> for full details on cookies and analytics used on this site.</p>
+            </div>
+        </div>
+
+        <div class="section-divider"><span>From the Genie's realm</span></div>
+        <span class="sponsored-label">Sponsored Links</span>
         <div class="featured-grid">
-            <a href="https://opencharter9824.live-website.com/" target="_blank" class="store-card">
+            <a href="https://opencharter9824.live-website.com/" target="_blank" rel="sponsored noopener" class="store-card">
                 <h3>Open Character Counter</h3>
                 <p>Track characters, words, sentences and paragraphs as you type.</p>
             </a>
-            <a href="https://payhip.com/NextUpGoods" target="_blank" class="store-card">
+            <a href="https://payhip.com/NextUpGoods" target="_blank" rel="sponsored noopener" class="store-card">
                 <h3>NextUpGoods</h3>
                 <p>Premium tools, exclusive resources, and top daily deals.</p>
             </a>
-            <a href="https://payhip.com/TheComfortCart" target="_blank" class="store-card">
+            <a href="https://payhip.com/TheComfortCart" target="_blank" rel="sponsored noopener" class="store-card">
                 <h3>TheComfortCart</h3>
                 <p>High-quality cozy home additions and curated lifestyle gear.</p>
+            </a>
+            <a href="http://stopwatchpro.xyz/index.html" target="_blank" rel="sponsored noopener" class="store-card">
+                <h3>StopwatchPro</h3>
+                <p>Free online stopwatch and lap timer for workouts, study sessions, and more.</p>
             </a>
         </div>
 
@@ -453,9 +564,11 @@
             <a href="https://www.facebook.com/AmazeCentral1" target="_blank">Facebook</a>
             <a href="https://www.pinterest.com/FashionTrendsforward/" target="_blank">Pinterest</a>
             <button onclick="shareGame(event)">📢 Share Game</button>
-            <a href="http://freecharactercounter.com/" target="_blank">Character Counter Tool</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
+            <a href="http://freecharactercounter.com/" target="_blank" rel="sponsored noopener">Character Counter Tool</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
         </div>
         <div class="footer-copy">
             © 2026 MindGenie AI — All rights reserved
