@@ -67,6 +67,49 @@
           "@type": "Question",
           "name": "Does MindGenie AI store who I'm thinking of?",
           "acceptedAnswer": { "@type": "Answer", "text": "We don't ask for or store any personal information to play." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I play MindGenie AI on my phone?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. MindGenie AI runs entirely in the browser and is fully playable on phones, tablets, and desktop computers." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I play more than once?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. There's no limit, once a round ends you can start a new one immediately and think of a different character." }
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "MindGenie AI",
+      "url": "https://mindgenie.example.com/",
+      "description": "Creator of MindGenie AI, a free browser-based character guessing game.",
+      "sameAs": [
+        "https://www.facebook.com/AmazeCentral1",
+        "https://www.pinterest.com/FashionTrendsforward/"
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mindgenie.example.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Play MindGenie AI",
+          "item": "https://mindgenie.example.com/#play"
         }
       ]
     }
@@ -164,19 +207,9 @@
             width: 100%;
             padding: 18px 0 0;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             position: relative;
-        }
-        .lang-btn {
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: var(--smoke);
-            letter-spacing: 0.5px;
-            cursor: pointer;
         }
         .top-nav {
             display: flex;
@@ -188,6 +221,11 @@
             font-size: 0.8rem;
         }
         .top-nav a:hover { color: var(--white); }
+        .top-nav a.nav-play {
+            color: var(--gold-dim);
+            font-weight: 600;
+        }
+        .top-nav a.nav-play:hover { color: var(--gold); }
 
         .nav-toggle {
             display: none;
@@ -251,6 +289,23 @@
             color: var(--smoke);
             margin-top: 8px;
             font-weight: 500;
+        }
+
+        /* ── Crystal ball accent beneath the logo ── */
+        .crystal-ball {
+            display: flex;
+            justify-content: center;
+            margin-top: 14px;
+        }
+        .crystal-ball .orb {
+            font-size: 1.4rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px rgba(185,127,255,0.7));
+            animation: orb-float 3.6s ease-in-out infinite;
+        }
+        @keyframes orb-float {
+            0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 8px rgba(185,127,255,0.6)); }
+            50%       { transform: translateY(-6px) scale(1.06); filter: drop-shadow(0 0 18px rgba(185,127,255,0.9)); }
         }
 
         .speech-bubble {
@@ -369,6 +424,25 @@
             transform: none !important;
         }
 
+        .btn-secondary {
+            background: rgba(255,255,255,0.06);
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.18);
+            padding: 14px 28px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.18s ease;
+            font-family: inherit;
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
         .options-grid {
             display: flex;
             flex-direction: column;
@@ -427,8 +501,8 @@
         }
 
         .btn-play:focus-visible,
+        .btn-secondary:focus-visible,
         .btn-option:focus-visible,
-        .lang-btn:focus-visible,
         .nav-toggle:focus-visible,
         .top-nav a:focus-visible,
         .footer-links a:focus-visible,
@@ -462,6 +536,12 @@
             font-size: 0.85rem;
             color: var(--gold-dim);
             letter-spacing: 0.5px;
+        }
+        .loading-progress-text {
+            font-size: 0.72rem;
+            color: var(--smoke);
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         .spinner {
             width: 22px;
@@ -535,6 +615,27 @@
             50%       { text-shadow: 0 0 55px rgba(240,192,64,0.85), 0 0 90px rgba(185,127,255,0.4); }
         }
 
+        /* ── Small star burst behind the revealed name ── */
+        .reveal-stars {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .reveal-stars::before, .reveal-stars::after {
+            content: '✦';
+            position: absolute;
+            color: var(--glow);
+            opacity: 0;
+            animation: star-pop 1.4s ease 0.5s forwards;
+        }
+        .reveal-stars::before { left: 18%; top: -6px; font-size: 1.1rem; }
+        .reveal-stars::after  { right: 18%; top: 4px; font-size: 0.85rem; animation-delay: 0.75s; }
+        @keyframes star-pop {
+            0%   { opacity: 0; transform: scale(0.4) rotate(0deg); }
+            40%  { opacity: 1; transform: scale(1.15) rotate(20deg); }
+            100% { opacity: 0.6; transform: scale(1) rotate(0deg); }
+        }
+
         .confetti-piece {
             position: fixed;
             top: -10px;
@@ -572,6 +673,16 @@
             font-size: 0.85rem;
             margin-bottom: 14px;
             display: none;
+        }
+
+        /* ── Post-game share / rematch actions ── */
+        .post-game-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .post-game-actions .btn-secondary {
+            flex: 1;
         }
 
         .section-divider {
@@ -631,6 +742,32 @@
             margin-bottom: 0;
         }
 
+        /* ── Pre-footer call-to-action ── */
+        .pre-footer-cta {
+            width: 100%;
+            text-align: center;
+            background: rgba(108,63,200,0.08);
+            border: 1px solid rgba(108,63,200,0.25);
+            border-radius: 16px;
+            padding: 28px 24px;
+            margin: 20px 0 10px;
+        }
+        .pre-footer-cta h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+        }
+        .pre-footer-cta p {
+            color: var(--smoke);
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+        .pre-footer-cta .btn-play {
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
         footer {
             width: 100%;
             background: rgba(0,0,0,0.4);
@@ -684,7 +821,7 @@
             padding: 14px 20px 30px;
             text-align: center;
         }
-        .sponsored-strip .sponsored-label {
+        .sponsored-tag {
             font-size: 0.62rem;
             letter-spacing: 1px;
             text-transform: uppercase;
@@ -699,6 +836,39 @@
             margin: 0 8px;
         }
         .sponsored-strip a:hover { color: var(--smoke); }
+
+        /* ── Sticky mobile play bar ── */
+        .sticky-play-bar {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 40;
+            background: rgba(10, 8, 26, 0.92);
+            backdrop-filter: blur(6px);
+            border-top: 1px solid rgba(108,63,200,0.4);
+            padding: 10px 14px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(100%);
+            transition: transform 0.25s ease;
+        }
+        .sticky-play-bar.visible {
+            transform: translateY(0);
+        }
+        .sticky-play-bar button {
+            width: 100%;
+            max-width: 460px;
+            padding: 14px 20px;
+        }
+        @media (min-width: 701px) {
+            .sticky-play-bar { display: none !important; }
+        }
+        @media (max-width: 700px) {
+            .sticky-play-bar { display: flex; }
+            .page-wrap { padding-bottom: 90px; }
+        }
     </style>
 </head>
 <body>
@@ -710,19 +880,20 @@
     <div class="page-wrap">
 
         <div class="top-bar">
-            <div class="lang-btn">English 🌐</div>
             <button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="topNav">☰ Menu</button>
             <nav class="top-nav" id="topNav">
                 <a href="index.html">🏠 Home</a>
+                <a href="#play" class="nav-play">🔮 Play</a>
                 <a href="#about">About</a>
                 <a href="#how-to-play">How to Play</a>
                 <a href="#faq">FAQ</a>
                 <a href="contact.html">Contact</a>
             </nav>
         </div>
-        <div class="logo-area">
+        <div class="logo-area" id="play">
             <h1><span class="logo-eye" aria-hidden="true">👁</span> MindGenie AI <span class="logo-eye" aria-hidden="true">👁</span></h1>
             <h2>The Ultimate Character Guessing Game</h2>
+            <div class="crystal-ball" aria-hidden="true"><span class="orb">🔮</span></div>
         </div>
         <div id="wakeBanner" class="wake-banner" role="status">
             ⏳ Summoning the Genie for the first time today — this may take up to 30 seconds...
@@ -735,7 +906,7 @@
 
         <div class="speech-bubble" id="gameBox">
             <div id="questionNum" class="question-num" style="display:none;" aria-hidden="true"></div>
-            <p id="gameText" aria-live="polite">Think of ANY character — movie, TV, anime, superhero, celebrity, cartoon, video game, or historical figure.<br><br>Don't tell me who it is. Answer around 15 simple questions and see if I can read your mind.</p>
+            <p id="gameText" aria-live="polite">Think of ANY character. Don't tell me who it is — just answer honestly and I'll try to read your mind.</p>
         </div>
 
         <div id="interactionArea" style="width:100%">
@@ -764,6 +935,7 @@
                 <div class="answered-chip" id="answeredChip">✔ You answered: —</div>
                 <div class="spinner" aria-hidden="true"></div>
                 <div class="loading-text" id="loadingMsg">Thinking.</div>
+                <div class="loading-progress-text" id="loadingProgressText"></div>
             </div>
 
             <div id="ratePanel" class="rate-panel" style="display:none;">
@@ -773,6 +945,10 @@
                     <button class="btn-option no" id="rateNoBtn"><span class="opt-icon" aria-hidden="true">✖</span> No</button>
                 </div>
                 <div class="rate-thanks" id="rateThanks">Thanks — that helps the Genie learn! ✨</div>
+                <div class="post-game-actions">
+                    <button class="btn-secondary" id="shareResultBtn">📤 Share Result</button>
+                    <button class="btn-secondary" id="challengeFriendBtn">🤝 Challenge a Friend</button>
+                </div>
                 <button class="btn-play" id="playAgainBtn">Challenge Me Again</button>
             </div>
 
@@ -808,6 +984,7 @@
         <div class="content-section">
             <p>MindGenie AI is a free browser-based guessing game inspired by classic "20 questions" style mind-reading games. Think of any character — real, fictional, historical, or from pop culture — and the Genie will ask you a short series of simple yes-or-no style questions. Using your answers, our guessing engine narrows down the possibilities and reveals its best guess at who you were thinking of.</p>
             <p>The game was built as a fun, lightweight way to test how well a simple question-and-answer model can "read your mind." No account, download, or payment is required — just open the page and start playing in your browser, on desktop or mobile.</p>
+            <p>Every round you play also helps the Genie learn. When you rate whether its final guess was right or wrong, that feedback quietly improves how it asks questions in future games.</p>
         </div>
 
         <div class="section-divider" id="how-to-play"><span>How to Play</span></div>
@@ -849,6 +1026,20 @@
                 <h3>Does MindGenie AI store who I'm thinking of?</h3>
                 <p>We don't ask for or store any personal information to play. See our <a href="privacy-policy.html" style="color:var(--gold-dim);">Privacy Policy</a> for full details on cookies and analytics used on this site.</p>
             </div>
+            <div class="faq-item">
+                <h3>Can I play MindGenie AI on my phone?</h3>
+                <p>Yes. The game runs entirely in the browser and is fully playable on phones, tablets, and desktop computers.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can I play more than once?</h3>
+                <p>Yes — there's no limit. Once a round ends, click "Challenge Me Again" to start a new one right away.</p>
+            </div>
+        </div>
+
+        <div class="pre-footer-cta">
+            <h3>✨ Think you can stump the Genie?</h3>
+            <p>Pick a new character and see if it can read your mind again.</p>
+            <button class="btn-play" id="ctaStartBtn">🔮 Play Again</button>
         </div>
 
     </div>
@@ -874,11 +1065,16 @@
 
     <!-- Sponsored links: moved below the footer and de-emphasized so they don't compete with gameplay -->
     <div class="sponsored-strip">
-        <span class="sponsored-label">Sponsored</span>
+        <span class="sponsored-tag">Advertisement</span>
         <a href="https://opencharter9824.live-website.com/" target="_blank" rel="sponsored noopener">Character Counter</a>
         <a href="https://payhip.com/NextUpGoods" target="_blank" rel="sponsored noopener">NextUpGoods</a>
         <a href="https://payhip.com/TheComfortCart" target="_blank" rel="sponsored noopener">TheComfortCart</a>
         <a href="http://stopwatchpro.xyz/index.html" target="_blank" rel="sponsored noopener">StopwatchPro</a>
+    </div>
+
+    <!-- Sticky mobile play bar: appears once the main Start button scrolls out of view -->
+    <div class="sticky-play-bar" id="stickyPlayBar">
+        <button class="btn-play" id="bottomStartBtn">🔮 Play Now</button>
     </div>
 
     <script>
@@ -905,11 +1101,15 @@
         const ESTIMATED_QUESTIONS = 15;
 
         // ── STATIC DOM REFERENCES ──
-        const startBtn       = document.getElementById('startBtn');
+        const startBtn        = document.getElementById('startBtn');
+        const bottomStartBtn  = document.getElementById('bottomStartBtn');
+        const ctaStartBtn     = document.getElementById('ctaStartBtn');
+        const stickyPlayBar   = document.getElementById('stickyPlayBar');
         const optionsGrid     = document.getElementById('optionsGrid');
         const answerLoading   = document.getElementById('answerLoading');
         const answeredChip    = document.getElementById('answeredChip');
         const loadingMsgEl    = document.getElementById('loadingMsg');
+        const loadingProgressText = document.getElementById('loadingProgressText');
         const ratePanel       = document.getElementById('ratePanel');
         const ratePromptEl    = document.getElementById('ratePrompt');
         const rateThanks      = document.getElementById('rateThanks');
@@ -917,6 +1117,8 @@
         const rateYesBtn      = document.getElementById('rateYesBtn');
         const rateNoBtn       = document.getElementById('rateNoBtn');
         const playAgainBtn    = document.getElementById('playAgainBtn');
+        const shareResultBtn  = document.getElementById('shareResultBtn');
+        const challengeFriendBtn = document.getElementById('challengeFriendBtn');
         const shareBtn        = document.getElementById('shareBtn');
         const navToggle       = document.getElementById('navToggle');
         const topNav          = document.getElementById('topNav');
@@ -933,10 +1135,14 @@
             });
         });
         startBtn.addEventListener('click', startGame);
+        bottomStartBtn.addEventListener('click', startGame);
+        ctaStartBtn.addEventListener('click', startGame);
         playAgainBtn.addEventListener('click', startGame);
         rateYesBtn.addEventListener('click', () => rateGuess(true));
         rateNoBtn.addEventListener('click', () => rateGuess(false));
         shareBtn.addEventListener('click', shareGame);
+        shareResultBtn.addEventListener('click', shareResult);
+        challengeFriendBtn.addEventListener('click', challengeFriend);
         navToggle.addEventListener('click', () => {
             const isOpen = topNav.classList.toggle('open');
             navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
@@ -945,6 +1151,16 @@
             a.addEventListener('click', () => topNav.classList.remove('open'));
         });
 
+        // ── STICKY MOBILE PLAY BAR: show once the main Start button scrolls out of view ──
+        if ('IntersectionObserver' in window) {
+            const stickyObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    stickyPlayBar.classList.toggle('visible', !entry.isIntersecting);
+                });
+            }, { threshold: 0 });
+            stickyObserver.observe(startBtn);
+        }
+
         function showPanel(panel) {
             // panel: 'start' | 'options' | 'rate'
             startBtn.style.display      = panel === 'start'   ? 'block' : 'none';
@@ -952,6 +1168,7 @@
             ratePanel.style.display     = panel === 'rate'    ? 'block' : 'none';
             introExtras.style.display   = panel === 'start'   ? 'block' : 'none';
             answerLoading.style.display = 'none';
+            stickyPlayBar.classList.toggle('visible', panel !== 'start');
         }
 
         // ── WAKE-UP EXPERIENCE ──
@@ -1072,15 +1289,48 @@
             return Math.random().toString(36).substring(2, 15);
         }
 
+        function trackEvent(name, params) {
+            try {
+                if (typeof gtag === 'function') gtag('event', name, params || {});
+            } catch(e) {}
+        }
+
         function shareGame(e) {
             e.preventDefault();
             const url  = window.location.href.split('?')[0];
             const text = "Can this AI guess your favorite character? Play MindGenie AI now!";
+            trackEvent('share_click', { share_type: 'game' });
             if (navigator.share) {
                 navigator.share({ title: 'MindGenie AI', text, url }).catch(console.error);
             } else {
                 navigator.clipboard.writeText(url);
                 alert("Game URL copied to clipboard!");
+            }
+        }
+
+        function shareResult() {
+            const url  = window.location.href.split('?')[0];
+            const text = lastGuessedCharacter
+                ? `MindGenie AI guessed I was thinking of ${lastGuessedCharacter}! Think you can stump it?`
+                : "MindGenie AI just read my mind! Think you can stump it?";
+            trackEvent('share_click', { share_type: 'result', character: lastGuessedCharacter });
+            if (navigator.share) {
+                navigator.share({ title: 'MindGenie AI', text, url }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(`${text} ${url}`);
+                alert("Result copied to clipboard!");
+            }
+        }
+
+        function challengeFriend() {
+            const url  = window.location.href.split('?')[0];
+            const text = "I just played MindGenie AI — think of a character and see if it can guess who you're thinking of!";
+            trackEvent('share_click', { share_type: 'challenge_friend' });
+            if (navigator.share) {
+                navigator.share({ title: 'MindGenie AI', text, url }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(`${text} ${url}`);
+                alert("Invite link copied to clipboard!");
             }
         }
 
@@ -1093,6 +1343,8 @@
             rateThanks.style.display = 'none';
             rateButtonsRow.style.display = 'flex';
             introExtras.style.display = 'none';
+
+            trackEvent('game_started');
 
             startBtn.disabled = true;
             startBtn.textContent = '🔮 Starting...';
@@ -1129,6 +1381,7 @@
             const pct = Math.min(100, Math.round((questionCount / ESTIMATED_QUESTIONS) * 100));
             document.getElementById('progressFill').style.width = pct + '%';
             document.getElementById('progressLabel').innerText = `Question ${questionCount} of ~${ESTIMATED_QUESTIONS} · ${pct}% Complete`;
+            loadingProgressText.textContent = `Question ${questionCount} of ~${ESTIMATED_QUESTIONS} · ${pct}% Complete`;
         }
 
         function renderQuestion(text) {
@@ -1195,6 +1448,7 @@
             if (btnEl) btnEl.classList.add('selected');
 
             answeredChip.textContent = `✔ You answered: ${label}`;
+            loadingProgressText.textContent = `Question ${questionCount} of ~${ESTIMATED_QUESTIONS}`;
             answerLoading.style.display = 'flex';
             startThinkingRotation();
 
@@ -1228,19 +1482,16 @@
             lastGuessedCharacter = character;
             document.getElementById('progressWrap').style.display = 'none';
             questionNumEl.style.display = 'none';
-            setDialogue(`✨ My vision is complete...<br>I believe you're thinking of...<span class="guess-name big-glow">${character}</span>`);
+            setDialogue(`✨ My vision is complete...<br>I believe you're thinking of...<span class="reveal-stars"><span class="guess-name big-glow">${character}</span></span>`);
             ratePromptEl.innerHTML = `I guessed <strong>${character}</strong>! Accuracy helps me improve.<br>Was I right?`;
             showPanel('rate');
             launchConfetti();
             playRevealSound();
+            trackEvent('game_completed', { character: character, questions_asked: questionCount });
         }
 
         function rateGuess(wasCorrect) {
-            try {
-                if (typeof gtag === 'function') {
-                    gtag('event', 'guess_rating', { correct: wasCorrect, character: lastGuessedCharacter });
-                }
-            } catch(e) {}
+            trackEvent('guess_rating', { correct: wasCorrect, character: lastGuessedCharacter });
             playRateSound(wasCorrect);
             rateButtonsRow.style.display = 'none';
             rateThanks.style.display = 'block';
