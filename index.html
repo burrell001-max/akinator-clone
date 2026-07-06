@@ -136,13 +136,13 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --deep:     #0a0a1a;
-            --violet:   #6c3fc8;
-            --gold:     #f0c040;
+            --deep:     #101b38;
+            --violet:   #7b4dff;
+            --gold:     #ffd166;
             --gold-dim: #c9993a;
-            --glow:     #b97fff;
-            --white:    #f5f0ff;
-            --smoke:    #a89bc2;
+            --glow:     #c58cff;
+            --white:    #f8f8ff;
+            --smoke:    #c4c6d6;
             --green:    #50c878;
             --red:      #c85050;
         }
@@ -150,7 +150,8 @@
         html { scroll-behavior: smooth; }
 
         body {
-            background: radial-gradient(circle at top, #22104b 0%, var(--deep) 70%);
+            background:
+                radial-gradient(circle at top, #243b72 0%, #171c3b 35%, #10162d 70%, #090d18 100%);
             font-family: 'Inter', sans-serif;
             color: var(--white);
             min-height: 100vh;
@@ -282,23 +283,13 @@
             0%, 100% { text-shadow: 0 0 8px var(--glow); opacity: 1; }
             50%       { text-shadow: 0 0 30px var(--glow), 0 0 60px var(--violet); opacity: 0.7; }
         }
-        .logo-area h1 .h1-kicker {
-            display: block;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.72rem;
-            letter-spacing: 3px;
+        .logo-area h2 {
+            font-size: 0.75rem;
+            letter-spacing: 4px;
             text-transform: uppercase;
             color: var(--smoke);
-            font-weight: 600;
-            text-shadow: none;
-            margin-top: 6px;
-        }
-        .logo-area .subtitle {
-            font-size: 0.95rem;
-            color: var(--smoke);
-            max-width: 480px;
-            margin: 10px auto 0;
-            line-height: 1.6;
+            margin-top: 8px;
+            font-weight: 500;
         }
 
         /* ── Crystal ball accent beneath the logo ── */
@@ -412,54 +403,6 @@
             margin-top: 14px;
         }
 
-        /* ── "How it works" mini preview strip ── */
-        .flow-preview {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 18px;
-        }
-        .flow-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.68rem;
-            color: var(--smoke);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            opacity: 0;
-            animation: flow-fade-in 0.5s ease forwards;
-        }
-        .flow-step .flow-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(108,63,200,0.15);
-            border: 1px solid rgba(108,63,200,0.35);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-        }
-        .flow-step:nth-child(1) { animation-delay: 0.1s; }
-        .flow-step:nth-child(3) { animation-delay: 0.35s; }
-        .flow-step:nth-child(5) { animation-delay: 0.6s; }
-        .flow-arrow {
-            color: var(--gold-dim);
-            font-size: 1.1rem;
-            opacity: 0;
-            animation: flow-fade-in 0.5s ease forwards;
-        }
-        .flow-arrow:nth-of-type(2) { animation-delay: 0.25s; }
-        .flow-arrow:nth-of-type(4) { animation-delay: 0.5s; }
-        @keyframes flow-fade-in {
-            from { opacity: 0; transform: translateY(6px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
         .btn-play {
             background: linear-gradient(135deg, var(--violet) 0%, #9b59d6 100%);
             color: #fff;
@@ -516,7 +459,7 @@
             font-weight: 600;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.18s ease;
             letter-spacing: 0.5px;
             display: flex;
             align-items: center;
@@ -528,7 +471,7 @@
         .btn-option:hover {
             background: rgba(108,63,200,0.3);
             border-color: var(--violet);
-            transform: translateY(-4px) scale(1.02);
+            transform: translateY(-2px);
         }
         .btn-option:active {
             transform: scale(0.97);
@@ -712,7 +655,6 @@
             width: 100%;
             text-align: center;
             padding-top: 4px;
-            transition: opacity 0.3s ease;
         }
         .rate-panel p {
             color: var(--smoke);
@@ -886,27 +828,15 @@
             text-transform: uppercase;
             color: #4a4a6a;
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
-        .sponsored-cards {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
-        }
-        .sponsored-cards a {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: #7a7a9a;
+        .sponsored-strip a {
+            color: #5a5a7a;
             text-decoration: none;
-            font-size: 0.74rem;
-            padding: 6px 12px;
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 20px;
-            transition: color 0.15s, border-color 0.15s;
+            font-size: 0.72rem;
+            margin: 0 8px;
         }
-        .sponsored-cards a:hover { color: var(--smoke); border-color: rgba(255,255,255,0.15); }
+        .sponsored-strip a:hover { color: var(--smoke); }
 
         /* ── Sticky mobile play bar ── */
         .sticky-play-bar {
@@ -962,11 +892,8 @@
             </nav>
         </div>
         <div class="logo-area" id="play">
-            <h1>
-                <span class="logo-eye" aria-hidden="true">👁</span> MindGenie AI <span class="logo-eye" aria-hidden="true">👁</span>
-                <span class="h1-kicker">Free Online Character Guessing Game</span>
-            </h1>
-            <p class="subtitle">Think of any character and let the AI guess who you're thinking of — free to play on desktop and mobile.</p>
+            <h1><span class="logo-eye" aria-hidden="true">👁</span> MindGenie AI <span class="logo-eye" aria-hidden="true">👁</span></h1>
+            <h2>The Ultimate Character Guessing Game</h2>
             <div class="crystal-ball" aria-hidden="true"><span class="orb">🔮</span></div>
         </div>
         <div id="wakeBanner" class="wake-banner" role="status">
@@ -1027,13 +954,6 @@
             </div>
 
             <div id="introExtras">
-                <div class="flow-preview" aria-hidden="true">
-                    <div class="flow-step"><span class="flow-icon">❓</span>Question 1</div>
-                    <span class="flow-arrow">→</span>
-                    <div class="flow-step"><span class="flow-icon">❓</span>Question 2</div>
-                    <span class="flow-arrow">→</span>
-                    <div class="flow-step"><span class="flow-icon">🔮</span>Reveal</div>
-                </div>
                 <div class="category-chips" aria-hidden="true">
                     <span class="chip">🎬 Movies</span>
                     <span class="chip">📺 TV</span>
@@ -1130,10 +1050,7 @@
             <a href="https://www.facebook.com/AmazeCentral1" target="_blank">Facebook</a>
             <a href="https://www.pinterest.com/FashionTrendsforward/" target="_blank">Pinterest</a>
             <button id="shareBtn" aria-label="Share this game">📢 Share Game</button>
-            <button id="soundToggleBtn" aria-label="Toggle sound effects" aria-pressed="true">🔊 Sound: On</button>
             <a href="about.html">About</a>
-            <a href="#how-to-play">How to Play</a>
-            <a href="#faq">FAQ</a>
             <a href="contact.html">Contact</a>
             <a href="privacy-policy.html">Privacy Policy</a>
             <a href="terms.html">Terms of Service</a>
@@ -1149,13 +1066,11 @@
 
     <!-- Sponsored links: moved below the footer and de-emphasized so they don't compete with gameplay -->
     <div class="sponsored-strip">
-        <span class="sponsored-tag">Advertisement — More Free Tools</span>
-        <div class="sponsored-cards">
-            <a href="https://opencharter9824.live-website.com/" target="_blank" rel="sponsored noopener">🧠 Character Counter</a>
-            <a href="https://payhip.com/NextUpGoods" target="_blank" rel="sponsored noopener">🛍 NextUpGoods</a>
-            <a href="https://payhip.com/TheComfortCart" target="_blank" rel="sponsored noopener">🛋 TheComfortCart</a>
-            <a href="http://stopwatchpro.xyz/index.html" target="_blank" rel="sponsored noopener">⏱ StopwatchPro</a>
-        </div>
+        <span class="sponsored-tag">Advertisement</span>
+        <a href="https://opencharter9824.live-website.com/" target="_blank" rel="sponsored noopener">Character Counter</a>
+        <a href="https://payhip.com/NextUpGoods" target="_blank" rel="sponsored noopener">NextUpGoods</a>
+        <a href="https://payhip.com/TheComfortCart" target="_blank" rel="sponsored noopener">TheComfortCart</a>
+        <a href="http://stopwatchpro.xyz/index.html" target="_blank" rel="sponsored noopener">StopwatchPro</a>
     </div>
 
     <!-- Sticky mobile play bar: appears once the main Start button scrolls out of view -->
@@ -1206,7 +1121,6 @@
         const shareResultBtn  = document.getElementById('shareResultBtn');
         const challengeFriendBtn = document.getElementById('challengeFriendBtn');
         const shareBtn        = document.getElementById('shareBtn');
-        const soundToggleBtn  = document.getElementById('soundToggleBtn');
         const navToggle       = document.getElementById('navToggle');
         const topNav          = document.getElementById('topNav');
         const questionNumEl   = document.getElementById('questionNum');
@@ -1228,7 +1142,6 @@
         rateYesBtn.addEventListener('click', () => rateGuess(true));
         rateNoBtn.addEventListener('click', () => rateGuess(false));
         shareBtn.addEventListener('click', shareGame);
-        soundToggleBtn.addEventListener('click', toggleSound);
         shareResultBtn.addEventListener('click', shareResult);
         challengeFriendBtn.addEventListener('click', challengeFriend);
         navToggle.addEventListener('click', () => {
@@ -1330,25 +1243,12 @@
         loadVisitorCount();
 
         // ── SOUND (tiny, optional Web Audio tones — no external files) ──
-        let soundEnabled = localStorage.getItem('mindgenie_sound') !== 'off';
-        soundToggleBtn.textContent = soundEnabled ? '🔊 Sound: On' : '🔇 Sound: Off';
-        soundToggleBtn.setAttribute('aria-pressed', String(soundEnabled));
-
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            localStorage.setItem('mindgenie_sound', soundEnabled ? 'on' : 'off');
-            soundToggleBtn.textContent = soundEnabled ? '🔊 Sound: On' : '🔇 Sound: Off';
-            soundToggleBtn.setAttribute('aria-pressed', String(soundEnabled));
-            if (soundEnabled) beep(600, 0.08);
-        }
-
         let audioCtx = null;
         function getAudioCtx() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             return audioCtx;
         }
         function beep(freq, duration, volume = 0.12) {
-            if (!soundEnabled) return;
             try {
                 const ctx = getAudioCtx();
                 const osc = ctx.createOscillator();
@@ -1583,21 +1483,12 @@
             lastGuessedCharacter = character;
             document.getElementById('progressWrap').style.display = 'none';
             questionNumEl.style.display = 'none';
-
-            // Two-stage reveal: build suspense before showing the name.
-            setDialogue("✨ My vision is complete...<br>The Genie sees...");
-            ratePromptEl.innerHTML = `Was I right?`;
+            setDialogue(`✨ My vision is complete...<br>I believe you're thinking of...<span class="reveal-stars"><span class="guess-name big-glow">${character}</span></span>`);
+            ratePromptEl.innerHTML = `I guessed <strong>${character}</strong>! Accuracy helps me improve.<br>Was I right?`;
             showPanel('rate');
-            ratePanel.style.opacity = '0';
-
-            setTimeout(() => {
-                setDialogue(`✨ I believe you're thinking of...<span class="reveal-stars"><span class="guess-name big-glow">${character}</span></span>`);
-                ratePromptEl.innerHTML = `I guessed <strong>${character}</strong>! Accuracy helps me improve.<br>Was I right?`;
-                ratePanel.style.opacity = '1';
-                launchConfetti();
-                playRevealSound();
-                trackEvent('game_completed', { character: character, questions_asked: questionCount });
-            }, 900);
+            launchConfetti();
+            playRevealSound();
+            trackEvent('game_completed', { character: character, questions_asked: questionCount });
         }
 
         function rateGuess(wasCorrect) {
