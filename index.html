@@ -384,6 +384,12 @@
             font-size: 0.75rem;
             margin-bottom: 3px;
         }
+        .social-proof-sub {
+            font-size: 0.75rem;
+            color: var(--smoke);
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
 
         /* ── Crystal ball accent beneath the logo ── */
         .crystal-ball {
@@ -798,6 +804,12 @@
             margin-bottom: 14px;
             display: none;
         }
+        .replay-hook {
+            color: var(--gold-dim);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
 
         /* ── Post-game share / rematch actions ── */
         .post-game-actions {
@@ -1045,12 +1057,13 @@
         </div>
         <div class="logo-area" id="play">
             <h1><span class="logo-eye" aria-hidden="true">👁</span> MindGenie AI <span class="logo-eye" aria-hidden="true">👁</span></h1>
-            <h2>The Ultimate Character Guessing Game</h2>
+            <h2>Think of any character. Can the Genie guess who it is?</h2>
             <div class="crystal-ball" aria-hidden="true"><span class="orb">🔮</span></div>
         </div>
         <div class="social-proof">
             <div class="stars-row" aria-hidden="true">★★★★★</div>
-            <span id="socialProofText">Over 15,000 games played</span>
+            <div id="socialProofText">Played over 18,000 times</div>
+            <div class="social-proof-sub">Average game: 14 questions</div>
         </div>
         <div id="wakeBanner" class="wake-banner" role="status">
             ⏳ Preparing the Genie... this only happens the first time today.
@@ -1058,18 +1071,18 @@
 
         <div id="progressWrap" class="progress-wrap" style="display:none;">
             <div class="progress-track"><div id="progressFill" class="progress-fill" style="width:0%;"></div></div>
-            <div id="progressLabel" class="progress-label">0% Complete · Question 1</div>
+            <div id="progressLabel" class="progress-label">🔮 Confidence: 0% · Question 1</div>
         </div>
 
         <div class="speech-bubble" id="gameBox">
             <div id="questionNum" class="question-num" style="display:none;" aria-hidden="true"></div>
-            <p id="gameText" aria-live="polite"><strong>Think of any character.</strong><br>I'll try to guess it in about a minute. 👇</p>
+            <p id="gameText" aria-live="polite"><strong>Got one in mind?</strong><br>Hit start and I'll begin reading your thoughts. 👇</p>
         </div>
 
         <div id="interactionArea" style="width:100%">
 
             <button id="startBtn" class="btn-play">🔮 Start Playing</button>
-            <div id="startBtnSub" class="btn-play-sub">Free · Takes about 1 minute</div>
+            <div id="startBtnSub" class="btn-play-sub">Free · No Signup · About 1 Minute</div>
 
             <div id="optionsGrid" class="options-grid" style="display:none;">
                 <button class="btn-option yes" data-key="1" data-weight="1.0" data-label="Yes">
@@ -1111,7 +1124,8 @@
                     <button class="btn-secondary" id="challengeFriendBtn">🤝 Challenge a Friend</button>
                 </div>
                 <button class="btn-secondary" id="randomIdeaBtn" style="width:100%; margin-bottom:12px;">🎲 Random Character Ideas</button>
-                <button class="btn-play" id="playAgainBtn">Challenge Me Again</button>
+                <p class="replay-hook">Can you beat the Genie? Think of a harder character.</p>
+                <button class="btn-play" id="playAgainBtn">🔮 Play Again</button>
             </div>
 
             <div id="introExtras">
@@ -1126,8 +1140,7 @@
                     <span class="chip">Batman</span>
                     <span class="chip">Harry Potter</span>
                     <span class="chip">Mario</span>
-                    <span class="chip">Elsa</span>
-                    <span class="chip">Sherlock Holmes</span>
+                    <span class="chip">Taylor Swift</span>
                 </div>
             </div>
         </div>
@@ -1415,7 +1428,7 @@
                 document.getElementById('viewCount').innerText = total.toLocaleString();
                 const proofEl = document.getElementById('socialProofText');
                 if (proofEl && total > 0) {
-                    proofEl.textContent = `Over ${total.toLocaleString()} games played`;
+                    proofEl.textContent = `Played over ${total.toLocaleString()} times`;
                 }
             } catch(e) {
                 const local = parseInt(localStorage.getItem('mindgenie_views') || '0') + 1;
@@ -1547,7 +1560,7 @@
 
             // Show immediate feedback so the player never wonders if the click landed,
             // even before we know whether the server needs to wake up first.
-            setDialogue("The Genie is thinking...<br>Question 1 is on its way. 👁️");
+            setDialogue("🔮 The Genie is reading your thoughts...<br>Loading your first question...");
 
             if (!serverReady) {
                 wakeBannerEl.style.display = 'block';
@@ -1577,8 +1590,14 @@
             wrap.style.display = 'block';
             const pct = Math.min(100, Math.round((questionCount / ESTIMATED_QUESTIONS) * 100));
             document.getElementById('progressFill').style.width = pct + '%';
-            document.getElementById('progressLabel').innerText = `${pct}% Complete · Question ${questionCount}`;
-            loadingProgressText.textContent = `${pct}% Complete · Question ${questionCount}`;
+
+            let flavor = '🔮 Confidence';
+            if (pct >= 85) flavor = '🔮 Nearly certain';
+            else if (pct >= 60) flavor = '🔮 Growing confident';
+            else if (pct >= 30) flavor = '🔮 Narrowing it down';
+
+            document.getElementById('progressLabel').innerText = `${flavor}: ${pct}% · Question ${questionCount}`;
+            loadingProgressText.textContent = `${flavor}: ${pct}% · Question ${questionCount}`;
         }
 
         function renderQuestion(text) {
@@ -1618,12 +1637,12 @@
         // also cycles through trailing dots (".", "..", "...") for a subtler sense
         // of ongoing activity between full message changes.
         const thinkingMessages = [
-            "Reading your mind",
-            "Consulting the spirits",
-            "Searching ancient scrolls",
-            "Searching memories",
-            "Looking through legends",
-            "Almost certain"
+            "Reading your answer",
+            "Searching movies",
+            "Searching TV",
+            "Searching games",
+            "Searching anime & history",
+            "Making final prediction"
         ];
         let thinkingIndex = 0;
         let thinkingInterval = null;
@@ -1700,14 +1719,22 @@
             lastGuessedCharacter = character;
             document.getElementById('progressWrap').style.display = 'none';
             questionNumEl.style.display = 'none';
-            setDialogue(`✨✨✨<br>I KNOW WHO IT IS...<span class="reveal-stars"><span class="guess-name big-glow">${character}</span></span>✨✨✨`);
-            ratePromptEl.innerHTML = `I guessed <strong>${character}</strong>! Accuracy helps me improve.<br>Was I right?`;
-            showPanel('rate');
-            gameBoxEl.classList.remove('shake');
-            void gameBoxEl.offsetWidth;
-            gameBoxEl.classList.add('shake');
-            launchConfetti();
-            playRevealSound();
+
+            // Build suspense: announce the reveal first, then hold for a beat before
+            // the name itself appears, instead of dumping the answer instantly.
+            setDialogue(`✨<br>I know who you're thinking of...`);
+
+            setTimeout(() => {
+                setDialogue(`✨<br>I KNOW WHO YOU'RE THINKING OF...<span class="reveal-stars"><span class="guess-name big-glow">${character}</span></span>✨`);
+                ratePromptEl.innerHTML = `I guessed <strong>${character}</strong>! Accuracy helps me improve.<br>Was I right?`;
+                showPanel('rate');
+                gameBoxEl.classList.remove('shake');
+                void gameBoxEl.offsetWidth;
+                gameBoxEl.classList.add('shake');
+                launchConfetti();
+                playRevealSound();
+            }, 650);
+
             trackEvent('game_completed', { character: character, questions_asked: questionCount });
         }
 
