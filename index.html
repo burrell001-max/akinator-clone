@@ -7,19 +7,30 @@
     <meta name="description" content="Play MindGenie AI! Think of any movie, TV, anime, or historical character. Answer ~15 questions and watch our AI Genie guess who it is.">
     <meta name="keywords" content="MindGenie AI, AI character guessing game, mind reader AI, online akinator clone, free AI game, web games">
     <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#101b38">
+    <link rel="canonical" href="https://mindgenieai.xyz/">
+
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <!-- Open Graph / Twitter Card -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="MindGenie AI - Free Online Character Guessing Game">
     <meta property="og:description" content="Think of any character and see if our AI Genie can read your mind in about a minute.">
-    <meta property="og:url" content="https://mindgenie.example.com/">
-    <!-- Add an og:image once a share graphic is ready, e.g.: <meta property="og:image" content="https://mindgenie.example.com/og-image.jpg"> -->
-    <meta name="twitter:card" content="summary">
+    <meta property="og:url" content="https://mindgenieai.xyz/">
+    <meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="MindGenie AI - Free Online Character Guessing Game">
     <meta name="twitter:description" content="Think of any character and see if our AI Genie can read your mind in about a minute.">
+    <meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://akinator-clone-0uf6.onrender.com">
 
     <!-- Structured data -->
     <script type="application/ld+json">
@@ -27,7 +38,19 @@
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "MindGenie AI",
+      "url": "https://mindgenieai.xyz/",
       "description": "A free browser-based character guessing game. Think of a character and answer simple questions while the AI Genie tries to guess who it is.",
+      "applicationCategory": "Game",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "MindGenie AI",
+      "url": "https://mindgenieai.xyz/",
       "applicationCategory": "Game",
       "operatingSystem": "Any",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
@@ -77,6 +100,31 @@
           "@type": "Question",
           "name": "Can I play more than once?",
           "acceptedAnswer": { "@type": "Answer", "text": "Yes. There's no limit, once a round ends you can start a new one immediately and think of a different character." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is MindGenie AI like Akinator?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. MindGenie AI is a free browser-based character guessing game in the same spirit as Akinator: think of a character, answer a series of yes-or-no style questions, and see if the Genie can guess who it is." }
+        },
+        {
+          "@type": "Question",
+          "name": "How accurate is MindGenie AI?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Accuracy depends on how well-known the character is and how consistently you answer. Popular characters are usually guessed correctly within 10 to 20 questions, while obscure or very similar characters can trip up the Genie." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does MindGenie AI use artificial intelligence?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. MindGenie AI runs a guessing engine that narrows down possible characters based on your answers, refining its questions and guesses as more people play." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can MindGenie AI guess movie characters?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Movie characters are one of the most common categories players think of, alongside TV, anime, superheroes, history, and celebrities." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can MindGenie AI guess anime characters?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Anime and manga characters are fully supported alongside movies, TV shows, video games, and historical figures." }
         }
       ]
     }
@@ -86,7 +134,7 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "MindGenie AI",
-      "url": "https://mindgenie.example.com/",
+      "url": "https://mindgenieai.xyz/",
       "description": "Creator of MindGenie AI, a free browser-based character guessing game.",
       "sameAs": [
         "https://www.facebook.com/AmazeCentral1",
@@ -103,32 +151,45 @@
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://mindgenie.example.com/"
+          "item": "https://mindgenieai.xyz/"
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": "Play MindGenie AI",
-          "item": "https://mindgenie.example.com/#play"
+          "item": "https://mindgenieai.xyz/#play"
         }
       ]
     }
     </script>
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XV64DRRJGD"></script>
+    <!-- Analytics & ads: loaded after window.load so they don't compete with initial
+         render / Core Web Vitals. gtag() calls are buffered on window.dataLayer as usual. -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-XV64DRRJGD');
+
+      window.addEventListener('load', function () {
+        const gaScript = document.createElement('script');
+        gaScript.async = true;
+        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-XV64DRRJGD';
+        document.head.appendChild(gaScript);
+
+        const goatScript = document.createElement('script');
+        goatScript.async = true;
+        goatScript.setAttribute('data-goatcounter', 'https://kbwill41.goatcounter.com/count');
+        goatScript.src = '//gc.zgo.at/count.js';
+        document.head.appendChild(goatScript);
+
+        const adsScript = document.createElement('script');
+        adsScript.async = true;
+        adsScript.crossOrigin = 'anonymous';
+        adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667';
+        document.head.appendChild(adsScript);
+      });
     </script>
-
-    <script data-goatcounter="https://kbwill41.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667"
-     crossorigin="anonymous"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
@@ -260,9 +321,23 @@
             .top-nav.open { display: flex; }
         }
 
+        @keyframes introFadeDown {
+            from { opacity: 0; transform: translateY(-16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes introFadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes introPop {
+            from { opacity: 0; transform: scale(0.6); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
         .logo-area {
             text-align: center;
             margin: 30px 0 10px;
+            animation: introFadeDown 0.7s ease both;
         }
         .logo-area h1 {
             font-family: 'Cinzel', serif;
@@ -297,6 +372,7 @@
             display: flex;
             justify-content: center;
             margin-top: 14px;
+            animation: introPop 0.6s ease 0.25s both;
         }
         .crystal-ball .orb {
             font-size: 1.4rem;
@@ -319,6 +395,7 @@
             box-shadow: 0 0 0 1px rgba(108,63,200,0.1), 0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
             position: relative;
             margin-bottom: 22px;
+            animation: introFadeUp 0.7s ease 0.35s both;
         }
         .speech-bubble::before {
             content: '';
@@ -407,8 +484,8 @@
             background: linear-gradient(135deg, var(--violet) 0%, #9b59d6 100%);
             color: #fff;
             border: none;
-            padding: 18px 40px;
-            font-size: 1.1rem;
+            padding: 22px 40px;
+            font-size: 1.2rem;
             font-weight: 700;
             border-radius: 14px;
             cursor: pointer;
@@ -418,7 +495,7 @@
             transition: all 0.2s ease;
             box-shadow: 0 4px 30px rgba(108,63,200,0.45);
         }
-        .btn-play:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(108,63,200,0.6); }
+        .btn-play:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 40px rgba(108,63,200,0.6); }
         .btn-play:disabled {
             cursor: wait;
             opacity: 0.65;
@@ -835,8 +912,10 @@
             text-decoration: none;
             font-size: 0.72rem;
             margin: 0 8px;
+            opacity: 0.55;
+            transition: opacity 0.15s ease, color 0.15s ease;
         }
-        .sponsored-strip a:hover { color: var(--smoke); }
+        .sponsored-strip a:hover { color: var(--smoke); opacity: 1; }
 
         /* ── Sticky mobile play bar ── */
         .sticky-play-bar {
@@ -868,7 +947,7 @@
         }
         @media (max-width: 700px) {
             .sticky-play-bar { display: flex; }
-            .page-wrap { padding-bottom: 90px; }
+            .page-wrap { padding-bottom: 110px; }
         }
     </style>
 </head>
@@ -907,7 +986,7 @@
 
         <div class="speech-bubble" id="gameBox">
             <div id="questionNum" class="question-num" style="display:none;" aria-hidden="true"></div>
-            <p id="gameText" aria-live="polite">Think of ANY character. Don't tell me who it is — just answer honestly and I'll try to read your mind.</p>
+            <p id="gameText" aria-live="polite"><strong>Think of any character in the world.</strong><br>Movies, TV, anime, superheroes, history, or real celebrities.<br>Answer a few questions and see if the Genie can read your mind.</p>
         </div>
 
         <div id="interactionArea" style="width:100%">
@@ -931,6 +1010,9 @@
                     <span class="opt-icon" aria-hidden="true">❓</span> Not Sure
                 </button>
             </div>
+            <p id="keyboardHint" style="display:none; text-align:center; font-size:0.78rem; color:var(--smoke); margin-top:12px; letter-spacing:0.3px;">
+                💡 Tip: Press 1–5 on your keyboard to answer faster.
+            </p>
 
             <div id="answerLoading" class="loading-wrap" style="display:none;" role="status">
                 <div class="answered-chip" id="answeredChip">✔ You answered: —</div>
@@ -950,6 +1032,7 @@
                     <button class="btn-secondary" id="shareResultBtn">📤 Share Result</button>
                     <button class="btn-secondary" id="challengeFriendBtn">🤝 Challenge a Friend</button>
                 </div>
+                <button class="btn-secondary" id="randomIdeaBtn" style="width:100%; margin-bottom:12px;">🎲 Random Character Ideas</button>
                 <button class="btn-play" id="playAgainBtn">Challenge Me Again</button>
             </div>
 
@@ -986,6 +1069,7 @@
             <p>MindGenie AI is a free browser-based guessing game inspired by classic "20 questions" style mind-reading games. Think of any character — real, fictional, historical, or from pop culture — and the Genie will ask you a short series of simple yes-or-no style questions. Using your answers, our guessing engine narrows down the possibilities and reveals its best guess at who you were thinking of.</p>
             <p>The game was built as a fun, lightweight way to test how well a simple question-and-answer model can "read your mind." No account, download, or payment is required — just open the page and start playing in your browser, on desktop or mobile.</p>
             <p>Every round you play also helps the Genie learn. When you rate whether its final guess was right or wrong, that feedback quietly improves how it asks questions in future games.</p>
+            <p><strong>How accurate is it?</strong> The Genie draws on a knowledge base of hundreds of thousands of characters and usually narrows in on the right answer within 10–20 questions for well-known picks.</p>
         </div>
 
         <div class="section-divider" id="how-to-play"><span>How to Play</span></div>
@@ -1034,6 +1118,22 @@
             <div class="faq-item">
                 <h3>Can I play more than once?</h3>
                 <p>Yes — there's no limit. Once a round ends, click "Challenge Me Again" to start a new one right away.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is MindGenie AI like Akinator?</h3>
+                <p>Yes — it's a free browser-based character guessing game in the same spirit as Akinator: think of a character, answer yes-or-no style questions, and see if the Genie can guess who it is.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How accurate is MindGenie AI?</h3>
+                <p>It depends on how well-known the character is. Popular characters are usually guessed correctly within 10–20 questions, while obscure or very similar characters can trip up the Genie.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Does MindGenie AI use artificial intelligence?</h3>
+                <p>Yes — the Genie narrows down possible characters based on your answers, refining its questions and guesses as more people play.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can MindGenie AI guess movie and anime characters?</h3>
+                <p>Absolutely. Movies and anime are two of the most popular categories, alongside TV, superheroes, history, video games, and celebrities.</p>
             </div>
         </div>
 
@@ -1118,6 +1218,7 @@
         const rateYesBtn      = document.getElementById('rateYesBtn');
         const rateNoBtn       = document.getElementById('rateNoBtn');
         const playAgainBtn    = document.getElementById('playAgainBtn');
+        const randomIdeaBtn   = document.getElementById('randomIdeaBtn');
         const shareResultBtn  = document.getElementById('shareResultBtn');
         const challengeFriendBtn = document.getElementById('challengeFriendBtn');
         const shareBtn        = document.getElementById('shareBtn');
@@ -1139,6 +1240,7 @@
         bottomStartBtn.addEventListener('click', startGame);
         ctaStartBtn.addEventListener('click', startGame);
         playAgainBtn.addEventListener('click', startGame);
+        randomIdeaBtn.addEventListener('click', showRandomIdeas);
         rateYesBtn.addEventListener('click', () => rateGuess(true));
         rateNoBtn.addEventListener('click', () => rateGuess(false));
         shareBtn.addEventListener('click', shareGame);
@@ -1169,6 +1271,8 @@
             ratePanel.style.display     = panel === 'rate'    ? 'block' : 'none';
             introExtras.style.display   = panel === 'start'   ? 'block' : 'none';
             answerLoading.style.display = 'none';
+            const hintEl = document.getElementById('keyboardHint');
+            if (hintEl) hintEl.style.display = panel === 'options' ? 'block' : 'none';
             stickyPlayBar.classList.toggle('visible', panel !== 'start');
         }
 
@@ -1433,9 +1537,12 @@
 
         // Rotating "thinking" messages while we wait on submit-answer.
         const thinkingMessages = [
-            "Thinking.", "Thinking..", "Thinking...",
-            "Consulting the spirits...", "Searching memories...",
-            "Looking through legends...", "Almost certain..."
+            "🔮 Searching ancient scrolls...",
+            "👁 Consulting the spirits...",
+            "✨ Reading your thoughts...",
+            "📚 Searching memories...",
+            "🕯 Looking through legends...",
+            "🌙 Almost certain..."
         ];
         let thinkingIndex = 0;
         let thinkingInterval = null;
@@ -1502,6 +1609,20 @@
             launchConfetti();
             playRevealSound();
             trackEvent('game_completed', { character: character, questions_asked: questionCount });
+        }
+
+        const characterIdeaPool = [
+            "Batman", "Harry Potter", "Taylor Swift", "Albert Einstein", "Shrek",
+            "Mario", "Spider-Man", "Elsa", "Darth Vader", "Sherlock Holmes",
+            "Naruto Uzumaki", "Homer Simpson", "Cleopatra", "Iron Man", "Gandalf",
+            "SpongeBob SquarePants", "Wonder Woman", "Frodo Baggins", "Pikachu", "Napoleon Bonaparte"
+        ];
+
+        function showRandomIdeas() {
+            trackEvent('random_ideas_click');
+            const shuffled = [...characterIdeaPool].sort(() => Math.random() - 0.5);
+            const picks = shuffled.slice(0, 3);
+            ratePromptEl.innerHTML = `Can't think of one? Try: <strong>${picks.join('</strong>, <strong>')}</strong> — or anyone else!`;
         }
 
         function rateGuess(wasCorrect) {
