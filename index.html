@@ -31,6 +31,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://akinator-clone-0uf6.onrender.com">
+    <!-- Fonts loaded via <link> rather than CSS @import: @import blocks the CSSOM
+         until it resolves, delaying font (and therefore text) rendering. -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap">
 
@@ -336,7 +338,7 @@
 
         .logo-area {
             text-align: center;
-            margin: 10px 0;
+            margin: 30px 0 10px;
             animation: introFadeDown 0.7s ease both;
         }
         .logo-area h1 {
@@ -367,11 +369,27 @@
             font-weight: 500;
         }
 
+        /* ── Social proof stat, right under the tagline ── */
+        .social-proof {
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--gold-dim);
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+            animation: introFadeDown 0.7s ease 0.1s both;
+        }
+        .social-proof .stars-row {
+            color: var(--gold);
+            letter-spacing: 2px;
+            font-size: 0.75rem;
+            margin-bottom: 3px;
+        }
+
         /* ── Crystal ball accent beneath the logo ── */
         .crystal-ball {
             display: flex;
             justify-content: center;
-            margin-top: 8px;
+            margin-top: 14px;
             animation: introPop 0.6s ease 0.25s both;
         }
         .crystal-ball .orb {
@@ -389,7 +407,7 @@
             background: rgba(20, 14, 50, 0.85);
             border: 1px solid rgba(108, 63, 200, 0.4);
             border-radius: 20px;
-            padding: 20px;
+            padding: 28px 32px;
             width: 100%;
             text-align: center;
             box-shadow: 0 0 0 1px rgba(108,63,200,0.1), 0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
@@ -480,17 +498,12 @@
             margin-top: 14px;
         }
 
-        @keyframes btnPulse {
-            0%   { transform: scale(1); }
-            50%  { transform: scale(1.03); }
-            100% { transform: scale(1); }
-        }
         .btn-play {
             background: linear-gradient(135deg, var(--violet) 0%, #9b59d6 100%);
             color: #fff;
             border: none;
-            padding: 22px 40px;
-            font-size: 1.2rem;
+            padding: 26px 40px;
+            font-size: 1.4rem;
             font-weight: 700;
             border-radius: 14px;
             cursor: pointer;
@@ -499,25 +512,21 @@
             text-transform: uppercase;
             transition: all 0.2s ease;
             box-shadow: 0 4px 30px rgba(108,63,200,0.45);
-            animation: btnPulse 2.5s ease-in-out infinite;
         }
-        .btn-play:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 40px rgba(108,63,200,0.6); animation-play-state: paused; }
+        .btn-play:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 40px rgba(108,63,200,0.6); }
         .btn-play:disabled {
             cursor: wait;
             opacity: 0.65;
             transform: none !important;
-            animation: none !important;
         }
-        .spinner-small {
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top: 2px solid white;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 10px;
-            vertical-align: -3px;
-            animation: spin 0.8s linear infinite;
+
+        .btn-play-sub {
+            text-align: center;
+            font-size: 0.78rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--smoke);
+            margin-top: 10px;
         }
 
         .btn-secondary {
@@ -580,6 +589,15 @@
             background: rgba(80,200,120,0.28) !important;
             border-color: #50c878 !important;
             opacity: 0.9 !important;
+            transform: scale(0.96);
+        }
+        .btn-option.selected .opt-icon {
+            animation: option-flash 0.5s ease;
+        }
+        @keyframes option-flash {
+            0%   { transform: scale(1); }
+            40%  { transform: scale(1.5); }
+            100% { transform: scale(1); }
         }
         .btn-option.yes  { border-color: rgba(80,200,120,0.4); }
         .btn-option.no   { border-color: rgba(200,80,80,0.4); }
@@ -591,18 +609,12 @@
         /* ── Bigger, easier-to-tap buttons on phones ── */
         @media (max-width: 480px) {
             .btn-option {
-                padding: 22px 20px;
+                padding: 24px 20px;
                 font-size: 1.1rem;
             }
-            .logo-area { margin: 6px 0; }
-            .logo-area h1 { letter-spacing: 1px; }
-            .crystal-ball { margin-top: 4px; }
-            .speech-bubble { padding: 16px; margin-bottom: 16px; }
-            #gameText { line-height: 1.5; font-size: 1.05rem; min-height: 0; }
-            .content-section p,
-            .content-section ol,
-            .content-section ul { line-height: 1.6; }
-            .section-divider { margin: 36px 0 18px; }
+            .page-wrap { padding-left: 16px; padding-right: 16px; }
+            .options-grid { gap: 16px; }
+            .speech-bubble { padding: 24px 22px; }
         }
 
         .btn-play:focus-visible,
@@ -623,11 +635,6 @@
             font-size: 0.95rem;
             font-style: italic;
             padding: 14px;
-            animation: pulse-opacity 1.5s ease-in-out infinite;
-        }
-        @keyframes pulse-opacity {
-            0%, 100% { opacity: 0.5; }
-            50%       { opacity: 1; }
         }
 
         .loading-wrap {
@@ -638,9 +645,8 @@
             padding: 10px 0 4px;
         }
         .answered-chip {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--green);
+            font-size: 0.85rem;
+            color: var(--gold-dim);
             letter-spacing: 0.5px;
         }
         .loading-progress-text {
@@ -699,30 +705,10 @@
             width: 100%;
             display: none;
         }
-        .wake-progress-track {
-            width: 100%;
-            height: 5px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 8px 0 6px;
-        }
-        .wake-progress-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--gold-dim), var(--gold));
-            border-radius: 5px;
-            transition: width 0.3s linear;
-        }
-        .wake-countdown-text {
-            font-size: 0.72rem;
-            color: var(--smoke);
-            letter-spacing: 0.3px;
-        }
 
         .guess-name {
             font-family: 'Cinzel', serif;
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             color: var(--gold);
             display: block;
             margin: 12px 0;
@@ -739,6 +725,18 @@
         @keyframes name-glow-pulse {
             0%, 100% { text-shadow: 0 0 30px rgba(240,192,64,0.5); }
             50%       { text-shadow: 0 0 55px rgba(240,192,64,0.85), 0 0 90px rgba(185,127,255,0.4); }
+        }
+
+        /* ── Screen shake on the big reveal ── */
+        @keyframes reveal-shake {
+            0%, 100% { transform: translateX(0); }
+            20%      { transform: translateX(-4px); }
+            40%      { transform: translateX(4px); }
+            60%      { transform: translateX(-3px); }
+            80%      { transform: translateX(3px); }
+        }
+        .speech-bubble.shake {
+            animation: reveal-shake 0.4s ease;
         }
 
         /* ── Small star burst behind the revealed name ── */
@@ -786,23 +784,6 @@
             font-size: 0.95rem;
             margin-bottom: 14px;
         }
-        .idea-pill {
-            background: rgba(108,63,200,0.2);
-            border: 1px solid rgba(108,63,200,0.45);
-            color: var(--white);
-            font-size: 0.85rem;
-            font-weight: 600;
-            padding: 5px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.15s ease;
-        }
-        .idea-pill:hover {
-            background: rgba(108,63,200,0.4);
-            border-color: var(--violet);
-            transform: translateY(-1px);
-        }
         .rate-buttons {
             display: flex;
             gap: 12px;
@@ -810,9 +791,6 @@
         }
         .rate-buttons .btn-option {
             flex: 1;
-        }
-        #playAgainBtn {
-            margin-bottom: 16px;
         }
         .rate-thanks {
             color: var(--gold-dim);
@@ -887,6 +865,27 @@
         .faq-item p {
             margin-bottom: 0;
         }
+
+        /* ── Collapsible "more FAQ" section: keeps full FAQ schema content in the
+             DOM for SEO, but hides the long tail behind a toggle so the visible
+             page doesn't overwhelm people who just want to play. ── */
+        details.more-faq { margin-top: 4px; }
+        details.more-faq summary {
+            cursor: pointer;
+            color: var(--gold-dim);
+            font-size: 0.88rem;
+            font-weight: 600;
+            list-style: none;
+            padding: 8px 0;
+        }
+        details.more-faq summary::-webkit-details-marker { display: none; }
+        details.more-faq summary::before {
+            content: '+ ';
+        }
+        details.more-faq[open] summary::before {
+            content: '– ';
+        }
+        details.more-faq summary:hover { color: var(--gold); }
 
         /* ── Pre-footer call-to-action ── */
         .pre-footer-cta {
@@ -1017,6 +1016,15 @@
             .sticky-play-bar { display: flex; }
             .page-wrap { padding-bottom: 110px; }
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1030,10 +1038,7 @@
         <div class="top-bar">
             <button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="topNav">☰ Menu</button>
             <nav class="top-nav" id="topNav">
-                <a href="index.html">🏠 Home</a>
                 <a href="#play" class="nav-play">🔮 Play</a>
-                <a href="#about">About</a>
-                <a href="#how-to-play">How to Play</a>
                 <a href="#faq">FAQ</a>
                 <a href="contact.html">Contact</a>
             </nav>
@@ -1043,25 +1048,28 @@
             <h2>The Ultimate Character Guessing Game</h2>
             <div class="crystal-ball" aria-hidden="true"><span class="orb">🔮</span></div>
         </div>
+        <div class="social-proof">
+            <div class="stars-row" aria-hidden="true">★★★★★</div>
+            <span id="socialProofText">Over 15,000 games played</span>
+        </div>
         <div id="wakeBanner" class="wake-banner" role="status">
-            <div id="wakeMsgText">⏳ Summoning the Genie for the first time today...</div>
-            <div class="wake-progress-track"><div id="wakeProgressFill" class="wake-progress-fill"></div></div>
-            <div id="wakeCountdownText" class="wake-countdown-text">Usually takes about 15 seconds</div>
+            ⏳ Preparing the Genie... this only happens the first time today.
         </div>
 
         <div id="progressWrap" class="progress-wrap" style="display:none;">
             <div class="progress-track"><div id="progressFill" class="progress-fill" style="width:0%;"></div></div>
-            <div id="progressLabel" class="progress-label">Question 1 of ~15</div>
+            <div id="progressLabel" class="progress-label">0% Complete · Question 1</div>
         </div>
 
         <div class="speech-bubble" id="gameBox">
             <div id="questionNum" class="question-num" style="display:none;" aria-hidden="true"></div>
-            <p id="gameText" aria-live="polite"><strong>Think of any character in the world.</strong><br>Movies, TV, anime, superheroes, history, or real celebrities.<br>Answer a few questions and see if the Genie can read your mind.</p>
+            <p id="gameText" aria-live="polite"><strong>Think of any character.</strong><br>I'll try to guess it in about a minute. 👇</p>
         </div>
 
         <div id="interactionArea" style="width:100%">
 
-            <button id="startBtn" class="btn-play">🔮 Start Game</button>
+            <button id="startBtn" class="btn-play">🔮 Start Playing</button>
+            <div id="startBtnSub" class="btn-play-sub">Free · Takes about 1 minute</div>
 
             <div id="optionsGrid" class="options-grid" style="display:none;">
                 <button class="btn-option yes" data-key="1" data-weight="1.0" data-label="Yes">
@@ -1087,7 +1095,7 @@
             <div id="answerLoading" class="loading-wrap" style="display:none;" role="status">
                 <div class="answered-chip" id="answeredChip">✔ You answered: —</div>
                 <div class="spinner" aria-hidden="true"></div>
-                <div class="loading-text" id="loadingMsg">Thinking.</div>
+                <div class="loading-text" id="loadingMsg">Reading your mind.</div>
                 <div class="loading-progress-text" id="loadingProgressText"></div>
             </div>
 
@@ -1098,61 +1106,30 @@
                     <button class="btn-option no" id="rateNoBtn"><span class="opt-icon" aria-hidden="true">✖</span> No</button>
                 </div>
                 <div class="rate-thanks" id="rateThanks">Thanks — that helps the Genie learn! ✨</div>
-                <button class="btn-play" id="playAgainBtn">🔮 Play Again</button>
                 <div class="post-game-actions">
-                    <button class="btn-secondary" id="shareResultBtn">📤 Share Result</button>
+                    <button class="btn-secondary" id="shareResultBtn">🎉 Share My Result</button>
                     <button class="btn-secondary" id="challengeFriendBtn">🤝 Challenge a Friend</button>
                 </div>
-                <button class="btn-secondary" id="randomIdeaBtn" style="width:100%;">🎲 Random Character Ideas</button>
+                <button class="btn-secondary" id="randomIdeaBtn" style="width:100%; margin-bottom:12px;">🎲 Random Character Ideas</button>
+                <button class="btn-play" id="playAgainBtn">Challenge Me Again</button>
             </div>
 
             <div id="introExtras">
                 <div class="category-chips" aria-hidden="true">
                     <span class="chip">🎬 Movies</span>
                     <span class="chip">📺 TV</span>
-                    <span class="chip">🕰 History</span>
+                    <span class="chip">🎮 Games</span>
                     <span class="chip">🎌 Anime</span>
-                    <span class="chip">🦸 Superheroes</span>
-                    <span class="chip">🎤 Celebrities</span>
-                    <span class="chip">🖍 Cartoons</span>
-                    <span class="chip">🎮 Video Games</span>
                 </div>
                 <p class="examples-label">Need ideas?</p>
                 <div class="examples-chips">
                     <span class="chip">Batman</span>
                     <span class="chip">Harry Potter</span>
-                    <span class="chip">Taylor Swift</span>
-                    <span class="chip">Albert Einstein</span>
-                    <span class="chip">Shrek</span>
                     <span class="chip">Mario</span>
-                    <span class="chip">Spider-Man</span>
                     <span class="chip">Elsa</span>
-                    <span class="chip">Darth Vader</span>
                     <span class="chip">Sherlock Holmes</span>
                 </div>
-                <p class="time-estimate">⏱ Takes about 1 minute</p>
             </div>
-        </div>
-
-        <div class="section-divider" id="about"><span>About the Genie</span></div>
-        <div class="content-section">
-            <p>MindGenie AI is a free browser-based guessing game inspired by classic "20 questions" style mind-reading games. Think of any character — real, fictional, historical, or from pop culture — and the Genie will ask you a short series of simple yes-or-no style questions. Using your answers, our guessing engine narrows down the possibilities and reveals its best guess at who you were thinking of.</p>
-            <p>The game was built as a fun, lightweight way to test how well a simple question-and-answer model can "read your mind." No account, download, or payment is required — just open the page and start playing in your browser, on desktop or mobile.</p>
-            <p>Every round you play also helps the Genie learn. When you rate whether its final guess was right or wrong, that feedback quietly improves how it asks questions in future games.</p>
-            <p><strong>How accurate is it?</strong> The Genie draws on a knowledge base of hundreds of thousands of characters and usually narrows in on the right answer within 10–20 questions for well-known picks.</p>
-        </div>
-
-        <div class="section-divider" id="how-to-play"><span>How to Play</span></div>
-        <div class="content-section">
-            <ol>
-                <li>Think of any character — a person, fictional hero, villain, celebrity, or historical figure.</li>
-                <li>Click "Start Game" to begin a new round.</li>
-                <li>Answer each question with Yes, No, Probably, Probably not, or I'm not sure.</li>
-                <li>Keep answering as the Genie asks more questions and narrows down its guess.</li>
-                <li>After a series of questions, the Genie reveals who it thinks you were picturing.</li>
-                <li>Click "Challenge Me Again" to play another round with a new character in mind.</li>
-            </ol>
-            <p>The more honestly and consistently you answer, the better the Genie's guess will be. Some rounds it gets it right away — others it takes a wrong guess and learns from the round.</p>
         </div>
 
         <div class="section-divider" id="faq"><span>Frequently Asked Questions</span></div>
@@ -1162,49 +1139,73 @@
                 <p>Yes. The game is completely free, with no sign-up, download, or in-game purchases required.</p>
             </div>
             <div class="faq-item">
-                <h3>Why does the game say it's "waking up" sometimes?</h3>
-                <p>Our guessing engine runs on a free-tier server that goes to sleep when it isn't being used. The first game of the day can take up to 30 seconds to "wake up" — after that, rounds load quickly.</p>
-            </div>
-            <div class="faq-item">
-                <h3>What kinds of characters can I think of?</h3>
-                <p>Almost anything — fictional characters from movies, TV, books, and games, as well as well-known historical figures or celebrities. The wider known the character, the more likely the Genie will guess correctly.</p>
+                <h3>How accurate is MindGenie AI?</h3>
+                <p>It depends on how well-known the character is. Popular characters are usually guessed correctly within 10–20 questions, while obscure or very similar characters can trip up the Genie.</p>
             </div>
             <div class="faq-item">
                 <h3>How many questions does the Genie ask?</h3>
                 <p>Usually 10–20 questions, depending on your answers.</p>
             </div>
             <div class="faq-item">
-                <h3>Does the Genie always guess correctly?</h3>
-                <p>No — it's a fun guessing model, not a perfect mind reader. Obscure or very similar characters can trip it up, which is part of the fun.</p>
-            </div>
-            <div class="faq-item">
-                <h3>Does MindGenie AI store who I'm thinking of?</h3>
-                <p>We don't ask for or store any personal information to play. See our <a href="privacy-policy.html" style="color:var(--gold-dim);">Privacy Policy</a> for full details on cookies and analytics used on this site.</p>
-            </div>
-            <div class="faq-item">
                 <h3>Can I play MindGenie AI on my phone?</h3>
                 <p>Yes. The game runs entirely in the browser and is fully playable on phones, tablets, and desktop computers.</p>
             </div>
-            <div class="faq-item">
-                <h3>Can I play more than once?</h3>
-                <p>Yes — there's no limit. Once a round ends, click "Challenge Me Again" to start a new one right away.</p>
-            </div>
-            <div class="faq-item">
-                <h3>Is MindGenie AI like Akinator?</h3>
-                <p>Yes — it's a free browser-based character guessing game in the same spirit as Akinator: think of a character, answer yes-or-no style questions, and see if the Genie can guess who it is.</p>
-            </div>
-            <div class="faq-item">
-                <h3>How accurate is MindGenie AI?</h3>
-                <p>It depends on how well-known the character is. Popular characters are usually guessed correctly within 10–20 questions, while obscure or very similar characters can trip up the Genie.</p>
-            </div>
-            <div class="faq-item">
-                <h3>Does MindGenie AI use artificial intelligence?</h3>
-                <p>Yes — the Genie narrows down possible characters based on your answers, refining its questions and guesses as more people play.</p>
-            </div>
-            <div class="faq-item">
-                <h3>Can MindGenie AI guess movie and anime characters?</h3>
-                <p>Absolutely. Movies and anime are two of the most popular categories, alongside TV, superheroes, history, video games, and celebrities.</p>
-            </div>
+
+            <details class="more-faq">
+                <summary>More questions</summary>
+                <div class="faq-item" style="margin-top:14px;">
+                    <h3>Why does the game say it's "waking up" sometimes?</h3>
+                    <p>Our guessing engine runs on a free-tier server that goes to sleep when it isn't being used. The first game of the day can take up to 30 seconds to "wake up" — after that, rounds load quickly.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What kinds of characters can I think of?</h3>
+                    <p>Almost anything — fictional characters from movies, TV, books, and games, as well as well-known historical figures or celebrities. The wider known the character, the more likely the Genie will guess correctly.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Does the Genie always guess correctly?</h3>
+                    <p>No — it's a fun guessing model, not a perfect mind reader. Obscure or very similar characters can trip it up, which is part of the fun.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Does MindGenie AI store who I'm thinking of?</h3>
+                    <p>We don't ask for or store any personal information to play. See our <a href="privacy-policy.html" style="color:var(--gold-dim);">Privacy Policy</a> for full details on cookies and analytics used on this site.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Can I play more than once?</h3>
+                    <p>Yes — there's no limit. Once a round ends, click "Challenge Me Again" to start a new one right away.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is MindGenie AI like Akinator?</h3>
+                    <p>Yes — it's a free browser-based character guessing game in the same spirit as Akinator: think of a character, answer yes-or-no style questions, and see if the Genie can guess who it is.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Does MindGenie AI use artificial intelligence?</h3>
+                    <p>Yes — the Genie narrows down possible characters based on your answers, refining its questions and guesses as more people play.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Can MindGenie AI guess movie and anime characters?</h3>
+                    <p>Absolutely. Movies and anime are two of the most popular categories, alongside TV, superheroes, history, video games, and celebrities.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="section-divider" id="about"><span>About the Genie</span></div>
+        <div class="content-section">
+            <p>MindGenie AI is a free browser-based guessing game inspired by classic "20 questions" style mind-reading games. Think of any character — real, fictional, historical, or from pop culture — and the Genie will ask you a short series of simple yes-or-no style questions. Using your answers, our guessing engine narrows down the possibilities and reveals its best guess at who you were thinking of.</p>
+            <p>The game was built as a fun, lightweight way to test how well a simple question-and-answer model can "read your mind." No account, download, or payment is required — just open the page and start playing in your browser, on desktop or mobile.</p>
+            <p>Every round you play also helps the Genie learn. When you rate whether its final guess was right or wrong, that feedback quietly improves how it asks questions in future games.</p>
+        </div>
+
+        <div class="section-divider" id="how-to-play"><span>How to Play</span></div>
+        <div class="content-section">
+            <ol>
+                <li>Think of any character — a person, fictional hero, villain, celebrity, or historical figure.</li>
+                <li>Click "Start Playing" to begin a new round.</li>
+                <li>Answer each question with Yes, No, Probably, Probably not, or I'm not sure.</li>
+                <li>Keep answering as the Genie asks more questions and narrows down its guess.</li>
+                <li>After a series of questions, the Genie reveals who it thinks you were picturing.</li>
+                <li>Click "Challenge Me Again" to play another round with a new character in mind.</li>
+            </ol>
+            <p>The more honestly and consistently you answer, the better the Genie's guess will be. Some rounds it gets it right away — others it takes a wrong guess and learns from the round.</p>
         </div>
 
         <div class="pre-footer-cta">
@@ -1273,6 +1274,7 @@
 
         // ── STATIC DOM REFERENCES ──
         const startBtn        = document.getElementById('startBtn');
+        const startBtnSub     = document.getElementById('startBtnSub');
         const bottomStartBtn  = document.getElementById('bottomStartBtn');
         const ctaStartBtn     = document.getElementById('ctaStartBtn');
         const stickyPlayBar   = document.getElementById('stickyPlayBar');
@@ -1297,9 +1299,7 @@
         const questionNumEl   = document.getElementById('questionNum');
         const introExtras     = document.getElementById('introExtras');
         const wakeBannerEl    = document.getElementById('wakeBanner');
-        const wakeMsgTextEl   = document.getElementById('wakeMsgText');
-        const wakeProgressFillEl = document.getElementById('wakeProgressFill');
-        const wakeCountdownTextEl = document.getElementById('wakeCountdownText');
+        const gameBoxEl       = document.getElementById('gameBox');
         const optionButtons   = Array.from(optionsGrid.querySelectorAll('.btn-option'));
         let lastGuessedCharacter = '';
 
@@ -1340,6 +1340,7 @@
         function showPanel(panel) {
             // panel: 'start' | 'options' | 'rate'
             startBtn.style.display      = panel === 'start'   ? 'block' : 'none';
+            startBtnSub.style.display   = panel === 'start'   ? 'block' : 'none';
             optionsGrid.style.display   = panel === 'options' ? 'flex'  : 'none';
             ratePanel.style.display     = panel === 'rate'    ? 'block' : 'none';
             introExtras.style.display   = panel === 'start'   ? 'block' : 'none';
@@ -1351,23 +1352,21 @@
 
         // ── WAKE-UP EXPERIENCE ──
         const wakeMessages = [
-            "⏳ Contacting the Genie...",
+            "⏳ Preparing the Genie... this only happens the first time today.",
             "✨ Opening the ancient library...",
             "🔮 Searching millions of characters...",
-            "📖 Dusting off old tomes...",
-            "🕯 Lighting the ritual candles...",
-            "👁 The Genie is waking... almost ready..."
+            "👁 Almost ready..."
         ];
         let wakeMsgIndex = 0;
         let wakeMsgInterval = null;
 
         function startWakeMessageRotation() {
             wakeMsgIndex = 0;
-            wakeMsgTextEl.textContent = wakeMessages[0];
+            wakeBannerEl.textContent = wakeMessages[0];
             clearInterval(wakeMsgInterval);
             wakeMsgInterval = setInterval(() => {
                 wakeMsgIndex = (wakeMsgIndex + 1) % wakeMessages.length;
-                wakeMsgTextEl.textContent = wakeMessages[wakeMsgIndex];
+                wakeBannerEl.textContent = wakeMessages[wakeMsgIndex];
             }, 2000);
         }
         function stopWakeMessageRotation() {
@@ -1375,40 +1374,11 @@
             wakeMsgInterval = null;
         }
 
-        // Countdown bar: most Render free-tier cold starts finish in ~15s, so we animate
-        // toward that expectation but never let the bar look "done" before the server
-        // actually responds — it eases toward 92% and holds until wakeServer() resolves.
-        const WAKE_ESTIMATE_SECONDS = 15;
-        let wakeCountdownInterval = null;
-        let wakeElapsedSeconds = 0;
-
-        function startWakeCountdown() {
-            wakeElapsedSeconds = 0;
-            wakeProgressFillEl.style.width = '0%';
-            wakeCountdownTextEl.textContent = `Usually takes about ${WAKE_ESTIMATE_SECONDS} seconds`;
-            clearInterval(wakeCountdownInterval);
-            wakeCountdownInterval = setInterval(() => {
-                wakeElapsedSeconds += 1;
-                const pct = Math.min(92, Math.round((wakeElapsedSeconds / WAKE_ESTIMATE_SECONDS) * 100));
-                wakeProgressFillEl.style.width = pct + '%';
-                const remaining = Math.max(0, WAKE_ESTIMATE_SECONDS - wakeElapsedSeconds);
-                wakeCountdownTextEl.textContent = remaining > 0
-                    ? `About ${remaining} second${remaining === 1 ? '' : 's'} left...`
-                    : `Almost there, thanks for your patience...`;
-            }, 1000);
-        }
-        function stopWakeCountdown() {
-            clearInterval(wakeCountdownInterval);
-            wakeCountdownInterval = null;
-            wakeProgressFillEl.style.width = '100%';
-        }
-
         function wakeServer() {
             fetch(`${API_URL}/`)
                 .then(() => {
                     serverReady = true;
                     stopWakeMessageRotation();
-                    stopWakeCountdown();
                     wakeBannerEl.style.display = 'none';
                     wakePromiseResolvers.forEach(resolve => resolve());
                     wakePromiseResolvers = [];
@@ -1426,16 +1396,11 @@
         setTimeout(() => {
             if (!serverReady) {
                 wakeBannerEl.style.display = 'block';
-                startWakeCountdown();
                 startWakeMessageRotation();
             }
-        }, 6000);
+        }, 2000);
 
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(() => wakeServer());
-        } else {
-            wakeServer();
-        }
+        wakeServer();
 
         setInterval(() => {
             fetch(`${API_URL}/`).catch(() => {});
@@ -1446,7 +1411,12 @@
             try {
                 const res  = await fetch('https://kbwill41.goatcounter.com/counter//.json');
                 const data = await res.json();
-                document.getElementById('viewCount').innerText = Number(data.count).toLocaleString();
+                const total = Number(data.count);
+                document.getElementById('viewCount').innerText = total.toLocaleString();
+                const proofEl = document.getElementById('socialProofText');
+                if (proofEl && total > 0) {
+                    proofEl.textContent = `Over ${total.toLocaleString()} games played`;
+                }
             } catch(e) {
                 const local = parseInt(localStorage.getItem('mindgenie_views') || '0') + 1;
                 localStorage.setItem('mindgenie_views', local);
@@ -1554,7 +1524,6 @@
             // sticky bar, etc.), the game state changes up in the speech bubble, out of
             // view — which reads as "the button did nothing." Scroll the game area into
             // view first so the player actually sees the round start.
-            const gameBoxEl = document.getElementById('gameBox');
             if (gameBoxEl) {
                 const rect = gameBoxEl.getBoundingClientRect();
                 const isOutOfView = rect.top < 0 || rect.bottom > window.innerHeight;
@@ -1565,10 +1534,7 @@
 
             sessionId = generateSessionId();
             questionCount = 0;
-            const progressWrapEl = document.getElementById('progressWrap');
-            progressWrapEl.style.display = 'block';
-            document.getElementById('progressFill').style.width = '0%';
-            document.getElementById('progressLabel').innerText = `Question 1 of ~${ESTIMATED_QUESTIONS} · 0% Complete`;
+            document.getElementById('progressWrap').style.display = 'none';
             questionNumEl.style.display = 'none';
             rateThanks.style.display = 'none';
             rateButtonsRow.style.display = 'flex';
@@ -1577,17 +1543,17 @@
             trackEvent('game_started');
 
             startBtn.disabled = true;
-            startBtn.innerHTML = '<span class="spinner-small" aria-hidden="true"></span> Connecting to Genie...';
+            startBtn.textContent = '🔮 Starting...';
+
+            // Show immediate feedback so the player never wonders if the click landed,
+            // even before we know whether the server needs to wake up first.
+            setDialogue("The Genie is thinking...<br>Question 1 is on its way. 👁️");
 
             if (!serverReady) {
                 wakeBannerEl.style.display = 'block';
-                startWakeCountdown();
                 startWakeMessageRotation();
-                setDialogue("The Genie is still awakening from slumber...<br>Hang tight, this only happens on the first game of the day. 👁️");
                 await waitForServer();
             }
-
-            setDialogue("Good... I'm already sensing something.<br>Answer honestly. I'll know if you don't. 👁️");
 
             try {
                 const res  = await fetch(`${API_URL}/start-game?session_id=${sessionId}`);
@@ -1611,8 +1577,8 @@
             wrap.style.display = 'block';
             const pct = Math.min(100, Math.round((questionCount / ESTIMATED_QUESTIONS) * 100));
             document.getElementById('progressFill').style.width = pct + '%';
-            document.getElementById('progressLabel').innerText = `Question ${questionCount} of ~${ESTIMATED_QUESTIONS} · ${pct}% Complete`;
-            loadingProgressText.textContent = `Question ${questionCount} of ~${ESTIMATED_QUESTIONS} · ${pct}% Complete`;
+            document.getElementById('progressLabel').innerText = `${pct}% Complete · Question ${questionCount}`;
+            loadingProgressText.textContent = `${pct}% Complete · Question ${questionCount}`;
         }
 
         function renderQuestion(text) {
@@ -1633,7 +1599,7 @@
                 btn.classList.remove('selected');
             });
             startBtn.disabled = false;
-            startBtn.textContent = '🔮 Start Game';
+            startBtn.textContent = '🔮 Start Playing';
             showPanel('options');
 
             optionsGrid.classList.remove('question-enter');
@@ -1648,42 +1614,43 @@
             setDialogue("Hmm, the spirits gave a strange sign I didn't recognize.<br>You can try answering again, or start a new round.");
         }
 
-        // Rotating "thinking" messages while we wait on submit-answer.
+        // Rotating "thinking" messages while we wait on submit-answer. Each message
+        // also cycles through trailing dots (".", "..", "...") for a subtler sense
+        // of ongoing activity between full message changes.
         const thinkingMessages = [
-            "🔮 Searching ancient scrolls...",
-            "👁 Consulting the spirits...",
-            "✨ Reading your thoughts...",
-            "📚 Searching memories...",
-            "🕯 Looking through legends...",
-            "🌙 Almost certain...",
-            "🧠 Cross-referencing possibilities...",
-            "📖 Flipping through old tomes...",
-            "🗺 Narrowing the realms of thought...",
-            "💭 Sensing a pattern forming...",
-            "🌟 Aligning the constellations...",
-            "🔍 Peering into the crystal ball...",
-            "🕰 Traveling through memory...",
-            "🎭 Weighing the possibilities...",
-            "🪄 Casting a divination...",
-            "📜 Consulting ancient records...",
-            "🌌 Gazing deeper into the void...",
-            "🔑 Unlocking a hidden clue..."
+            "Reading your mind",
+            "Consulting the spirits",
+            "Searching ancient scrolls",
+            "Searching memories",
+            "Looking through legends",
+            "Almost certain"
         ];
         let thinkingIndex = 0;
         let thinkingInterval = null;
+        let thinkingDotInterval = null;
+        let thinkingDots = 0;
 
         function startThinkingRotation() {
             thinkingIndex = 0;
-            loadingMsgEl.textContent = thinkingMessages[0];
+            thinkingDots = 0;
+            loadingMsgEl.textContent = thinkingMessages[0] + '.';
             clearInterval(thinkingInterval);
+            clearInterval(thinkingDotInterval);
             thinkingInterval = setInterval(() => {
                 thinkingIndex = (thinkingIndex + 1) % thinkingMessages.length;
-                loadingMsgEl.textContent = thinkingMessages[thinkingIndex];
-            }, 1400);
+                thinkingDots = 0;
+                loadingMsgEl.textContent = thinkingMessages[thinkingIndex] + '.';
+            }, 2400);
+            thinkingDotInterval = setInterval(() => {
+                thinkingDots = (thinkingDots + 1) % 3;
+                loadingMsgEl.textContent = thinkingMessages[thinkingIndex] + '.'.repeat(thinkingDots + 1);
+            }, 500);
         }
         function stopThinkingRotation() {
             clearInterval(thinkingInterval);
+            clearInterval(thinkingDotInterval);
             thinkingInterval = null;
+            thinkingDotInterval = null;
         }
 
         async function submitAnswer(weight, btnEl, label) {
@@ -1695,8 +1662,13 @@
 
             answeredChip.textContent = `✔ You answered: ${label}`;
             loadingProgressText.textContent = `Question ${questionCount} of ~${ESTIMATED_QUESTIONS}`;
-            answerLoading.style.display = 'flex';
-            startThinkingRotation();
+
+            // Let the selected-button flash animation play briefly before swapping
+            // to the loading state, so the click always feels acknowledged first.
+            setTimeout(() => {
+                answerLoading.style.display = 'flex';
+                startThinkingRotation();
+            }, 250);
 
             try {
                 const res  = await fetch(`${API_URL}/submit-answer`, {
@@ -1728,9 +1700,12 @@
             lastGuessedCharacter = character;
             document.getElementById('progressWrap').style.display = 'none';
             questionNumEl.style.display = 'none';
-            setDialogue(`✨ My vision is complete...<br>I believe you're thinking of...<span class="reveal-stars"><span class="guess-name big-glow">${character}</span></span>`);
+            setDialogue(`✨✨✨<br>I KNOW WHO IT IS...<span class="reveal-stars"><span class="guess-name big-glow">${character}</span></span>✨✨✨`);
             ratePromptEl.innerHTML = `I guessed <strong>${character}</strong>! Accuracy helps me improve.<br>Was I right?`;
             showPanel('rate');
+            gameBoxEl.classList.remove('shake');
+            void gameBoxEl.offsetWidth;
+            gameBoxEl.classList.add('shake');
             launchConfetti();
             playRevealSound();
             trackEvent('game_completed', { character: character, questions_asked: questionCount });
@@ -1747,16 +1722,7 @@
             trackEvent('random_ideas_click');
             const shuffled = [...characterIdeaPool].sort(() => Math.random() - 0.5);
             const picks = shuffled.slice(0, 3);
-            const buttonsHtml = picks
-                .map(name => `<button type="button" class="idea-pill" data-character="${name}">${name}</button>`)
-                .join(' ');
-            ratePromptEl.innerHTML = `Can't think of one? Try: ${buttonsHtml} — or anyone else!`;
-            ratePromptEl.querySelectorAll('.idea-pill').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    trackEvent('random_idea_selected', { character: btn.dataset.character });
-                    ratePromptEl.innerHTML = `Great choice! Now keep <strong>${btn.dataset.character}</strong> in your mind...`;
-                });
-            });
+            ratePromptEl.innerHTML = `Can't think of one? Try: <strong>${picks.join('</strong>, <strong>')}</strong> — or anyone else!`;
         }
 
         function rateGuess(wasCorrect) {
