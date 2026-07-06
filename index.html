@@ -251,30 +251,50 @@
         .options-grid {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 14px;
             width: 100%;
         }
         .btn-option {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(108,63,200,0.3);
             color: var(--white);
-            padding: 15px;
+            padding: 18px 20px;
             font-size: 1rem;
             font-weight: 600;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.18s ease;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 48px;
         }
         .btn-option:hover {
             background: rgba(108,63,200,0.3);
             border-color: var(--violet);
-            transform: translateX(4px);
+            transform: translateY(-2px);
+        }
+        .btn-option:active {
+            transform: scale(0.97);
+        }
+        .btn-option:disabled {
+            cursor: wait;
+            opacity: 0.55;
+            transform: none !important;
+        }
+        .btn-option.selected {
+            background: rgba(80,200,120,0.28) !important;
+            border-color: #50c878 !important;
+            opacity: 0.9 !important;
         }
         .btn-option.yes  { border-color: rgba(80,200,120,0.4); }
         .btn-option.no   { border-color: rgba(200,80,80,0.4); }
         .btn-option.yes:hover { background: rgba(80,200,120,0.15); border-color: #50c878; }
         .btn-option.no:hover  { background: rgba(200,80,80,0.15); border-color: #c85050; }
+
+        .opt-icon { font-size: 0.95rem; opacity: 0.85; }
 
         .loading-text {
             text-align: center;
@@ -287,6 +307,56 @@
         @keyframes pulse-opacity {
             0%, 100% { opacity: 0.5; }
             50%       { opacity: 1; }
+        }
+
+        .loading-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0 4px;
+        }
+        .answered-chip {
+            font-size: 0.85rem;
+            color: var(--gold-dim);
+            letter-spacing: 0.5px;
+        }
+        .spinner {
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255,255,255,0.15);
+            border-top-color: var(--glow);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .progress-wrap {
+            width: 100%;
+            margin-bottom: 14px;
+        }
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--violet), var(--glow));
+            border-radius: 6px;
+            transition: width 0.4s ease;
+        }
+        .progress-label {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--smoke);
+            letter-spacing: 1px;
+            margin-top: 6px;
+            text-transform: uppercase;
         }
 
         .wake-banner {
@@ -483,12 +553,17 @@
             ⏳ Summoning the Genie for the first time today — this may take up to 30 seconds...
         </div>
 
+        <div id="progressWrap" class="progress-wrap" style="display:none;">
+            <div class="progress-track"><div id="progressFill" class="progress-fill" style="width:0%;"></div></div>
+            <div id="progressLabel" class="progress-label">Question 1 of ~15</div>
+        </div>
+
         <div class="speech-bubble" id="gameBox">
-            <p id="gameText">Someone is in your mind right now. A character.<br>I can feel it.<br><br>Shall we begin?</p>
+            <p id="gameText">Think of any character — fictional, a celebrity, or a historical figure.<br><br>Don't tell me who it is. I'll try to guess by asking a few simple questions.</p>
         </div>
 
         <div id="interactionArea" style="width:100%">
-            <button class="btn-play" onclick="startGame()">Enter the Lair</button>
+            <button class="btn-play" onclick="startGame()">🔮 Start Game</button>
         </div>
 
         <!-- ── ABOUT ── -->
@@ -503,7 +578,7 @@
         <div class="content-section">
             <ol>
                 <li>Think of any character — a person, fictional hero, villain, celebrity, or historical figure.</li>
-                <li>Click "Enter the Lair" to begin a new round.</li>
+                <li>Click "Start Game" to begin a new round.</li>
                 <li>Answer each question with Yes, No, Probably, Probably not, or I'm not sure.</li>
                 <li>Keep answering as the Genie asks more questions and narrows down its guess.</li>
                 <li>After a series of questions, the Genie reveals who it thinks you were picturing.</li>
@@ -597,6 +672,8 @@
         let currentQuestionId = "";
         let questionCount = 0;
         let serverReady = false;
+        let answerPending = false;
+        const ESTIMATED_QUESTIONS = 15;
 
         // ── WAKE UP BACKEND ON PAGE LOAD ──
         function wakeServer() {
@@ -697,26 +774,62 @@
             }
         }
 
+        function updateProgress() {
+            const wrap = document.getElementById('progressWrap');
+            wrap.style.display = 'block';
+            const pct = Math.min(100, Math.round((questionCount / ESTIMATED_QUESTIONS) * 100));
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressLabel').innerText = `Question ${questionCount} of ~${ESTIMATED_QUESTIONS}`;
+        }
+
         function renderQuestion(text) {
             questionCount++;
+            answerPending = false;
             let prefix = "";
             if (questionCount === 4) prefix = "The image grows clearer...<br><br>";
             if (questionCount === 7) prefix = "I'm very close now...<br><br>";
             if (questionCount === 9) prefix = "Almost there. One final veil to lift...<br><br>";
             setDialogue(prefix + text);
+            updateProgress();
             setInteraction(`
                 <div class="options-grid">
-                    <button class="btn-option yes" onclick="submitAnswer(1.0)">✓ Yes</button>
-                    <button class="btn-option no"  onclick="submitAnswer(0.0)">✗ No</button>
-                    <button class="btn-option"     onclick="submitAnswer(0.75)">Probably</button>
-                    <button class="btn-option"     onclick="submitAnswer(0.25)">Probably not</button>
-                    <button class="btn-option"     onclick="submitAnswer(0.5)">I'm not sure...</button>
+                    <button class="btn-option yes" data-key="1" onclick="submitAnswer(1.0, this, 'Yes')"><span class="opt-icon">✔</span> Yes</button>
+                    <button class="btn-option no"  data-key="2" onclick="submitAnswer(0.0, this, 'No')"><span class="opt-icon">✖</span> No</button>
+                    <button class="btn-option"     data-key="3" onclick="submitAnswer(0.75, this, 'Probably')"><span class="opt-icon">?</span> Probably</button>
+                    <button class="btn-option"     data-key="4" onclick="submitAnswer(0.25, this, 'Probably not')"><span class="opt-icon">?</span> Probably not</button>
+                    <button class="btn-option"     data-key="5" onclick="submitAnswer(0.5, this, 'Not sure')"><span class="opt-icon">❓</span> I'm not sure...</button>
                 </div>
             `);
         }
 
-        async function submitAnswer(weight) {
-            setInteraction(`<div class="loading-text">I feel the answer forming in the ether...</div>`);
+        async function submitAnswer(weight, btnEl, label) {
+            if (answerPending) return;
+            answerPending = true;
+
+            // Keep buttons visible but disabled, highlight the chosen one
+            const buttons = document.querySelectorAll('.btn-option');
+            buttons.forEach(btn => { btn.disabled = true; });
+            if (btnEl) btnEl.classList.add('selected');
+
+            // Add a small spinner + "you answered" chip beneath the buttons
+            const optionsGrid = document.querySelector('.options-grid');
+            if (optionsGrid) {
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'loading-wrap';
+                loadingDiv.id = 'answerLoading';
+                loadingDiv.innerHTML = `
+                    <div class="answered-chip">✔ You answered: ${label}</div>
+                    <div class="spinner"></div>
+                    <div class="loading-text" id="loadingMsg">Thinking...</div>
+                `;
+                optionsGrid.after(loadingDiv);
+            }
+
+            const timeoutWarning = setTimeout(() => {
+                const msg = document.getElementById('loadingMsg');
+                if (msg) msg.innerText = "Still thinking... the Genie is contacting the spirit realm. This can take a few more seconds.";
+            }, 8000);
+
             try {
                 const res  = await fetch(`${API_URL}/submit-answer`, {
                     method: 'POST',
@@ -724,6 +837,7 @@
                     body: JSON.stringify({ session_id: sessionId, question_id: currentQuestionId, answer_weight: weight })
                 });
                 const data = await res.json();
+                clearTimeout(timeoutWarning);
                 if (data.status === "playing") {
                     currentQuestionId = data.next_question_id;
                     renderQuestion(data.question_text);
@@ -731,15 +845,26 @@
                     renderGuess(data.character_guess);
                 }
             } catch(err) {
+                clearTimeout(timeoutWarning);
+                answerPending = false;
                 setDialogue("The vision slipped away...<br>The spirits lost the connection.");
                 setInteraction(`<button class="btn-play" onclick="startGame()">Try Again</button>`);
             }
         }
 
         function renderGuess(character) {
+            answerPending = false;
+            document.getElementById('progressWrap').style.display = 'none';
             setDialogue(`I knew it all along.<br><span class="guess-name">${character}</span>Your mind is an open book to me. 🔮`);
             setInteraction(`<button class="btn-play" onclick="startGame()">Challenge Me Again</button>`);
         }
+
+        // ── KEYBOARD SUPPORT ──
+        document.addEventListener('keydown', (e) => {
+            if (answerPending) return;
+            const btn = document.querySelector(`.btn-option[data-key="${e.key}"]`);
+            if (btn && !btn.disabled) btn.click();
+        });
     </script>
 </body>
 </html>
