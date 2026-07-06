@@ -31,6 +31,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://akinator-clone-0uf6.onrender.com">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap">
 
     <!-- Structured data -->
     <script type="application/ld+json">
@@ -192,8 +194,6 @@
     </script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
-
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
@@ -336,7 +336,7 @@
 
         .logo-area {
             text-align: center;
-            margin: 30px 0 10px;
+            margin: 10px 0;
             animation: introFadeDown 0.7s ease both;
         }
         .logo-area h1 {
@@ -371,7 +371,7 @@
         .crystal-ball {
             display: flex;
             justify-content: center;
-            margin-top: 14px;
+            margin-top: 8px;
             animation: introPop 0.6s ease 0.25s both;
         }
         .crystal-ball .orb {
@@ -389,7 +389,7 @@
             background: rgba(20, 14, 50, 0.85);
             border: 1px solid rgba(108, 63, 200, 0.4);
             border-radius: 20px;
-            padding: 28px 32px;
+            padding: 20px;
             width: 100%;
             text-align: center;
             box-shadow: 0 0 0 1px rgba(108,63,200,0.1), 0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
@@ -480,6 +480,11 @@
             margin-top: 14px;
         }
 
+        @keyframes btnPulse {
+            0%   { transform: scale(1); }
+            50%  { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
         .btn-play {
             background: linear-gradient(135deg, var(--violet) 0%, #9b59d6 100%);
             color: #fff;
@@ -494,12 +499,25 @@
             text-transform: uppercase;
             transition: all 0.2s ease;
             box-shadow: 0 4px 30px rgba(108,63,200,0.45);
+            animation: btnPulse 2.5s ease-in-out infinite;
         }
-        .btn-play:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 40px rgba(108,63,200,0.6); }
+        .btn-play:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 40px rgba(108,63,200,0.6); animation-play-state: paused; }
         .btn-play:disabled {
             cursor: wait;
             opacity: 0.65;
             transform: none !important;
+            animation: none !important;
+        }
+        .spinner-small {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: -3px;
+            animation: spin 0.8s linear infinite;
         }
 
         .btn-secondary {
@@ -576,6 +594,15 @@
                 padding: 22px 20px;
                 font-size: 1.1rem;
             }
+            .logo-area { margin: 6px 0; }
+            .logo-area h1 { letter-spacing: 1px; }
+            .crystal-ball { margin-top: 4px; }
+            .speech-bubble { padding: 16px; margin-bottom: 16px; }
+            #gameText { line-height: 1.5; font-size: 1.05rem; min-height: 0; }
+            .content-section p,
+            .content-section ol,
+            .content-section ul { line-height: 1.6; }
+            .section-divider { margin: 36px 0 18px; }
         }
 
         .btn-play:focus-visible,
@@ -611,8 +638,9 @@
             padding: 10px 0 4px;
         }
         .answered-chip {
-            font-size: 0.85rem;
-            color: var(--gold-dim);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--green);
             letter-spacing: 0.5px;
         }
         .loading-progress-text {
@@ -670,6 +698,26 @@
             margin-bottom: 14px;
             width: 100%;
             display: none;
+        }
+        .wake-progress-track {
+            width: 100%;
+            height: 5px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 8px 0 6px;
+        }
+        .wake-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+            border-radius: 5px;
+            transition: width 0.3s linear;
+        }
+        .wake-countdown-text {
+            font-size: 0.72rem;
+            color: var(--smoke);
+            letter-spacing: 0.3px;
         }
 
         .guess-name {
@@ -738,6 +786,23 @@
             font-size: 0.95rem;
             margin-bottom: 14px;
         }
+        .idea-pill {
+            background: rgba(108,63,200,0.2);
+            border: 1px solid rgba(108,63,200,0.45);
+            color: var(--white);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s ease;
+        }
+        .idea-pill:hover {
+            background: rgba(108,63,200,0.4);
+            border-color: var(--violet);
+            transform: translateY(-1px);
+        }
         .rate-buttons {
             display: flex;
             gap: 12px;
@@ -745,6 +810,9 @@
         }
         .rate-buttons .btn-option {
             flex: 1;
+        }
+        #playAgainBtn {
+            margin-bottom: 16px;
         }
         .rate-thanks {
             color: var(--gold-dim);
@@ -976,7 +1044,9 @@
             <div class="crystal-ball" aria-hidden="true"><span class="orb">🔮</span></div>
         </div>
         <div id="wakeBanner" class="wake-banner" role="status">
-            ⏳ Summoning the Genie for the first time today — this may take up to 30 seconds...
+            <div id="wakeMsgText">⏳ Summoning the Genie for the first time today...</div>
+            <div class="wake-progress-track"><div id="wakeProgressFill" class="wake-progress-fill"></div></div>
+            <div id="wakeCountdownText" class="wake-countdown-text">Usually takes about 15 seconds</div>
         </div>
 
         <div id="progressWrap" class="progress-wrap" style="display:none;">
@@ -1028,12 +1098,12 @@
                     <button class="btn-option no" id="rateNoBtn"><span class="opt-icon" aria-hidden="true">✖</span> No</button>
                 </div>
                 <div class="rate-thanks" id="rateThanks">Thanks — that helps the Genie learn! ✨</div>
+                <button class="btn-play" id="playAgainBtn">🔮 Play Again</button>
                 <div class="post-game-actions">
                     <button class="btn-secondary" id="shareResultBtn">📤 Share Result</button>
                     <button class="btn-secondary" id="challengeFriendBtn">🤝 Challenge a Friend</button>
                 </div>
-                <button class="btn-secondary" id="randomIdeaBtn" style="width:100%; margin-bottom:12px;">🎲 Random Character Ideas</button>
-                <button class="btn-play" id="playAgainBtn">Challenge Me Again</button>
+                <button class="btn-secondary" id="randomIdeaBtn" style="width:100%;">🎲 Random Character Ideas</button>
             </div>
 
             <div id="introExtras">
@@ -1227,6 +1297,9 @@
         const questionNumEl   = document.getElementById('questionNum');
         const introExtras     = document.getElementById('introExtras');
         const wakeBannerEl    = document.getElementById('wakeBanner');
+        const wakeMsgTextEl   = document.getElementById('wakeMsgText');
+        const wakeProgressFillEl = document.getElementById('wakeProgressFill');
+        const wakeCountdownTextEl = document.getElementById('wakeCountdownText');
         const optionButtons   = Array.from(optionsGrid.querySelectorAll('.btn-option'));
         let lastGuessedCharacter = '';
 
@@ -1281,6 +1354,8 @@
             "⏳ Contacting the Genie...",
             "✨ Opening the ancient library...",
             "🔮 Searching millions of characters...",
+            "📖 Dusting off old tomes...",
+            "🕯 Lighting the ritual candles...",
             "👁 The Genie is waking... almost ready..."
         ];
         let wakeMsgIndex = 0;
@@ -1288,11 +1363,11 @@
 
         function startWakeMessageRotation() {
             wakeMsgIndex = 0;
-            wakeBannerEl.textContent = wakeMessages[0];
+            wakeMsgTextEl.textContent = wakeMessages[0];
             clearInterval(wakeMsgInterval);
             wakeMsgInterval = setInterval(() => {
                 wakeMsgIndex = (wakeMsgIndex + 1) % wakeMessages.length;
-                wakeBannerEl.textContent = wakeMessages[wakeMsgIndex];
+                wakeMsgTextEl.textContent = wakeMessages[wakeMsgIndex];
             }, 2000);
         }
         function stopWakeMessageRotation() {
@@ -1300,11 +1375,40 @@
             wakeMsgInterval = null;
         }
 
+        // Countdown bar: most Render free-tier cold starts finish in ~15s, so we animate
+        // toward that expectation but never let the bar look "done" before the server
+        // actually responds — it eases toward 92% and holds until wakeServer() resolves.
+        const WAKE_ESTIMATE_SECONDS = 15;
+        let wakeCountdownInterval = null;
+        let wakeElapsedSeconds = 0;
+
+        function startWakeCountdown() {
+            wakeElapsedSeconds = 0;
+            wakeProgressFillEl.style.width = '0%';
+            wakeCountdownTextEl.textContent = `Usually takes about ${WAKE_ESTIMATE_SECONDS} seconds`;
+            clearInterval(wakeCountdownInterval);
+            wakeCountdownInterval = setInterval(() => {
+                wakeElapsedSeconds += 1;
+                const pct = Math.min(92, Math.round((wakeElapsedSeconds / WAKE_ESTIMATE_SECONDS) * 100));
+                wakeProgressFillEl.style.width = pct + '%';
+                const remaining = Math.max(0, WAKE_ESTIMATE_SECONDS - wakeElapsedSeconds);
+                wakeCountdownTextEl.textContent = remaining > 0
+                    ? `About ${remaining} second${remaining === 1 ? '' : 's'} left...`
+                    : `Almost there, thanks for your patience...`;
+            }, 1000);
+        }
+        function stopWakeCountdown() {
+            clearInterval(wakeCountdownInterval);
+            wakeCountdownInterval = null;
+            wakeProgressFillEl.style.width = '100%';
+        }
+
         function wakeServer() {
             fetch(`${API_URL}/`)
                 .then(() => {
                     serverReady = true;
                     stopWakeMessageRotation();
+                    stopWakeCountdown();
                     wakeBannerEl.style.display = 'none';
                     wakePromiseResolvers.forEach(resolve => resolve());
                     wakePromiseResolvers = [];
@@ -1322,11 +1426,16 @@
         setTimeout(() => {
             if (!serverReady) {
                 wakeBannerEl.style.display = 'block';
+                startWakeCountdown();
                 startWakeMessageRotation();
             }
-        }, 2000);
+        }, 6000);
 
-        wakeServer();
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => wakeServer());
+        } else {
+            wakeServer();
+        }
 
         setInterval(() => {
             fetch(`${API_URL}/`).catch(() => {});
@@ -1456,7 +1565,10 @@
 
             sessionId = generateSessionId();
             questionCount = 0;
-            document.getElementById('progressWrap').style.display = 'none';
+            const progressWrapEl = document.getElementById('progressWrap');
+            progressWrapEl.style.display = 'block';
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('progressLabel').innerText = `Question 1 of ~${ESTIMATED_QUESTIONS} · 0% Complete`;
             questionNumEl.style.display = 'none';
             rateThanks.style.display = 'none';
             rateButtonsRow.style.display = 'flex';
@@ -1465,10 +1577,11 @@
             trackEvent('game_started');
 
             startBtn.disabled = true;
-            startBtn.textContent = '🔮 Starting...';
+            startBtn.innerHTML = '<span class="spinner-small" aria-hidden="true"></span> Connecting to Genie...';
 
             if (!serverReady) {
                 wakeBannerEl.style.display = 'block';
+                startWakeCountdown();
                 startWakeMessageRotation();
                 setDialogue("The Genie is still awakening from slumber...<br>Hang tight, this only happens on the first game of the day. 👁️");
                 await waitForServer();
@@ -1542,7 +1655,19 @@
             "✨ Reading your thoughts...",
             "📚 Searching memories...",
             "🕯 Looking through legends...",
-            "🌙 Almost certain..."
+            "🌙 Almost certain...",
+            "🧠 Cross-referencing possibilities...",
+            "📖 Flipping through old tomes...",
+            "🗺 Narrowing the realms of thought...",
+            "💭 Sensing a pattern forming...",
+            "🌟 Aligning the constellations...",
+            "🔍 Peering into the crystal ball...",
+            "🕰 Traveling through memory...",
+            "🎭 Weighing the possibilities...",
+            "🪄 Casting a divination...",
+            "📜 Consulting ancient records...",
+            "🌌 Gazing deeper into the void...",
+            "🔑 Unlocking a hidden clue..."
         ];
         let thinkingIndex = 0;
         let thinkingInterval = null;
@@ -1622,7 +1747,16 @@
             trackEvent('random_ideas_click');
             const shuffled = [...characterIdeaPool].sort(() => Math.random() - 0.5);
             const picks = shuffled.slice(0, 3);
-            ratePromptEl.innerHTML = `Can't think of one? Try: <strong>${picks.join('</strong>, <strong>')}</strong> — or anyone else!`;
+            const buttonsHtml = picks
+                .map(name => `<button type="button" class="idea-pill" data-character="${name}">${name}</button>`)
+                .join(' ');
+            ratePromptEl.innerHTML = `Can't think of one? Try: ${buttonsHtml} — or anyone else!`;
+            ratePromptEl.querySelectorAll('.idea-pill').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    trackEvent('random_idea_selected', { character: btn.dataset.character });
+                    ratePromptEl.innerHTML = `Great choice! Now keep <strong>${btn.dataset.character}</strong> in your mind...`;
+                });
+            });
         }
 
         function rateGuess(wasCorrect) {
