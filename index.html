@@ -44,6 +44,8 @@
             --glow:     #b97fff;
             --white:    #f5f0ff;
             --smoke:    #a89bc2;
+            --green:    #50c878;
+            --red:      #c85050;
         }
 
         html { scroll-behavior: smooth; }
@@ -129,6 +131,19 @@
             font-size: 0.8rem;
         }
         .top-nav a:hover { color: var(--white); }
+
+        /* ── Mobile nav fix: stack and wrap instead of cramming ── */
+        @media (max-width: 700px) {
+            .top-bar {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .top-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                row-gap: 8px;
+            }
+        }
 
         .logo-area {
             text-align: center;
@@ -221,6 +236,15 @@
             border-bottom-color: rgba(20, 14, 50, 0.95);
             border-top: 0;
         }
+        .question-num {
+            display: inline-block;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
         #gameText {
             font-size: 1.15rem;
             line-height: 1.7;
@@ -230,6 +254,15 @@
             transition: opacity 0.3s ease;
         }
         #gameText.fade { opacity: 0; }
+
+        /* ── Answer / question entrance animation ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .question-enter {
+            animation: fadeUp 0.35s ease;
+        }
 
         .btn-play {
             background: linear-gradient(135deg, var(--violet) 0%, #9b59d6 100%);
@@ -247,6 +280,11 @@
             box-shadow: 0 4px 30px rgba(108,63,200,0.45);
         }
         .btn-play:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(108,63,200,0.6); }
+        .btn-play:disabled {
+            cursor: wait;
+            opacity: 0.65;
+            transform: none !important;
+        }
 
         .options-grid {
             display: flex;
@@ -270,6 +308,7 @@
             justify-content: center;
             gap: 10px;
             min-height: 48px;
+            font-family: inherit;
         }
         .btn-option:hover {
             background: rgba(108,63,200,0.3);
@@ -295,6 +334,18 @@
         .btn-option.no:hover  { background: rgba(200,80,80,0.15); border-color: #c85050; }
 
         .opt-icon { font-size: 0.95rem; opacity: 0.85; }
+
+        /* ── Visible keyboard focus for all interactive controls ── */
+        .btn-play:focus-visible,
+        .btn-option:focus-visible,
+        .lang-btn:focus-visible,
+        .top-nav a:focus-visible,
+        .footer-links a:focus-visible,
+        .footer-links button:focus-visible,
+        .store-card:focus-visible {
+            outline: 2px solid var(--glow);
+            outline-offset: 3px;
+        }
 
         .loading-text {
             text-align: center;
@@ -384,6 +435,54 @@
         @keyframes reveal-name {
             from { opacity: 0; transform: scale(0.8) translateY(10px); letter-spacing: 10px; }
             to   { opacity: 1; transform: scale(1) translateY(0); letter-spacing: 2px; }
+        }
+        .guess-name.big-glow {
+            animation: reveal-name 0.6s ease forwards, name-glow-pulse 2.2s ease-in-out 0.6s infinite;
+        }
+        @keyframes name-glow-pulse {
+            0%, 100% { text-shadow: 0 0 30px rgba(240,192,64,0.5); }
+            50%       { text-shadow: 0 0 55px rgba(240,192,64,0.85), 0 0 90px rgba(185,127,255,0.4); }
+        }
+
+        /* ── Confetti burst on reveal ── */
+        .confetti-piece {
+            position: fixed;
+            top: -10px;
+            width: 8px;
+            height: 14px;
+            opacity: 0.9;
+            pointer-events: none;
+            z-index: 50;
+            animation: confetti-fall linear forwards;
+        }
+        @keyframes confetti-fall {
+            to { transform: translateY(105vh) rotate(540deg); opacity: 0; }
+        }
+
+        /* ── Rate-the-guess panel ── */
+        .rate-panel {
+            width: 100%;
+            text-align: center;
+            padding-top: 4px;
+        }
+        .rate-panel p {
+            color: var(--smoke);
+            font-size: 0.95rem;
+            margin-bottom: 14px;
+        }
+        .rate-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .rate-buttons .btn-option {
+            flex: 1;
+        }
+        .rate-thanks {
+            color: var(--gold-dim);
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+            display: none;
         }
 
         .section-divider {
@@ -546,10 +645,10 @@
             </nav>
         </div>
         <div class="logo-area">
-            <h1><span class="logo-eye">👁</span> MindGenie AI <span class="logo-eye">👁</span></h1>
+            <h1><span class="logo-eye" aria-hidden="true">👁</span> MindGenie AI <span class="logo-eye" aria-hidden="true">👁</span></h1>
             <h2>The Ultimate Character Guessing Game</h2>
         </div>
-        <div id="wakeBanner" class="wake-banner">
+        <div id="wakeBanner" class="wake-banner" role="status">
             ⏳ Summoning the Genie for the first time today — this may take up to 30 seconds...
         </div>
 
@@ -559,11 +658,51 @@
         </div>
 
         <div class="speech-bubble" id="gameBox">
-            <p id="gameText">Think of any character — fictional, a celebrity, or a historical figure.<br><br>Don't tell me who it is. I'll try to guess by asking a few simple questions.</p>
+            <div id="questionNum" class="question-num" style="display:none;" aria-hidden="true"></div>
+            <p id="gameText" aria-live="polite">Think of any character — fictional, a celebrity, or a historical figure.<br><br>Don't tell me who it is. I'll try to guess by asking a few simple questions.</p>
         </div>
 
         <div id="interactionArea" style="width:100%">
-            <button class="btn-play" onclick="startGame()">🔮 Start Game</button>
+
+            <!-- Start / try-again panel -->
+            <button id="startBtn" class="btn-play" onclick="startGame()">🔮 Start Game</button>
+
+            <!-- Answer options (built once, reused for every question) -->
+            <div id="optionsGrid" class="options-grid" style="display:none;">
+                <button class="btn-option yes" data-key="1" data-weight="1.0" data-label="Yes">
+                    <span class="opt-icon" aria-hidden="true">✔</span> Yes
+                </button>
+                <button class="btn-option no" data-key="2" data-weight="0.0" data-label="No">
+                    <span class="opt-icon" aria-hidden="true">✖</span> No
+                </button>
+                <button class="btn-option" data-key="3" data-weight="0.75" data-label="Probably">
+                    <span class="opt-icon" aria-hidden="true">🤔</span> Probably
+                </button>
+                <button class="btn-option" data-key="4" data-weight="0.25" data-label="Probably Not">
+                    <span class="opt-icon" aria-hidden="true">🤨</span> Probably Not
+                </button>
+                <button class="btn-option" data-key="5" data-weight="0.5" data-label="Not Sure">
+                    <span class="opt-icon" aria-hidden="true">❓</span> Not Sure
+                </button>
+            </div>
+
+            <!-- Loading indicator shown while an answer is being submitted -->
+            <div id="answerLoading" class="loading-wrap" style="display:none;" role="status">
+                <div class="answered-chip" id="answeredChip">✔ You answered: —</div>
+                <div class="spinner" aria-hidden="true"></div>
+                <div class="loading-text" id="loadingMsg">Thinking...</div>
+            </div>
+
+            <!-- Rate-the-guess panel, shown after a character reveal -->
+            <div id="ratePanel" class="rate-panel" style="display:none;">
+                <p id="ratePrompt">Was I correct?</p>
+                <div class="rate-buttons">
+                    <button class="btn-option yes" onclick="rateGuess(true)"><span class="opt-icon" aria-hidden="true">✔</span> Yes</button>
+                    <button class="btn-option no" onclick="rateGuess(false)"><span class="opt-icon" aria-hidden="true">✖</span> No</button>
+                </div>
+                <div class="rate-thanks" id="rateThanks">Thanks — that helps the Genie learn! ✨</div>
+                <button class="btn-play" id="playAgainBtn" onclick="startGame()">Challenge Me Again</button>
+            </div>
         </div>
 
         <!-- ── ABOUT ── -->
@@ -639,7 +778,7 @@
         <div class="footer-links">
             <a href="https://www.facebook.com/AmazeCentral1" target="_blank">Facebook</a>
             <a href="https://www.pinterest.com/FashionTrendsforward/" target="_blank">Pinterest</a>
-            <button onclick="shareGame(event)">📢 Share Game</button>
+            <button onclick="shareGame(event)" aria-label="Share this game">📢 Share Game</button>
             <a href="https://opencharactercounter.com/" target="_blank" rel="sponsored noopener">Character Counter Tool</a>
             <a href="about.html">About</a>
             <a href="contact.html">Contact</a>
@@ -673,7 +812,35 @@
         let questionCount = 0;
         let serverReady = false;
         let answerPending = false;
+        let wakePromiseResolvers = [];
         const ESTIMATED_QUESTIONS = 15;
+
+        // ── STATIC DOM REFERENCES (created once, reused for every question) ──
+        const startBtn      = document.getElementById('startBtn');
+        const optionsGrid    = document.getElementById('optionsGrid');
+        const answerLoading  = document.getElementById('answerLoading');
+        const answeredChip   = document.getElementById('answeredChip');
+        const loadingMsgEl   = document.getElementById('loadingMsg');
+        const ratePanel      = document.getElementById('ratePanel');
+        const rateThanks     = document.getElementById('rateThanks');
+        const rateButtonsRow = document.querySelector('.rate-buttons');
+        const questionNumEl  = document.getElementById('questionNum');
+        const optionButtons  = Array.from(optionsGrid.querySelectorAll('.btn-option'));
+
+        // Wire up the option buttons once, using their data-* attributes.
+        optionButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                submitAnswer(parseFloat(btn.dataset.weight), btn, btn.dataset.label);
+            });
+        });
+
+        function showPanel(panel) {
+            // panel: 'start' | 'options' | 'rate'
+            startBtn.style.display     = panel === 'start'   ? 'block' : 'none';
+            optionsGrid.style.display  = panel === 'options' ? 'flex'  : 'none';
+            ratePanel.style.display    = panel === 'rate'    ? 'block' : 'none';
+            answerLoading.style.display = 'none';
+        }
 
         // ── WAKE UP BACKEND ON PAGE LOAD ──
         function wakeServer() {
@@ -681,17 +848,24 @@
                 .then(() => {
                     serverReady = true;
                     document.getElementById('wakeBanner').style.display = 'none';
+                    wakePromiseResolvers.forEach(resolve => resolve());
+                    wakePromiseResolvers = [];
                 })
                 .catch(() => {
                     setTimeout(wakeServer, 5000);
                 });
         }
 
+        function waitForServer() {
+            if (serverReady) return Promise.resolve();
+            return new Promise(resolve => wakePromiseResolvers.push(resolve));
+        }
+
         setTimeout(() => {
             if (!serverReady) {
                 document.getElementById('wakeBanner').style.display = 'block';
             }
-        }, 3000);
+        }, 2000);
 
         wakeServer();
 
@@ -721,11 +895,10 @@
             setTimeout(() => {
                 el.innerHTML = html;
                 el.classList.remove('fade');
+                el.classList.remove('question-enter');
+                void el.offsetWidth; // restart animation
+                el.classList.add('question-enter');
             }, 280);
-        }
-
-        function setInteraction(html) {
-            document.getElementById('interactionArea').innerHTML = html;
         }
 
         function generateSessionId() {
@@ -749,17 +922,24 @@
         async function startGame() {
             sessionId = generateSessionId();
             questionCount = 0;
-            document.getElementById('wakeBanner').style.display = 'none';
+            document.getElementById('progressWrap').style.display = 'none';
+            questionNumEl.style.display = 'none';
+            rateThanks.style.display = 'none';
+            rateButtonsRow.style.display = 'flex';
+
+            // Keep the Start button visible but disabled instead of swapping it out,
+            // so the page never feels empty while we contact the server.
+            startBtn.disabled = true;
+            startBtn.textContent = '🔮 Starting...';
 
             if (!serverReady) {
-                setDialogue("The Genie is still awakening from slumber...<br>Please wait just a moment. 👁️");
-                setInteraction(`<div class="loading-text">Contacting the spirit realm...</div>`);
-                setTimeout(startGame, 4000);
-                return;
+                document.getElementById('wakeBanner').style.display = 'block';
+                setDialogue("The Genie is still awakening from slumber...<br>Hang tight, this only happens on the first game of the day. 👁️");
+                await waitForServer();
+                document.getElementById('wakeBanner').style.display = 'none';
             }
 
             setDialogue("Good... I'm already sensing something.<br>Answer honestly. I'll know if you don't. 👁️");
-            setInteraction(`<div class="loading-text">The Genie reaches into the void...</div>`);
 
             try {
                 const res  = await fetch(`${API_URL}/start-game?session_id=${sessionId}`);
@@ -767,10 +947,14 @@
                 if (data.status === "game_started") {
                     currentQuestionId = data.next_question_id;
                     renderQuestion(data.question_text);
+                } else {
+                    handleUnexpectedResponse();
                 }
             } catch(err) {
                 setDialogue("The connection to the spirit realm was lost.<br>Try again in a moment.");
-                setInteraction(`<button class="btn-play" onclick="startGame()">Try Again</button>`);
+                startBtn.disabled = false;
+                startBtn.textContent = '🔮 Try Again';
+                showPanel('start');
             }
         }
 
@@ -791,43 +975,49 @@
             if (questionCount === 9) prefix = "Almost there. One final veil to lift...<br><br>";
             setDialogue(prefix + text);
             updateProgress();
-            setInteraction(`
-                <div class="options-grid">
-                    <button class="btn-option yes" data-key="1" onclick="submitAnswer(1.0, this, 'Yes')"><span class="opt-icon">✔</span> Yes</button>
-                    <button class="btn-option no"  data-key="2" onclick="submitAnswer(0.0, this, 'No')"><span class="opt-icon">✖</span> No</button>
-                    <button class="btn-option"     data-key="3" onclick="submitAnswer(0.75, this, 'Probably')"><span class="opt-icon">?</span> Probably</button>
-                    <button class="btn-option"     data-key="4" onclick="submitAnswer(0.25, this, 'Probably not')"><span class="opt-icon">?</span> Probably not</button>
-                    <button class="btn-option"     data-key="5" onclick="submitAnswer(0.5, this, 'Not sure')"><span class="opt-icon">❓</span> I'm not sure...</button>
-                </div>
-            `);
+
+            questionNumEl.textContent = `Question ${questionCount}`;
+            questionNumEl.style.display = 'block';
+
+            // Reset the shared button set for this new question instead of
+            // rebuilding the DOM: just re-enable and clear old selection state.
+            optionButtons.forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('selected');
+            });
+            startBtn.disabled = false;
+            startBtn.textContent = '🔮 Start Game';
+            showPanel('options');
+
+            optionsGrid.classList.remove('question-enter');
+            void optionsGrid.offsetWidth;
+            optionsGrid.classList.add('question-enter');
+        }
+
+        function handleUnexpectedResponse() {
+            // Guard against an API response that is neither "playing" nor
+            // "guess" so the player is never stuck unable to answer again.
+            answerPending = false;
+            optionButtons.forEach(btn => { btn.disabled = false; btn.classList.remove('selected'); });
+            answerLoading.style.display = 'none';
+            setDialogue("Hmm, the spirits gave a strange sign I didn't recognize.<br>You can try answering again, or start a new round.");
         }
 
         async function submitAnswer(weight, btnEl, label) {
             if (answerPending) return;
             answerPending = true;
 
-            // Keep buttons visible but disabled, highlight the chosen one
-            const buttons = document.querySelectorAll('.btn-option');
-            buttons.forEach(btn => { btn.disabled = true; });
+            // Keep the buttons visible but disabled, highlight the chosen one,
+            // and show a small "you answered" chip + spinner beneath them.
+            optionButtons.forEach(btn => { btn.disabled = true; });
             if (btnEl) btnEl.classList.add('selected');
 
-            // Add a small spinner + "you answered" chip beneath the buttons
-            const optionsGrid = document.querySelector('.options-grid');
-            if (optionsGrid) {
-                const loadingDiv = document.createElement('div');
-                loadingDiv.className = 'loading-wrap';
-                loadingDiv.id = 'answerLoading';
-                loadingDiv.innerHTML = `
-                    <div class="answered-chip">✔ You answered: ${label}</div>
-                    <div class="spinner"></div>
-                    <div class="loading-text" id="loadingMsg">Thinking...</div>
-                `;
-                optionsGrid.after(loadingDiv);
-            }
+            answeredChip.textContent = `✔ You answered: ${label}`;
+            loadingMsgEl.textContent = 'Thinking...';
+            answerLoading.style.display = 'flex';
 
             const timeoutWarning = setTimeout(() => {
-                const msg = document.getElementById('loadingMsg');
-                if (msg) msg.innerText = "Still thinking... the Genie is contacting the spirit realm. This can take a few more seconds.";
+                loadingMsgEl.textContent = "Still thinking... the Genie is contacting the spirit realm. This can take a few more seconds.";
             }, 8000);
 
             try {
@@ -839,31 +1029,68 @@
                 const data = await res.json();
                 clearTimeout(timeoutWarning);
                 if (data.status === "playing") {
+                    renderQuestion.__nextId = data.next_question_id;
                     currentQuestionId = data.next_question_id;
                     renderQuestion(data.question_text);
                 } else if (data.status === "guess") {
                     renderGuess(data.character_guess);
+                } else {
+                    handleUnexpectedResponse();
                 }
             } catch(err) {
                 clearTimeout(timeoutWarning);
                 answerPending = false;
-                setDialogue("The vision slipped away...<br>The spirits lost the connection.");
-                setInteraction(`<button class="btn-play" onclick="startGame()">Try Again</button>`);
+                optionButtons.forEach(btn => { btn.disabled = false; btn.classList.remove('selected'); });
+                answerLoading.style.display = 'none';
+                setDialogue("The vision slipped away...<br>The spirits lost the connection. Try answering again.");
             }
         }
 
         function renderGuess(character) {
             answerPending = false;
             document.getElementById('progressWrap').style.display = 'none';
-            setDialogue(`I knew it all along.<br><span class="guess-name">${character}</span>Your mind is an open book to me. 🔮`);
-            setInteraction(`<button class="btn-play" onclick="startGame()">Challenge Me Again</button>`);
+            questionNumEl.style.display = 'none';
+            setDialogue(`I knew it all along.<br><span class="guess-name big-glow">${character}</span>Your mind is an open book to me. 🔮`);
+            showPanel('rate');
+            launchConfetti();
+        }
+
+        function rateGuess(wasCorrect) {
+            // No dedicated backend endpoint for this yet, so we just log the
+            // signal locally/to analytics and thank the player.
+            try {
+                if (typeof gtag === 'function') {
+                    gtag('event', 'guess_rating', { correct: wasCorrect });
+                }
+            } catch(e) {}
+            rateButtonsRow.style.display = 'none';
+            rateThanks.style.display = 'block';
+        }
+
+        function launchConfetti() {
+            const colors = ['#f0c040', '#6c3fc8', '#b97fff', '#50c878', '#f5f0ff'];
+            const count = 60;
+            for (let i = 0; i < count; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                const left = Math.random() * 100;
+                const duration = 1.8 + Math.random() * 1.4;
+                const delay = Math.random() * 0.3;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.left = left + 'vw';
+                piece.style.background = color;
+                piece.style.animationDuration = duration + 's';
+                piece.style.animationDelay = delay + 's';
+                document.body.appendChild(piece);
+                setTimeout(() => piece.remove(), (duration + delay) * 1000 + 200);
+            }
         }
 
         // ── KEYBOARD SUPPORT ──
         document.addEventListener('keydown', (e) => {
             if (answerPending) return;
             const btn = document.querySelector(`.btn-option[data-key="${e.key}"]`);
-            if (btn && !btn.disabled) btn.click();
+            if (btn && !btn.disabled && optionsGrid.style.display !== 'none') btn.click();
         });
     </script>
 </body>
