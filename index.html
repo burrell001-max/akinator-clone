@@ -1337,6 +1337,19 @@
 
         // ── GAME FLOW ──
         async function startGame() {
+            // If the click came from a button further down the page (pre-footer CTA,
+            // sticky bar, etc.), the game state changes up in the speech bubble, out of
+            // view — which reads as "the button did nothing." Scroll the game area into
+            // view first so the player actually sees the round start.
+            const gameBoxEl = document.getElementById('gameBox');
+            if (gameBoxEl) {
+                const rect = gameBoxEl.getBoundingClientRect();
+                const isOutOfView = rect.top < 0 || rect.bottom > window.innerHeight;
+                if (isOutOfView) {
+                    gameBoxEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+
             sessionId = generateSessionId();
             questionCount = 0;
             document.getElementById('progressWrap').style.display = 'none';
