@@ -1,0 +1,16 @@
+# MindGenie AI
+
+> MindGenie AI is a free, browser-based character guessing game. Think of any character — from movies, TV, anime, books, video games, or history — and the AI Genie asks a short series of yes-or-no style questions to guess who you're thinking of.
+
+## Key facts
+- Free to play, no account or signup required
+- Runs entirely in the browser, works on desktop and mobile
+- Typically asks 10–20 questions per round
+- Covers characters from movies, TV, anime, video games, books, and history
+
+## Pages
+- [Home / Play](https://mindgenieai.xyz/): The game itself, plus FAQ, About, and How to Play sections
+- [About](https://mindgenieai.xyz/about.html): Background on the project
+- [Contact](https://mindgenieai.xyz/contact.html): How to reach the site owner
+- [Privacy Policy](https://mindgenieai.xyz/privacy-policy.html): Data collection, analytics, and advertising disclosures
+- [Terms of Service](https://mindgenieai.xyz/terms.html): Terms of use
