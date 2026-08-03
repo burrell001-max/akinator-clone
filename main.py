@@ -227,19 +227,89 @@ CHARACTERS = {
 }
 
 
-def get_daily_question_set():
-    """
-    Returns a random 10-question subset, in random order, freshly shuffled
-    every time a game starts. No longer seeded by date, so every player —
-    and every replay by the same player — gets a different opening question
-    and a different order.
-    """
-    all_q = list(QUESTIONS.keys())
-    random.shuffle(all_q)   # unseeded -> different every call
-    return all_q[:10]
-
-
 DAILY_CHARACTER_COUNT = 15  # how many of the full roster are "in play" each day
+
+# --- ADAPTIVE QUESTION SELECTION ---
+# Instead of asking a fixed, pre-shuffled list of 10 questions, we pick each
+# question on the fly based on the answers given so far: whichever remaining
+# question best "splits" the characters that are still plausible matches.
+MIN_QUESTIONS = 6      # never guess before at least this many questions
+MAX_QUESTIONS = 14      # hard cap so a round can't run forever
+CONFIDENCE_MARGIN = 0.35  # stop early once the leader is clearly ahead
+
+
+def _character_distances(characters: Dict[str, Dict], answers: Dict[str, float]) -> Dict[str, float]:
+    """
+    For each character, the average |difference| between their profile and
+    the user's answers so far, over only the questions actually answered.
+    Lower = more plausible match. Unanswered-so-far -> distance 0 for all
+    (nothing to distinguish them yet).
+    """
+    distances = {}
+    for name, profile in characters.items():
+        total = 0.0
+        answered = 0
+        for q_id, user_weight in answers.items():
+            if q_id in profile:
+                total += abs(profile[q_id] - user_weight)
+                answered += 1
+        distances[name] = (total / answered) if answered > 0 else 0.0
+    return distances
+
+
+def _character_weights(characters: Dict[str, Dict], answers: Dict[str, float]) -> Dict[str, float]:
+    """
+    Converts distance-so-far into a plausibility weight: characters that fit
+    the answers well so far get more influence over which question we ask
+    next. A small epsilon keeps a perfect-so-far match from dominating so
+    completely that we stop exploring other close contenders too early.
+    """
+    distances = _character_distances(characters, answers)
+    return {name: 1.0 / (dist + 0.15) for name, dist in distances.items()}
+
+
+def _weighted_variance(values, weights) -> float:
+    if not values:
+        return 0.0
+    total_w = sum(weights)
+    if total_w == 0:
+        return 0.0
+    mean = sum(v * w for v, w in zip(values, weights)) / total_w
+    return sum(w * (v - mean) ** 2 for v, w in zip(values, weights)) / total_w
+
+
+def pick_next_question(characters: Dict[str, Dict], answers: Dict[str, float], available: set) -> str:
+    """
+    Chooses whichever unasked question has the highest weighted variance in
+    answer-value across today's characters -- i.e. the question most likely
+    to meaningfully split apart the candidates still in contention, given
+    what we've learned so far. Falls back to the first available question if
+    every candidate question is somehow non-discriminating.
+    """
+    weights = _character_weights(characters, answers)
+    best_q, best_variance = None, -1.0
+    for q_id in available:
+        values, w_list = [], []
+        for name, profile in characters.items():
+            if q_id in profile:
+                values.append(profile[q_id])
+                w_list.append(weights[name])
+        variance = _weighted_variance(values, w_list)
+        if variance > best_variance:
+            best_variance, best_q = variance, q_id
+    return best_q or next(iter(available))
+
+
+def should_stop(characters: Dict[str, Dict], answers: Dict[str, float], asked_count: int, available: set) -> bool:
+    if asked_count >= MAX_QUESTIONS or not available:
+        return True
+    if asked_count < MIN_QUESTIONS:
+        return False
+    distances = sorted(_character_distances(characters, answers).values())
+    if len(distances) < 2:
+        return True
+    # Confident once the runner-up is clearly further away than the leader.
+    return (distances[1] - distances[0]) >= CONFIDENCE_MARGIN
 
 
 def get_daily_character_pool():
@@ -270,15 +340,22 @@ def home():
 
 @app.get("/start-game")
 def start_game(session_id: str):
-    # Same 10 questions for everyone today; changes automatically tomorrow
-    selected = get_daily_question_set()
+    # Same rotating character pool for everyone today; changes automatically
+    # tomorrow. Questions, however, are now chosen adaptively per-session as
+    # the player answers, rather than pre-selected before the game starts.
+    todays_characters = get_daily_character_pool()
 
     sessions[session_id] = {
+        "characters": todays_characters,
         "answers": {},
-        "remaining_questions": list(selected),
+        "asked_questions": [],
+        "available_questions": set(QUESTIONS.keys()),
     }
 
-    next_q = selected[0]
+    next_q = pick_next_question(todays_characters, {}, sessions[session_id]["available_questions"])
+    sessions[session_id]["asked_questions"].append(next_q)
+    sessions[session_id]["available_questions"].discard(next_q)
+
     return {
         "status": "game_started",
         "next_question_id": next_q,
@@ -293,12 +370,19 @@ def submit_answer(data: AnswerInput):
         return {"status": "error", "message": "Session not found."}
 
     session["answers"][data.question_id] = data.answer_weight
+    session["available_questions"].discard(data.question_id)
 
-    if data.question_id in session["remaining_questions"]:
-        session["remaining_questions"].remove(data.question_id)
+    todays_characters = session["characters"]
 
-    if session["remaining_questions"]:
-        next_q = session["remaining_questions"][0]
+    if not should_stop(
+        todays_characters,
+        session["answers"],
+        len(session["asked_questions"]),
+        session["available_questions"],
+    ):
+        next_q = pick_next_question(todays_characters, session["answers"], session["available_questions"])
+        session["asked_questions"].append(next_q)
+        session["available_questions"].discard(next_q)
         return {
             "status": "playing",
             "next_question_id": next_q,
@@ -306,9 +390,8 @@ def submit_answer(data: AnswerInput):
         }
 
     # --- WEIGHTED MATCH CALCULATION ---
-    # Characters with more answered questions get scored fairly
-    # Only today's rotating character pool is considered
-    todays_characters = get_daily_character_pool()
+    # Characters with more answered questions get scored fairly.
+    # Only today's rotating character pool (fixed for this session) is considered.
     best_match = None
     best_score = float('inf')
 
