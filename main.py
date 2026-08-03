@@ -229,14 +229,13 @@ CHARACTERS = {
 
 def get_daily_question_set():
     """
-    Returns the same 10 questions, in the same order, for every player
-    on a given calendar day. The set automatically changes the next day
-    because the random seed is derived from today's date.
+    Returns a random 10-question subset, in random order, freshly shuffled
+    every time a game starts. No longer seeded by date, so every player —
+    and every replay by the same player — gets a different opening question
+    and a different order.
     """
     all_q = list(QUESTIONS.keys())
-    today_str = date.today().isoformat()  # e.g. "2026-06-21"
-    rng = random.Random(today_str)        # seeded RNG -> same shuffle all day
-    rng.shuffle(all_q)
+    random.shuffle(all_q)   # unseeded -> different every call
     return all_q[:10]
 
 
