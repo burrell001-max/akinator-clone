@@ -84,6 +84,26 @@
           "@type": "Question",
           "name": "Can I play MindGenie AI on my phone?",
           "acceptedAnswer": { "@type": "Answer", "text": "Yes. MindGenie AI runs entirely in the browser and is fully playable on phones, tablets, and desktop computers." }
+        },
+        {
+          "@type": "Question",
+          "name": "What kinds of characters can I think of?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Anyone real or fictional works: movie and TV characters, anime and manga characters, video game characters, and historical figures. If you can describe them with yes-or-no traits, the Genie can usually take a guess." }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if the Genie guesses wrong?",
+          "acceptedAnswer": { "@type": "Answer", "text": "You can tell the Genie it guessed wrong, and it'll note that for future rounds. Every wrong guess helps sharpen its questions for the next player who thinks of the same character." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need to create an account?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. There's no sign-up, login, or personal information required at any point. Just open the page and start a round." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my data stored or shared?",
+          "acceptedAnswer": { "@type": "Answer", "text": "MindGenie AI only stores the answers from your current round to make its guess, along with anonymous, aggregate stats like how often a character is guessed correctly. See the Privacy Policy for full details." }
         }
       ]
     }
@@ -1127,6 +1147,33 @@
                 <h3>Can I play MindGenie AI on my phone?</h3>
                 <p>Yes. The game runs entirely in the browser and is fully playable on phones, tablets, and desktop computers.</p>
             </div>
+            <div class="faq-item">
+                <h3>What kinds of characters can I think of?</h3>
+                <p>Anyone real or fictional works — movie and TV characters, anime and manga characters, video game characters, or historical figures. If you can describe them with a series of yes-or-no traits, the Genie can usually take a guess. Browse <a href="movies.html" style="color:var(--gold-dim);">movies</a>, <a href="tv-shows.html" style="color:var(--gold-dim);">TV shows</a>, <a href="anime.html" style="color:var(--gold-dim);">anime</a>, <a href="video-games.html" style="color:var(--gold-dim);">video games</a>, and <a href="history.html" style="color:var(--gold-dim);">history</a> for ideas by category.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What happens if the Genie guesses wrong?</h3>
+                <p>You can tell it the guess was wrong right on the results screen. That feedback doesn't change your current round, but it helps sharpen the questions asked to the next player who thinks of the same character.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Do I need to create an account?</h3>
+                <p>No. There's no sign-up, login, or personal information required at any point — just open the page and start a round.</p>
+            </div>
+            <details class="more-faq">
+                <summary>A few more questions</summary>
+                <div class="faq-item">
+                    <h3>Is my data stored or shared?</h3>
+                    <p>MindGenie AI only keeps the answers from your current round in order to make its guess, plus anonymous, aggregate stats like how often a given character gets guessed correctly. See the <a href="privacy-policy.html" style="color:var(--gold-dim);">Privacy Policy</a> for the full details.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Why did the loading take a few seconds the first time?</h3>
+                    <p>The Genie's backend spins down after periods of inactivity to save resources, so the very first round of the day can take a few extra seconds to "wake up." Every round after that starts instantly.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Can I suggest a character to add?</h3>
+                    <p>Yes — use the <a href="contact.html" style="color:var(--gold-dim);">Contact page</a> to send suggestions. New characters get added in batches; check the blog for update notes.</p>
+                </div>
+            </details>
 
             <p style="margin-top:6px;"><a href="faq.html" style="color:var(--gold-dim); font-weight:600; font-size:0.9rem;">See the full FAQ &rarr;</a></p>
         </div>
@@ -1134,18 +1181,49 @@
         <div class="section-divider" id="about"><span>About the Genie</span></div>
         <div class="content-section">
             <p>MindGenie AI is a free browser-based guessing game inspired by classic "20 questions" style mind-reading games. Think of any character — real, fictional, historical, or from pop culture — and the Genie will ask you a short series of simple yes-or-no style questions to work out who you're thinking of.</p>
+            <p>Under the hood, each answer narrows down a large pool of possible characters by comparing the traits you've confirmed or ruled out against traits already known about thousands of characters. The more distinctive a character is — a unique power, a rare job, a specific era — the fewer questions it usually takes. Characters who share a lot of traits with someone more famous, like a supporting cast member or a minor villain, tend to take longer and occasionally stump the Genie entirely.</p>
+            <p>Every round also feeds back into the system: when players confirm or correct a guess, that signal helps the Genie ask sharper questions the next time someone thinks of the same character.</p>
             <p>No account, download, or payment is required — just open the page and start playing. <a href="about.html" style="color:var(--gold-dim);">Read more about how the Genie works &rarr;</a></p>
         </div>
 
         <div class="section-divider" id="how-to-play"><span>How to Play</span></div>
         <div class="content-section">
             <ol>
-                <li>Think of any character — a person, fictional hero, villain, celebrity, or historical figure.</li>
+                <li>Think of any character — a person, fictional hero, villain, celebrity, or historical figure — and hold them firmly in mind before you start.</li>
                 <li>Click "Start Playing" to begin a new round.</li>
-                <li>Answer each question with Yes, No, Probably, Probably not, or I'm not sure.</li>
-                <li>After a series of questions, the Genie reveals who it thinks you were picturing.</li>
+                <li>Answer each question with Yes, No, Probably, Probably not, or I'm not sure, based only on what's actually true of the character you're thinking of.</li>
+                <li>After a series of questions — usually 10 to 20 — the Genie reveals who it thinks you were picturing.</li>
+                <li>Rate whether the guess was correct, then play again with a harder or more obscure pick.</li>
             </ol>
+            <p>A couple of tips: answer honestly rather than trying to "trick" the Genie — inconsistent answers usually just slow down the guess rather than beat it. And if you get stuck on the same character every round, try switching categories below for a fresh challenge.</p>
             <p><a href="how-to-play.html" style="color:var(--gold-dim);">See the full guide and tips &rarr;</a></p>
+        </div>
+
+        <div class="section-divider" id="categories"><span>Character Categories</span></div>
+        <div class="content-section">
+            <p>Not sure who to think of? Each category below has its own page with character ideas split into Easy, Medium, and Hard difficulty, plus a few individual character guides explaining why the Genie finds them easy or tricky to guess.</p>
+            <div class="featured-grid">
+                <a href="movies.html" class="store-card">
+                    <h3>🎬 Movie Characters</h3>
+                    <p>Heroes, villains, and sidekicks from film — from instant guesses to genuine sequel-only stumpers.</p>
+                </a>
+                <a href="tv-shows.html" class="store-card">
+                    <h3>📺 TV Show Characters</h3>
+                    <p>Sitcom leads, prestige-drama anti-heroes, and reality-TV personalities.</p>
+                </a>
+                <a href="anime.html" class="store-card">
+                    <h3>🎌 Anime Characters</h3>
+                    <p>Shonen icons, fan favorites, and characters that push the Genie to its limit.</p>
+                </a>
+                <a href="video-games.html" class="store-card">
+                    <h3>🎮 Video Game Characters</h3>
+                    <p>Platformer mascots, RPG heroes, and deep-cut protagonists.</p>
+                </a>
+                <a href="history.html" class="store-card">
+                    <h3>📜 Historical Figures</h3>
+                    <p>Rulers, scientists, and revolutionaries — real people the Genie has to reason about too.</p>
+                </a>
+            </div>
         </div>
 
         <div class="pre-footer-cta">
