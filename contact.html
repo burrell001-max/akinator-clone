@@ -3,25 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact - MindGenie AI</title>
+<title>Contact | MindGenie AI</title>
+<meta name="description" content="Get in touch with the MindGenie AI team — bug reports, character suggestions, and general feedback.">
 <meta name="robots" content="index, follow">
+<meta name="theme-color" content="#101b38">
+<link rel="canonical" href="https://mindgenieai.xyz/contact.html">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
-  * { box-sizing: border-box; }
-  body { background:#0a0a1a; color:#f5f0ff; font-family:'Inter',sans-serif; margin:0; padding:0 20px 60px; display:flex; flex-direction:column; align-items:center; }
-  .wrap { max-width: 700px; width:100%; padding-top:40px; }
-  a { color:#f0c040; }
-  h1 { font-family:'Cinzel',serif; color:#f0c040; font-size:2rem; margin-bottom: 20px; }
-  p { color:#cfc7e8; line-height:1.8; font-size:0.97rem; margin-bottom: 14px; }
-  .back { display:inline-block; margin-top: 40px; color:#a89bc2; text-decoration:none; font-size:0.85rem; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--violet:#7b4dff;--gold:#ffd166;--gold-dim:#c9993a;--white:#f8f8ff;--smoke:#c4c6d6}
+body{background:radial-gradient(circle at top,#243b72 0%,#171c3b 35%,#10162d 70%,#090d18 100%);font-family:'Inter',sans-serif;color:var(--white);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.page-wrap{width:100%;max-width:680px;padding:0 20px 60px}
+.top-bar{padding:18px 0}
+.top-bar a{color:var(--smoke);text-decoration:none;font-size:.85rem}
+.top-bar a:hover{color:var(--white)}
+.breadcrumb{font-size:.78rem;color:var(--smoke);margin-bottom:20px}
+.breadcrumb a{color:var(--gold-dim);text-decoration:none}
+.breadcrumb a:hover{color:var(--gold)}
+h1{font-family:'Cinzel',serif;font-size:clamp(1.8rem,6vw,2.4rem);color:var(--gold);text-shadow:0 0 20px rgba(240,192,64,.35);margin-bottom:18px}
+h2{font-family:'Cinzel',serif;font-size:1.15rem;color:var(--gold);margin:26px 0 10px}
+p{color:var(--smoke);line-height:1.8;font-size:.98rem;margin-bottom:14px}
+.contact-card{background:rgba(20,14,50,.6);border:1px solid rgba(108,63,200,.3);border-radius:14px;padding:22px 24px;margin:10px 0}
+.contact-card a{color:var(--gold);text-decoration:none;font-weight:600}
+.contact-card a:hover{color:var(--gold-dim)}
+.reason-list{list-style:none;margin:0 0 14px}
+.reason-list li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.92rem;color:var(--smoke)}
+.reason-list li strong{color:var(--white)}
+footer{width:100%;text-align:center;padding:24px 20px;font-size:.78rem;color:#4a4a6a;border-top:1px solid rgba(255,255,255,.05);margin-top:30px}
+footer a{color:var(--smoke);text-decoration:none;margin:0 8px}
+footer a:hover{color:var(--white)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Contact Us</h1>
-  <p>Have feedback, found a bug, or have a question about MindGenie AI? We'd love to hear from you.</p>
-  <p>Email: <a href="mailto:williamsconsultingsolutions68@gmail.com">williamsconsultingsolutions68@gmail.com</a></p>
-  <a class="back" href="index.html">← Back to MindGenie AI</a>
+<div class="page-wrap">
+    <div class="top-bar"><a href="index.html">&larr; Back to MindGenie AI</a></div>
+    <nav class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Contact</nav>
+
+    <main>
+        <h1>Contact</h1>
+        <p>Found a bug, have a character suggestion, or just want to say the Genie guessed wrong in an interesting way? We'd like to hear about it.</p>
+
+        <div class="contact-card">
+            <p style="margin-bottom:6px">Email us at:</p>
+            <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a>
+        </div>
+
+        <h2>What's useful to include</h2>
+        <ul class="reason-list">
+            <li><strong>Bug reports</strong> — what you were doing, what device/browser you were on, and what happened.</li>
+            <li><strong>Wrong guesses</strong> — the character you were thinking of and roughly what questions felt off.</li>
+            <li><strong>Character suggestions</strong> — characters you think the Genie should know but doesn't.</li>
+            <li><strong>Anything else</strong> — general feedback is genuinely read, not just filed away.</li>
+        </ul>
+
+        <p>We're a small team, so responses may take a few days, but every message gets read.</p>
+    </main>
 </div>
+<footer>
+    <div><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy-policy.html">Privacy Policy</a><a href="index.html#blog">Blog</a><a href="terms.html">Terms of Service</a></div>
+    <div style="margin-top:10px">© 2026 MindGenie AI — All rights reserved</div>
+</footer>
 </body>
 </html>

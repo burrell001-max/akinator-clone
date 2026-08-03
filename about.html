@@ -3,36 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About - MindGenie AI</title>
+<title>About MindGenie AI</title>
+<meta name="description" content="What MindGenie AI is, how the guessing engine works, and why we built a free browser-based character guessing game.">
 <meta name="robots" content="index, follow">
+<meta name="theme-color" content="#101b38">
+<link rel="canonical" href="https://mindgenieai.xyz/about.html">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap">
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "AboutPage", "url": "https://mindgenieai.xyz/about.html",
+  "mainEntity": { "@type": "Organization", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" } }
+</script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
-  * { box-sizing: border-box; }
-  body { background:#0a0a1a; color:#f5f0ff; font-family:'Inter',sans-serif; margin:0; padding:0 20px 60px; display:flex; flex-direction:column; align-items:center; }
-  .wrap { max-width: 700px; width:100%; padding-top:40px; }
-  a { color:#f0c040; }
-  h1 { font-family:'Cinzel',serif; color:#f0c040; font-size:2rem; margin-bottom: 20px; }
-  h2 { color:#f0c040; font-size:1.1rem; margin: 24px 0 10px; }
-  p { color:#cfc7e8; line-height:1.8; font-size:0.97rem; margin-bottom: 14px; }
-  .back { display:inline-block; margin-top: 40px; color:#a89bc2; text-decoration:none; font-size:0.85rem; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--violet:#7b4dff;--gold:#ffd166;--gold-dim:#c9993a;--white:#f8f8ff;--smoke:#c4c6d6}
+body{background:radial-gradient(circle at top,#243b72 0%,#171c3b 35%,#10162d 70%,#090d18 100%);font-family:'Inter',sans-serif;color:var(--white);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.page-wrap{width:100%;max-width:680px;padding:0 20px 60px}
+.top-bar{padding:18px 0}
+.top-bar a{color:var(--smoke);text-decoration:none;font-size:.85rem}
+.top-bar a:hover{color:var(--white)}
+.breadcrumb{font-size:.78rem;color:var(--smoke);margin-bottom:20px}
+.breadcrumb a{color:var(--gold-dim);text-decoration:none}
+.breadcrumb a:hover{color:var(--gold)}
+h1{font-family:'Cinzel',serif;font-size:clamp(1.8rem,6vw,2.4rem);color:var(--gold);text-shadow:0 0 20px rgba(240,192,64,.35);margin-bottom:24px}
+h2{font-family:'Cinzel',serif;font-size:1.25rem;color:var(--gold);margin:30px 0 12px}
+p{color:var(--smoke);line-height:1.8;font-size:.98rem;margin-bottom:14px}
+ul{color:var(--smoke);line-height:1.85;font-size:.98rem;margin:0 0 16px 22px}
+li{margin-bottom:6px}
+strong{color:var(--white)}
+.cta{text-align:center;background:rgba(108,63,200,.08);border:1px solid rgba(108,63,200,.25);border-radius:16px;padding:26px 22px;margin:36px 0 10px}
+.cta h3{font-family:'Cinzel',serif;color:var(--gold);font-size:1.1rem;margin-bottom:10px}
+.cta a.btn{display:inline-block;margin-top:6px;background:linear-gradient(135deg,var(--violet),#5a2ec9);color:var(--white);text-decoration:none;font-weight:600;padding:12px 26px;border-radius:30px;box-shadow:0 6px 24px rgba(108,63,200,.5)}
+footer{width:100%;text-align:center;padding:24px 20px;font-size:.78rem;color:#4a4a6a;border-top:1px solid rgba(255,255,255,.05);margin-top:30px}
+footer a{color:var(--smoke);text-decoration:none;margin:0 8px}
+footer a:hover{color:var(--white)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>About MindGenie AI</h1>
+<div class="page-wrap">
+    <div class="top-bar"><a href="index.html">&larr; Back to MindGenie AI</a></div>
+    <nav class="breadcrumb"><a href="index.html">Home</a> &rsaquo; About</nav>
 
-  <p>MindGenie AI is an independent, free-to-play browser game inspired by classic mind-reading guessing games like 20 Questions. Pick any character in your head, answer a short series of simple questions, and watch our guessing engine try to figure out who you were thinking of.</p>
+    <main>
+        <h1>About MindGenie AI</h1>
 
-  <h2>Why We Built It</h2>
-  <p>We wanted a lightweight, no-sign-up way to enjoy a quick guessing game from any device — no installs, no accounts, just a quick browser-based round whenever you have a couple of minutes to kill.</p>
+        <p>MindGenie AI is a free, browser-based character guessing game. You think of a character — a movie hero, a historical figure, an anime villain, anyone — and a guessing engine we call the Genie asks a short series of yes-or-no style questions until it names who you were thinking of. No account, no download, and no payment is required to play.</p>
 
-  <h2>How It Works</h2>
-  <p>Each round, your yes/no/maybe answers are sent to our question-and-guessing engine, which narrows down the field of possible characters with every answer until it's ready to make its best guess. It isn't perfect — sometimes it guesses wrong, especially with very obscure characters — but that's part of the fun of playing.</p>
+        <h2>Why we built it</h2>
+        <p>The "20 Questions" guessing format has been around for the better part of a century, first as a parlor game, then a radio and TV show, and more recently as browser games like Akinator. We wanted a lightweight, fast-loading version of that format that ran entirely in the browser, worked well on phones, and got a little smarter with every round played — without asking players for an account or any personal information.</p>
 
-  <h2>Who's Behind This</h2>
-  <p>MindGenie AI is an independently run hobby project. We're a small team focused on building simple, free browser games. You can reach us any time using the details on our <a href="contact.html">Contact page</a>.</p>
+        <h2>How the Genie decides what to ask</h2>
+        <p>Each round starts with a large pool of possible characters. The Genie picks questions designed to split that pool roughly in half based on how previous players have answered the same questions for the same characters, then narrows the field with each answer until one character stands out. You can read a full breakdown of the mechanics on our <a href="blog/how-ai-guessing-games-work.html" style="color:var(--gold-dim)">how AI guessing games work</a> post.</p>
+        <p>Every round also feeds back into the system. When you rate whether the Genie's final guess was correct, that feedback nudges how confidently the engine associates that question with that character the next time someone plays — so the more the game gets played, the sharper its questions get over time.</p>
 
-  <a class="back" href="index.html">← Back to MindGenie AI</a>
+        <h2>What we don't do</h2>
+        <ul>
+            <li>We don't require sign-up, login, or any personal information to play a round.</li>
+            <li>We don't store who you were thinking of beyond what's needed to run the current round.</li>
+            <li>We don't sell or share individual gameplay data with third parties. See our <a href="privacy-policy.html" style="color:var(--gold-dim)">Privacy Policy</a> for the full details on cookies and analytics used on this site.</li>
+        </ul>
+
+        <h2>The team</h2>
+        <p>MindGenie AI is built and maintained by a small independent team who work on it outside of day jobs. We treat it as an ongoing project rather than a finished product — questions, character coverage, and the interface all continue to change as more people play. If something's broken or a guess seems way off, we genuinely want to hear about it through our <a href="contact.html" style="color:var(--gold-dim)">Contact page</a>.</p>
+    </main>
+
+    <div class="cta">
+        <h3>🔮 See it in action</h3>
+        <p style="margin-bottom:14px;font-size:.9rem">Think of a character and find out how the Genie handles it.</p>
+        <a class="btn" href="index.html#play">Play MindGenie AI</a>
+    </div>
 </div>
+<footer>
+    <div><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy-policy.html">Privacy Policy</a><a href="index.html#blog">Blog</a><a href="terms.html">Terms of Service</a></div>
+    <div style="margin-top:10px">© 2026 MindGenie AI — All rights reserved</div>
+</footer>
 </body>
 </html>
