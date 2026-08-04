@@ -3,160 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How Does an AI Guessing Game Work? | MindGenie AI</title>
-<meta name="description" content="How games like MindGenie AI and Akinator guess who you're thinking of in about 15 questions — decision trees, entropy, and probability, explained simply.">
-<meta name="keywords" content="how does akinator work, AI guessing game algorithm, decision tree game, MindGenie AI">
+<title>How Does an AI Guessing Game Actually Work? - MindGenie AI</title>
+<meta name="description" content="A look at the logic behind MindGenie AI and other 20-questions style guessing games — how the Genie narrows down your character.">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#101b38">
-<link rel="canonical" href="https://mindgenieai.xyz/blog/how-ai-guessing-games-work.html">
-
-<link rel="icon" href="/favicon.ico" sizes="any">
-
-<meta property="og:type" content="article">
-<meta property="og:title" content="How Does an AI Guessing Game Work?">
-<meta property="og:description" content="The logic behind how the Genie narrows down your character, question by question.">
-<meta property="og:url" content="https://mindgenieai.xyz/blog/how-ai-guessing-games-work.html">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap">
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "How Does an AI Guessing Game Work?",
-  "description": "How games like MindGenie AI guess who you're thinking of using decision trees and probability.",
-  "author": { "@type": "Organization", "name": "MindGenie AI" },
-  "publisher": { "@type": "Organization", "name": "MindGenie AI" },
-  "mainEntityOfPage": "https://mindgenieai.xyz/blog/how-ai-guessing-games-work.html",
-  "datePublished": "2026-08-03"
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://mindgenieai.xyz/" },
-    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://mindgenieai.xyz/#blog" },
-    { "@type": "ListItem", "position": 3, "name": "How Does an AI Guessing Game Work?", "item": "https://mindgenieai.xyz/blog/how-ai-guessing-games-work.html" }
-  ]
-}
-</script>
-
 <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-        --deep: #101b38; --violet: #7b4dff; --gold: #ffd166; --gold-dim: #c9993a;
-        --glow: #c58cff; --white: #f8f8ff; --smoke: #c4c6d6;
-    }
-    html { scroll-behavior: smooth; }
-    body {
-        background: radial-gradient(circle at top, #243b72 0%, #171c3b 35%, #10162d 70%, #090d18 100%);
-        font-family: 'Inter', sans-serif; color: var(--white); min-height: 100vh;
-        display: flex; flex-direction: column; align-items: center;
-    }
-    .page-wrap { width: 100%; max-width: 680px; padding: 0 20px 60px; }
-    .top-bar { padding: 18px 0; }
-    .top-bar a { color: var(--smoke); text-decoration: none; font-size: 0.85rem; }
-    .top-bar a:hover { color: var(--white); }
-    .breadcrumb { font-size: 0.78rem; color: var(--smoke); margin-bottom: 20px; }
-    .breadcrumb a { color: var(--gold-dim); text-decoration: none; }
-    .breadcrumb a:hover { color: var(--gold); }
-    article header { margin-bottom: 28px; }
-    .kicker { font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 10px; }
-    h1 { font-family: 'Cinzel', serif; font-size: clamp(1.8rem, 6vw, 2.4rem); color: var(--gold); line-height: 1.25; text-shadow: 0 0 20px rgba(240,192,64,0.35); margin-bottom: 10px; }
-    .meta { font-size: 0.8rem; color: var(--smoke); }
-    .content-section { margin-bottom: 6px; }
-    .content-section h2 { font-family: 'Cinzel', serif; font-size: 1.3rem; color: var(--gold); margin: 32px 0 12px; }
-    .content-section p { color: var(--smoke); line-height: 1.8; font-size: 0.98rem; margin-bottom: 14px; }
-    .content-section ul, .content-section ol { color: var(--smoke); line-height: 1.85; font-size: 0.98rem; margin: 0 0 16px 22px; }
-    .content-section li { margin-bottom: 6px; }
-    strong { color: var(--white); }
-    .callout {
-        background: rgba(108,63,200,0.1); border: 1px solid rgba(108,63,200,0.3);
-        border-radius: 14px; padding: 18px 20px; margin: 20px 0; font-size: 0.92rem; color: var(--smoke); line-height: 1.7;
-    }
-    .cta {
-        text-align: center; background: rgba(108,63,200,0.08); border: 1px solid rgba(108,63,200,0.25);
-        border-radius: 16px; padding: 26px 22px; margin: 40px 0 10px;
-    }
-    .cta h3 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.1rem; margin-bottom: 10px; }
-    .cta a.btn {
-        display: inline-block; margin-top: 6px; background: linear-gradient(135deg, var(--violet), #5a2ec9);
-        color: var(--white); text-decoration: none; font-weight: 600; padding: 12px 26px; border-radius: 30px;
-        box-shadow: 0 6px 24px rgba(108,63,200,0.5);
-    }
-    footer { width: 100%; text-align: center; padding: 24px 20px; font-size: 0.78rem; color: #4a4a6a; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 30px; }
-    footer a { color: var(--smoke); text-decoration: none; margin: 0 8px; }
-    footer a:hover { color: var(--white); }
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
+* { box-sizing: border-box; }
+body { background:#0a0a1a; color:#f5f0ff; font-family:'Inter',sans-serif; margin:0; padding:0 20px 60px; display:flex; flex-direction:column; align-items:center; }
+.wrap { max-width: 700px; width:100%; padding-top:40px; }
+a { color:#f0c040; }
+h1 { font-family:'Cinzel',serif; color:#f0c040; font-size:2rem; margin-bottom: 20px; }
+h2 { color:#f0c040; font-size:1.1rem; margin: 24px 0 10px; }
+p { color:#cfc7e8; line-height:1.8; font-size:0.97rem; margin-bottom: 14px; }
+ul { color:#cfc7e8; line-height:1.8; font-size:0.97rem; padding-left: 20px; margin-bottom:14px; }
+.back { display:inline-block; margin-top: 40px; color:#a89bc2; text-decoration:none; font-size:0.85rem; }
+.cta { display:inline-block; margin-top:10px; padding:12px 22px; background:#f0c040; color:#0a0a1a; font-weight:700; border-radius:8px; text-decoration:none; }
+.meta { color:#a89bc2; font-size:0.8rem; margin-bottom:30px; }
 </style>
 </head>
 <body>
-<div class="page-wrap">
-    <div class="top-bar"><a href="../index.html">&larr; Back to MindGenie AI</a></div>
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="../index.html">Home</a> &rsaquo; <a href="../index.html#blog">Blog</a> &rsaquo; How Does an AI Guessing Game Work?
-    </nav>
+<div class="wrap">
+<h1>How Does an AI Guessing Game Actually Work?</h1>
+<p class="meta">MindGenie AI Blog</p>
 
-    <article>
-        <header>
-            <div class="kicker">Behind the Genie</div>
-            <h1>How Does an AI Guessing Game Work?</h1>
-            <div class="meta">MindGenie AI Team · Updated August 2026 · 6 min read</div>
-        </header>
+<p>If you've played MindGenie AI, you've probably wondered how a website can guess who — or what — you're thinking of after just a dozen or so yes-or-no questions. It can feel like magic, but the idea behind it is actually a fairly old and elegant piece of game logic, dressed up with some modern AI polish.</p>
 
-        <div class="content-section">
-            <p>Every round of MindGenie AI looks like magic: you think of a character, answer a handful of questions, and the Genie names the exact person you had in mind. There's no magic involved — just a well-understood piece of computer science that's been narrowing down mystery answers since long before computers existed.</p>
+<h2>It starts with 20 Questions</h2>
+<p>The "guess the character" format didn't start on the internet. It's a digital descendant of the classic parlor game 20 Questions, where one player thinks of a person, place, or thing, and the other tries to identify it using only yes-or-no questions. The trick to playing it well is asking questions that split the remaining possibilities roughly in half each time — that's what lets a skilled human (or a good algorithm) zero in on an answer surprisingly fast, even out of thousands of options.</p>
+<p>MindGenie AI works on the same core principle. Every question you're asked isn't random — it's chosen because your answer to it will eliminate as many wrong guesses as possible, as efficiently as possible.</p>
 
-            <h2>It starts with an old parlor game</h2>
-            <p>The format the Genie uses — think of something, answer yes-or-no questions, get identified within a limited number of tries — comes from the classic guessing game "20 Questions." One player picks a subject, and everyone else tries to identify it using only yes-or-no questions, ideally in twenty or fewer. Every AI guessing game, MindGenie AI included, is really just a digital version of that idea, run against a huge database of characters instead of one human opponent.</p>
+<h2>Behind the scenes: how the Genie narrows things down</h2>
+<p>When you start a round, the Genie technically doesn't "know" anything about your character yet. What it has is a large pool of possible characters — movie heroes, anime leads, historical figures, celebrities, video game protagonists, and more — each one tagged with a set of characteristics.</p>
+<ul>
+<li>A "Yes" keeps characters matching that trait in the running and discards the rest.</li>
+<li>A "No" does the opposite.</li>
+<li>Answers like "Probably" or "Probably not" nudge the odds without fully eliminating anyone, since human memory and opinion are rarely black-and-white.</li>
+</ul>
+<p>After each answer, the pool of remaining candidates shrinks, and the Genie's confidence score climbs. Once one character stands out clearly above the rest, or the question budget runs low, the Genie commits to its best guess.</p>
 
-            <h2>The core trick: splitting the crowd in half</h2>
-            <p>Imagine the Genie starts with a pool of thousands of possible characters. A badly chosen first question — "Are you thinking of a wizard?" — only rules out a small slice of that pool. A well-chosen question splits the remaining candidates roughly down the middle, no matter what you're thinking of.</p>
-            <p>That's the same principle behind <strong>binary search</strong>, the technique used to look something up quickly in a huge sorted list. Each answer you give doesn't just remove a few characters — it removes roughly half of everyone still standing. Ask enough well-placed questions like that, and even a pool of 100,000 characters collapses to a single name in well under twenty rounds. Mathematically, halving a pool of size N takes only about log₂(N) questions — for 100,000 characters, that's around 17.</p>
+<h2>Why some characters are harder to guess than others</h2>
+<p>Popular, well-documented characters (think Batman, Mario, or Harry Potter) tend to get guessed quickly because there's a lot of consistent data about them. Obscure characters, or ones that share a lot of traits with someone more famous, are much harder — and that difficulty curve is intentional. It's part of what makes the game interesting to replay.</p>
 
-            <h2>Choosing the "best" next question</h2>
-            <p>The hard part isn't the halving math, it's figuring out which question actually splits the current pool evenly. Behind the scenes, the engine tracks how previous players answered each question for each character, and uses that history to estimate, for the group of characters still in play, which question is closest to a 50/50 split right now. This is closely related to a concept from information theory called <strong>entropy</strong> — roughly, how much a question is expected to reduce our uncertainty. The engine favors high-entropy questions early on and switches to narrower, more specific ones as the pool shrinks.</p>
+<h2>The "learning" part</h2>
+<p>Every time you confirm whether the Genie's final guess was right or wrong, that feedback gets folded back into the system. Over thousands of rounds, this kind of feedback loop helps refine which questions are actually useful and helps correct traits that might have been tagged incorrectly.</p>
 
-            <div class="callout">
-                This is also why the Genie's questions can feel oddly specific later in a round — "Does this character often carry a weapon?" makes little sense as a first question, but it's exactly the kind of question that separates the last two or three characters still in the running.
-            </div>
+<h2>Try to beat it</h2>
+<p>Pick a character with a lot of overlapping traits with someone else — two similar-looking anime rivals, for example, or two historical figures from the same era — answer carefully, and see how many questions it takes before the Genie either nails it or gives up.</p>
 
-            <h2>Learning from every round</h2>
-            <p>A static guessing tree would get stale fast — new characters become popular, old ones fade, and a fixed set of questions eventually stops working well. Instead, systems like this treat every completed game as a small piece of training data. When you rate whether the Genie's final guess was right or wrong, that feedback nudges the weighting of the question-and-character associations involved in your round, ever so slightly. Multiply that by thousands of games, and the question-selection engine keeps adapting on its own — no manual reprogramming required.</p>
-
-            <h2>Handling "probably," "not sure," and getting it wrong</h2>
-            <p>Real answers aren't always a clean yes or no, which is why the Genie offers "Probably," "Probably not," and "Not sure" as well. Internally, each of those maps to a confidence value between 0 and 1 rather than a hard true/false, so a hesitant answer nudges the probability of each remaining character instead of eliminating or confirming them outright. That's also why an occasional wrong guess doesn't mean the system is broken — a string of uncertain answers, or a genuinely obscure character, can leave two or three candidates in a near tie right up to the final question.</p>
-
-            <h2>Why this approach scales so well</h2>
-            <ul>
-                <li><strong>It's category-agnostic.</strong> The same halving logic works whether you're thinking of a movie villain, an anime protagonist, or a historical figure — the engine doesn't need separate rules for each category.</li>
-                <li><strong>It gets smarter with use.</strong> More players means more signal on which questions actually distinguish similar characters.</li>
-                <li><strong>It fails gracefully.</strong> Even when the guess is wrong, the near-misses are usually plausible — a mix-up between two characters who share a lot of traits, not a random miss.</li>
-            </ul>
-
-            <p>So the next time the Genie nails a character you were sure would stump it, you'll know there's no actual mind-reading going on — just a few thousand well-placed yes-or-no questions, refined by everyone who's played before you.</p>
-        </div>
-
-        <div class="cta">
-            <h3>✨ Put the algorithm to the test</h3>
-            <p style="color:var(--smoke); margin-bottom:14px; font-size:0.9rem;">Think of a character and see how few questions it actually takes.</p>
-            <a class="btn" href="../index.html#play">🔮 Play MindGenie AI</a>
-        </div>
-    </article>
+<a class="cta" href="../index.html#play">🔮 Play MindGenie AI Now</a>
+<br>
+<a class="back" href="../index.html">← Back to MindGenie AI</a>
 </div>
-
-<footer>
-    <div>
-        <a href="../about.html">About</a>
-        <a href="../contact.html">Contact</a>
-        <a href="../privacy-policy.html">Privacy Policy</a>
-        <a href="../index.html#blog">Blog</a>
-        <a href="../terms.html">Terms of Service</a>
-    </div>
-    <div style="margin-top:10px;">© 2026 MindGenie AI — All rights reserved</div>
-</footer>
 </body>
 </html>
