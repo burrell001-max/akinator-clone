@@ -34,8 +34,8 @@
     <link rel="preconnect" href="https://akinator-clone-0uf6.onrender.com">
     <!-- Fonts loaded via <link> rather than CSS @import: @import blocks the CSSOM
          until it resolves, delaying font (and therefore text) rendering. -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap"></noscript>
 
     <!-- Structured data -->
     <script type="application/ld+json">
@@ -221,7 +221,7 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 0;
-            filter: blur(80px);
+            filter: blur(60px);
             opacity: 0.18;
         }
         .nebula-1 { width: 500px; height: 500px; background: var(--violet); top: -100px; left: -150px; }
@@ -1029,7 +1029,7 @@
     <div class="nebula nebula-1"></div>
     <div class="nebula nebula-2"></div>
     <div class="nebula nebula-3"></div>
-    <div class="page-wrap">
+    <div class="page-wrap" role="main">
 
         <div class="top-bar">
             <button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="topNav">☰ Menu</button>
@@ -1273,17 +1273,17 @@
     </div>
 
     <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-
         // ── STARFIELD ──
         const starsEl = document.getElementById('stars');
-        for (let i = 0; i < 120; i++) {
+        const STAR_COUNT = window.matchMedia('(max-width: 640px)').matches ? 45 : 90;
+        const buildStars = () => { for (let i = 0; i < STAR_COUNT; i++) {
             const s = document.createElement('div');
             s.className = 'star';
             const size = Math.random() * 2.5 + 0.5;
             s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;--o:${(Math.random()*0.6+0.2).toFixed(2)};animation-delay:${(Math.random()*5).toFixed(1)}s;`;
             starsEl.appendChild(s);
-        }
+        } };
+        (window.requestIdleCallback ? requestIdleCallback(buildStars, {timeout: 1500}) : setTimeout(buildStars, 300));
 
         // ── CONFIG ──
         const API_URL = "https://akinator-clone-0uf6.onrender.com";
