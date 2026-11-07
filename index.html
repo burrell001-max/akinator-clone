@@ -139,7 +139,11 @@
     }
     </script>
 
-    <!-- Analytics & ads: loaded after window.load so they don't compete with initial
+    <!-- Google AdSense: a normal tag in the raw HTML so AdSense can verify the site.
+         It is async, so it does not block rendering. -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
+    <!-- Analytics: loaded after window.load so they don't compete with initial
          render / Core Web Vitals. gtag() calls are buffered on window.dataLayer as usual. -->
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -158,12 +162,6 @@
         goatScript.setAttribute('data-goatcounter', 'https://kbwill41.goatcounter.com/count');
         goatScript.src = '//gc.zgo.at/count.js';
         document.head.appendChild(goatScript);
-
-        const adsScript = document.createElement('script');
-        adsScript.async = true;
-        adsScript.crossOrigin = 'anonymous';
-        adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667';
-        document.head.appendChild(adsScript);
       });
     </script>
 
