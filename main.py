@@ -4,6 +4,9 @@ from pydantic import BaseModel
 from typing import Dict
 import random
 from datetime import date
+import time
+
+from feedback import router as feedback_router, set_session_lookup
 
 app = FastAPI()
 
@@ -16,6 +19,20 @@ app.add_middleware(
 )
 
 sessions: Dict[str, Dict] = {}
+SESSION_TTL_SECONDS = 2 * 60 * 60  # drop abandoned sessions so memory doesn't grow forever
+
+
+def _purge_old_sessions():
+    cutoff = time.time() - SESSION_TTL_SECONDS
+    for sid in [k for k, v in sessions.items() if v.get("created_at", 0) < cutoff]:
+        sessions.pop(sid, None)
+
+
+# Lets the /feedback endpoint check that a session really exists (and, later,
+# read its recorded answers for learning) without importing this module.
+set_session_lookup(lambda sid: sessions.get(sid))
+
+app.include_router(feedback_router)
 
 # --- QUESTIONS (20 broad trait questions) ---
 QUESTIONS = {
@@ -325,7 +342,9 @@ CHARACTERS = {
 }
 
 
-DAILY_CHARACTER_COUNT = 15  # how many of the full roster are "in play" each day
+# Every character must be in play every day. With a smaller daily subset, a player
+# thinking of a roster character that is not in today's pool can never be guessed.
+DAILY_CHARACTER_COUNT = len(CHARACTERS)
 
 # --- ADAPTIVE QUESTION SELECTION ---
 # Instead of asking a fixed, pre-shuffled list of 10 questions, we pick each
@@ -441,9 +460,11 @@ def start_game(session_id: str):
     # Same rotating character pool for everyone today; changes automatically
     # tomorrow. Questions, however, are now chosen adaptively per-session as
     # the player answers, rather than pre-selected before the game starts.
+    _purge_old_sessions()
     todays_characters = get_daily_character_pool()
 
     sessions[session_id] = {
+        "created_at": time.time(),
         "characters": todays_characters,
         "answers": {},
         "asked_questions": [],

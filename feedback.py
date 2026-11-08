@@ -38,6 +38,15 @@ RATE_LIMIT = 30
 RATE_WINDOW_SECONDS = 600
 
 router = APIRouter()
+
+_session_lookup = None
+
+
+def set_session_lookup(fn):
+    """main.py registers a function sid -> session dict (or None) so feedback can only be
+    recorded for sessions the server actually served."""
+    global _session_lookup
+    _session_lookup = fn
 _hits = defaultdict(deque)
 
 _SESSION_RE = re.compile(r"^[A-Za-z0-9_\-]{1,64}$")
@@ -129,6 +138,10 @@ def learn_from_feedback(session_id: str, guessed: str, correct: bool, actual: Op
 def submit_feedback(body: FeedbackIn, request: Request):
     if _rate_limited(_client_key(request)):
         raise HTTPException(status_code=429, detail="Too many requests")
+
+    if _session_lookup is not None and _session_lookup(body.session_id) is None:
+        # Session expired (e.g. the server restarted) or never existed.
+        raise HTTPException(status_code=404, detail="Unknown or expired session")
 
     if body.actual_character and body.correct:
         raise HTTPException(status_code=422, detail="actual_character only applies to wrong guesses")
