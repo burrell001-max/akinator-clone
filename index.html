@@ -758,6 +758,36 @@
         .rate-buttons .btn-option {
             flex: 1;
         }
+        .correction-row {
+            display: none;
+            margin-bottom: 18px;
+        }
+        .correction-row label {
+            display: block;
+            color: var(--smoke);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        .correction-row input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.18);
+            background: rgba(255,255,255,0.06);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        .correction-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .correction-actions .btn-secondary {
+            flex: 1;
+            padding: 12px 16px;
+        }
         .rate-thanks {
             color: var(--gold-dim);
             font-size: 0.85rem;
@@ -1086,6 +1116,14 @@
                     <button class="btn-option yes" id="rateYesBtn"><span class="opt-icon" aria-hidden="true">✔</span> Yes</button>
                     <button class="btn-option no" id="rateNoBtn"><span class="opt-icon" aria-hidden="true">✖</span> No</button>
                 </div>
+                <div class="correction-row" id="correctionRow">
+                    <label for="actualCharacter">Who were you thinking of? (optional)</label>
+                    <input type="text" id="actualCharacter" maxlength="60" autocomplete="off" placeholder="e.g. Han Solo">
+                    <div class="correction-actions">
+                        <button type="button" class="btn-secondary" id="correctionSendBtn">Send</button>
+                        <button type="button" class="btn-secondary" id="correctionSkipBtn">Skip</button>
+                    </div>
+                </div>
                 <div class="rate-thanks" id="rateThanks">Thanks for the feedback! ✨</div>
                 <div class="post-game-actions">
                     <button class="btn-secondary" id="shareResultBtn">🎉 Share My Result</button>
@@ -1298,6 +1336,12 @@
         const ratePromptEl    = document.getElementById('ratePrompt');
         const rateThanks      = document.getElementById('rateThanks');
         const rateButtonsRow  = document.querySelector('.rate-buttons');
+        const correctionRow   = document.getElementById('correctionRow');
+        const actualInput     = document.getElementById('actualCharacter');
+        const correctionSendBtn = document.getElementById('correctionSendBtn');
+        const correctionSkipBtn = document.getElementById('correctionSkipBtn');
+        let ratedSessionId = '';
+        let ratingPromise = null;
         const rateYesBtn      = document.getElementById('rateYesBtn');
         const rateNoBtn       = document.getElementById('rateNoBtn');
         const playAgainBtn    = document.getElementById('playAgainBtn');
@@ -1548,6 +1592,9 @@
             document.getElementById('progressWrap').style.display = 'none';
             questionNumEl.style.display = 'none';
             rateThanks.style.display = 'none';
+            rateThanks.textContent = 'Thanks for the feedback! ✨';
+            correctionRow.style.display = 'none';
+            actualInput.value = '';
             rateButtonsRow.style.display = 'flex';
             introExtras.style.display = 'none';
 
@@ -1715,6 +1762,7 @@
         function renderGuess(character) {
             answerPending = false;
             lastGuessedCharacter = character;
+            ratedSessionId = sessionId;
             document.getElementById('progressWrap').style.display = 'none';
             questionNumEl.style.display = 'none';
 
@@ -1724,7 +1772,7 @@
 
             setTimeout(() => {
                 setDialogue(`✨<br>I KNOW WHO YOU'RE THINKING OF...<span class="reveal-stars"><span class="guess-name big-glow">${character}<\/span><\/span>✨`);
-                ratePromptEl.innerHTML = `I guessed <strong>${character}<\/strong>! Accuracy helps me improve.<br>Was I right?`;
+                ratePromptEl.innerHTML = `I guessed <strong>${character}<\/strong>!<br>Was I right?`;
                 showPanel('rate');
                 gameBoxEl.classList.remove('shake');
                 void gameBoxEl.offsetWidth;
@@ -1750,12 +1798,69 @@
             ratePromptEl.innerHTML = `Can't think of one? Try: <strong>${picks.join('<\/strong>, <strong>')}<\/strong> — or anyone else!`;
         }
 
-        function rateGuess(wasCorrect) {
+        async function postFeedback(payload) {
+            try {
+                const res = await fetch(`${API_URL}/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    keepalive: true
+                });
+                return res.ok;
+            } catch (err) {
+                return false;
+            }
+        }
+
+        function showFeedbackThanks(saved) {
+            correctionRow.style.display = 'none';
+            rateThanks.textContent = saved ? 'Thanks \u2014 your feedback was saved. \u2728' : 'Thanks for the feedback! \u2728';
+            rateThanks.style.display = 'block';
+        }
+
+        async function rateGuess(wasCorrect) {
             trackEvent('guess_rating', { correct: wasCorrect, character: lastGuessedCharacter });
             playRateSound(wasCorrect);
             rateButtonsRow.style.display = 'none';
-            rateThanks.style.display = 'block';
+
+            const payload = {
+                session_id: ratedSessionId,
+                guessed_character: lastGuessedCharacter,
+                correct: wasCorrect
+            };
+
+            if (wasCorrect) {
+                showFeedbackThanks(await postFeedback(payload));
+                return;
+            }
+
+            // Wrong guess: record the rating right away, then offer an optional correction.
+            correctionRow.style.display = 'block';
+            actualInput.focus();
+            ratingPromise = postFeedback(payload);
         }
+
+        async function sendCorrection() {
+            const actual = actualInput.value.trim();
+            if (!actual) { showFeedbackThanks(ratingPromise ? await ratingPromise : false); return; }
+            correctionSendBtn.disabled = true;
+            if (ratingPromise) await ratingPromise; // make sure the rating row exists first
+            const ok = await postFeedback({
+                session_id: ratedSessionId,
+                guessed_character: lastGuessedCharacter,
+                correct: false,
+                actual_character: actual
+            });
+            correctionSendBtn.disabled = false;
+            showFeedbackThanks(ok);
+        }
+
+        correctionSendBtn.addEventListener('click', sendCorrection);
+        correctionSkipBtn.addEventListener('click', async () => showFeedbackThanks(ratingPromise ? await ratingPromise : false));
+        actualInput.addEventListener('keydown', (e) => {
+            e.stopPropagation(); // don't let the 1-5 answer shortcuts fire while typing
+            if (e.key === 'Enter') sendCorrection();
+        });
 
         function launchConfetti() {
             const colors = ['#f0c040', '#6c3fc8', '#b97fff', '#50c878', '#f5f0ff'];
