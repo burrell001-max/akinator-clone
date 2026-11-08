@@ -53,18 +53,21 @@ footer a:hover{color:var(--white)}
         <p>MindGenie AI is a free, browser-based character guessing game. You think of a character — a movie hero, a historical figure, an anime villain, anyone — and a guessing engine we call the Genie asks a short series of yes-or-no style questions until it names who you were thinking of. No account, no download, and no payment is required to play.</p>
 
         <h2>Why we built it</h2>
-        <p>The "20 Questions" guessing format has been around for the better part of a century, first as a parlor game, then a radio and TV show, and more recently as browser games like Akinator. We wanted a lightweight, fast-loading version of that format that ran entirely in the browser, worked well on phones, and got a little smarter with every round played — without asking players for an account or any personal information.</p>
+        <p>The "20 Questions" guessing format has been around for the better part of a century, first as a parlor game, then a radio and TV show, and more recently as browser games like Akinator. We wanted a lightweight, fast-loading version of that format that ran entirely in the browser and worked well on phones — without asking players for an account or any personal information.</p>
 
         <h2>How the Genie decides what to ask</h2>
-        <p>Each round starts with a large pool of possible characters. The Genie picks questions designed to split that pool roughly in half based on how previous players have answered the same questions for the same characters, then narrows the field with each answer until one character stands out. You can read a full breakdown of the mechanics on our <a href="https://mindgenieai.xyz/blog/how-ai-guessing-games-work.html" style="color:var(--gold-dim)">how AI guessing games work</a> post.</p>
-        <p>Every round also feeds back into the system. When you rate whether the Genie's final guess was correct, that feedback nudges how confidently the engine associates that question with that character the next time someone plays — so the more the game gets played, the sharper its questions get over time.</p>
+        <p>Each round starts with a large pool of possible characters. The Genie picks questions designed to split that pool as evenly as possible, using traits recorded for each character (a power, an era, a job, a medium). Each answer rules characters in or out, and the field narrows until one character stands out. You can read a full breakdown of the mechanics on our <a href="https://mindgenieai.xyz/blog/how-ai-guessing-games-work.html" style="color:var(--gold-dim)">how AI guessing games work</a> post.</p>
+        <p>After each guess you can tell the Genie whether it was right, and if it was wrong you can optionally type who you were thinking of. Those ratings and corrections are saved without any personal information, and we review them to find characters that are guessed too easily or too rarely, fix questions that mislead players, and decide which characters to add next.</p>
 
         <h2>What we don't do</h2>
         <ul>
             <li>We don't require sign-up, login, or any personal information to play a round.</li>
-            <li>We don't store who you were thinking of beyond what's needed to run the current round.</li>
+            <li>We don't link anything you tell us to who you are. If you choose to type who you were thinking of after a wrong guess, that name is saved with a random session ID, not with any account or contact detail.</li>
             <li>We don't sell or share individual gameplay data with third parties. See our <a href="https://mindgenieai.xyz/privacy-policy.html" style="color:var(--gold-dim)">Privacy Policy</a> for the full details on cookies and analytics used on this site.</li>
         </ul>
+
+        <h2>How the site is funded</h2>
+        <p>MindGenie AI is free to play. The site is supported by advertising served through Google AdSense, which is why you may see ads on some pages. Ads never change which character the Genie guesses.</p>
 
         <h2>The team</h2>
         <p>MindGenie AI is built and maintained by a small independent team who work on it outside of day jobs. We treat it as an ongoing project rather than a finished product — questions, character coverage, and the interface all continue to change as more people play. If something's broken or a guess seems way off, we genuinely want to hear about it through our <a href="https://mindgenieai.xyz/contact.html" style="color:var(--gold-dim)">Contact page</a>.</p>
