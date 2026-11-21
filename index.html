@@ -1151,6 +1151,19 @@
             .theme-grid { grid-template-columns:1fr 1fr; gap:12px; max-width:440px; margin:0 auto; }
         .theme-btn { padding:16px 12px; }
         @media (max-width:420px){ .theme-grid { grid-template-columns:1fr; } }
+            .top-bar { justify-content:space-between; }
+        .lang { position:relative; z-index:35; }
+        .lang-btn { background:rgba(255,255,255,.75); border:1px solid #fff; border-radius:999px; padding:7px 16px; font-family:'Fredoka',sans-serif; font-size:.95rem; font-weight:500; color:#17384c; cursor:pointer; }
+        .lang-btn:hover { background:#fff; }
+        .lang-menu { position:absolute; top:calc(100% + 6px); left:0; min-width:190px; max-height:70vh; overflow-y:auto; list-style:none; background:#d2dde9; border:2px solid #fff; border-radius:10px; padding:6px; box-shadow:0 10px 30px rgba(23,56,76,.25); }
+        .lang-menu[hidden] { display:none; }
+        .lang-menu button { width:100%; text-align:start; background:none; border:0; border-radius:6px; padding:8px 12px; font-family:'Fredoka',sans-serif; font-size:1.05rem; font-weight:600; color:#17384c; cursor:pointer; }
+        .lang-menu button:hover:not(:disabled) { background:#fff; }
+        .lang-menu button[aria-current="true"] { background:#fff; }
+        .lang-menu button:disabled { opacity:.5; cursor:not-allowed; font-weight:500; }
+        .lang-menu small { font-size:.72rem; font-weight:400; margin-inline-start:6px; }
+        html[dir="rtl"] .stage { direction:ltr; }
+        html[dir="rtl"] .speech-bubble, html[dir="rtl"] .history { direction:rtl; text-align:right; }
     </style>
 </head>
 <body>
@@ -1162,28 +1175,32 @@
     <div class="page-wrap" role="main">
 
         <div class="top-bar">
+            <div class="lang" id="lang">
+                <button type="button" class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu"><span id="langCur">English</span> &#9662;</button>
+                <ul class="lang-menu" id="langMenu" hidden></ul>
+            </div>
             <button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="topNav">☰ Menu</button>
            <nav class="top-nav" id="topNav">
-<a href="#play" class="nav-play">🔮 Play</a>
-<a href="#faq">FAQ</a>
-<a href="#blog">Blog</a>
-<a href="https://mindgenieai.xyz/contact.html">Contact</a>
+<a href="#play" class="nav-play" data-i18n="nav_play">🔮 Play</a>
+<a href="#faq" data-i18n="nav_faq">FAQ</a>
+<a href="#blog" data-i18n="nav_blog">Blog</a>
+<a href="https://mindgenieai.xyz/contact.html" data-i18n="nav_contact">Contact</a>
 </nav>
 </div>
         <div class="logo-area" id="play">
             <h1 class="wordmark">MindGenie</h1>
-            <p class="tagline">Think of a character. I'll guess who it is.</p>
+            <p class="tagline" data-i18n="tagline">Think of a character. I'll guess who it is.</p>
         </div>
 
         <div class="stage">
             <aside class="history" id="historyPanel" aria-label="Your last games" hidden>
                 <button class="history-close" id="historyClose" aria-label="Hide your last games">&times;</button>
-                <h3>Your last games</h3>
-                <small>&#10003; I guessed it &middot; &#10007; you stumped me</small>
+                <h3 data-i18n="histTitle">Your last games</h3>
+                <small data-i18n="histLegend">&#10003; I guessed it &middot; &#10007; you stumped me</small>
                 <ul id="historyList"></ul>
             </aside>
             <div class="genie-wrap">
-                <div class="hello" id="helloBubble">Hello, I am MindGenie</div>
+                <div class="hello" id="helloBubble" data-i18n="hello">Hello, I am MindGenie</div>
                 <svg class="genie" viewBox="0 0 260 340" role="img" aria-label="The MindGenie, a friendly genie in a turban">
                     <defs><linearGradient id="gSmoke" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f86e6"/><stop offset="1" stop-color="#8fb8f5" stop-opacity=".15"/></linearGradient></defs>
                     <path d="M75 210 C70 260 140 250 125 290 C118 312 150 312 140 336 C175 305 140 285 160 262 C185 238 185 225 185 210 Z" fill="url(#gSmoke)"/>
@@ -1223,36 +1240,36 @@
 
         <div id="interactionArea" style="width:100%">
 
-            <button id="startBtn" class="btn-play">Play</button>
-            <div id="startBtnSub" class="btn-play-sub">Free, no sign-up, about a minute</div>
+            <button id="startBtn" class="btn-play" data-i18n="play">Play</button>
+            <div id="startBtnSub" class="btn-play-sub" data-i18n="sub">Free, no sign-up, about a minute</div>
 
             <div id="themeGrid" class="theme-grid" style="display:none;">
-                <button type="button" class="btn-option theme-btn" data-theme="movies"><span class="opt-icon" aria-hidden="true">🎬</span> Movies</button>
-                <button type="button" class="btn-option theme-btn" data-theme="tv"><span class="opt-icon" aria-hidden="true">📺</span> TV shows</button>
-                <button type="button" class="btn-option theme-btn" data-theme="games"><span class="opt-icon" aria-hidden="true">🎮</span> Video games</button>
-                <button type="button" class="btn-option theme-btn" data-theme="anime"><span class="opt-icon" aria-hidden="true">🎌</span> Anime</button>
-                <button type="button" class="btn-option theme-btn" data-theme="history"><span class="opt-icon" aria-hidden="true">📜</span> History</button>
-                <button type="button" class="btn-option theme-btn" data-theme="any"><span class="opt-icon" aria-hidden="true">🎲</span> Anything</button>
+                <button type="button" class="btn-option theme-btn" data-theme="movies"><span class="opt-icon" aria-hidden="true">🎬</span> <span data-i18n="th_movies">Movies</span></button>
+                <button type="button" class="btn-option theme-btn" data-theme="tv"><span class="opt-icon" aria-hidden="true">📺</span> <span data-i18n="th_tv">TV shows</span></button>
+                <button type="button" class="btn-option theme-btn" data-theme="games"><span class="opt-icon" aria-hidden="true">🎮</span> <span data-i18n="th_games">Video games</span></button>
+                <button type="button" class="btn-option theme-btn" data-theme="anime"><span class="opt-icon" aria-hidden="true">🎌</span> <span data-i18n="th_anime">Anime</span></button>
+                <button type="button" class="btn-option theme-btn" data-theme="history"><span class="opt-icon" aria-hidden="true">📜</span> <span data-i18n="th_history">History</span></button>
+                <button type="button" class="btn-option theme-btn" data-theme="any"><span class="opt-icon" aria-hidden="true">🎲</span> <span data-i18n="th_any">Anything</span></button>
             </div>
 
             <div id="optionsGrid" class="options-grid" style="display:none;">
                 <button class="btn-option yes" data-key="1" data-weight="1.0" data-label="Yes">
-                    <span class="opt-icon" aria-hidden="true">✔</span> Yes
+                    <span class="opt-icon" aria-hidden="true">✔</span> <span data-i18n="a1">Yes</span>
                 </button>
                 <button class="btn-option no" data-key="2" data-weight="0.0" data-label="No">
-                    <span class="opt-icon" aria-hidden="true">✖</span> No
+                    <span class="opt-icon" aria-hidden="true">✖</span> <span data-i18n="a2">No</span>
                 </button>
                 <button class="btn-option" data-key="3" data-weight="0.75" data-label="Probably">
-                    <span class="opt-icon" aria-hidden="true">🤔</span> Probably
+                    <span class="opt-icon" aria-hidden="true">🤔</span> <span data-i18n="a3">Probably</span>
                 </button>
                 <button class="btn-option" data-key="4" data-weight="0.25" data-label="Probably Not">
-                    <span class="opt-icon" aria-hidden="true">🤨</span> Probably Not
+                    <span class="opt-icon" aria-hidden="true">🤨</span> <span data-i18n="a4">Probably Not</span>
                 </button>
                 <button class="btn-option" data-key="5" data-weight="0.5" data-label="Not Sure">
-                    <span class="opt-icon" aria-hidden="true">❓</span> Not Sure
+                    <span class="opt-icon" aria-hidden="true">❓</span> <span data-i18n="a5">Not Sure</span>
                 </button>
             </div>
-            <p id="keyboardHint" style="display:none; text-align:center; font-size:0.78rem; color:var(--smoke); margin-top:12px; letter-spacing:0.3px;">
+            <p id="keyboardHint" data-i18n="hint" style="display:none; text-align:center; font-size:0.78rem; color:var(--smoke); margin-top:12px; letter-spacing:0.3px;">
                 💡 Tip: Press 1–5 on your keyboard to answer faster.
             </p>
 
@@ -1266,37 +1283,37 @@
             <div id="ratePanel" class="rate-panel" style="display:none;">
                 <p id="ratePrompt">Was I correct?</p>
                 <div class="rate-buttons">
-                    <button class="btn-option yes" id="rateYesBtn"><span class="opt-icon" aria-hidden="true">✔</span> Yes</button>
-                    <button class="btn-option no" id="rateNoBtn"><span class="opt-icon" aria-hidden="true">✖</span> No</button>
+                    <button class="btn-option yes" id="rateYesBtn"><span class="opt-icon" aria-hidden="true">✔</span> <span data-i18n="a1">Yes</span></button>
+                    <button class="btn-option no" id="rateNoBtn"><span class="opt-icon" aria-hidden="true">✖</span> <span data-i18n="a2">No</span></button>
                 </div>
                 <div class="correction-row" id="correctionRow">
-                    <label for="actualCharacter">Who were you thinking of? (optional)</label>
-                    <input type="text" id="actualCharacter" maxlength="60" autocomplete="off" placeholder="e.g. Han Solo">
+                    <label for="actualCharacter" data-i18n="who">Who were you thinking of? (optional)</label>
+                    <input type="text" id="actualCharacter" maxlength="60" autocomplete="off" data-i18n-ph="whoPh" placeholder="e.g. Han Solo">
                     <div class="correction-actions">
-                        <button type="button" class="btn-secondary" id="correctionSendBtn">Send</button>
-                        <button type="button" class="btn-secondary" id="correctionSkipBtn">Skip</button>
+                        <button type="button" class="btn-secondary" id="correctionSendBtn" data-i18n="send">Send</button>
+                        <button type="button" class="btn-secondary" id="correctionSkipBtn" data-i18n="skip">Skip</button>
                     </div>
                 </div>
                 <div class="rate-thanks" id="rateThanks">Thanks for the feedback! ✨</div>
                 <div class="post-game-actions">
-                    <button class="btn-secondary" id="shareResultBtn">🎉 Share My Result</button>
-                    <button class="btn-secondary" id="challengeFriendBtn">🤝 Challenge a Friend</button>
+                    <button class="btn-secondary" id="shareResultBtn" data-i18n="shareRes">🎉 Share My Result</button>
+                    <button class="btn-secondary" id="challengeFriendBtn" data-i18n="challenge">🤝 Challenge a Friend</button>
                 </div>
-                <button class="btn-secondary" id="randomIdeaBtn" style="width:100%; margin-bottom:12px;">🎲 Random Character Ideas</button>
-                <p class="replay-hook">Can you beat the Genie? Think of a harder character.</p>
-                <button class="btn-play" id="playAgainBtn">Play again</button>
+                <button class="btn-secondary" id="randomIdeaBtn" data-i18n="random" style="width:100%; margin-bottom:12px;">🎲 Random Character Ideas</button>
+                <p class="replay-hook" data-i18n="replay">Can you beat the Genie? Think of a harder character.</p>
+                <button class="btn-play" id="playAgainBtn" data-i18n="playAgain">Play again</button>
             </div>
 
             <div id="introExtras">
                 <p class="social-line" id="socialProofText"></p>
                 <p class="stat-line" id="statLine"></p>
                 <div class="category-chips">
-                    <a class="chip" href="/movies.html">🎬 Movies</a>
-                    <a class="chip" href="/tv-shows.html">📺 TV</a>
-                    <a class="chip" href="/video-games.html">🎮 Games</a>
-                    <a class="chip" href="/anime.html">🎌 Anime</a>
+                    <a class="chip" data-i18n="c_movies" href="/movies.html">🎬 Movies</a>
+                    <a class="chip" data-i18n="c_tv" href="/tv-shows.html">📺 TV</a>
+                    <a class="chip" data-i18n="c_games" href="/video-games.html">🎮 Games</a>
+                    <a class="chip" data-i18n="c_anime" href="/anime.html">🎌 Anime</a>
                 </div>
-                <p class="examples-label">Need ideas?</p>
+                <p class="examples-label" data-i18n="need">Need ideas?</p>
                 <div class="examples-chips">
                     <button type="button" class="chip idea-chip" data-name="Batman">Batman</button>
                     <button type="button" class="chip idea-chip" data-name="Harry Potter">Harry Potter</button>
@@ -1404,9 +1421,9 @@
         </div>
 
         <div class="pre-footer-cta">
-            <h3>✨ Think you can stump the Genie?</h3>
-            <p>Pick a new character and see if it can read your mind again.</p>
-            <button class="btn-play" id="ctaStartBtn">Play again</button>
+            <h3 data-i18n="cta_h">✨ Think you can stump the Genie?</h3>
+            <p data-i18n="cta_p">Pick a new character and see if it can read your mind again.</p>
+            <button class="btn-play" id="ctaStartBtn" data-i18n="playAgain">Play again</button>
         </div>
 
 <div id="blog" class="content-section">
@@ -1431,11 +1448,11 @@
    <p class="last-updated" style="text-align:center;color:#9a9cb5;font-size:.8rem;margin:24px 0 0">Last updated: <time datetime="2026-11-01">November 1, 2026</time></p>
 <footer>
     <div class="footer-links">
-        <button id="shareBtn" aria-label="Share this game">📢 Share Game</button>
-        <a href="https://mindgenieai.xyz/about.html">About</a>
-        <a href="https://mindgenieai.xyz/contact.html">Contact</a>
-        <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
-        <a href="#blog">Blog</a> <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+        <button id="shareBtn" aria-label="Share this game" data-i18n="f_share">📢 Share Game</button>
+        <a href="https://mindgenieai.xyz/about.html" data-i18n="f_about">About</a>
+        <a href="https://mindgenieai.xyz/contact.html" data-i18n="nav_contact">Contact</a>
+        <a href="https://mindgenieai.xyz/privacy-policy.html" data-i18n="f_privacy">Privacy Policy</a>
+        <a href="#blog" data-i18n="nav_blog">Blog</a> <a href="https://mindgenieai.xyz/terms.html" data-i18n="f_terms">Terms of Service</a>
     </div>
     <div class="footer-copy">
         © 2026 MindGenie AI — All rights reserved
@@ -1450,9 +1467,10 @@
     <!-- Sponsored links: moved below the footer and de-emphasized so they don't compete with gameplay -->
     <!-- Sticky mobile play bar: appears once the main Start button scrolls out of view -->
     <div class="sticky-play-bar" id="stickyPlayBar">
-        <button class="btn-play" id="bottomStartBtn">Play now</button>
+        <button class="btn-play" id="bottomStartBtn" data-i18n="playNow">Play now</button>
     </div>
 
+    <script src="/i18n.js"></script>
     <script>
         // ── STARFIELD ──
         const starsEl = document.getElementById('stars');
@@ -1475,6 +1493,23 @@
         let answerPending = false;
         let wakePromiseResolvers = [];
         const ESTIMATED_QUESTIONS = 15;
+
+        // ── i18n core (dictionaries live in /i18n.js) ──
+        let LANG = 'en';
+        let introState = 'intro';   // 'intro' | 'theme' | null: which message the speech bubble shows before a round
+        function t(key, vars) {
+            const D = window.I18N || {};
+            let v = D[LANG] && D[LANG][key];
+            if (v === undefined) v = D.en && D.en[key];
+            if (v === undefined) return key;
+            if (typeof v === 'string' && vars) v = v.replace(/\{(\w+)\}/g, (m, k) => (vars[k] !== undefined ? vars[k] : m));
+            return v;
+        }
+        function tq(qid) {
+            const d = window.I18N && window.I18N[LANG];
+            const n = parseInt(String(qid).slice(1), 10) - 1;
+            return (d && d.q && d.q[n]) || null;
+        }
 
         // ── STATIC DOM REFERENCES ──
         const startBtn        = document.getElementById('startBtn');
@@ -1627,7 +1662,7 @@
                 document.getElementById('viewCount').innerText = total.toLocaleString();
                 const proofEl = document.getElementById('socialProofText');
                 if (proofEl && total > 0) {
-                    proofEl.textContent = `Played over ${total.toLocaleString()} times`;
+                    window._played = total; proofEl.textContent = t('played', { n: total.toLocaleString() });
                 }
             } catch(e) {
                 const local = parseInt(localStorage.getItem('mindgenie_views') || '0') + 1;
@@ -1694,39 +1729,39 @@
         function shareGame(e) {
             e.preventDefault();
             const url  = window.location.href.split('?')[0];
-            const text = "Can this AI guess your favorite character? Play MindGenie AI now!";
+            const text = t('shareGameTxt');
             trackEvent('share_click', { share_type: 'game' });
             if (navigator.share) {
                 navigator.share({ title: 'MindGenie AI', text, url }).catch(console.error);
             } else {
                 navigator.clipboard.writeText(url);
-                alert("Game URL copied to clipboard!");
+                alert(t('copied'));
             }
         }
 
         function shareResult() {
             const url  = window.location.href.split('?')[0];
             const text = lastGuessedCharacter
-                ? `MindGenie AI guessed I was thinking of ${lastGuessedCharacter}! Think you can stump it?`
-                : "MindGenie AI just read my mind! Think you can stump it?";
+                ? t('shareResTxt', { name: lastGuessedCharacter })
+                : t('shareResTxt2');
             trackEvent('share_click', { share_type: 'result', character: lastGuessedCharacter });
             if (navigator.share) {
                 navigator.share({ title: 'MindGenie AI', text, url }).catch(console.error);
             } else {
                 navigator.clipboard.writeText(`${text} ${url}`);
-                alert("Result copied to clipboard!");
+                alert(t('copied'));
             }
         }
 
         function challengeFriend() {
             const url  = window.location.href.split('?')[0];
-            const text = "I just played MindGenie AI — think of a character and see if it can guess who you're thinking of!";
+            const text = t('challengeTxt');
             trackEvent('share_click', { share_type: 'challenge_friend' });
             if (navigator.share) {
                 navigator.share({ title: 'MindGenie AI', text, url }).catch(console.error);
             } else {
                 navigator.clipboard.writeText(`${text} ${url}`);
-                alert("Invite link copied to clipboard!");
+                alert(t('copied'));
             }
         }
 
@@ -1741,7 +1776,8 @@
             document.getElementById('progressWrap').style.display = 'none';
             questionNumEl.style.display = 'none';
             introExtras.style.display = 'none';
-            setDialogue('<strong>Select a theme.</strong><br>Which kind of character are you thinking of?');
+            introState = 'theme';
+            setDialogue(t('themeTitle'));
             showPanel('theme');
             trackEvent('theme_picker_opened');
         }
@@ -1764,12 +1800,13 @@
                 }
             }
 
+            introState = null;
             sessionId = generateSessionId();
             questionCount = 0;
             document.getElementById('progressWrap').style.display = 'none';
             questionNumEl.style.display = 'none';
             rateThanks.style.display = 'none';
-            rateThanks.textContent = 'Thanks for the feedback! ✨';
+            rateThanks.textContent = t('thanks');
             correctionRow.style.display = 'none';
             actualInput.value = '';
             rateButtonsRow.style.display = 'flex';
@@ -1779,11 +1816,11 @@
             trackEvent('game_started');
 
             startBtn.disabled = true;
-            startBtn.textContent = 'Starting…';
+            startBtn.textContent = t('starting');
 
             // Show immediate feedback so the player never wonders if the click landed,
             // even before we know whether the server needs to wake up first.
-            setDialogue("🔮 The Genie is reading your thoughts...<br>Loading your first question...");
+            setDialogue(t('loading1'));
 
             if (!serverReady) {
                 wakeBannerEl.style.display = 'block';
@@ -1801,9 +1838,9 @@
                     handleUnexpectedResponse();
                 }
             } catch(err) {
-                setDialogue("The connection to the spirit realm was lost.<br>Try again in a moment.");
+                setDialogue(t('connLost'));
                 startBtn.disabled = false;
-                startBtn.textContent = 'Try again';
+                startBtn.textContent = t('tryAgain');
                 showPanel('start');
             }
         }
@@ -1814,26 +1851,26 @@
             const pct = Math.min(100, Math.round((questionCount / ESTIMATED_QUESTIONS) * 100));
             document.getElementById('progressFill').style.width = pct + '%';
 
-            let flavor = '🔮 Confidence';
-            if (pct >= 85) flavor = '🔮 Nearly certain';
-            else if (pct >= 60) flavor = '🔮 Growing confident';
-            else if (pct >= 30) flavor = '🔮 Narrowing it down';
+            let flavor = '🔮 ' + t('conf');
+            if (pct >= 85) flavor = '🔮 ' + t('conf4');
+            else if (pct >= 60) flavor = '🔮 ' + t('conf3');
+            else if (pct >= 30) flavor = '🔮 ' + t('conf2');
 
-            document.getElementById('progressLabel').innerText = `${flavor}: ${pct}% · Question ${questionCount}`;
-            loadingProgressText.textContent = `${flavor}: ${pct}% · Question ${questionCount}`;
+            document.getElementById('progressLabel').innerText = `${flavor}: ${pct}% · ${t('question')} ${questionCount}`;
+            loadingProgressText.textContent = `${flavor}: ${pct}% · ${t('question')} ${questionCount}`;
         }
 
         function renderQuestion(text) {
             questionCount++;
             answerPending = false;
             let prefix = "";
-            if (questionCount === 4) prefix = "The image grows clearer...<br><br>";
-            if (questionCount === 7) prefix = "I'm very close now...<br><br>";
-            if (questionCount === 9) prefix = "Almost there. One final veil to lift...<br><br>";
-            setDialogue(prefix + text);
+            if (questionCount === 4) prefix = t('pre4') + "<br><br>";
+            if (questionCount === 7) prefix = t('pre7') + "<br><br>";
+            if (questionCount === 9) prefix = t('pre9') + "<br><br>";
+            setDialogue(prefix + (tq(currentQuestionId) || text));
             updateProgress();
 
-            questionNumEl.textContent = `Question ${questionCount}`;
+            questionNumEl.textContent = `${t('question')} ${questionCount}`;
             questionNumEl.style.display = 'block';
 
             optionButtons.forEach(btn => {
@@ -1841,7 +1878,7 @@
                 btn.classList.remove('selected');
             });
             startBtn.disabled = false;
-            startBtn.textContent = 'Play';
+            startBtn.textContent = t('play');
             showPanel('options');
 
             optionsGrid.classList.remove('question-enter');
@@ -1853,7 +1890,7 @@
             answerPending = false;
             optionButtons.forEach(btn => { btn.disabled = false; btn.classList.remove('selected'); });
             answerLoading.style.display = 'none';
-            setDialogue("Hmm, the spirits gave a strange sign I didn't recognize.<br>You can try answering again, or start a new round.");
+            setDialogue(t('unexpected'));
         }
 
         // Rotating "thinking" messages while we wait on submit-answer. Each message
@@ -1902,8 +1939,8 @@
             optionButtons.forEach(btn => { btn.disabled = true; });
             if (btnEl) btnEl.classList.add('selected');
 
-            answeredChip.textContent = `✔ You answered: ${label}`;
-            loadingProgressText.textContent = `Question ${questionCount} of ~${ESTIMATED_QUESTIONS}`;
+            answeredChip.textContent = `✔ ${t('answered')} ${label}`;
+            loadingProgressText.textContent = t('ofq', { n: questionCount, m: ESTIMATED_QUESTIONS });
 
             // Let the selected-button flash animation play briefly before swapping
             // to the loading state, so the click always feels acknowledged first.
@@ -1933,7 +1970,7 @@
                 answerPending = false;
                 optionButtons.forEach(btn => { btn.disabled = false; btn.classList.remove('selected'); });
                 answerLoading.style.display = 'none';
-                setDialogue("The vision slipped away...<br>The spirits lost the connection. Try answering again.");
+                setDialogue(t('slipped'));
             }
         }
 
@@ -1946,11 +1983,11 @@
 
             // Build suspense: announce the reveal first, then hold for a beat before
             // the name itself appears, instead of dumping the answer instantly.
-            setDialogue(`✨<br>I know who you're thinking of...`);
+            setDialogue(`✨<br>${t('reveal1')}`);
 
             setTimeout(() => {
-                setDialogue(`✨<br>I KNOW WHO YOU'RE THINKING OF...<span class="reveal-stars"><span class="guess-name big-glow">${character}<\/span><\/span>✨`);
-                ratePromptEl.innerHTML = `I guessed <strong>${character}<\/strong>!<br>Was I right?`;
+                setDialogue(`✨<br>${t('reveal2')}<span class="reveal-stars"><span class="guess-name big-glow">${character}<\/span><\/span>✨`);
+                ratePromptEl.innerHTML = t('guessed', { name: `<strong>${character}<\/strong>` });
                 showPanel('rate');
                 gameBoxEl.classList.remove('shake');
                 void gameBoxEl.offsetWidth;
@@ -1973,7 +2010,7 @@
             trackEvent('random_ideas_click');
             const shuffled = [...characterIdeaPool].sort(() => Math.random() - 0.5);
             const picks = shuffled.slice(0, 3);
-            ratePromptEl.innerHTML = `Can't think of one? Try: <strong>${picks.join('<\/strong>, <strong>')}<\/strong> — or anyone else!`;
+            ratePromptEl.innerHTML = t('ideas', { names: `<strong>${picks.join('<\/strong>, <strong>')}<\/strong>` });
         }
 
         async function postFeedback(payload) {
@@ -1992,7 +2029,7 @@
 
         function showFeedbackThanks(saved) {
             correctionRow.style.display = 'none';
-            rateThanks.textContent = saved ? 'Thanks \u2014 your feedback was saved. \u2728' : 'Thanks for the feedback! \u2728';
+            rateThanks.textContent = saved ? t('thanksSaved') : t('thanks');
             rateThanks.style.display = 'block';
         }
 
@@ -2076,15 +2113,13 @@
                 const name = document.createElement('span'); name.textContent = g.name;
                 const mark = document.createElement('span'); mark.className = 'mark';
                 mark.textContent = g.correct ? '\u2713' : '\u2717';
-                mark.title = g.correct ? 'I guessed it' : 'You stumped me';
+                mark.title = g.correct ? t('markOk') : t('markMiss');
                 li.append(name, mark);
                 historyList.appendChild(li);
             });
             historyPanel.hidden = h.length === 0;
             const stumped = h.filter(g => !g.correct).length;
-            statLine.textContent = h.length
-                ? `Your record: I guessed ${h.length - stumped} of ${h.length}. You stumped me ${stumped} time${stumped === 1 ? '' : 's'}.`
-                : '';
+            statLine.textContent = h.length ? t('record', { g: h.length - stumped, n: h.length, s: stumped }) : '';
         }
         function recordGame(correct) {
             if (!lastGuessedCharacter) return;
@@ -2097,8 +2132,71 @@
         renderHistory();
 
         document.querySelectorAll('.idea-chip').forEach(b => b.addEventListener('click', () => {
-            setDialogue(`<strong>Good pick! Think of ${b.dataset.name}.</strong><br>Press Play when you're ready.`);
+            setDialogue(t('goodPick', { name: b.dataset.name }));
         }));
+
+        // ── LANGUAGE MENU ──
+        const langBtn  = document.getElementById('langBtn');
+        const langMenu = document.getElementById('langMenu');
+        const langCur  = document.getElementById('langCur');
+        function langReady(code) { return code === 'en' || !!(window.I18N && window.I18N[code]); }
+        function buildLangMenu() {
+            langMenu.innerHTML = '';
+            (window.LANGS || []).forEach(l => {
+                const li = document.createElement('li');
+                const b = document.createElement('button');
+                b.type = 'button'; b.textContent = l.name; b.lang = l.code;
+                if (!langReady(l.code)) {
+                    b.disabled = true;
+                    const sm = document.createElement('small'); sm.textContent = t('soon'); b.appendChild(sm);
+                } else {
+                    b.addEventListener('click', () => { setLang(l.code); closeLangMenu(); });
+                }
+                if (l.code === LANG) b.setAttribute('aria-current', 'true');
+                li.appendChild(b); langMenu.appendChild(li);
+            });
+        }
+        function closeLangMenu() { langMenu.hidden = true; langBtn.setAttribute('aria-expanded', 'false'); }
+        langBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langMenu.hidden = !langMenu.hidden;
+            langBtn.setAttribute('aria-expanded', langMenu.hidden ? 'false' : 'true');
+        });
+        document.addEventListener('click', (e) => { if (!document.getElementById('lang').contains(e.target)) closeLangMenu(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLangMenu(); });
+
+        function setLang(code) {
+            LANG = code;
+            try { localStorage.setItem('mindgenie_lang', code); } catch (e) {}
+            trackEvent('language_selected', { lang: code });
+            applyLang();
+        }
+        function applyLang() {
+            const meta = (window.LANGS || []).find(l => l.code === LANG) || { name: 'English' };
+            document.documentElement.lang = LANG;
+            document.documentElement.dir = meta.rtl ? 'rtl' : 'ltr';
+            langCur.textContent = meta.name;
+            document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+            document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+            optionButtons.forEach(btn => { btn.dataset.label = t('a' + btn.dataset.key); });
+            thinkingMessages.splice(0, thinkingMessages.length, ...t('think'));
+            wakeMessages.splice(0, wakeMessages.length, t('wake'));
+            wakeBannerEl.textContent = t('wake');
+            if (introState === 'intro') document.getElementById('gameText').innerHTML = t('intro');
+            if (introState === 'theme') document.getElementById('gameText').innerHTML = t('themeTitle');
+            const proofEl = document.getElementById('socialProofText');
+            if (proofEl && window._played) proofEl.textContent = t('played', { n: Number(window._played).toLocaleString() });
+            renderHistory();
+            buildLangMenu();
+        }
+        function detectLang() {
+            try { const saved = localStorage.getItem('mindgenie_lang'); if (saved && langReady(saved)) return saved; } catch (e) {}
+            const prefs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en'])
+                .map(x => String(x).slice(0, 2).toLowerCase());
+            return prefs.find(langReady) || 'en';
+        }
+        LANG = detectLang();
+        applyLang();
 
         // ── KEYBOARD SUPPORT ──
         document.addEventListener('keydown', (e) => {
