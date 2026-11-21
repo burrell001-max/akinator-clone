@@ -1,0 +1,178 @@
+/* MindGenie AI: shared sky theme for every inner page.
+   Same palette and fonts as the homepage (index.html). Loaded AFTER each page's own
+   <style> block / guide.css, so it overrides the old dark theme without touching content. */
+
+:root {
+  --ink: #17384c;
+  --ink-soft: #3b6078;
+  --blue: #1c63ad;
+  --blue-deep: #0e4f9c;
+  --orange: #d98200;
+  --line: #cfe0f7;
+  /* the old pages read colours from these variables, so re-pointing them re-themes most things */
+  --white: #17384c;
+  --smoke: #3b6078;
+  --gold: #d98200;
+  --gold-dim: #1c63ad;
+  --glow: #4a8df0;
+  --violet: #2f78d6;
+  --green: #2c9a5a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: linear-gradient(180deg, #4f86d8 0%, #8fb0ee 38%, #c9d3fb 72%, #dfe6fb 100%) fixed;
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 55% at 15% 100%, rgba(255,255,255,.35), transparent 60%),
+    radial-gradient(90% 50% at 95% 65%, rgba(122,108,230,.28), transparent 62%);
+}
+.page-wrap, .wrap { position: relative; z-index: 1; }
+
+/* ── Layout: content sits on a light card, like the homepage sections ── */
+.page-wrap { max-width: 760px; }
+.page-wrap > main,
+.page-wrap > article,
+.wrap {
+  background: rgba(255,255,255,.8);
+  border: 1px solid #fff;
+  border-radius: 16px;
+  padding: 26px 30px 30px;
+  box-shadow: 0 10px 30px rgba(23,56,76,.14);
+}
+.wrap { max-width: 760px; margin: 28px 0 40px; padding-top: 26px; }
+.wrap h1 { margin-bottom: 8px; }
+
+/* ── Header and breadcrumbs ── */
+.top-bar a, .top-nav a { color: var(--ink); font-weight: 500; text-decoration: none; }
+.top-bar a:hover, .top-nav a:hover { color: var(--blue-deep); }
+.top-bar a.brand {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  color: transparent;
+  background: linear-gradient(180deg, #ffe27a 0%, #ffb21c 55%, #e07b00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 2px 0 #8a4a00);
+}
+.top-nav a.nav-play { color: var(--blue-deep); font-weight: 700; }
+/* pages that only have a "Back to MindGenie AI" link get a pill button */
+.top-bar > a:only-child:not(.brand) {
+  display: inline-block;
+  background: rgba(255,255,255,.75);
+  border: 1px solid #fff;
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: .95rem;
+}
+.top-bar > a:only-child:not(.brand):hover { background: #fff; }
+.breadcrumb, .breadcrumbs { color: #28506a; }
+.breadcrumb a, .breadcrumbs a { color: var(--blue); }
+.breadcrumb a:hover, .breadcrumbs a:hover { color: var(--blue-deep); }
+
+/* ── Type ── */
+h1, h2, h3 { font-family: 'Fredoka', sans-serif; font-weight: 600; }
+h1 { color: var(--ink); text-shadow: none; }
+h2 { color: var(--ink); }
+.page-wrap article h1, .page-wrap main h1, .wrap h1 { color: var(--ink); text-shadow: none; }
+p, li, .intro, .tier-note { color: var(--ink-soft); }
+strong { color: var(--ink); }
+main a, article a, .wrap a { color: var(--blue); }
+main a:hover, article a:hover, .wrap a:hover { color: var(--blue-deep); }
+.kicker { color: var(--blue); letter-spacing: .5px; text-transform: none; font-size: .85rem; font-weight: 600; }
+.meta, .pg-note, .time-estimate, .updated { color: #41647a; }
+.trait-list strong, .round strong { color: var(--ink); }
+
+/* ── Chips, cards, lists ── */
+.char-chip, .related a {
+  background: rgba(255,255,255,.75);
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+.char-chip:hover, .related a:hover { background: #fff; border-color: #4a8df0; color: var(--blue-deep); }
+.related a { color: var(--blue); }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  box-shadow: 0 3px 0 #dbe8fa;
+}
+.card:hover { background: #f4f8ff; border-color: #4a8df0; }
+.card strong { color: var(--ink); }
+.card .meta { color: var(--blue); }
+.tier-easy .card, .tier-easy .char-chip { border-left-color: #4cbf7a; }
+.tier-med .card { border-left-color: #f0b030; }
+.tier-hard .card, .tier-hard .char-chip { border-left-color: #e0707a; }
+.tier-easy .char-chip { border-color: #4cbf7a; }
+.tier-hard .char-chip { border-color: #e0707a; }
+.diff-easy   { background: #d7f3e1; color: #1f7a45; border: 1px solid #4cbf7a; }
+.diff-medium { background: #fff1cc; color: #8a5a00; border: 1px solid #f0b030; }
+.diff-hard   { background: #fde0e3; color: #a3303b; border: 1px solid #e0707a; }
+.faq-item { border-bottom-color: rgba(23,56,76,.12); }
+.faq-item h3 { color: var(--ink); }
+.contact-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; }
+.contact-card a { color: var(--blue); }
+.reason-list li, .trait-list li, .round li { color: var(--ink-soft); }
+
+/* ── Call-to-action: 3D blue button like the homepage Play button ── */
+div.cta {
+  background: rgba(255,255,255,.85);
+  border: 1px solid #fff;
+  box-shadow: 0 6px 18px rgba(23,56,76,.12);
+}
+div.cta h3 { color: var(--ink); font-family: 'Fredoka', sans-serif; font-size: 1.3rem; }
+div.cta a.btn,
+a.cta {
+  display: inline-block;
+  background: linear-gradient(180deg, #4a98f5, #2370d0);
+  color: #fff !important;
+  border-radius: 999px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: .5px;
+  text-decoration: none;
+  padding: 13px 30px;
+  box-shadow: 0 5px 0 #164a92, 0 10px 20px rgba(23,56,76,.22);
+}
+div.cta a.btn:hover, a.cta:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #164a92, 0 12px 22px rgba(23,56,76,.25); }
+div.cta a.btn:active, a.cta:active { transform: translateY(3px); box-shadow: 0 2px 0 #164a92; }
+div.cta a.btn:focus-visible, a.cta:focus-visible, .card:focus-visible, .char-chip:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+div.cta p { color: var(--ink-soft) !important; }
+.back { color: var(--blue); }
+a.back:hover { color: var(--blue-deep); }
+
+/* ── Footer: dark teal band, same as homepage ── */
+.last-updated { color: #28506a !important; }
+footer {
+  width: 100%;
+  background: #17475e;
+  border-top: 0;
+  color: #a9c7d9;
+  padding: 26px 20px;
+  margin-top: 36px;
+}
+footer a { color: #dbeaf7; font-size: .9rem; }
+footer a:hover { color: #fff; }
+
+/* ── Stray inline links that used the old gold colour ── */
+a[style*="gold-dim"] { color: var(--blue) !important; }
+
+@media (max-width: 600px) {
+  .page-wrap > main, .page-wrap > article, .wrap { padding: 20px 18px 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
