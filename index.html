@@ -1144,6 +1144,10 @@
         .footer-copy { background:#103847; color:#a9c7d9; }
         .view-counter { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.25); color:#ffd166; }
         .sticky-play-bar { background:rgba(255,255,255,.92); border-top:1px solid #cfe0f7; }
+            #startBtn.btn-play { display:block; width:fit-content; max-width:100%; }
+        .chip { font-family:inherit; text-decoration:none; cursor:pointer; transition:background .15s, border-color .15s; }
+        .chip:hover { background:#fff; border-color:#4a8df0; }
+        .chip:focus-visible { outline:2px solid #4a8df0; outline-offset:2px; }
     </style>
 </head>
 <body>
@@ -1274,18 +1278,18 @@
             <div id="introExtras">
                 <p class="social-line" id="socialProofText"></p>
                 <p class="stat-line" id="statLine"></p>
-                <div class="category-chips" aria-hidden="true">
-                    <span class="chip">🎬 Movies</span>
-                    <span class="chip">📺 TV</span>
-                    <span class="chip">🎮 Games</span>
-                    <span class="chip">🎌 Anime</span>
+                <div class="category-chips">
+                    <a class="chip" href="/movies.html">🎬 Movies</a>
+                    <a class="chip" href="/tv-shows.html">📺 TV</a>
+                    <a class="chip" href="/video-games.html">🎮 Games</a>
+                    <a class="chip" href="/anime.html">🎌 Anime</a>
                 </div>
                 <p class="examples-label">Need ideas?</p>
                 <div class="examples-chips">
-                    <span class="chip">Batman</span>
-                    <span class="chip">Harry Potter</span>
-                    <span class="chip">Pikachu</span>
-                    <span class="chip">Elsa</span>
+                    <button type="button" class="chip idea-chip" data-name="Batman">Batman</button>
+                    <button type="button" class="chip idea-chip" data-name="Harry Potter">Harry Potter</button>
+                    <button type="button" class="chip idea-chip" data-name="Pikachu">Pikachu</button>
+                    <button type="button" class="chip idea-chip" data-name="Elsa">Elsa</button>
                 </div>
             </div>
         </div>
@@ -2057,6 +2061,10 @@
         }
         document.getElementById('historyClose').addEventListener('click', () => { historyPanel.hidden = true; });
         renderHistory();
+
+        document.querySelectorAll('.idea-chip').forEach(b => b.addEventListener('click', () => {
+            setDialogue(`<strong>Good pick! Think of ${b.dataset.name}.</strong><br>Press Play when you're ready.`);
+        }));
 
         // ── KEYBOARD SUPPORT ──
         document.addEventListener('keydown', (e) => {
