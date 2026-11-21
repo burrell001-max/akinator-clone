@@ -8,7 +8,7 @@
     <meta name="description" content="Play MindGenie AI! Think of any movie, TV, anime, or historical character. Answer ~15 questions and watch our AI Genie guess who it is.">
     <meta name="keywords" content="MindGenie AI, AI character guessing game, mind reader AI, 20 questions game, free AI game, web games">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#101b38">
+    <meta name="theme-color" content="#4f86d8">
     <link rel="canonical" href="https://mindgenieai.xyz/">
 
     <!-- Favicons -->
@@ -34,8 +34,8 @@
     <link rel="preconnect" href="https://akinator-clone-0uf6.onrender.com">
     <!-- Fonts loaded via <link> rather than CSS @import: @import blocks the CSSOM
          until it resolves, delaying font (and therefore text) rendering. -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap"></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap"></noscript>
 
     <!-- Structured data -->
     <script type="application/ld+json">
@@ -1039,6 +1039,111 @@
                 scroll-behavior: auto !important;
             }
         }
+    
+        /* ═══ SKY THEME (Akinator-style layout) — overrides the original dark theme ═══ */
+        :root { --white:#17384c; --smoke:#3b6078; --gold:#d98200; --gold-dim:#1c63ad; --glow:#4a8df0; --violet:#2f78d6; }
+        body { background: linear-gradient(180deg,#4f86d8 0%,#8fb0ee 38%,#c9d3fb 72%,#dfe6fb 100%) fixed; font-family:'Inter',sans-serif; color:#17384c; }
+        body::before { content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+            background: radial-gradient(120% 55% at 15% 100%, rgba(255,255,255,.35), transparent 60%),
+                        radial-gradient(90% 50% at 95% 65%, rgba(122,108,230,.28), transparent 62%); }
+        .nebula { display:none; }
+        .star { border-radius:2px; background:rgba(255,255,255,.55); scale:10; rotate:45deg; animation: drift var(--d,4s) ease-in-out infinite alternate; }
+        @keyframes drift { from { translate:0 0; opacity:calc(var(--o,.6)*.5); } to { translate:0 -14px; opacity:var(--o,.6); } }
+        .page-wrap { max-width:1080px; }
+        .top-nav a { color:#17384c; font-size:.9rem; font-weight:500; }
+        .top-nav a:hover { color:#0e4f9c; }
+        .top-nav a.nav-play { color:#0e4f9c; font-weight:700; }
+        .nav-toggle { background:rgba(255,255,255,.7); border-color:#fff; color:#17384c; }
+        @media (max-width:700px){ .top-nav { background:#fff; border-color:#cfe0f7; box-shadow:0 8px 24px rgba(23,56,76,.18); } }
+
+        .logo-area { margin:10px 0 0; }
+        .logo-area h1.wordmark { font-family:'Fredoka',sans-serif; font-weight:700; letter-spacing:1px; line-height:1;
+            font-size:clamp(3rem,10vw,5rem); color:transparent;
+            background:linear-gradient(180deg,#ffe27a 0%,#ffb21c 55%,#e07b00 100%); -webkit-background-clip:text; background-clip:text;
+            text-shadow:none; filter:drop-shadow(0 2px 0 #8a4a00) drop-shadow(0 0 1px #8a4a00); }
+        .tagline { font-family:'Fredoka',sans-serif; font-weight:500; font-size:1.1rem; color:#17384c; margin-top:6px; text-align:center; }
+
+        .stage { position:relative; width:100%; display:grid; grid-template-columns:minmax(0,270px) minmax(0,360px); justify-content:center; align-items:center; gap:28px; margin-top:12px; }
+        .genie-wrap { position:relative; justify-self:center; animation: bob 5s ease-in-out infinite; }
+        .genie { width:260px; height:auto; display:block; filter:drop-shadow(0 10px 14px rgba(23,56,76,.25)); }
+        @keyframes bob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+        .hello { position:absolute; left:-40px; top:70px; z-index:2; background:rgba(255,255,255,.82); backdrop-filter:blur(6px); border-radius:12px;
+            padding:12px 16px; font-family:'Fredoka',sans-serif; font-weight:600; font-size:1.05rem; color:#17384c; box-shadow:0 6px 18px rgba(23,56,76,.15); max-width:190px; }
+        .stage.playing .hello { display:none; }
+
+        .speech-bubble { background:rgba(255,255,255,.78); backdrop-filter:blur(6px); border:1px solid #fff; border-radius:14px; padding:24px 26px;
+            text-align:left; margin:0; box-shadow:0 10px 30px rgba(23,56,76,.16); }
+        .speech-bubble::before { display:none; }
+        .speech-bubble::after { content:''; position:absolute; top:50%; left:-12px; bottom:auto; transform:translateY(-50%);
+            border:0 solid transparent; border-width:10px 12px 10px 0; border-right-color:rgba(255,255,255,.78); }
+        .question-num { text-transform:none; letter-spacing:0; color:#1c63ad; font-size:.85rem; }
+        #gameText { font-family:'Fredoka',sans-serif; font-size:1.35rem; line-height:1.4; font-weight:500; color:#17384c; min-height:84px; }
+        .guess-name { font-family:'Fredoka',sans-serif; color:#d98200; text-shadow:none; font-size:2.4rem; }
+        .guess-name.big-glow { animation: reveal-name .6s ease forwards; }
+        .reveal-stars::before, .reveal-stars::after { color:#ffb21c; }
+
+        .history { position:absolute; left:0; top:6px; width:210px; background:rgba(255,255,255,.72); backdrop-filter:blur(6px); border-radius:12px; padding:14px 16px; box-shadow:0 6px 18px rgba(23,56,76,.14); }
+        .history[hidden] { display:none; }
+        .history h3 { font-family:'Fredoka',sans-serif; font-size:1rem; margin-bottom:2px; padding-right:26px; }
+        .history small { display:block; font-size:.72rem; color:#41647a; margin-bottom:8px; }
+        .history ul { list-style:none; }
+        .history li { display:flex; justify-content:space-between; gap:8px; font-size:.88rem; padding:3px 0; border-top:1px solid rgba(23,56,76,.08); }
+        .history li .mark { font-weight:700; }
+        .history li.ok .mark { color:#2c9a5a; } .history li.miss .mark { color:#c0392b; }
+        .history-close { position:absolute; top:8px; right:8px; width:24px; height:24px; border-radius:50%; border:0; background:#fff; color:#a33; font-size:1rem; line-height:1; cursor:pointer; }
+        @media (max-width:1050px){
+            .history { position:static; grid-column:1/-1; order:3; width:100%; max-width:380px; justify-self:center; }
+        }
+        @media (max-width:760px){
+            .stage { grid-template-columns:minmax(0,1fr); gap:20px; }
+            .genie { width:200px; }
+            .hello { position:static; margin:0 auto 8px; text-align:center; }
+            .speech-bubble::after { top:-12px; left:50%; transform:translateX(-50%); border-width:0 10px 12px 10px; border-color:transparent; border-bottom-color:rgba(255,255,255,.78); }
+        }
+
+        #interactionArea { max-width:560px; margin:22px auto 0; }
+        .btn-play { background:linear-gradient(180deg,#4a98f5,#2370d0); color:#fff; border:0; border-radius:999px; padding:16px 32px; font-family:'Fredoka',sans-serif;
+            font-size:1.25rem; font-weight:600; letter-spacing:1px; text-transform:none; box-shadow:0 5px 0 #164a92, 0 10px 20px rgba(23,56,76,.22); }
+        .btn-play:hover { transform:translateY(-2px); box-shadow:0 7px 0 #164a92, 0 12px 22px rgba(23,56,76,.25); }
+        .btn-play:active { transform:translateY(3px); box-shadow:0 2px 0 #164a92; }
+        #startBtn.btn-play { background:transparent; box-shadow:none; width:auto; margin:0 auto; border-radius:0; padding:8px 56px; font-size:3rem; letter-spacing:8px; font-weight:700;
+            color:#fff; text-shadow:0 3px 8px rgba(23,56,76,.45); border-top:2px solid rgba(255,255,255,.85); border-bottom:2px solid rgba(255,255,255,.85); }
+        #startBtn.btn-play:hover { transform:scale(1.05); }
+        .btn-play-sub { text-transform:none; letter-spacing:.3px; font-size:.9rem; color:#17384c; }
+        .btn-secondary { background:#fff; color:#17384c; border:2px solid #b8cdf0; border-radius:999px; }
+        .btn-secondary:hover { background:#eef4ff; border-color:#4a8df0; }
+        .options-grid { gap:12px; max-width:420px; margin:0 auto; }
+        .btn-option { background:#fff; color:#17384c; border:2px solid #b8cdf0; border-radius:999px; box-shadow:0 4px 0 #9db9e6; font-family:'Fredoka',sans-serif; font-size:1.1rem; font-weight:500; }
+        .btn-option:hover { background:#eef4ff; border-color:#4a8df0; }
+        .btn-option:active { transform:translateY(3px); box-shadow:0 1px 0 #9db9e6; }
+        .btn-option.yes { border-color:#4cbf7a; box-shadow:0 4px 0 #3da368; } .btn-option.yes:hover { background:#e9f9ef; border-color:#2c9a5a; }
+        .btn-option.no  { border-color:#e0707a; box-shadow:0 4px 0 #c0505b; } .btn-option.no:hover  { background:#fdecee; border-color:#c0392b; }
+        .btn-option.selected { background:#d7f3e1 !important; border-color:#2c9a5a !important; }
+        #keyboardHint { color:#17384c !important; }
+        .chip { background:rgba(255,255,255,.65); border:1px solid #fff; color:#17384c; }
+        .examples-label { text-transform:none; letter-spacing:.3px; color:#17384c; font-size:.9rem; }
+        .stat-line, .social-line { text-align:center; font-size:.9rem; color:#17384c; margin-bottom:10px; }
+        .spinner { border-color:rgba(23,56,76,.15); border-top-color:#1c63ad; }
+        .loading-progress-text, .progress-label { text-transform:none; letter-spacing:.3px; font-size:.82rem; }
+        .progress-track { background:rgba(255,255,255,.6); }
+        .progress-fill { background:linear-gradient(90deg,#ffc83d,#ff9d00); }
+        .wake-banner { background:rgba(255,255,255,.75); border-color:#f0c040; color:#7a4d00; }
+        .correction-row input { background:#fff; color:#17384c; border:2px solid #b8cdf0; }
+
+        .section-divider { max-width:760px; margin:44px auto 18px; opacity:1; }
+        .section-divider::before, .section-divider::after { background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent); }
+        .section-divider span { font-family:'Fredoka',sans-serif; font-size:1.05rem; letter-spacing:.5px; text-transform:none; color:#17384c; }
+        .content-section { max-width:760px; margin:0 auto 10px; background:rgba(255,255,255,.78); border-radius:16px; padding:22px 26px; }
+        .content-section h2 { font-family:'Fredoka',sans-serif; color:#17384c; }
+        .store-card { background:#fff; border-color:#cfe0f7; } .store-card:hover { background:#f4f8ff; border-color:#4a8df0; }
+        .store-card h3, .pre-footer-cta h3 { font-family:'Fredoka',sans-serif; color:#17384c; }
+        .pre-footer-cta { max-width:760px; margin:20px auto 10px; background:rgba(255,255,255,.78); border-color:#fff; }
+        .last-updated { color:#41647a !important; }
+        footer { background:#17475e; border-top:0; }
+        .footer-links a, .footer-links button { color:#dbeaf7; font-size:.9rem; } .footer-links a:hover, .footer-links button:hover { color:#fff; }
+        .footer-copy { background:#103847; color:#a9c7d9; }
+        .view-counter { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.25); color:#ffd166; }
+        .sticky-play-bar { background:rgba(255,255,255,.92); border-top:1px solid #cfe0f7; }
     </style>
 </head>
 <body>
@@ -1059,28 +1164,60 @@
 </nav>
 </div>
         <div class="logo-area" id="play">
-            <h1><span class="logo-eye" aria-hidden="true">👁</span> MindGenie AI <span class="logo-eye" aria-hidden="true">👁</span></h1>
-            <h2>Think of any character. Can the Genie guess who it is?</h2>
-            <div class="crystal-ball" aria-hidden="true"><span class="orb">🔮</span></div>
-        </div>
-          <div id="wakeBanner" class="wake-banner" role="status">
-            ⏳ Preparing the Genie... this only happens the first time today.
+            <h1 class="wordmark">MindGenie</h1>
+            <p class="tagline">Think of a character. I'll guess who it is.</p>
         </div>
 
-        <div id="progressWrap" class="progress-wrap" style="display:none;">
+        <div class="stage">
+            <aside class="history" id="historyPanel" aria-label="Your last games" hidden>
+                <button class="history-close" id="historyClose" aria-label="Hide your last games">&times;</button>
+                <h3>Your last games</h3>
+                <small>&#10003; I guessed it &middot; &#10007; you stumped me</small>
+                <ul id="historyList"></ul>
+            </aside>
+            <div class="genie-wrap">
+                <div class="hello" id="helloBubble">Hello, I am MindGenie</div>
+                <svg class="genie" viewBox="0 0 260 340" role="img" aria-label="The MindGenie, a friendly genie in a turban">
+                    <defs><linearGradient id="gSmoke" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f86e6"/><stop offset="1" stop-color="#8fb8f5" stop-opacity=".15"/></linearGradient></defs>
+                    <path d="M75 210 C70 260 140 250 125 290 C118 312 150 312 140 336 C175 305 140 285 160 262 C185 238 185 225 185 210 Z" fill="url(#gSmoke)"/>
+                    <path d="M70 214 C66 160 84 134 130 134 C176 134 194 160 190 214 Z" fill="#2a6fd6"/>
+                    <path d="M112 136 L130 188 L148 136 Z" fill="#ffd36b"/>
+                    <rect x="72" y="198" width="116" height="14" rx="7" fill="#e24a5a"/>
+                    <rect x="78" y="160" width="104" height="26" rx="13" fill="#2f7ae5"/>
+                    <circle cx="84" cy="173" r="11" fill="#f2c79f"/><circle cx="176" cy="173" r="11" fill="#f2c79f"/>
+                    <circle cx="90" cy="98" r="8" fill="#e8b88c"/><circle cx="170" cy="98" r="8" fill="#e8b88c"/>
+                    <circle cx="130" cy="96" r="40" fill="#f2c79f"/>
+                    <path d="M86 84 C84 40 176 36 174 84 C160 70 100 70 86 84 Z" fill="#fff8e8"/>
+                    <path d="M88 82 C110 68 150 68 172 82" stroke="#e0cfa8" stroke-width="3" fill="none"/>
+                    <path d="M104 52 C120 44 146 48 156 60" stroke="#e8dcc0" stroke-width="3" fill="none"/>
+                    <path d="M130 56 C126 36 140 24 150 22 C146 34 142 44 136 56Z" fill="#e24a5a"/>
+                    <circle cx="130" cy="66" r="8" fill="#e23a55"/><circle cx="127" cy="63" r="2.5" fill="#fff" opacity=".7"/>
+                    <circle cx="116" cy="94" r="6" fill="#fff"/><circle cx="144" cy="94" r="6" fill="#fff"/>
+                    <circle cx="117" cy="95" r="3" fill="#2b2118"/><circle cx="145" cy="95" r="3" fill="#2b2118"/>
+                    <path d="M106 84 L124 88 M154 84 L136 88" stroke="#3b2a24" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M104 110 C114 102 126 108 130 112 C134 108 146 102 156 110 C150 122 136 116 130 118 C124 116 110 122 104 110Z" fill="#3b2a24"/>
+                    <path d="M122 122 C126 136 134 136 138 122 C134 126 126 126 122 122Z" fill="#3b2a24"/>
+                </svg>
+            </div>
+            <div class="speech-bubble" id="gameBox">
+                <div id="questionNum" class="question-num" style="display:none;" aria-hidden="true"></div>
+                <p id="gameText" aria-live="polite"><strong>Think of a real or fictional character.</strong><br>I'll try to guess who it is.</p>
+            </div>
+        </div>
+
+        <div id="wakeBanner" class="wake-banner" role="status" style="margin-top:16px;">
+            &#9203; Preparing the Genie... this only happens the first time today.
+        </div>
+
+        <div id="progressWrap" class="progress-wrap" style="display:none; max-width:560px; margin-top:16px;">
             <div class="progress-track"><div id="progressFill" class="progress-fill" style="width:0%;"></div></div>
-            <div id="progressLabel" class="progress-label">🔮 Confidence: 0% · Question 1</div>
-        </div>
-
-        <div class="speech-bubble" id="gameBox">
-            <div id="questionNum" class="question-num" style="display:none;" aria-hidden="true"></div>
-            <p id="gameText" aria-live="polite"><strong>Got one in mind?</strong><br>Hit start and I'll begin reading your thoughts. 👇</p>
+            <div id="progressLabel" class="progress-label">Confidence: 0% &middot; Question 1</div>
         </div>
 
         <div id="interactionArea" style="width:100%">
 
-            <button id="startBtn" class="btn-play">🔮 Start Playing</button>
-            <div id="startBtnSub" class="btn-play-sub">Free · No Signup · About 1 Minute</div>
+            <button id="startBtn" class="btn-play">Play</button>
+            <div id="startBtnSub" class="btn-play-sub">Free, no sign-up, about a minute</div>
 
             <div id="optionsGrid" class="options-grid" style="display:none;">
                 <button class="btn-option yes" data-key="1" data-weight="1.0" data-label="Yes">
@@ -1131,10 +1268,12 @@
                 </div>
                 <button class="btn-secondary" id="randomIdeaBtn" style="width:100%; margin-bottom:12px;">🎲 Random Character Ideas</button>
                 <p class="replay-hook">Can you beat the Genie? Think of a harder character.</p>
-                <button class="btn-play" id="playAgainBtn">🔮 Play Again</button>
+                <button class="btn-play" id="playAgainBtn">Play again</button>
             </div>
 
             <div id="introExtras">
+                <p class="social-line" id="socialProofText"></p>
+                <p class="stat-line" id="statLine"></p>
                 <div class="category-chips" aria-hidden="true">
                     <span class="chip">🎬 Movies</span>
                     <span class="chip">📺 TV</span>
@@ -1251,7 +1390,7 @@
         <div class="pre-footer-cta">
             <h3>✨ Think you can stump the Genie?</h3>
             <p>Pick a new character and see if it can read your mind again.</p>
-            <button class="btn-play" id="ctaStartBtn">🔮 Play Again</button>
+            <button class="btn-play" id="ctaStartBtn">Play again</button>
         </div>
 
 <div id="blog" class="content-section">
@@ -1295,7 +1434,7 @@
     <!-- Sponsored links: moved below the footer and de-emphasized so they don't compete with gameplay -->
     <!-- Sticky mobile play bar: appears once the main Start button scrolls out of view -->
     <div class="sticky-play-bar" id="stickyPlayBar">
-        <button class="btn-play" id="bottomStartBtn">🔮 Play Now</button>
+        <button class="btn-play" id="bottomStartBtn">Play now</button>
     </div>
 
     <script>
@@ -1598,10 +1737,11 @@
             rateButtonsRow.style.display = 'flex';
             introExtras.style.display = 'none';
 
+            document.querySelector('.stage').classList.add('playing');
             trackEvent('game_started');
 
             startBtn.disabled = true;
-            startBtn.textContent = '🔮 Starting...';
+            startBtn.textContent = 'Starting…';
 
             // Show immediate feedback so the player never wonders if the click landed,
             // even before we know whether the server needs to wake up first.
@@ -1625,7 +1765,7 @@
             } catch(err) {
                 setDialogue("The connection to the spirit realm was lost.<br>Try again in a moment.");
                 startBtn.disabled = false;
-                startBtn.textContent = '🔮 Try Again';
+                startBtn.textContent = 'Try again';
                 showPanel('start');
             }
         }
@@ -1663,7 +1803,7 @@
                 btn.classList.remove('selected');
             });
             startBtn.disabled = false;
-            startBtn.textContent = '🔮 Start Playing';
+            startBtn.textContent = 'Play';
             showPanel('options');
 
             optionsGrid.classList.remove('question-enter');
@@ -1819,6 +1959,7 @@
         }
 
         async function rateGuess(wasCorrect) {
+            recordGame(wasCorrect);
             trackEvent('guess_rating', { correct: wasCorrect, character: lastGuessedCharacter });
             playRateSound(wasCorrect);
             rateButtonsRow.style.display = 'none';
@@ -1880,6 +2021,42 @@
                 setTimeout(() => piece.remove(), (duration + delay) * 1000 + 200);
             }
         }
+
+        // ── LOCAL GAME HISTORY (stored only in this browser) ──
+        const HISTORY_KEY = 'mindgenie_history';
+        const historyPanel = document.getElementById('historyPanel');
+        const historyList  = document.getElementById('historyList');
+        const statLine     = document.getElementById('statLine');
+        function loadHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch (e) { return []; } }
+        function saveHistory(h) { try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(0, 50))); } catch (e) {} }
+        function renderHistory() {
+            const h = loadHistory();
+            historyList.innerHTML = '';
+            h.slice(0, 10).forEach(g => {
+                const li = document.createElement('li');
+                li.className = g.correct ? 'ok' : 'miss';
+                const name = document.createElement('span'); name.textContent = g.name;
+                const mark = document.createElement('span'); mark.className = 'mark';
+                mark.textContent = g.correct ? '\u2713' : '\u2717';
+                mark.title = g.correct ? 'I guessed it' : 'You stumped me';
+                li.append(name, mark);
+                historyList.appendChild(li);
+            });
+            historyPanel.hidden = h.length === 0;
+            const stumped = h.filter(g => !g.correct).length;
+            statLine.textContent = h.length
+                ? `Your record: I guessed ${h.length - stumped} of ${h.length}. You stumped me ${stumped} time${stumped === 1 ? '' : 's'}.`
+                : '';
+        }
+        function recordGame(correct) {
+            if (!lastGuessedCharacter) return;
+            const h = loadHistory();
+            h.unshift({ name: lastGuessedCharacter, correct: !!correct });
+            saveHistory(h);
+            renderHistory();
+        }
+        document.getElementById('historyClose').addEventListener('click', () => { historyPanel.hidden = true; });
+        renderHistory();
 
         // ── KEYBOARD SUPPORT ──
         document.addEventListener('keydown', (e) => {
