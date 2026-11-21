@@ -444,6 +444,26 @@ def get_daily_character_pool():
     return {name: CHARACTERS[name] for name in pool}
 
 
+
+# --- THEMES (player picks one after pressing Play; "any" uses today's rotating pool) ---
+THEMES = {
+    "movies": ["Spider-Man", "Yoda", "Darth Vader", "Iron Man", "Thanos", "Thor", "Wonder Woman", "Shrek",
+               "Captain Jack Sparrow", "Frodo Baggins", "Gandalf", "Harry Potter", "Hermione Granger",
+               "Albus Dumbledore", "Katniss Everdeen", "Buzz Lightyear", "Maleficent", "Elsa", "Moana",
+               "Mulan", "Cinderella", "Deadpool", "Roy Batty", "Furiosa", "Batman", "The Joker"],
+    "tv": ["Walter White", "Saul Goodman", "Michael Scott", "Eleven", "Omar Little", "BoJack Horseman",
+           "SpongeBob", "Sherlock Holmes", "The Doctor"],
+    "games": ["Solid Snake", "GLaDOS", "Kratos", "Cortana", "Samus Aran", "Pikachu"],
+    "anime": ["Goku", "Levi Ackerman", "L", "Pikachu"],
+    "history": ["Abraham Lincoln", "Nikola Tesla", "Cleopatra", "Joan of Arc", "Genghis Khan"],
+}
+
+
+def get_theme_pool(theme):
+    names = [n for n in THEMES.get(theme, []) if n in CHARACTERS]
+    return {n: CHARACTERS[n] for n in names} if len(names) >= 2 else None
+
+
 class AnswerInput(BaseModel):
     session_id: str
     question_id: str
@@ -456,12 +476,12 @@ def home():
 
 
 @app.get("/start-game")
-def start_game(session_id: str):
+def start_game(session_id: str, theme: str = "any"):
     # Same rotating character pool for everyone today; changes automatically
     # tomorrow. Questions, however, are now chosen adaptively per-session as
     # the player answers, rather than pre-selected before the game starts.
     _purge_old_sessions()
-    todays_characters = get_daily_character_pool()
+    todays_characters = get_theme_pool(theme) or get_daily_character_pool()
 
     sessions[session_id] = {
         "created_at": time.time(),

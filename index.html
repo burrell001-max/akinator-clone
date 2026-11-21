@@ -1148,6 +1148,9 @@
         .chip { font-family:inherit; text-decoration:none; cursor:pointer; transition:background .15s, border-color .15s; }
         .chip:hover { background:#fff; border-color:#4a8df0; }
         .chip:focus-visible { outline:2px solid #4a8df0; outline-offset:2px; }
+            .theme-grid { grid-template-columns:1fr 1fr; gap:12px; max-width:440px; margin:0 auto; }
+        .theme-btn { padding:16px 12px; }
+        @media (max-width:420px){ .theme-grid { grid-template-columns:1fr; } }
     </style>
 </head>
 <body>
@@ -1222,6 +1225,15 @@
 
             <button id="startBtn" class="btn-play">Play</button>
             <div id="startBtnSub" class="btn-play-sub">Free, no sign-up, about a minute</div>
+
+            <div id="themeGrid" class="theme-grid" style="display:none;">
+                <button type="button" class="btn-option theme-btn" data-theme="movies"><span class="opt-icon" aria-hidden="true">🎬</span> Movies</button>
+                <button type="button" class="btn-option theme-btn" data-theme="tv"><span class="opt-icon" aria-hidden="true">📺</span> TV shows</button>
+                <button type="button" class="btn-option theme-btn" data-theme="games"><span class="opt-icon" aria-hidden="true">🎮</span> Video games</button>
+                <button type="button" class="btn-option theme-btn" data-theme="anime"><span class="opt-icon" aria-hidden="true">🎌</span> Anime</button>
+                <button type="button" class="btn-option theme-btn" data-theme="history"><span class="opt-icon" aria-hidden="true">📜</span> History</button>
+                <button type="button" class="btn-option theme-btn" data-theme="any"><span class="opt-icon" aria-hidden="true">🎲</span> Anything</button>
+            </div>
 
             <div id="optionsGrid" class="options-grid" style="display:none;">
                 <button class="btn-option yes" data-key="1" data-weight="1.0" data-label="Yes">
@@ -1498,6 +1510,7 @@
         const introExtras     = document.getElementById('introExtras');
         const wakeBannerEl    = document.getElementById('wakeBanner');
         const gameBoxEl       = document.getElementById('gameBox');
+        const themeGrid       = document.getElementById('themeGrid');
         const optionButtons   = Array.from(optionsGrid.querySelectorAll('.btn-option'));
         let lastGuessedCharacter = '';
 
@@ -1540,6 +1553,7 @@
             startBtn.style.display      = panel === 'start'   ? 'block' : 'none';
             startBtnSub.style.display   = panel === 'start'   ? 'block' : 'none';
             optionsGrid.style.display   = panel === 'options' ? 'flex'  : 'none';
+            themeGrid.style.display     = panel === 'theme'   ? 'grid'  : 'none';
             ratePanel.style.display     = panel === 'rate'    ? 'block' : 'none';
             introExtras.style.display   = panel === 'start'   ? 'block' : 'none';
             answerLoading.style.display = 'none';
@@ -1717,7 +1731,27 @@
         }
 
         // ── GAME FLOW ──
-        async function startGame() {
+        // Play buttons open the theme picker; picking a theme starts the round.
+        function startGame() {
+            if (gameBoxEl) {
+                const rect = gameBoxEl.getBoundingClientRect();
+                if (rect.top < 0 || rect.bottom > window.innerHeight) gameBoxEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            document.querySelector('.stage').classList.add('playing');
+            document.getElementById('progressWrap').style.display = 'none';
+            questionNumEl.style.display = 'none';
+            introExtras.style.display = 'none';
+            setDialogue('<strong>Select a theme.</strong><br>Which kind of character are you thinking of?');
+            showPanel('theme');
+            trackEvent('theme_picker_opened');
+        }
+        document.querySelectorAll('.theme-btn').forEach(btn => btn.addEventListener('click', () => {
+            playClickSound();
+            trackEvent('theme_selected', { theme: btn.dataset.theme });
+            beginRound(btn.dataset.theme);
+        }));
+
+        async function beginRound(theme) {
             // If the click came from a button further down the page (pre-footer CTA,
             // sticky bar, etc.), the game state changes up in the speech bubble, out of
             // view — which reads as "the button did nothing." Scroll the game area into
@@ -1758,7 +1792,7 @@
             }
 
             try {
-                const res  = await fetch(`${API_URL}/start-game?session_id=${sessionId}`);
+                const res  = await fetch(`${API_URL}/start-game?session_id=${sessionId}&theme=${encodeURIComponent(theme || 'any')}`);
                 const data = await res.json();
                 if (data.status === "game_started") {
                     currentQuestionId = data.next_question_id;
