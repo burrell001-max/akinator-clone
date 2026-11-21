@@ -10,7 +10,12 @@
 
 ## Pages
 - [Home / Play](https://mindgenieai.xyz/): The game itself, plus FAQ, About, and How to Play sections
+- [Mind Reader Game](https://mindgenieai.xyz/mind-reader-game.html)
+- [Genie Guessing Game](https://mindgenieai.xyz/genie-guessing-game.html)
+- [20 Questions Online](https://mindgenieai.xyz/20-questions-online.html)
+- [Character Guesser](https://mindgenieai.xyz/character-guesser.html)
 - [About](https://mindgenieai.xyz/about.html): Background on the project
 - [Contact](https://mindgenieai.xyz/contact.html): How to reach the site owner
 - [Privacy Policy](https://mindgenieai.xyz/privacy-policy.html): Data collection, analytics, and advertising disclosures
 - [Terms of Service](https://mindgenieai.xyz/terms.html): Terms of use
+- [Legal Notices](https://mindgenieai.xyz/legal.html): Disclaimer, trademarks, copyright and advertising notices
