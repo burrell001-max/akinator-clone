@@ -1,4 +1,4 @@
-# Permanent redirects for the four character guides renamed in November 2026.
+# Permanent redirects for renamed character guides and consolidated blog copies.
 # Honoured by hosts that read this file (Cloudflare Pages, Netlify): status 301,
 # relative targets keep the request on whichever domain serves the site.
 # GitHub Pages ignores underscore-prefixed files, so this file is inert there.
@@ -7,3 +7,7 @@
 /eleven.html     /eleven-stranger-things.html 301
 /elsa.html       /elsa-frozen.html            301
 /trinity.html    /trinity-the-matrix.html     301
+/50-characters-that-stump-the-genie.html       /hardest-characters-to-guess.html 301
+/blog/50-characters-that-stump-the-genie.html  /hardest-characters-to-guess.html 301
+/blog/history-of-20-questions-games.html       /history-of-20-questions-games.html 301
+/blog/how-ai-guessing-games-work.html          /how-ai-guessing-games-work.html 301

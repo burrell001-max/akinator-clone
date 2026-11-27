@@ -19,6 +19,10 @@ Four guides were renamed in November 2026:
 | `/eleven.html` | `/eleven-stranger-things.html` | `(http.request.uri.path eq "/eleven.html")` |
 | `/elsa.html` | `/elsa-frozen.html` | `(http.request.uri.path eq "/elsa.html")` |
 | `/trinity.html` | `/trinity-the-matrix.html` | `(http.request.uri.path eq "/trinity.html")` |
+| `/50-characters-that-stump-the-genie.html` | `/hardest-characters-to-guess.html` | `(http.request.uri.path eq "/50-characters-that-stump-the-genie.html")` |
+| `/blog/50-characters-that-stump-the-genie.html` | `/hardest-characters-to-guess.html` | `(http.request.uri.path eq "/blog/50-characters-that-stump-the-genie.html")` |
+| `/blog/history-of-20-questions-games.html` | `/history-of-20-questions-games.html` | `(http.request.uri.path eq "/blog/history-of-20-questions-games.html")` |
+| `/blog/how-ai-guessing-games-work.html` | `/how-ai-guessing-games-work.html` | `(http.request.uri.path eq "/blog/how-ai-guessing-games-work.html")` |
 
 Each old path has to answer **301**, which GitHub Pages cannot do, so the zone
 runs through Cloudflare with its DNS records proxied and one **Single Redirect**

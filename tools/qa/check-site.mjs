@@ -316,6 +316,56 @@ for (const url of sitemapUrls) {
   if (!existsSync(target)) fail("sitemap.xml", `entry points at a missing file: ${url}`);
 }
 
+/* ── Redirect aliases and retired paths ─────────────────────────────────── */
+/* Every alias in _redirects needs a real source and target, must stay out of
+   the sitemap, and must have a noindex meta-refresh fallback for GitHub Pages
+   (which ignores underscore-prefixed files). Internal links must use the
+   canonical address so a click never takes an extra redirect hop. */
+const redirects = [];
+for (const line of (await readFile(join(ROOT, "_redirects"), "utf8")).split(/\r?\n/)) {
+  const trimmed = line.trim();
+  if (!trimmed || trimmed.startsWith("#")) continue;
+  const [from, to, status] = trimmed.split(/\s+/);
+  if (!from || !to || !status) {
+    fail("_redirects", `malformed rule: ${trimmed}`);
+    continue;
+  }
+  if (status !== "301" && status !== "302") fail("_redirects", `rule for ${from} uses status ${status}`);
+  const source = from.replace(/^\//, "");
+  const target = to.startsWith("https://mindgenieai.xyz/")
+    ? to.slice("https://mindgenieai.xyz/".length)
+    : to.replace(/^\//, "");
+  if (!existsSync(join(ROOT, source))) fail("_redirects", `source page is missing: ${from}`);
+  if (!existsSync(join(ROOT, target))) fail("_redirects", `target page is missing: ${to}`);
+  if (sitemapUrls.has(`https://mindgenieai.xyz${from}`)) fail("sitemap.xml", `lists the redirect alias ${from}`);
+  redirects.push({ from, to });
+}
+
+const aliases = new Set(redirects.map((rule) => rule.from));
+for (const file of htmlFiles) {
+  const rel = relative(ROOT, file).replace(/\\/g, "/");
+  const html = await readFile(file, "utf8");
+  const refresh = html.match(/http-equiv="refresh" content="0; url=([^"]+)"/i);
+  if (refresh && !aliases.has(`/${rel}`)) {
+    fail(rel, "meta-refresh alias has no rule in _redirects");
+  }
+  if (refresh) {
+    if (!/name="robots" content="noindex, follow"/.test(html)) fail(rel, "alias is not noindex");
+    if (!/<link rel="canonical"/.test(html)) fail(rel, "alias has no canonical target");
+  }
+  for (const match of html.matchAll(/(?:href|src)\s*=\s*"([^"]+)"/gi)) {
+    const clean = match[1].split("?")[0].split("#")[0];
+    if (aliases.has(clean)) fail(rel, `links to the redirect alias ${clean}`);
+  }
+}
+
+/* The retired /blog/ directory must stay a 404; its duplicate articles are
+   aliases, not a second index. */
+if (existsSync(join(ROOT, "blog/index.html"))) {
+  fail("blog/index.html", "the /blog/ directory must stay 404; duplicate guides are aliases");
+}
+if (redirects.length) notes.push(`${redirects.length} redirect aliases: noindex, out of the sitemap, never linked internally`);
+
 /* ── hreflang: every key page offers all 18 languages ──────────────────── */
 /* The site keeps one canonical URL per page and selects a language through
    ?lang=, so the alternates are query variants of that canonical. */
