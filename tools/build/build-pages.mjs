@@ -264,7 +264,7 @@ function patchGamePage(html, game) {
   let out = html;
 
   // Drop an earlier generated block, then insert a fresh one before the footer.
-  const existing = new RegExp(`\\n?[ \\t]*${RELATED_START.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[\\s\\S]*?${RELATED_END}`);
+  const existing = new RegExp(`\\n?[ \\t]*${escapeRe(RELATED_START)}[\\s\\S]*?${escapeRe(RELATED_END)}`, "g");
   out = out.replace(existing, "");
 
   const block = relatedBlock(game);
@@ -277,7 +277,11 @@ function patchGamePage(html, game) {
     insertAt = close === -1 ? -1 : out.lastIndexOf("\n", close);
   }
   if (insertAt === -1) throw new Error(`${game.slug}: no footer or wrap close to anchor the related block`);
-  out = out.slice(0, insertAt) + "\n\n" + block + out.slice(insertAt);
+  /* Trim both sides before writing, so a rebuild replaces the block byte for
+     byte instead of accumulating blank lines (CI diffs the result). */
+  const head = out.slice(0, insertAt).replace(/\s+$/, "");
+  const tail = out.slice(insertAt).replace(/^\n+/, "");
+  out = `${head}\n\n${block}\n\n${tail}`;
 
   const cat = CATEGORIES[game.cats[0]];
   out = rewriteImage(out, ogImage(game.slug), `${game.name} - ${cat.name} on MindGenieAI`);
@@ -292,16 +296,19 @@ const HUB_END = "<!-- hub-catlinks:end -->";
 const escapeRe = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 function patchHub(html) {
-  let out = html.replace(new RegExp(`\\s*${escapeRe(HUB_START)}[\\s\\S]*?${escapeRe(HUB_END)}`, "g"), "");
+  let out = html.replace(new RegExp(`\\n?[ \\t]*${escapeRe(HUB_START)}[\\s\\S]*?${escapeRe(HUB_END)}`, "g"), "");
   const row = `${HUB_START}
   <nav class="hub-catlinks" aria-label="Category pages">
     <span class="hub-catlinks-label">Browse by category</span>
 ${CATEGORY_ORDER.map((key) => `    <a href="/games/${CATEGORIES[key].slug}/">${esc(CATEGORIES[key].name)}</a>`).join("\n")}
   </nav>
   ${HUB_END}`;
-  const anchor = out.indexOf('  <footer class="hub-footer">');
-  if (anchor === -1) throw new Error("games/index.html: hub footer not found");
-  return out.slice(0, anchor) + row + "\n\n" + out.slice(anchor);
+  const at = out.indexOf('<footer class="hub-footer">');
+  if (at === -1) throw new Error("games/index.html: hub footer not found");
+  const anchor = out.lastIndexOf("\n", at) + 1;
+  const head = out.slice(0, anchor).replace(/\s+$/, "");
+  const tail = out.slice(anchor).replace(/^\n+/, "");
+  return `${head}\n\n${row}\n\n${tail}`;
 }
 
 /* ── Run ─────────────────────────────────────────────────────────────────── */
