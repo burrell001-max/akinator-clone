@@ -58,11 +58,11 @@ body::before {
 
 /* the article is the light card, like the homepage sections */
 article {
-  background: rgba(255,255,255,.8);
-  border: 1px solid #fff;
-  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #dbe8fa;
+  border-radius: 18px;
   padding: 28px 30px 30px;
-  box-shadow: 0 10px 30px rgba(23,56,76,.14);
+  box-shadow: 0 12px 32px rgba(15,28,37,.16);
 }
 article h1 {
   font-family: 'Fredoka', sans-serif;
@@ -100,8 +100,8 @@ article a:hover { color: var(--blue-deep); }
 /* call to action: white panel with the homepage's 3D blue button */
 .cta-box {
   text-align: center;
-  background: rgba(255,255,255,.88);
-  border: 1px solid #fff;
+  background: #ffffff;
+  border: 1px solid #dbe8fa;
   border-radius: 16px;
   padding: 26px 22px;
   margin: 36px 0 10px;
@@ -148,6 +148,8 @@ footer { width: 100%; background: #17475e; margin-top: auto; }
 .footer-links { max-width: 720px; margin: 0 auto; padding: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
 .footer-links a { color: #dbeaf7; text-decoration: none; font-size: .9rem; }
 .footer-links a:hover { color: #fff; }
+.footer-copy a { color: #dbeaf7; text-decoration: none; }
+.footer-copy a:hover { color: #fff; text-decoration: underline; }
 .footer-copy { text-align: center; padding: 14px 20px; font-size: .78rem; color: #a9c7d9; background: #103847; }
 
 @media (prefers-reduced-motion: reduce) { * { transition-duration: .01ms !important; scroll-behavior: auto !important; } }
