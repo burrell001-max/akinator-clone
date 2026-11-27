@@ -49,6 +49,9 @@
     <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
+    <!-- Games shelf: homepage-only carousel, styled by its own file so this page's theme is untouched -->
+    <link rel="stylesheet" href="/games/games-shelf.css">
+
     <!-- Open Graph / Twitter Card -->
     
     
@@ -1435,6 +1438,90 @@
             </div>
         </div>
 
+        <!-- ── Games shelf: category bar plus horizontal game carousel ── -->
+        <section id="freebuff-games-shelf" class="fb-games-section" aria-label="FreeBuff Game Categories and Featured Games">
+            <div class="fb-shelf-header">
+                <div>
+                    <h2 class="fb-shelf-title">Our Best Mind Games</h2>
+                    <p class="fb-shelf-subtitle">Pick a category or scroll through playable browser games on FreeBuff.</p>
+                </div>
+                <a href="/games/" class="fb-all-games-link">Browse All Games &rarr;</a>
+            </div>
+
+            <!-- Category filter bar -->
+            <div class="fb-category-bar" role="group" aria-label="Game Categories">
+                <button type="button" class="fb-cat-btn is-active" data-category="all" aria-pressed="true">All Games</button>
+                <button type="button" class="fb-cat-btn" data-category="Brain Games" aria-pressed="false">Brain Games</button>
+                <button type="button" class="fb-cat-btn" data-category="Daily Games" aria-pressed="false">Daily Games</button>
+                <button type="button" class="fb-cat-btn" data-category="Number Games" aria-pressed="false">Number Games</button>
+                <button type="button" class="fb-cat-btn" data-category="Word Games" aria-pressed="false">Word Games</button>
+                <button type="button" class="fb-cat-btn" data-category="Crosswords" aria-pressed="false">Crosswords</button>
+                <button type="button" class="fb-cat-btn" data-category="Sudoku" aria-pressed="false">Sudoku</button>
+                <button type="button" class="fb-cat-btn" data-category="Memory Games" aria-pressed="false">Memory Games</button>
+                <button type="button" class="fb-cat-btn" data-category="Sort Games" aria-pressed="false">Sort Games</button>
+                <button type="button" class="fb-cat-btn" data-category="Math Games" aria-pressed="false">Math Games</button>
+                <button type="button" class="fb-cat-btn" data-category="Puzzle Games" aria-pressed="false">Puzzle Games</button>
+            </div>
+
+            <!-- Horizontal scrolling carousel -->
+            <div class="fb-carousel-shell">
+                <button type="button" class="fb-nav-btn fb-prev" aria-label="Scroll games left" aria-controls="fbCarouselTrack">&lsaquo;</button>
+
+                <div class="fb-carousel-track" id="fbCarouselTrack" role="region" aria-label="Game carousel" tabindex="0">
+                    <a class="fb-game-card" href="/games/brain-codebreaker.html" data-category="Brain Games">
+                        <div class="fb-card-art art-brain"><span aria-hidden="true">&#128272;</span><small>Brain Games</small></div>
+                        <div class="fb-card-title">Codebreaker</div>
+                    </a>
+                    <a class="fb-game-card" href="/games/daily-nonogram.html" data-category="Daily Games">
+                        <div class="fb-card-art art-daily"><span aria-hidden="true">&#128197;</span><small>Daily Games</small></div>
+                        <div class="fb-card-title">Daily Nonogram</div>
+                    </a>
+                    <a class="fb-game-card" href="/games/word-anagram.html" data-category="Word Games">
+                        <div class="fb-card-art art-word"><span aria-hidden="true">&#128292;</span><small>Word Games</small></div>
+                        <div class="fb-card-title">Anagram Hunt</div>
+                    </a>
+                    <a class="fb-game-card" href="/games/word-guess.html" data-category="Word Games">
+                        <div class="fb-card-art art-word"><span aria-hidden="true">&#128289;</span><small>Word Games</small></div>
+                        <div class="fb-card-title">Word Guess</div>
+                    </a>
+                    <a class="fb-game-card" href="/games/memory.html" data-category="Memory Games">
+                        <div class="fb-card-art art-memory"><span aria-hidden="true">&#129504;</span><small>Memory Games</small></div>
+                        <div class="fb-card-title">Memory Match</div>
+                    </a>
+                    <a class="fb-game-card" href="/games/memory-echo.html" data-category="Memory Games">
+                        <div class="fb-card-art art-memory"><span aria-hidden="true">&#128276;</span><small>Memory Games</small></div>
+                        <div class="fb-card-title">Pattern Echo</div>
+                    </a>
+                    <a class="fb-game-card" href="/games/number-merge.html" data-category="Number Games">
+                        <div class="fb-card-art art-number"><span aria-hidden="true">&#128290;</span><small>Number Games</small></div>
+                        <div class="fb-card-title">Merge Up</div>
+                    </a>
+                    <a class="fb-game-card" href="/games/crossword-mini.html" data-category="Crosswords">
+                        <div class="fb-card-art art-cross"><span aria-hidden="true">&#9997;&#65039;</span><small>Crosswords</small></div>
+                        <div class="fb-card-title">Mini Crossword</div>
+                    </a>
+                    <a class="fb-game-card" href="/games/sudoku.html" data-category="Sudoku">
+                        <div class="fb-card-art art-sudoku"><span aria-hidden="true">&#9209;&#65039;</span><small>Sudoku</small></div>
+                        <div class="fb-card-title">Sudoku</div>
+                    </a>
+                    <a class="fb-game-card" href="/games/sort-sequence.html" data-category="Sort Games">
+                        <div class="fb-card-art art-sort"><span aria-hidden="true">&#127912;</span><small>Sort Games</small></div>
+                        <div class="fb-card-title">Sort Sprint</div>
+                    </a>
+                    <a class="fb-game-card" href="/games/math-speed.html" data-category="Math Games">
+                        <div class="fb-card-art art-math"><span aria-hidden="true">&#9889;</span><small>Math Games</small></div>
+                        <div class="fb-card-title">Quick Sums</div>
+                    </a>
+                    <a class="fb-game-card" href="/games/puzzle-slide.html" data-category="Puzzle Games">
+                        <div class="fb-card-art art-puzzle"><span aria-hidden="true">&#129513;</span><small>Puzzle Games</small></div>
+                        <div class="fb-card-title">Slide Fifteen</div>
+                    </a>
+                </div>
+
+                <button type="button" class="fb-nav-btn fb-next" aria-label="Scroll games right" aria-controls="fbCarouselTrack">&rsaquo;</button>
+            </div>
+        </section>
+
         <div class="section-divider" id="faq"><span>Frequently Asked Questions</span></div>
         <div class="content-section">
             <div class="faq-item">
@@ -1654,6 +1741,7 @@
     </div>
 
     <script src="/i18n.js"></script>
+    <script src="/games/games-shelf.js" defer></script>
     <script>
         // ── STARFIELD ──
         const starsEl = document.getElementById('stars');
