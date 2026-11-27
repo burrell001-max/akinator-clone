@@ -47,7 +47,11 @@ for (const match of (await source("games/sort-timeline.html"))
 
 const anagramByLetters = {};
 for (const match of (await source("games/word-anagram.html")).matchAll(/\{ w: "([a-z]+)", c: "/g)) {
-  anagramByLetters[match[1].split("").sort().join("")] = match[1];
+  const letters = match[1].split("").sort().join("");
+  if (anagramByLetters[letters]) {
+    throw new Error(`Word Anagram has two answers for ${letters}: ${anagramByLetters[letters]} and ${match[1]}`);
+  }
+  anagramByLetters[letters] = match[1];
 }
 
 /* ── Page-side helpers reused by several scenarios ────────────────────────── */
