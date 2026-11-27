@@ -24,6 +24,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/games.css">
 <link rel="stylesheet" href="/games/ribbon.css">
+<link rel="stylesheet" href="/games/i18n.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -63,48 +64,48 @@
   <div class="top">
     <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
     <nav aria-label="Primary">
-      <a href="https://mindgenieai.xyz/">Play the Genie</a>
-      <a href="/games/" aria-current="page">Games</a>
+      <a href="https://mindgenieai.xyz/" data-i18n="nav_play">Play the Genie</a>
+      <a href="/games/" aria-current="page" data-i18n="nav_games">Games</a>
       <a href="/games/memory.html">Memory Match</a>
       <a href="/games/memory-order.html">Order Recall</a>
     </nav>
   </div>
 
   <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
-    <a href="/games/#brain">Brain Games</a>
+    <a href="/games/#brain" data-mg-cat="brain">Brain Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#daily">Daily Games</a>
+    <a href="/games/#daily" data-mg-cat="daily">Daily Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#number">Number Games</a>
+    <a href="/games/#number" data-mg-cat="number">Number Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#word">Word Games</a>
+    <a href="/games/#word" data-mg-cat="word">Word Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#crossword">Crosswords</a>
+    <a href="/games/#crossword" data-mg-cat="crossword">Crosswords</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sudoku">Sudoku</a>
+    <a href="/games/#sudoku" data-mg-cat="sudoku">Sudoku</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#memory">Memory Games</a>
+    <a href="/games/#memory" data-mg-cat="memory">Memory Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sort">Sort Games</a>
+    <a href="/games/#sort" data-mg-cat="sort">Sort Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#math">Math Games</a>
+    <a href="/games/#math" data-mg-cat="math">Math Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#puzzle">Puzzle Games</a>
+    <a href="/games/#puzzle" data-mg-cat="puzzle">Puzzle Games</a>
   </nav>
 
   <main>
-    <h1>Digit Echo</h1>
+    <h1 data-mg-title="memory-numbers" data-title-en="Digit Echo: A Free Number Memory Game">Digit Echo</h1>
     <p class="updated">A string of digits flashes up. Type it back, exactly.</p>
 
     <div class="toolbar">
-      <button class="btn" type="button" id="start">Start</button>
+      <button class="btn" type="button" id="start" data-i18n="start">Start</button>
       <span class="hint" id="phaseLabel">Three digits to begin with.</span>
     </div>
 
     <div class="game-panel">
       <div class="stat-row">
         <span>Length <b id="length">3</b></span>
-        <span>Round <b id="round">0</b></span>
+        <span><span data-i18n="round">Round</span> <b id="round">0</b></span>
         <span>Best length <b id="best">0</b></span>
         <span>Best run <b id="streak">0</b></span>
       </div>
@@ -114,7 +115,7 @@
       <div class="answer-row">
         <label class="sr-only" for="answer">The digits, in order</label>
         <input id="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="type the digits" disabled>
-        <button class="btn" type="button" id="submit" disabled>Check</button>
+        <button class="btn" type="button" id="submit" disabled data-i18n="check">Check</button>
       </div>
 
       <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -125,7 +126,7 @@
     <p>A string of digits appears in gold for a moment, then turns into dots. Type the digits back in the same order and press Enter. Get it right and the next string is one digit longer; get it wrong and the round ends, with the correct sequence shown next to what you typed.</p>
     <p>The display time grows with the string, but never as fast as the string does, so the game gets harder in two ways at once. Three digits to begin with is easy; eight or nine is where most people stop.</p>
 
-    <h2>Rules and scoring</h2>
+    <h2 data-i18n="rules">Rules and scoring</h2>
     <ul>
       <li>Correct rounds increase the length by one digit; a mistake ends the session.</li>
       <li>Only digits are compared, so spaces, commas and dashes in what you type are stripped first.</li>
@@ -187,6 +188,12 @@
   </footer>
 </div>
 
+    <script src="/langs.js"></script>
+    <script src="/games/i18n-slugs.js"></script>
+    <script src="/games/i18n-data-a.js"></script>
+    <script src="/games/i18n-data-b.js"></script>
+    <script src="/games/i18n-data-c.js"></script>
+    <script src="/games/i18n.js"></script>
 <script src="/games/games.js"></script>
 <script src="/games/memory-engine.js"></script>
 <script>

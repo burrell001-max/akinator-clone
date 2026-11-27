@@ -1,26 +1,7 @@
 /* MindGenie translations.
    To add a language: add an entry to I18N below with the same keys as "en" plus a "q" array of the 28 questions
    (q[0] = question q1 ... q[27] = q28). It appears automatically (enabled) in the language menu. */
-window.LANGS = [
-  { code: 'en', name: 'English' },
-  { code: 'ar', name: 'العربية', rtl: true },
-  { code: 'zh', name: '中文' },
-  { code: 'de', name: 'Deutsch' },
-  { code: 'es', name: 'Español' },
-  { code: 'fr', name: 'Français' },
-  { code: 'he', name: 'עברית', rtl: true },
-  { code: 'it', name: 'Italiano' },
-  { code: 'ja', name: '日本語' },
-  { code: 'ko', name: '한국어' },
-  { code: 'nl', name: 'Nederlands' },
-  { code: 'pl', name: 'Polski' },
-  { code: 'pt', name: 'Português' },
-  { code: 'ru', name: 'Русский' },
-  { code: 'tr', name: 'Türkçe' },
-  { code: 'id', name: 'Bahasa Indonesia' },
-  { code: 'vi', name: 'Tiếng Việt' },
-  { code: 'fa', name: 'فارسی', rtl: true }
-];
+/* window.LANGS lives in /langs.js so the arcade can share it. */
 
 window.I18N = {
   en: {

@@ -33,7 +33,7 @@ const esc = (text) => String(text)
 const RIBBON = (current) => CATEGORY_ORDER.map((key) => {
   const cat = CATEGORIES[key];
   const currentAttr = key === current ? ' aria-current="page"' : "";
-  return `    <a href="/games/#${key}"${currentAttr}>${esc(cat.name)}</a>\n    <span class="mg-cat-sep" aria-hidden="true"></span>`;
+  return `    <a href="/games/#${key}"${currentAttr} data-mg-cat="${key}">${esc(cat.name)}</a>\n    <span class="mg-cat-sep" aria-hidden="true"></span>`;
 }).join("\n").replace(/\n {4}<span class="mg-cat-sep" aria-hidden="true"><\/span>$/, "");
 
 const ogImage = (name) => `${SITE}/${OG_DIR}/${name}.jpg`;
@@ -43,7 +43,7 @@ const ogImage = (name) => `${SITE}/${OG_DIR}/${name}.jpg`;
 function card(game, key) {
   return `      <a class="card cat-card" href="/games/${game.slug}.html">
         <span class="cat-card-glyph" aria-hidden="true">${game.glyph}</span>
-        <h3>${esc(game.name)}</h3>
+        <h3 data-mg-title="${game.slug}">${esc(game.name)}</h3>
         <p>${esc(game.blurb)}</p>
         <span class="tag">${esc(game.difficulty)}</span>${game.tags.map((tag) => `<span class="tag">${esc(tag)}</span>`).join("")}
       </a>`;
@@ -118,6 +118,7 @@ ${itemList}
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/games.css">
 <link rel="stylesheet" href="/games/ribbon.css">
+<link rel="stylesheet" href="/games/i18n.css">
 <script type="application/ld+json">
 ${jsonLd}
 </script>
@@ -127,9 +128,9 @@ ${jsonLd}
   <div class="top">
     <a class="brand" href="/">MindGenie AI</a>
     <nav aria-label="Primary">
-      <a href="/">Play the Genie</a>
-      <a href="/games/" aria-current="page">Games</a>
-      <a href="/games/${cat.slug}/">${esc(cat.name)}</a>
+      <a href="/" data-i18n="nav_play">Play the Genie</a>
+      <a href="/games/" aria-current="page" data-i18n="nav_games">Games</a>
+      <a href="/games/${cat.slug}/" data-mg-cat="${key}">${esc(cat.name)}</a>
     </nav>
   </div>
 
@@ -139,12 +140,12 @@ ${RIBBON(key)}
 
   <main>
     <p class="eyebrow">Category &middot; ${count} ${count === 1 ? "game" : "games"}</p>
-    <h1>${esc(cat.name)}</h1>
+    <h1 data-mg-cat="${key}" data-title-en="${esc(cat.title)}">${esc(cat.name)}</h1>
     <p class="lede">${esc(cat.lede)}</p>
     <p class="updated">Free to play in the browser &middot; no account &middot; scores saved on this device</p>
 
     <div class="toolbar">
-      <a class="btn" href="/games/">All 30 games</a>
+      <a class="btn" href="/games/" data-i18n="all_games">All 30 games</a>
       <a class="btn ghost" href="/games/#${key}">Filter the hub to ${esc(cat.name)}</a>
     </div>
 
@@ -166,7 +167,7 @@ ${cat.overview.map((para) => `      <p>${esc(para)}</p>`).join("\n")}
     </section>
 
     <section aria-labelledby="cat-howto">
-      <h2 id="cat-howto">How to play</h2>
+      <h2 id="cat-howto" data-i18n="how_to_play">How to play</h2>
 ${cat.howto.map((para) => `      <p>${esc(para)}</p>`).join("\n")}
       <div class="note">
         <strong>No setup required.</strong> Every game opens straight into a board. Progress is stored in your own browser under <code>mg-</code> keys &mdash; clearing site data resets it.
@@ -184,18 +185,24 @@ ${cat.tips.map((tip) => `        <li>${esc(tip)}</li>`).join("\n")}
       <h2 id="cat-other">Other shelves in the arcade</h2>
       <p class="filter-note">Ten categories, thirty games, one page each.</p>
       <div class="chips">
-${others.map((other) => `        <a class="chip" href="/games/${CATEGORIES[other].slug}/">${esc(CATEGORIES[other].name)}</a>`).join("\n")}
+${others.map((other) => `        <a class="chip" href="/games/${CATEGORIES[other].slug}/" data-mg-cat="${other}">${esc(CATEGORIES[other].name)}</a>`).join("\n")}
       </div>
     </section>
   </main>
 
   <footer>
-    <a href="/games/">All games</a>
+    <a href="/games/" data-i18n="all_games">All games</a>
     <a href="/">MindGenie AI</a>
     <a href="/blog.html">Blog</a>
     <a href="/privacy-policy.html">Privacy Policy</a>
   </footer>
 </div>
+<script src="/langs.js"></script>
+<script src="/games/i18n-slugs.js"></script>
+<script src="/games/i18n-data-a.js"></script>
+<script src="/games/i18n-data-b.js"></script>
+<script src="/games/i18n-data-c.js"></script>
+<script src="/games/i18n.js"></script>
 </body>
 </html>
 `;

@@ -72,7 +72,15 @@
     return normalise(params.get("cat") || params.get("category") || "");
   }
 
+  /* Counts follow the chosen language; the arcade i18n module provides them. */
+  var lastKey = "all";
+  function countText(n) {
+    if (window.MGi18n) return window.MGi18n.t("games_count", { n: n });
+    return n === 1 ? "1 game" : n + " games";
+  }
+
   function apply(key, remember) {
+    lastKey = key;
     pills.forEach(function (pill) {
       var on = pill.dataset.filter === key;
       pill.classList.toggle("is-active", on);
@@ -87,7 +95,7 @@
       if (match) shown++;
     });
 
-    if (countEl) countEl.textContent = shown === 1 ? "1 game" : shown + " games";
+    if (countEl) countEl.textContent = countText(shown);
     if (clearEl) clearEl.hidden = key === "all";
 
     /* The ribbon is on this page too, so keep its pressed state in step. */
@@ -114,4 +122,7 @@
 
   var requested = hashKey() || queryKey();
   apply(isKnown(requested) ? requested : "all", false);
+
+  /* A language switch re-renders the count without touching the filter. */
+  document.addEventListener("mg:lang", function () { apply(lastKey, false); });
 })();

@@ -24,6 +24,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/games.css">
 <link rel="stylesheet" href="/games/ribbon.css">
+<link rel="stylesheet" href="/games/i18n.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -66,42 +67,42 @@
   <div class="top">
     <a class="brand" href="/">MindGenie AI</a>
     <nav aria-label="Primary">
-      <a href="/">Play the Genie</a>
-      <a href="/games/" aria-current="page">Games</a>
-      <a href="/games/puzzle-games/">Puzzle Games</a>
+      <a href="/" data-i18n="nav_play">Play the Genie</a>
+      <a href="/games/" aria-current="page" data-i18n="nav_games">Games</a>
+      <a href="/games/puzzle-games/" data-mg-cat="puzzle">Puzzle Games</a>
     </nav>
   </div>
 
   <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
-    <a href="/games/#brain">Brain Games</a>
+    <a href="/games/#brain" data-mg-cat="brain">Brain Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#daily">Daily Games</a>
+    <a href="/games/#daily" data-mg-cat="daily">Daily Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#number">Number Games</a>
+    <a href="/games/#number" data-mg-cat="number">Number Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#word">Word Games</a>
+    <a href="/games/#word" data-mg-cat="word">Word Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#crossword">Crosswords</a>
+    <a href="/games/#crossword" data-mg-cat="crossword">Crosswords</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sudoku">Sudoku</a>
+    <a href="/games/#sudoku" data-mg-cat="sudoku">Sudoku</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#memory">Memory Games</a>
+    <a href="/games/#memory" data-mg-cat="memory">Memory Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sort">Sort Games</a>
+    <a href="/games/#sort" data-mg-cat="sort">Sort Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#math">Math Games</a>
+    <a href="/games/#math" data-mg-cat="math">Math Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#puzzle" aria-current="page">Puzzle Games</a>
+    <a href="/games/#puzzle" aria-current="page" data-mg-cat="puzzle">Puzzle Games</a>
   </nav>
 
   <main>
     <p class="eyebrow">Category &middot; 8 games</p>
-    <h1>Puzzle Games</h1>
+    <h1 data-mg-cat="puzzle" data-title-en="Puzzle Games — Free Sliding, Logic &amp; Picture Puzzles">Puzzle Games</h1>
     <p class="lede">The puzzle shelf: sliding tiles that are always solvable, a picture-logic nonogram, word squares and the logic puzzles that fit nowhere else. Slower than the arcade's sprints and better for it.</p>
     <p class="updated">Free to play in the browser &middot; no account &middot; scores saved on this device</p>
 
     <div class="toolbar">
-      <a class="btn" href="/games/">All 30 games</a>
+      <a class="btn" href="/games/" data-i18n="all_games">All 30 games</a>
       <a class="btn ghost" href="/games/#puzzle">Filter the hub to Puzzle Games</a>
     </div>
 
@@ -113,49 +114,49 @@
       <div class="grid cat-grid">
       <a class="card cat-card" href="/games/puzzle-slide.html">
         <span class="cat-card-glyph" aria-hidden="true">🧩</span>
-        <h3>Slide Fifteen</h3>
+        <h3 data-mg-title="puzzle-slide">Slide Fifteen</h3>
         <p>Arrange the numbered tiles on a 3×3 or 4×4 board. Every shuffle is solvable.</p>
         <span class="tag">Medium</span><span class="tag">Sliding tiles</span><span class="tag">3×3 / 4×4</span>
       </a>
       <a class="card cat-card" href="/games/daily-nonogram.html">
         <span class="cat-card-glyph" aria-hidden="true">📅</span>
-        <h3>Daily Nonogram</h3>
+        <h3 data-mg-title="daily-nonogram">Daily Nonogram</h3>
         <p>One six-by-six picture logic grid per day, built from the date. Tracks your streak.</p>
         <span class="tag">Easy</span><span class="tag">Picture logic</span><span class="tag">Daily</span>
       </a>
       <a class="card cat-card" href="/games/number-merge.html">
         <span class="cat-card-glyph" aria-hidden="true">🔢</span>
-        <h3>Merge Up</h3>
+        <h3 data-mg-title="number-merge">Merge Up</h3>
         <p>Slide and combine matching number tiles on a 4×4 board to double them.</p>
         <span class="tag">Easy</span><span class="tag">Tiles</span><span class="tag">Endless</span>
       </a>
       <a class="card cat-card" href="/games/pocket-sudoku.html">
         <span class="cat-card-glyph" aria-hidden="true">9️⃣</span>
-        <h3>Pocket Sudoku</h3>
+        <h3 data-mg-title="pocket-sudoku">Pocket Sudoku</h3>
         <p>A quick nine-by-nine board with Easy, Medium and Hard, a numpad built for phones, and a solved counter.</p>
         <span class="tag">Easy–Hard</span><span class="tag">Phone-first</span><span class="tag">Numpad</span>
       </a>
       <a class="card cat-card" href="/games/sudoku.html">
         <span class="cat-card-glyph" aria-hidden="true">9️⃣</span>
-        <h3>Sudoku</h3>
+        <h3 data-mg-title="sudoku">Sudoku</h3>
         <p>The full grid: four difficulties, conflict highlighting, keyboard play and a timer.</p>
         <span class="tag">Easy–Expert</span><span class="tag">Full grid</span><span class="tag">Keyboard</span>
       </a>
       <a class="card cat-card" href="/games/sudoku-daily.html">
         <span class="cat-card-glyph" aria-hidden="true">9️⃣</span>
-        <h3>Daily Sudoku</h3>
+        <h3 data-mg-title="sudoku-daily">Daily Sudoku</h3>
         <p>One nine-by-nine grid a day, date-seeded and checked for a unique solution, with a streak to keep.</p>
         <span class="tag">Medium</span><span class="tag">Daily</span><span class="tag">Unique solution</span>
       </a>
       <a class="card cat-card" href="/games/sudoku-six.html">
         <span class="cat-card-glyph" aria-hidden="true">9️⃣</span>
-        <h3>Sudoku Six</h3>
+        <h3 data-mg-title="sudoku-six">Sudoku Six</h3>
         <p>A six-by-six grid with two-by-three boxes: shorter than a full Sudoku, same logic, fresh grid every game.</p>
         <span class="tag">Easy</span><span class="tag">6×6</span><span class="tag">Fresh grid</span>
       </a>
       <a class="card cat-card" href="/games/sudoku-mini.html">
         <span class="cat-card-glyph" aria-hidden="true">9️⃣</span>
-        <h3>Sudoku Mini</h3>
+        <h3 data-mg-title="sudoku-mini">Sudoku Mini</h3>
         <p>Four by four, four digits, two-by-two boxes. A Sudoku you can finish in under a minute.</p>
         <span class="tag">Easy</span><span class="tag">4×4</span><span class="tag">Under a minute</span>
       </a>
@@ -171,7 +172,7 @@
     </section>
 
     <section aria-labelledby="cat-howto">
-      <h2 id="cat-howto">How to play</h2>
+      <h2 id="cat-howto" data-i18n="how_to_play">How to play</h2>
       <p>Slide Fifteen: click a tile next to the gap to slide it. Choose three-by-three for a quick solve or four-by-four for the full version.</p>
       <p>Daily Nonogram: read the row and column counts, fill the cells that must be filled, and mark the ones that must not be.</p>
       <div class="note">
@@ -192,25 +193,31 @@
       <h2 id="cat-other">Other shelves in the arcade</h2>
       <p class="filter-note">Ten categories, thirty games, one page each.</p>
       <div class="chips">
-        <a class="chip" href="/games/brain-games/">Brain Games</a>
-        <a class="chip" href="/games/daily-games/">Daily Games</a>
-        <a class="chip" href="/games/number-games/">Number Games</a>
-        <a class="chip" href="/games/word-games/">Word Games</a>
-        <a class="chip" href="/games/crosswords/">Crosswords</a>
-        <a class="chip" href="/games/sudoku/">Sudoku</a>
-        <a class="chip" href="/games/memory-games/">Memory Games</a>
-        <a class="chip" href="/games/sort-games/">Sort Games</a>
-        <a class="chip" href="/games/math-games/">Math Games</a>
+        <a class="chip" href="/games/brain-games/" data-mg-cat="brain">Brain Games</a>
+        <a class="chip" href="/games/daily-games/" data-mg-cat="daily">Daily Games</a>
+        <a class="chip" href="/games/number-games/" data-mg-cat="number">Number Games</a>
+        <a class="chip" href="/games/word-games/" data-mg-cat="word">Word Games</a>
+        <a class="chip" href="/games/crosswords/" data-mg-cat="crossword">Crosswords</a>
+        <a class="chip" href="/games/sudoku/" data-mg-cat="sudoku">Sudoku</a>
+        <a class="chip" href="/games/memory-games/" data-mg-cat="memory">Memory Games</a>
+        <a class="chip" href="/games/sort-games/" data-mg-cat="sort">Sort Games</a>
+        <a class="chip" href="/games/math-games/" data-mg-cat="math">Math Games</a>
       </div>
     </section>
   </main>
 
   <footer>
-    <a href="/games/">All games</a>
+    <a href="/games/" data-i18n="all_games">All games</a>
     <a href="/">MindGenie AI</a>
     <a href="/blog.html">Blog</a>
     <a href="/privacy-policy.html">Privacy Policy</a>
   </footer>
 </div>
+<script src="/langs.js"></script>
+<script src="/games/i18n-slugs.js"></script>
+<script src="/games/i18n-data-a.js"></script>
+<script src="/games/i18n-data-b.js"></script>
+<script src="/games/i18n-data-c.js"></script>
+<script src="/games/i18n.js"></script>
 </body>
 </html>

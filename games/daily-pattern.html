@@ -24,6 +24,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/games.css">
 <link rel="stylesheet" href="/games/ribbon.css">
+<link rel="stylesheet" href="/games/i18n.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -68,41 +69,41 @@
   <div class="top">
     <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
     <nav aria-label="Primary">
-      <a href="https://mindgenieai.xyz/">Play the Genie</a>
-      <a href="/games/" aria-current="page">Games</a>
+      <a href="https://mindgenieai.xyz/" data-i18n="nav_play">Play the Genie</a>
+      <a href="/games/" aria-current="page" data-i18n="nav_games">Games</a>
       <a href="/games/daily-nonogram.html">Daily Nonogram</a>
       <a href="/games/math-missing.html">Missing Number</a>
     </nav>
   </div>
 
   <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
-    <a href="/games/#brain">Brain Games</a>
+    <a href="/games/#brain" data-mg-cat="brain">Brain Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#daily">Daily Games</a>
+    <a href="/games/#daily" data-mg-cat="daily">Daily Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#number">Number Games</a>
+    <a href="/games/#number" data-mg-cat="number">Number Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#word">Word Games</a>
+    <a href="/games/#word" data-mg-cat="word">Word Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#crossword">Crosswords</a>
+    <a href="/games/#crossword" data-mg-cat="crossword">Crosswords</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sudoku">Sudoku</a>
+    <a href="/games/#sudoku" data-mg-cat="sudoku">Sudoku</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#memory">Memory Games</a>
+    <a href="/games/#memory" data-mg-cat="memory">Memory Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sort">Sort Games</a>
+    <a href="/games/#sort" data-mg-cat="sort">Sort Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#math">Math Games</a>
+    <a href="/games/#math" data-mg-cat="math">Math Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#puzzle">Puzzle Games</a>
+    <a href="/games/#puzzle" data-mg-cat="puzzle">Puzzle Games</a>
   </nav>
 
   <main>
-    <h1>Daily Sequence</h1>
+    <h1 data-mg-title="daily-pattern" data-title-en="Daily Sequence: A Free Number Pattern Puzzle">Daily Sequence</h1>
     <p class="updated">Five number patterns, rebuilt from today&rsquo;s date. Supply the next term in each.</p>
 
     <div class="toolbar">
-      <button class="btn ghost" type="button" id="restart">Restart today&rsquo;s set</button>
+      <button class="btn ghost" type="button" id="restart" data-i18n="restart">Restart today&rsquo;s set</button>
       <span class="hint" id="dateLabel">&nbsp;</span>
     </div>
 
@@ -121,8 +122,8 @@
       <div class="answer-row">
         <label class="sr-only" for="answer">Next term</label>
         <input id="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="next?">
-        <button class="btn" type="button" id="submit">Check</button>
-        <button class="btn ghost" type="button" id="reveal">Show answer</button>
+        <button class="btn" type="button" id="submit" data-i18n="check">Check</button>
+        <button class="btn ghost" type="button" id="reveal" data-i18n="reveal">Show answer</button>
       </div>
 
       <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -133,7 +134,7 @@
     <p>Five terms of a sequence are shown and the sixth is missing. Work out the rule, type the next term and press Enter. A correct answer turns the missing tile green and explains the rule; a wrong one shows the answer and moves on, because the puzzle set is fixed for the day and there is nothing to gain from hiding it.</p>
     <p>All five sequences are generated from the date: the same seed produces the same numbers for everybody, so two people playing on the same day get the same puzzles. Finish the set and your daily streak goes up by one; miss a day and it resets to one.</p>
 
-    <h2>Rules and scoring</h2>
+    <h2 data-i18n="rules">Rules and scoring</h2>
     <ul>
       <li>Five sequences per day, one attempt each, all with whole-number answers.</li>
       <li>Answers may be negative only in the subtraction set, and even there the sequence stays above zero.</li>
@@ -195,6 +196,12 @@
   </footer>
 </div>
 
+    <script src="/langs.js"></script>
+    <script src="/games/i18n-slugs.js"></script>
+    <script src="/games/i18n-data-a.js"></script>
+    <script src="/games/i18n-data-b.js"></script>
+    <script src="/games/i18n-data-c.js"></script>
+    <script src="/games/i18n.js"></script>
 <script src="/games/games.js"></script>
 <script>
 (function () {

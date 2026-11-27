@@ -24,6 +24,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/games.css">
 <link rel="stylesheet" href="/games/ribbon.css">
+<link rel="stylesheet" href="/games/i18n.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -67,50 +68,50 @@
   <div class="top">
     <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
     <nav aria-label="Primary">
-      <a href="https://mindgenieai.xyz/">Play the Genie</a>
-      <a href="/games/" aria-current="page">Games</a>
+      <a href="https://mindgenieai.xyz/" data-i18n="nav_play">Play the Genie</a>
+      <a href="/games/" aria-current="page" data-i18n="nav_games">Games</a>
       <a href="/games/crossword-clues.html">Clue Cards</a>
       <a href="/games/word-anagram.html">Anagram Hunt</a>
     </nav>
   </div>
 
   <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
-    <a href="/games/#brain">Brain Games</a>
+    <a href="/games/#brain" data-mg-cat="brain">Brain Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#daily">Daily Games</a>
+    <a href="/games/#daily" data-mg-cat="daily">Daily Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#number">Number Games</a>
+    <a href="/games/#number" data-mg-cat="number">Number Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#word">Word Games</a>
+    <a href="/games/#word" data-mg-cat="word">Word Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#crossword">Crosswords</a>
+    <a href="/games/#crossword" data-mg-cat="crossword">Crosswords</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sudoku">Sudoku</a>
+    <a href="/games/#sudoku" data-mg-cat="sudoku">Sudoku</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#memory">Memory Games</a>
+    <a href="/games/#memory" data-mg-cat="memory">Memory Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sort">Sort Games</a>
+    <a href="/games/#sort" data-mg-cat="sort">Sort Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#math">Math Games</a>
+    <a href="/games/#math" data-mg-cat="math">Math Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#puzzle">Puzzle Games</a>
+    <a href="/games/#puzzle" data-mg-cat="puzzle">Puzzle Games</a>
   </nav>
 
   <main>
-    <h1>Clue Anagrams</h1>
+    <h1 data-mg-title="crossword-anagrams" data-title-en="Clue Anagrams: A Free Crossword Anagram Game">Clue Anagrams</h1>
     <p class="updated">Eight clues, each with its answer&rsquo;s letters shuffled.</p>
 
     <div class="toolbar">
-      <button class="btn" type="button" id="start">Start 60-second run</button>
+      <button class="btn" type="button" id="start" data-i18n="start">Start 60-second run</button>
       <span class="hint">The letters are always all of the answer, never a subset.</span>
     </div>
 
     <div class="game-panel">
       <div class="stat-row">
         <span>Time <b id="left">60s</b></span>
-        <span>Score <b id="score">0</b></span>
+        <span><span data-i18n="score">Score</span> <b id="score">0</b></span>
         <span>Solved <b id="solved">0</b></span>
-        <span>Best <b id="best">0</b></span>
+        <span><span data-i18n="best">Best</span> <b id="best">0</b></span>
       </div>
 
       <div class="bar"><span id="barFill"></span></div>
@@ -124,8 +125,8 @@
       <div class="answer-row">
         <label class="sr-only" for="answer">Your answer</label>
         <input id="answer" type="text" autocomplete="off" autocapitalize="characters" placeholder="answer" disabled>
-        <button class="btn" type="button" id="submit" disabled>Submit</button>
-        <button class="btn ghost" type="button" id="skip" disabled>Skip</button>
+        <button class="btn" type="button" id="submit" disabled data-i18n="submit">Submit</button>
+        <button class="btn ghost" type="button" id="skip" disabled data-i18n="skip">Skip</button>
       </div>
 
       <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -135,7 +136,7 @@
     <p>Each round shows a crossword-style clue, its enumeration in brackets, and the answer&rsquo;s letters in a random order. Read the clue, rearrange the letters, type the answer and press Enter. A correct answer scores a point and deals the next clue. A skip moves on with no score.</p>
     <p>The letters are exactly the answer &mdash; no extra letters, no missing ones &mdash; so a wrong answer is almost always a wrong reading of the clue rather than a miscount. You have sixty seconds for eight clues.</p>
 
-    <h2>Rules and scoring</h2>
+    <h2 data-i18n="rules">Rules and scoring</h2>
     <ul>
       <li>Eight clues per run, drawn at random from a bank of twenty-one.</li>
       <li>One point per correct answer; skips score nothing and do not cost points.</li>
@@ -197,6 +198,12 @@
   </footer>
 </div>
 
+    <script src="/langs.js"></script>
+    <script src="/games/i18n-slugs.js"></script>
+    <script src="/games/i18n-data-a.js"></script>
+    <script src="/games/i18n-data-b.js"></script>
+    <script src="/games/i18n-data-c.js"></script>
+    <script src="/games/i18n.js"></script>
 <script src="/games/games.js"></script>
 <script>
 (function () {

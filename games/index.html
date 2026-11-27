@@ -24,6 +24,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/hub.css">
 <link rel="stylesheet" href="/games/ribbon.css">
+<link rel="stylesheet" href="/games/i18n.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -79,407 +80,413 @@
   </div>
 
     <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
-    <a href="/games/#brain">Brain Games</a>
+    <a href="/games/#brain" data-mg-cat="brain">Brain Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#daily">Daily Games</a>
+    <a href="/games/#daily" data-mg-cat="daily">Daily Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#number">Number Games</a>
+    <a href="/games/#number" data-mg-cat="number">Number Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#word">Word Games</a>
+    <a href="/games/#word" data-mg-cat="word">Word Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#crossword">Crosswords</a>
+    <a href="/games/#crossword" data-mg-cat="crossword">Crosswords</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sudoku">Sudoku</a>
+    <a href="/games/#sudoku" data-mg-cat="sudoku">Sudoku</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#memory">Memory Games</a>
+    <a href="/games/#memory" data-mg-cat="memory">Memory Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sort">Sort Games</a>
+    <a href="/games/#sort" data-mg-cat="sort">Sort Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#math">Math Games</a>
+    <a href="/games/#math" data-mg-cat="math">Math Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#puzzle">Puzzle Games</a>
+    <a href="/games/#puzzle" data-mg-cat="puzzle">Puzzle Games</a>
   </nav>
 
   <header class="hub-hero">
-    <h1>MindGenieAI Mind &amp; Puzzle Games</h1>
-    <p>Instant-play browser games across Brain, Daily, Number, Word, Crosswords, Sudoku, Memory, Sort, Math, and Puzzle categories&mdash;zero downloads required.</p>
+    <h1 data-mg-hub="0">MindGenieAI Mind &amp; Puzzle Games</h1>
+    <p data-mg-hub="1">Instant-play browser games across Brain, Daily, Number, Word, Crosswords, Sudoku, Memory, Sort, Math, and Puzzle categories&mdash;zero downloads required.</p>
   </header>
 
   <div class="cat-bar" id="hubCatBar" role="group" aria-label="Filter games by category">
-    <button type="button" class="cat-pill is-active" data-filter="all" aria-pressed="true">All Categories</button>
-    <button type="button" class="cat-pill" data-filter="brain" aria-pressed="false">Brain Games</button>
-    <button type="button" class="cat-pill" data-filter="daily" aria-pressed="false">Daily Games</button>
-    <button type="button" class="cat-pill" data-filter="number" aria-pressed="false">Number Games</button>
-    <button type="button" class="cat-pill" data-filter="word" aria-pressed="false">Word Games</button>
-    <button type="button" class="cat-pill" data-filter="crossword" aria-pressed="false">Crosswords</button>
-    <button type="button" class="cat-pill" data-filter="sudoku" aria-pressed="false">Sudoku</button>
-    <button type="button" class="cat-pill" data-filter="memory" aria-pressed="false">Memory Games</button>
-    <button type="button" class="cat-pill" data-filter="sort" aria-pressed="false">Sort Games</button>
-    <button type="button" class="cat-pill" data-filter="math" aria-pressed="false">Math Games</button>
-    <button type="button" class="cat-pill" data-filter="puzzle" aria-pressed="false">Puzzle Games</button>
+    <button type="button" class="cat-pill is-active" data-filter="all" aria-pressed="true" data-mg-hub="2">All Categories</button>
+    <button type="button" class="cat-pill" data-filter="brain" aria-pressed="false" data-mg-cat="brain">Brain Games</button>
+    <button type="button" class="cat-pill" data-filter="daily" aria-pressed="false" data-mg-cat="daily">Daily Games</button>
+    <button type="button" class="cat-pill" data-filter="number" aria-pressed="false" data-mg-cat="number">Number Games</button>
+    <button type="button" class="cat-pill" data-filter="word" aria-pressed="false" data-mg-cat="word">Word Games</button>
+    <button type="button" class="cat-pill" data-filter="crossword" aria-pressed="false" data-mg-cat="crossword">Crosswords</button>
+    <button type="button" class="cat-pill" data-filter="sudoku" aria-pressed="false" data-mg-cat="sudoku">Sudoku</button>
+    <button type="button" class="cat-pill" data-filter="memory" aria-pressed="false" data-mg-cat="memory">Memory Games</button>
+    <button type="button" class="cat-pill" data-filter="sort" aria-pressed="false" data-mg-cat="sort">Sort Games</button>
+    <button type="button" class="cat-pill" data-filter="math" aria-pressed="false" data-mg-cat="math">Math Games</button>
+    <button type="button" class="cat-pill" data-filter="puzzle" aria-pressed="false" data-mg-cat="puzzle">Puzzle Games</button>
   </div>
 
   <div class="hub-count-row">
     <p class="hub-count" id="hubCount" aria-live="polite">30 games</p>
-    <a class="hub-clear" id="hubClear" href="/games/" hidden>Show all 30 games</a>
+    <a class="hub-clear" id="hubClear" href="/games/" hidden data-mg-hub="4">Show all 30 games</a>
   </div>
 
   <main class="games-grid" id="hubGamesGrid">
     <a class="game-card" href="/games/brain-codebreaker.html" data-cats="brain number">
-      <div class="card-banner art-brain"><span aria-hidden="true">&#128272;</span><small>Brain Games</small></div>
+      <div class="card-banner art-brain"><span aria-hidden="true">&#128272;</span><small data-mg-cat="brain">Brain Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Codebreaker</h2>
+          <h2 data-mg-title="brain-codebreaker">Codebreaker</h2>
           <p>Guess a hidden code from exact and near-miss feedback. Three difficulty levels and ten guesses.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/daily-nonogram.html" data-cats="daily puzzle brain">
-      <div class="card-banner art-daily"><span aria-hidden="true">&#128197;</span><small>Daily Games</small></div>
+      <div class="card-banner art-daily"><span aria-hidden="true">&#128197;</span><small data-mg-cat="daily">Daily Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Daily Nonogram</h2>
+          <h2 data-mg-title="daily-nonogram">Daily Nonogram</h2>
           <p>One six-by-six picture logic grid per day, built from the date. Tracks your streak.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/number-merge.html" data-cats="number puzzle brain">
-      <div class="card-banner art-number"><span aria-hidden="true">&#128290;</span><small>Number Games</small></div>
+      <div class="card-banner art-number"><span aria-hidden="true">&#128290;</span><small data-mg-cat="number">Number Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Merge Up</h2>
+          <h2 data-mg-title="number-merge">Merge Up</h2>
           <p>Slide and combine matching number tiles on a 4&times;4 board to double them.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/word-anagram.html" data-cats="word brain">
-      <div class="card-banner art-word"><span aria-hidden="true">&#128292;</span><small>Word Games</small></div>
+      <div class="card-banner art-word"><span aria-hidden="true">&#128292;</span><small data-mg-cat="word">Word Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Anagram Hunt</h2>
+          <h2 data-mg-title="word-anagram">Anagram Hunt</h2>
           <p>Ten scrambled words, a clue for each, and points that a hint will cost you.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/word-guess.html" data-cats="word brain">
-      <div class="card-banner art-word"><span aria-hidden="true">&#128289;</span><small>Word Games</small></div>
+      <div class="card-banner art-word"><span aria-hidden="true">&#128289;</span><small data-mg-cat="word">Word Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Word Guess</h2>
+          <h2 data-mg-title="word-guess">Word Guess</h2>
           <p>Deduce the hidden five-letter word in six attempts using green and amber feedback.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/crossword-mini.html" data-cats="crossword word brain">
-      <div class="card-banner art-cross"><span aria-hidden="true">&#9997;&#65039;</span><small>Crosswords</small></div>
+      <div class="card-banner art-cross"><span aria-hidden="true">&#9997;&#65039;</span><small data-mg-cat="crossword">Crosswords</small></div>
       <div class="card-body">
         <div>
-          <h2>Mini Crossword</h2>
+          <h2 data-mg-title="crossword-mini">Mini Crossword</h2>
           <p>A six-by-six word square: six clues, and every answer reads across and down.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/pocket-sudoku.html" data-cats="sudoku number puzzle brain">
-      <div class="card-banner art-sudoku"><span aria-hidden="true">9&#65039;&#8419;</span><small>Sudoku</small></div>
+      <div class="card-banner art-sudoku"><span aria-hidden="true">9&#65039;&#8419;</span><small data-mg-cat="sudoku">Sudoku</small></div>
       <div class="card-body">
         <div>
-          <h2>Pocket Sudoku</h2>
+          <h2 data-mg-title="pocket-sudoku">Pocket Sudoku</h2>
           <p>A quick nine-by-nine board with Easy, Medium and Hard, a numpad built for phones, and a solved counter.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/sudoku.html" data-cats="sudoku number puzzle brain">
-      <div class="card-banner art-sudoku"><span aria-hidden="true">&#9209;&#65039;</span><small>Sudoku</small></div>
+      <div class="card-banner art-sudoku"><span aria-hidden="true">&#9209;&#65039;</span><small data-mg-cat="sudoku">Sudoku</small></div>
       <div class="card-body">
         <div>
-          <h2>Sudoku</h2>
+          <h2 data-mg-title="sudoku">Sudoku</h2>
           <p>The full grid: four difficulties, conflict highlighting, keyboard play and a timer.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/memory.html" data-cats="memory brain">
-      <div class="card-banner art-memory"><span aria-hidden="true">&#129504;</span><small>Memory Games</small></div>
+      <div class="card-banner art-memory"><span aria-hidden="true">&#129504;</span><small data-mg-cat="memory">Memory Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Memory Match</h2>
+          <h2 data-mg-title="memory">Memory Match</h2>
           <p>Flip cards and match all six pairs in as few moves as possible.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/memory-echo.html" data-cats="memory brain">
-      <div class="card-banner art-memory"><span aria-hidden="true">&#128276;</span><small>Memory Games</small></div>
+      <div class="card-banner art-memory"><span aria-hidden="true">&#128276;</span><small data-mg-cat="memory">Memory Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Pattern Echo</h2>
+          <h2 data-mg-title="memory-echo">Pattern Echo</h2>
           <p>Watch four pads light up in sequence, then repeat it back as the run grows.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/sort-sequence.html" data-cats="sort number brain">
-      <div class="card-banner art-sort"><span aria-hidden="true">&#127912;</span><small>Sort Games</small></div>
+      <div class="card-banner art-sort"><span aria-hidden="true">&#127912;</span><small data-mg-cat="sort">Sort Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Sort Sprint</h2>
+          <h2 data-mg-title="sort-sequence">Sort Sprint</h2>
           <p>Click a shuffled set into order &mdash; numbers low to high, or words A to Z &mdash; against the clock.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/math-speed.html" data-cats="math number brain">
-      <div class="card-banner art-math"><span aria-hidden="true">&#9889;</span><small>Math Games</small></div>
+      <div class="card-banner art-math"><span aria-hidden="true">&#9889;</span><small data-mg-cat="math">Math Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Quick Sums</h2>
+          <h2 data-mg-title="math-speed">Quick Sums</h2>
           <p>Sixty seconds of arithmetic across four operations, with a streak to protect.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/puzzle-slide.html" data-cats="puzzle brain">
-      <div class="card-banner art-puzzle"><span aria-hidden="true">&#129513;</span><small>Puzzle Games</small></div>
+      <div class="card-banner art-puzzle"><span aria-hidden="true">&#129513;</span><small data-mg-cat="puzzle">Puzzle Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Slide Fifteen</h2>
+          <h2 data-mg-title="puzzle-slide">Slide Fifteen</h2>
           <p>Arrange the numbered tiles on a 3&times;3 or 4&times;4 board. Every shuffle is solvable.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
     <a class="game-card" href="/games/sort-fractions.html" data-cats="sort math daily">
-      <div class="card-banner art-sort"><span aria-hidden="true">&#127853;</span><small>Sort Games</small></div>
+      <div class="card-banner art-sort"><span aria-hidden="true">&#127853;</span><small data-mg-cat="sort">Sort Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Fraction Ladder</h2>
+          <h2 data-mg-title="sort-fractions">Fraction Ladder</h2>
           <p>Eight values in four notations &mdash; fractions, decimals, percentages, mixed numbers &mdash; clicked into ascending order against the clock.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/sort-bins.html" data-cats="sort math">
-      <div class="card-banner art-sort"><span aria-hidden="true">&#128229;</span><small>Sort Games</small></div>
+      <div class="card-banner art-sort"><span aria-hidden="true">&#128229;</span><small data-mg-cat="sort">Sort Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Sort Bins</h2>
+          <h2 data-mg-title="sort-bins">Sort Bins</h2>
           <p>Forty-five seconds, three bins, one rule set at a time. Send each number to the bin that obeys the rule.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/sort-shifter.html" data-cats="sort brain">
-      <div class="card-banner art-sort"><span aria-hidden="true">&#8646;&#65039;</span><small>Sort Games</small></div>
+      <div class="card-banner art-sort"><span aria-hidden="true">&#8646;&#65039;</span><small data-mg-cat="sort">Sort Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Shift Sort</h2>
+          <h2 data-mg-title="sort-shifter">Shift Sort</h2>
           <p>Repair a scrambled row of seven numbers using the fewest swaps. No hints, no reshuffles.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/sort-timeline.html" data-cats="sort brain">
-      <div class="card-banner art-sort"><span aria-hidden="true">&#128336;</span><small>Sort Games</small></div>
+      <div class="card-banner art-sort"><span aria-hidden="true">&#128336;</span><small data-mg-cat="sort">Sort Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Timeline</h2>
+          <h2 data-mg-title="sort-timeline">Timeline</h2>
           <p>Six historical events a round. Click them in the order they happened, with the years hidden until you commit.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/math-target.html" data-cats="math number brain">
-      <div class="card-banner art-math"><span aria-hidden="true">&#10133;</span><small>Math Games</small></div>
+      <div class="card-banner art-math"><span aria-hidden="true">&#10133;</span><small data-mg-cat="math">Math Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Equation Forge</h2>
+          <h2 data-mg-title="math-target">Equation Forge</h2>
           <p>Four numbers, three empty operator slots and a target. Build the equation left to right.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/math-missing.html" data-cats="math number brain">
-      <div class="card-banner art-math"><span aria-hidden="true">&#128290;</span><small>Math Games</small></div>
+      <div class="card-banner art-math"><span aria-hidden="true">&#128290;</span><small data-mg-cat="math">Math Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Missing Number</h2>
+          <h2 data-mg-title="math-missing">Missing Number</h2>
           <p>Sixty seconds of equations with one value hidden somewhere different each time.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/daily-pattern.html" data-cats="daily math brain">
-      <div class="card-banner art-daily"><span aria-hidden="true">&#128200;</span><small>Daily Games</small></div>
+      <div class="card-banner art-daily"><span aria-hidden="true">&#128200;</span><small data-mg-cat="daily">Daily Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Daily Sequence</h2>
+          <h2 data-mg-title="daily-pattern">Daily Sequence</h2>
           <p>Five number sequences rebuilt from today's date. Find the rule and supply the next term.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/sudoku-daily.html" data-cats="sudoku daily number puzzle brain">
-      <div class="card-banner art-sudoku"><span aria-hidden="true">&#128197;</span><small>Sudoku</small></div>
+      <div class="card-banner art-sudoku"><span aria-hidden="true">&#128197;</span><small data-mg-cat="sudoku">Sudoku</small></div>
       <div class="card-body">
         <div>
-          <h2>Daily Sudoku</h2>
+          <h2 data-mg-title="sudoku-daily">Daily Sudoku</h2>
           <p>One nine-by-nine grid a day, date-seeded and checked for a unique solution, with a streak to keep.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/sudoku-six.html" data-cats="sudoku number puzzle brain">
-      <div class="card-banner art-sudoku"><span aria-hidden="true">&#128290;</span><small>Sudoku</small></div>
+      <div class="card-banner art-sudoku"><span aria-hidden="true">&#128290;</span><small data-mg-cat="sudoku">Sudoku</small></div>
       <div class="card-body">
         <div>
-          <h2>Sudoku Six</h2>
+          <h2 data-mg-title="sudoku-six">Sudoku Six</h2>
           <p>A six-by-six grid with two-by-three boxes: shorter than a full Sudoku, same logic, fresh grid every game.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/sudoku-mini.html" data-cats="sudoku number puzzle brain">
-      <div class="card-banner art-sudoku"><span aria-hidden="true">&#9638;</span><small>Sudoku</small></div>
+      <div class="card-banner art-sudoku"><span aria-hidden="true">&#9638;</span><small data-mg-cat="sudoku">Sudoku</small></div>
       <div class="card-body">
         <div>
-          <h2>Sudoku Mini</h2>
+          <h2 data-mg-title="sudoku-mini">Sudoku Mini</h2>
           <p>Four by four, four digits, two-by-two boxes. A Sudoku you can finish in under a minute.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/memory-grid.html" data-cats="memory brain">
-      <div class="card-banner art-memory"><span aria-hidden="true">&#9724;</span><small>Memory Games</small></div>
+      <div class="card-banner art-memory"><span aria-hidden="true">&#9724;</span><small data-mg-cat="memory">Memory Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Grid Flash</h2>
+          <h2 data-mg-title="memory-grid">Grid Flash</h2>
           <p>Squares light up on a four-by-four grid, then go dark. Click them back as each round adds one more.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/memory-numbers.html" data-cats="memory number brain">
-      <div class="card-banner art-memory"><span aria-hidden="true">&#128290;</span><small>Memory Games</small></div>
+      <div class="card-banner art-memory"><span aria-hidden="true">&#128290;</span><small data-mg-cat="memory">Memory Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Digit Echo</h2>
+          <h2 data-mg-title="memory-numbers">Digit Echo</h2>
           <p>A string of digits flashes up and vanishes. Type it back and the next string is one digit longer.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/memory-order.html" data-cats="memory brain">
-      <div class="card-banner art-memory"><span aria-hidden="true">&#9733;</span><small>Memory Games</small></div>
+      <div class="card-banner art-memory"><span aria-hidden="true">&#9733;</span><small data-mg-cat="memory">Memory Games</small></div>
       <div class="card-body">
         <div>
-          <h2>Order Recall</h2>
+          <h2 data-mg-title="memory-order">Order Recall</h2>
           <p>Shapes appear in a numbered order, then scatter. Click them back in the sequence you saw.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/crossword-clues.html" data-cats="crossword word brain">
-      <div class="card-banner art-cross"><span aria-hidden="true">&#127183;</span><small>Crosswords</small></div>
+      <div class="card-banner art-cross"><span aria-hidden="true">&#127183;</span><small data-mg-cat="crossword">Crosswords</small></div>
       <div class="card-body">
         <div>
-          <h2>Clue Cards</h2>
+          <h2 data-mg-title="crossword-clues">Clue Cards</h2>
           <p>Ten crossword clues with enumerations in two minutes. Hints reveal a letter and cost points.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/crossword-anagrams.html" data-cats="crossword word">
-      <div class="card-banner art-cross"><span aria-hidden="true">&#128292;</span><small>Crosswords</small></div>
+      <div class="card-banner art-cross"><span aria-hidden="true">&#128292;</span><small data-mg-cat="crossword">Crosswords</small></div>
       <div class="card-body">
         <div>
-          <h2>Clue Anagrams</h2>
+          <h2 data-mg-title="crossword-anagrams">Clue Anagrams</h2>
           <p>Each clue comes with its answer's letters shuffled. Rearrange them before the minute is up.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/crossword-daily.html" data-cats="crossword daily word brain">
-      <div class="card-banner art-cross"><span aria-hidden="true">&#128197;</span><small>Crosswords</small></div>
+      <div class="card-banner art-cross"><span aria-hidden="true">&#128197;</span><small data-mg-cat="crossword">Crosswords</small></div>
       <div class="card-body">
         <div>
-          <h2>Daily Clues</h2>
+          <h2 data-mg-title="crossword-daily">Daily Clues</h2>
           <p>Five crossword clues a day, the same for everybody, with one attempt each and a daily streak.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
 
     <a class="game-card" href="/games/crossword-detective.html" data-cats="crossword word brain">
-      <div class="card-banner art-cross"><span aria-hidden="true">&#128270;</span><small>Crosswords</small></div>
+      <div class="card-banner art-cross"><span aria-hidden="true">&#128270;</span><small data-mg-cat="crossword">Crosswords</small></div>
       <div class="card-body">
         <div>
-          <h2>Crossword Detective</h2>
+          <h2 data-mg-title="crossword-detective">Crossword Detective</h2>
           <p>A finished five-by-five word square with letters tampered with. Use the clues to find the fakes.</p>
         </div>
-        <span class="play-tag">Play Now &rarr;</span>
+        <span class="play-tag" data-i18n="play_now">Play Now</span>
       </div>
     </a>
   </main>
 
 <!-- hub-catlinks:start (generated) -->
   <nav class="hub-catlinks" aria-label="Category pages">
-    <span class="hub-catlinks-label">Browse by category</span>
-    <a href="/games/brain-games/">Brain Games</a>
-    <a href="/games/daily-games/">Daily Games</a>
-    <a href="/games/number-games/">Number Games</a>
-    <a href="/games/word-games/">Word Games</a>
-    <a href="/games/crosswords/">Crosswords</a>
-    <a href="/games/sudoku/">Sudoku</a>
-    <a href="/games/memory-games/">Memory Games</a>
-    <a href="/games/sort-games/">Sort Games</a>
-    <a href="/games/math-games/">Math Games</a>
-    <a href="/games/puzzle-games/">Puzzle Games</a>
+    <span class="hub-catlinks-label" data-mg-hub="3">Browse by category</span>
+    <a href="/games/brain-games/" data-mg-cat="brain">Brain Games</a>
+    <a href="/games/daily-games/" data-mg-cat="daily">Daily Games</a>
+    <a href="/games/number-games/" data-mg-cat="number">Number Games</a>
+    <a href="/games/word-games/" data-mg-cat="word">Word Games</a>
+    <a href="/games/crosswords/" data-mg-cat="crossword">Crosswords</a>
+    <a href="/games/sudoku/" data-mg-cat="sudoku">Sudoku</a>
+    <a href="/games/memory-games/" data-mg-cat="memory">Memory Games</a>
+    <a href="/games/sort-games/" data-mg-cat="sort">Sort Games</a>
+    <a href="/games/math-games/" data-mg-cat="math">Math Games</a>
+    <a href="/games/puzzle-games/" data-mg-cat="puzzle">Puzzle Games</a>
   </nav>
   <!-- hub-catlinks:end -->
 
   <footer class="hub-footer">
     <a href="/">MindGenie AI</a>
-    <a href="/games/">All games</a>
+    <a href="/games/" data-i18n="all_games">All games</a>
     <a href="https://mindgenieai.xyz/about.html">About</a>
     <a href="https://mindgenieai.xyz/contact.html">Contact</a>
     <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
     <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
   </footer>
 </div>
+    <script src="/langs.js"></script>
+    <script src="/games/i18n-slugs.js"></script>
+    <script src="/games/i18n-data-a.js"></script>
+    <script src="/games/i18n-data-b.js"></script>
+    <script src="/games/i18n-data-c.js"></script>
+    <script src="/games/i18n.js"></script>
 <script src="/games/hub.js"></script>
 </body>
 </html>

@@ -24,6 +24,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/games.css">
 <link rel="stylesheet" href="/games/ribbon.css">
+<link rel="stylesheet" href="/games/i18n.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -64,37 +65,37 @@
   <div class="top">
     <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
     <nav aria-label="Primary">
-      <a href="https://mindgenieai.xyz/">Play the Genie</a>
-      <a href="/games/" aria-current="page">Games</a>
+      <a href="https://mindgenieai.xyz/" data-i18n="nav_play">Play the Genie</a>
+      <a href="/games/" aria-current="page" data-i18n="nav_games">Games</a>
       <a href="/games/math-speed.html">Quick Sums</a>
       <a href="/games/math-target.html">Equation Forge</a>
     </nav>
   </div>
 
   <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
-    <a href="/games/#brain">Brain Games</a>
+    <a href="/games/#brain" data-mg-cat="brain">Brain Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#daily">Daily Games</a>
+    <a href="/games/#daily" data-mg-cat="daily">Daily Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#number">Number Games</a>
+    <a href="/games/#number" data-mg-cat="number">Number Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#word">Word Games</a>
+    <a href="/games/#word" data-mg-cat="word">Word Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#crossword">Crosswords</a>
+    <a href="/games/#crossword" data-mg-cat="crossword">Crosswords</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sudoku">Sudoku</a>
+    <a href="/games/#sudoku" data-mg-cat="sudoku">Sudoku</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#memory">Memory Games</a>
+    <a href="/games/#memory" data-mg-cat="memory">Memory Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sort">Sort Games</a>
+    <a href="/games/#sort" data-mg-cat="sort">Sort Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#math">Math Games</a>
+    <a href="/games/#math" data-mg-cat="math">Math Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#puzzle">Puzzle Games</a>
+    <a href="/games/#puzzle" data-mg-cat="puzzle">Puzzle Games</a>
   </nav>
 
   <main>
-    <h1>Missing Number</h1>
+    <h1 data-mg-title="math-missing" data-title-en="Missing Number: A Free 60-Second Maths Game">Missing Number</h1>
     <p class="updated">Sixty seconds of equations with one value hidden.</p>
 
     <div class="toolbar">
@@ -104,15 +105,15 @@
         <option value="medium" selected>Medium — numbers to 20</option>
         <option value="hard">Hard — numbers to 50</option>
       </select>
-      <button class="btn" type="button" id="start">Start</button>
+      <button class="btn" type="button" id="start" data-i18n="start">Start</button>
     </div>
 
     <div class="game-panel">
       <div class="stat-row">
         <span>Time <b id="left">60s</b></span>
-        <span>Score <b id="score">0</b></span>
-        <span>Streak <b id="streak">0</b></span>
-        <span>Best <b id="best">0</b></span>
+        <span><span data-i18n="score">Score</span> <b id="score">0</b></span>
+        <span><span data-i18n="streak">Streak</span> <b id="streak">0</b></span>
+        <span><span data-i18n="best">Best</span> <b id="best">0</b></span>
       </div>
 
       <div class="bar"><span id="barFill"></span></div>
@@ -122,7 +123,7 @@
       <div class="answer-row">
         <label class="sr-only" for="answer">Your answer</label>
         <input id="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="?" disabled>
-        <button class="btn" type="button" id="submit" disabled>Answer</button>
+        <button class="btn" type="button" id="submit" disabled data-i18n="submit">Answer</button>
       </div>
 
       <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -132,7 +133,7 @@
     <p>Each equation has one value replaced by a box. Work out what belongs there, type it and press Enter. A correct answer scores a point and a new equation appears at once; a wrong one breaks your streak and shows the missing value for a moment before moving on. The round lasts sixty seconds from the moment you press Start.</p>
     <p>The box is not always at the end. Sometimes it holds the sum, sometimes one of the numbers being added, sometimes the divisor, and sometimes the starting value. The operation symbols tell you which inverse to reach for: undo an addition with a subtraction, undo a multiplication with a division.</p>
 
-    <h2>Rules and scoring</h2>
+    <h2 data-i18n="rules">Rules and scoring</h2>
     <ul>
       <li>Answers are always whole numbers; nothing here produces a fraction or a negative.</li>
       <li>Easy uses numbers up to 12, medium up to 20 with times tables to 12, hard up to 50 with multiplication to 15.</li>
@@ -194,6 +195,12 @@
   </footer>
 </div>
 
+    <script src="/langs.js"></script>
+    <script src="/games/i18n-slugs.js"></script>
+    <script src="/games/i18n-data-a.js"></script>
+    <script src="/games/i18n-data-b.js"></script>
+    <script src="/games/i18n-data-c.js"></script>
+    <script src="/games/i18n.js"></script>
 <script src="/games/games.js"></script>
 <script>
 (function () {

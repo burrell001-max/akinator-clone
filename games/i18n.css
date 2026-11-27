@@ -1,0 +1,100 @@
+/* Language switcher on arcade pages.
+
+   Same component as the Genie's (.lang / .lang-btn / .lang-menu), restyled for
+   the arcade's dark panels and for the light hub. Loaded after games.css, so it
+   only needs the pieces the arcade adds. */
+
+.mg-lang {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px;
+}
+
+.mg-lang .lang-btn {
+  background: var(--panel-2, #1c2745);
+  color: var(--text, #e9edf8);
+  border: 1px solid rgba(255, 209, 102, .35);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font: inherit;
+  font-size: .86rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.mg-lang .lang-btn:hover { border-color: var(--gold, #ffd166); }
+
+.mg-lang .lang-menu {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 6px);
+  inset-inline-start: 0;
+  min-width: 200px;
+  max-height: 70vh;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  background: #0f1830;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 12px;
+  box-shadow: 0 14px 34px rgba(4, 8, 20, .5);
+}
+.mg-lang .lang-menu[hidden] { display: none; }
+.mg-lang .lang-menu button {
+  width: 100%;
+  text-align: start;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text, #e9edf8);
+  font: inherit;
+  font-size: .92rem;
+  cursor: pointer;
+}
+.mg-lang .lang-menu button:hover { background: rgba(255, 255, 255, .1); }
+.mg-lang .lang-menu button[aria-current="true"] {
+  background: rgba(255, 209, 102, .16);
+  color: var(--gold, #ffd166);
+  font-weight: 700;
+}
+
+/* Light surfaces: the hub, and the homepage's games shelf. */
+.hub-page .mg-lang .lang-btn,
+.light .mg-lang .lang-btn {
+  background: #fff;
+  color: #2b134c;
+  border-color: #ddd6fe;
+}
+.hub-page .mg-lang .lang-menu,
+.light .mg-lang .lang-menu {
+  background: #fff;
+  border-color: #e4def2;
+  box-shadow: 0 14px 34px rgba(43, 19, 76, .18);
+}
+.hub-page .mg-lang .lang-menu button,
+.light .mg-lang .lang-menu button { color: #2b134c; }
+.hub-page .mg-lang .lang-menu button:hover,
+.light .mg-lang .lang-menu button:hover { background: #f5f3ff; }
+.hub-page .mg-lang .lang-menu button[aria-current="true"],
+.light .mg-lang .lang-menu button[aria-current="true"] { background: #ede9fe; color: #5b21b6; }
+
+/* RTL keeps the ribbon and the toolbar readable. */
+html[dir="rtl"] .mg-cat-ribbon { direction: rtl; }
+html[dir="rtl"] .mg-related-alt,
+html[dir="rtl"] .section-head { text-align: right; }
+
+/* Longer translations must wrap, not overflow. */
+.mg-cat-ribbon a { white-space: nowrap; }
+.toolbar { flex-wrap: wrap; }
+.btn { white-space: normal; }
+
+@media (max-width: 640px) {
+  .mg-lang { margin-left: 0; width: 100%; justify-content: flex-end; }
+  .mg-lang .lang-menu { inset-inline-start: auto; inset-inline-end: 0; }
+}
+
+/* The shelf play tag keeps its arrow when the label is translated. */
+.play-tag::after { content: "\2192"; }

@@ -24,6 +24,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/games.css">
 <link rel="stylesheet" href="/games/ribbon.css">
+<link rel="stylesheet" href="/games/i18n.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -67,50 +68,50 @@
   <div class="top">
     <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
     <nav aria-label="Primary">
-      <a href="https://mindgenieai.xyz/">Play the Genie</a>
-      <a href="/games/" aria-current="page">Games</a>
+      <a href="https://mindgenieai.xyz/" data-i18n="nav_play">Play the Genie</a>
+      <a href="/games/" aria-current="page" data-i18n="nav_games">Games</a>
       <a href="/games/memory.html">Memory Match</a>
       <a href="/games/memory-echo.html">Pattern Echo</a>
     </nav>
   </div>
 
   <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
-    <a href="/games/#brain">Brain Games</a>
+    <a href="/games/#brain" data-mg-cat="brain">Brain Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#daily">Daily Games</a>
+    <a href="/games/#daily" data-mg-cat="daily">Daily Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#number">Number Games</a>
+    <a href="/games/#number" data-mg-cat="number">Number Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#word">Word Games</a>
+    <a href="/games/#word" data-mg-cat="word">Word Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#crossword">Crosswords</a>
+    <a href="/games/#crossword" data-mg-cat="crossword">Crosswords</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sudoku">Sudoku</a>
+    <a href="/games/#sudoku" data-mg-cat="sudoku">Sudoku</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#memory">Memory Games</a>
+    <a href="/games/#memory" data-mg-cat="memory">Memory Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sort">Sort Games</a>
+    <a href="/games/#sort" data-mg-cat="sort">Sort Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#math">Math Games</a>
+    <a href="/games/#math" data-mg-cat="math">Math Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#puzzle">Puzzle Games</a>
+    <a href="/games/#puzzle" data-mg-cat="puzzle">Puzzle Games</a>
   </nav>
 
   <main>
-    <h1>Grid Flash</h1>
+    <h1 data-mg-title="memory-grid" data-title-en="Grid Flash: A Free Visual Memory Game">Grid Flash</h1>
     <p class="updated">Count the lit squares, then click them back.</p>
 
     <div class="toolbar">
-      <button class="btn" type="button" id="start">Start</button>
+      <button class="btn" type="button" id="start" data-i18n="start">Start</button>
       <span class="hint" id="phaseLabel">Ready when you are.</span>
     </div>
 
     <div class="game-panel">
       <div class="stat-row">
-        <span>Level <b id="level">0</b></span>
+        <span><span data-i18n="level">Level</span> <b id="level">0</b></span>
         <span>Squares this round <b id="count">3</b></span>
         <span>Best level <b id="best">0</b></span>
-        <span>Streak <b id="streak">0</b></span>
+        <span><span data-i18n="streak">Streak</span> <b id="streak">0</b></span>
       </div>
 
       <div id="grid" role="group" aria-label="Memory grid"></div>
@@ -123,7 +124,7 @@
     <p>Some squares on the sixteen-cell grid light up in gold for roughly a second. When they go dark again, click each square that was lit. Get them all and the next round lights one more square. Click a square that was dark and the round ends, with the pattern shown in a paler gold so you can see where you went wrong.</p>
     <p>Your score is the number of levels cleared, and your best ever is kept in this browser. Starting again begins at three squares: the difficulty curve is the same every time, so the only variable is how well you hold a pattern in mind.</p>
 
-    <h2>Rules and scoring</h2>
+    <h2 data-i18n="rules">Rules and scoring</h2>
     <ul>
       <li>Level one lights three squares; each cleared level adds one more.</li>
       <li>Each square can only be clicked once per round, and a wrong click ends the round immediately.</li>
@@ -185,6 +186,12 @@
   </footer>
 </div>
 
+    <script src="/langs.js"></script>
+    <script src="/games/i18n-slugs.js"></script>
+    <script src="/games/i18n-data-a.js"></script>
+    <script src="/games/i18n-data-b.js"></script>
+    <script src="/games/i18n-data-c.js"></script>
+    <script src="/games/i18n.js"></script>
 <script src="/games/games.js"></script>
 <script src="/games/memory-engine.js"></script>
 <script>

@@ -24,6 +24,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/games.css">
 <link rel="stylesheet" href="/games/ribbon.css">
+<link rel="stylesheet" href="/games/i18n.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -62,37 +63,37 @@
   <div class="top">
     <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
     <nav aria-label="Primary">
-      <a href="https://mindgenieai.xyz/">Play the Genie</a>
-      <a href="/games/" aria-current="page">Games</a>
+      <a href="https://mindgenieai.xyz/" data-i18n="nav_play">Play the Genie</a>
+      <a href="/games/" aria-current="page" data-i18n="nav_games">Games</a>
       <a href="/games/brain-codebreaker.html">Codebreaker</a>
       <a href="/games/memory-echo.html">Pattern Echo</a>
     </nav>
   </div>
 
   <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
-    <a href="/games/#brain">Brain Games</a>
+    <a href="/games/#brain" data-mg-cat="brain">Brain Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#daily">Daily Games</a>
+    <a href="/games/#daily" data-mg-cat="daily">Daily Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#number">Number Games</a>
+    <a href="/games/#number" data-mg-cat="number">Number Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#word">Word Games</a>
+    <a href="/games/#word" data-mg-cat="word">Word Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#crossword">Crosswords</a>
+    <a href="/games/#crossword" data-mg-cat="crossword">Crosswords</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sudoku">Sudoku</a>
+    <a href="/games/#sudoku" data-mg-cat="sudoku">Sudoku</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#memory">Memory Games</a>
+    <a href="/games/#memory" data-mg-cat="memory">Memory Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sort">Sort Games</a>
+    <a href="/games/#sort" data-mg-cat="sort">Sort Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#math">Math Games</a>
+    <a href="/games/#math" data-mg-cat="math">Math Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#puzzle">Puzzle Games</a>
+    <a href="/games/#puzzle" data-mg-cat="puzzle">Puzzle Games</a>
   </nav>
 
   <main>
-    <h1>Daily Nonogram</h1>
+    <h1 data-mg-title="daily-nonogram" data-title-en="Daily Nonogram: A Six-by-Six Picture Logic Puzzle">Daily Nonogram</h1>
     <p class="updated">Puzzle for <span id="dateLabel">today</span> — the same grid for everyone, all day.</p>
 
     <div class="game-panel">
@@ -108,14 +109,15 @@
 
       <div class="mode-row">
         <button class="btn ghost" type="button" id="clear">Clear marks</button>
-        <button class="btn" type="button" id="check">Check</button>
+        <button class="btn" type="button" id="check" data-i18n="check">Check</button>
       </div>
 
       <p class="status" id="status" role="status" aria-live="polite"></p>
       <p class="hint">Tap a cell to fill it, tap again to mark it empty with an ✕, tap a third time to clear it.</p>
     </div>
 
-    <h2>How to play</h2>
+    <h2 data-i18n="how_to_play">How to play</h2>
+    <p class="mg-howto" data-mg-howto="daily-nonogram"></p>
     <p>A nonogram gives you numbers instead of a picture. Each number beside a row or above a column is the length of a run of filled cells, in order. Two numbers mean two separate runs with at least one empty cell between them.</p>
     <p>On a row labelled <strong>2 1</strong>, six cells long, the row contains a block of two filled cells, then at least one gap, then a single filled cell. The gap could be one cell or several, and the runs could start anywhere that fits — that is the puzzle. Use the ✕ mark for cells you have proved are empty; it does not count as filled and it will not block a win.</p>
     <p>You win when every row and every column shows exactly the runs its clue asks for. The check is on the clues, not on one stored answer, so any arrangement that satisfies all twelve clues counts as solved.</p>
@@ -175,6 +177,12 @@
     <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
   </footer>
 </div>
+    <script src="/langs.js"></script>
+    <script src="/games/i18n-slugs.js"></script>
+    <script src="/games/i18n-data-a.js"></script>
+    <script src="/games/i18n-data-b.js"></script>
+    <script src="/games/i18n-data-c.js"></script>
+    <script src="/games/i18n.js"></script>
 <script src="/games/games.js"></script>
 <script>
 (function () {

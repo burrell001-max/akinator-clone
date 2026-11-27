@@ -24,6 +24,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/games.css">
 <link rel="stylesheet" href="/games/ribbon.css">
+<link rel="stylesheet" href="/games/i18n.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -74,50 +75,50 @@
   <div class="top">
     <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
     <nav aria-label="Primary">
-      <a href="https://mindgenieai.xyz/">Play the Genie</a>
-      <a href="/games/" aria-current="page">Games</a>
+      <a href="https://mindgenieai.xyz/" data-i18n="nav_play">Play the Genie</a>
+      <a href="/games/" aria-current="page" data-i18n="nav_games">Games</a>
       <a href="/games/sort-sequence.html">Sort Sprint</a>
       <a href="/games/sort-fractions.html">Fraction Ladder</a>
     </nav>
   </div>
 
   <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
-    <a href="/games/#brain">Brain Games</a>
+    <a href="/games/#brain" data-mg-cat="brain">Brain Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#daily">Daily Games</a>
+    <a href="/games/#daily" data-mg-cat="daily">Daily Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#number">Number Games</a>
+    <a href="/games/#number" data-mg-cat="number">Number Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#word">Word Games</a>
+    <a href="/games/#word" data-mg-cat="word">Word Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#crossword">Crosswords</a>
+    <a href="/games/#crossword" data-mg-cat="crossword">Crosswords</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sudoku">Sudoku</a>
+    <a href="/games/#sudoku" data-mg-cat="sudoku">Sudoku</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#memory">Memory Games</a>
+    <a href="/games/#memory" data-mg-cat="memory">Memory Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sort">Sort Games</a>
+    <a href="/games/#sort" data-mg-cat="sort">Sort Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#math">Math Games</a>
+    <a href="/games/#math" data-mg-cat="math">Math Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#puzzle">Puzzle Games</a>
+    <a href="/games/#puzzle" data-mg-cat="puzzle">Puzzle Games</a>
   </nav>
 
   <main>
-    <h1>Sort Bins</h1>
+    <h1 data-mg-title="sort-bins" data-title-en="Sort Bins: A Free 45-Second Number Sorting Game">Sort Bins</h1>
     <p class="updated">One number at a time. Send it to the bin whose rule it obeys.</p>
 
     <div class="toolbar">
-      <button class="btn" type="button" id="start">Start 45-second round</button>
+      <button class="btn" type="button" id="start" data-i18n="start">Start 45-second round</button>
       <span class="hint" id="ruleName">Rules change every round.</span>
     </div>
 
     <div class="game-panel bin-card">
       <div class="stat-row">
         <span>Time <b id="left">45s</b></span>
-        <span>Score <b id="score">0</b></span>
-        <span>Streak <b id="streak">0</b></span>
-        <span>Best <b id="best">0</b></span>
+        <span><span data-i18n="score">Score</span> <b id="score">0</b></span>
+        <span><span data-i18n="streak">Streak</span> <b id="streak">0</b></span>
+        <span><span data-i18n="best">Best</span> <b id="best">0</b></span>
       </div>
 
       <div class="timebar"><span id="barFill"></span></div>
@@ -137,7 +138,7 @@
     <p>A number appears in the middle of the board and three bins sit underneath it. Each bin is labelled with a rule. Decide which rule the number obeys, then click that bin &mdash; or press <strong>1</strong>, <strong>2</strong> or <strong>3</strong>. A correct sort scores a point and a new number appears immediately. A wrong sort costs a point, resets your streak, and highlights the bin the number actually belonged to before moving on.</p>
     <p>You have forty-five seconds. The rules come in four sets and one is chosen at random each round: even and odd with the odd numbers split by divisibility, multiples of five and three, primes and squares, and divisibility by four and three. The bin labels always tell you exactly which rule is in force, so read them before your first click.</p>
 
-    <h2>Rules and scoring</h2>
+    <h2 data-i18n="rules">Rules and scoring</h2>
     <ul>
       <li>Numbers run from 10 to 99, and every number belongs to exactly one bin.</li>
       <li>One point per correct sort; one point lost per mistake, never below zero.</li>
@@ -199,6 +200,12 @@
   </footer>
 </div>
 
+    <script src="/langs.js"></script>
+    <script src="/games/i18n-slugs.js"></script>
+    <script src="/games/i18n-data-a.js"></script>
+    <script src="/games/i18n-data-b.js"></script>
+    <script src="/games/i18n-data-c.js"></script>
+    <script src="/games/i18n.js"></script>
 <script src="/games/games.js"></script>
 <script>
 (function () {

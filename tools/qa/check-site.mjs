@@ -183,7 +183,9 @@ for (const key of CATEGORY_ORDER) {
   const html = await readFile(file, "utf8");
   const expected = GAMES.filter((game) => game.cats.includes(key));
 
-  if (!html.includes(`<h1>${cat.name}</h1>`)) fail(rel, `h1 is not "${cat.name}"`);
+  /* The h1 carries localization attributes, so compare its text only. */
+  const heading = html.match(/<h1[^>]*>([^<]*)<\/h1>/);
+  if (!heading || heading[1] !== cat.name) fail(rel, `h1 is not "${cat.name}"`);
   if (!html.includes('href="/games/games.css"')) fail(rel, "does not load games.css");
   if (!html.includes('href="/games/ribbon.css"')) fail(rel, "does not load ribbon.css");
   if (!html.includes('href="/games/"')) fail(rel, "does not link back to the hub");

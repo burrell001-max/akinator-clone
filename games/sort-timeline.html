@@ -24,6 +24,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/games.css">
 <link rel="stylesheet" href="/games/ribbon.css">
+<link rel="stylesheet" href="/games/i18n.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -78,47 +79,47 @@
   <div class="top">
     <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
     <nav aria-label="Primary">
-      <a href="https://mindgenieai.xyz/">Play the Genie</a>
-      <a href="/games/" aria-current="page">Games</a>
+      <a href="https://mindgenieai.xyz/" data-i18n="nav_play">Play the Genie</a>
+      <a href="/games/" aria-current="page" data-i18n="nav_games">Games</a>
       <a href="/games/sort-sequence.html">Sort Sprint</a>
       <a href="/games/sort-shifter.html">Shift Sort</a>
     </nav>
   </div>
 
   <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
-    <a href="/games/#brain">Brain Games</a>
+    <a href="/games/#brain" data-mg-cat="brain">Brain Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#daily">Daily Games</a>
+    <a href="/games/#daily" data-mg-cat="daily">Daily Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#number">Number Games</a>
+    <a href="/games/#number" data-mg-cat="number">Number Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#word">Word Games</a>
+    <a href="/games/#word" data-mg-cat="word">Word Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#crossword">Crosswords</a>
+    <a href="/games/#crossword" data-mg-cat="crossword">Crosswords</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sudoku">Sudoku</a>
+    <a href="/games/#sudoku" data-mg-cat="sudoku">Sudoku</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#memory">Memory Games</a>
+    <a href="/games/#memory" data-mg-cat="memory">Memory Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#sort">Sort Games</a>
+    <a href="/games/#sort" data-mg-cat="sort">Sort Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#math">Math Games</a>
+    <a href="/games/#math" data-mg-cat="math">Math Games</a>
     <span class="mg-cat-sep" aria-hidden="true"></span>
-    <a href="/games/#puzzle">Puzzle Games</a>
+    <a href="/games/#puzzle" data-mg-cat="puzzle">Puzzle Games</a>
   </nav>
 
   <main>
-    <h1>Timeline</h1>
+    <h1 data-mg-title="sort-timeline" data-title-en="Timeline: A Free Sort-the-Events History Game">Timeline</h1>
     <p class="updated">Three rounds of six events. Click them in the order they happened.</p>
 
     <div class="toolbar">
-      <button class="btn" type="button" id="restart">Start over</button>
+      <button class="btn" type="button" id="restart" data-i18n="restart">Start over</button>
       <span class="hint" id="roundLabel">Round 1 of 3</span>
     </div>
 
     <div class="game-panel">
       <div class="stat-row">
-        <span>Round <b id="round">1/3</b></span>
+        <span><span data-i18n="round">Round</span> <b id="round">1/3</b></span>
         <span>Placed <b id="placed">0/6</b></span>
         <span>Mistakes <b id="mistakes">0</b></span>
         <span>Time <b id="time">0:00</b></span>
@@ -134,7 +135,7 @@
     <p>Each round deals six events from history, technology and exploration. Click them one at a time starting with the earliest. A click is accepted only if the event happened after the last one you placed, so the choices narrow as the list shrinks. When all six are placed, the next round deals a fresh set.</p>
     <p>Years are deliberately hidden until an event has been placed &mdash; that is where the game is. After the third round the year of every event you saw is listed in order, so a round you guessed through still teaches you the dates.</p>
 
-    <h2>Rules and scoring</h2>
+    <h2 data-i18n="rules">Rules and scoring</h2>
     <ul>
       <li>Three rounds, six events each, and no event repeats within a session.</li>
       <li>A wrong click costs nothing but a mistake and a shake; the event stays on the board.</li>
@@ -196,6 +197,12 @@
   </footer>
 </div>
 
+    <script src="/langs.js"></script>
+    <script src="/games/i18n-slugs.js"></script>
+    <script src="/games/i18n-data-a.js"></script>
+    <script src="/games/i18n-data-b.js"></script>
+    <script src="/games/i18n-data-c.js"></script>
+    <script src="/games/i18n.js"></script>
 <script src="/games/games.js"></script>
 <script>
 (function () {
