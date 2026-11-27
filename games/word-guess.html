@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Guess: A Free Five-Letter Word Game</title>
+<meta name="description" content="Guess a hidden five-letter word in six tries. Green means right letter, right place; amber means right letter, wrong place. Free, no account, plays on a phone.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/word-guess.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Word Guess: A Free Five-Letter Word Game">
+<meta property="og:description" content="Six tries at a hidden five-letter word, with a keyboard that works on a phone.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/word-guess.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Word Guess: A Free Five-Letter Word Game">
+<meta name="twitter:description" content="Six tries at a hidden five-letter word.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<style>
+  .board { display: grid; gap: 6px; width: min(100%, 330px); margin: 0 auto; }
+  .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .tile {
+    aspect-ratio: 1 / 1; display: grid; place-items: center;
+    border: 2px solid rgba(255, 255, 255, .18); border-radius: 8px;
+    font-size: clamp(1.1rem, 6vw, 1.5rem); font-weight: 700; text-transform: uppercase;
+    background: #101830; color: var(--text);
+    transition: transform .18s ease, background-color .18s ease;
+  }
+  .tile.filled { border-color: rgba(255, 209, 102, .55); }
+  .tile.correct { background: #2f7d55; border-color: #2f7d55; color: #fff; }
+  .tile.present { background: #9a7a1f; border-color: #9a7a1f; color: #fff; }
+  .tile.absent  { background: #2a3350; border-color: #2a3350; color: #b9c2d8; }
+  .tile.flip { transform: rotateX(360deg); }
+  .keys { display: grid; gap: 6px; margin: 20px auto 0; width: min(100%, 480px); }
+  .keyrow { display: flex; gap: 5px; justify-content: center; }
+  .key {
+    flex: 1 1 auto; min-width: 0; max-width: 44px;
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--line);
+    border-radius: 7px; padding: 12px 0; font-size: .82rem; font-weight: 700;
+    text-transform: uppercase; cursor: pointer;
+  }
+  .key.wide { max-width: 68px; font-size: .7rem; }
+  .key.correct { background: #2f7d55; border-color: #2f7d55; }
+  .key.present { background: #9a7a1f; border-color: #9a7a1f; }
+  .key.absent { background: #1a2338; color: #6c7690; }
+  .shake { animation: shake .3s ease; }
+  @keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/">Games</a>
+      <a href="/games/sudoku.html">Sudoku</a>
+      <a href="/games/memory.html">Memory</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Word Guess</h1>
+    <p class="updated">Six tries, five letters, one hidden word.</p>
+
+    <div class="toolbar" style="justify-content:center">
+      <button class="btn ghost" id="newWord" type="button">New word</button>
+    </div>
+
+    <div class="board" id="board" role="grid" aria-label="Guess grid"></div>
+    <div class="keys" id="keys" aria-label="Keyboard"></div>
+
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <h2>How it works</h2>
+    <p>Type a five-letter word and press enter. After each guess the tiles change colour: green means the letter is in the word and in the right place, amber means the letter is in the word but somewhere else, and grey means the word does not contain that letter at all. You have six guesses.</p>
+    <p>Repeated letters are handled the way you would expect. If the answer contains one "E" and your guess has two, only the first one is coloured — a second E cannot be both present and accounted for.</p>
+
+    <h2>Strategy that actually helps</h2>
+    <p>Start with a word built from common letters rather than a clever one. Vowels and the letters R, S, T, L and N appear in most English five-letter words, so a first guess like "stare" or "raise" usually produces more information than a thematic word does.</p>
+    <p>Do not repeat a letter you already know is absent, and do not move a green letter. If a letter came back amber, it belongs in the word but not where you put it — shifting it to a different position is the single most useful move available. When two guesses leave several possibilities, use the third to test letters you have not tried rather than to guess a word: eliminating four letters can be worth more than a fifty-fifty shot.</p>
+
+    <h2>Where the words come from</h2>
+    <p>The answer is drawn from a fixed list of common five-letter words written into this page. Names, plurals ending in S where the singular is the real word, and obscure dictionary entries are left out, so a guess only fails when the word really is not in the list. Nothing is fetched and nothing is stored; a new word is one button away.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var WORDS = ("about above actor acute admit adopt adult after again agent agree ahead alarm album alert alike alive allow alone along alter among anger angle angry apart apple apply arena argue arise array aside asset audio audit avoid award aware badly baker basic beach began begin being below bench birth black blame blind block blood board boost booth bound brain brand brave bread break brief bring broad broke brown build built buyer cabin carry catch cause chain chair chart chase cheap check chest chief child chose civil claim class clean clear climb clock close cloud coach coast could count court cover craft crash cream crime cross crowd crown curve cycle daily dance dealt death depth doing doubt dozen draft drama drawn dream dress drink drive drove dying eager early earth eight elite empty enemy enjoy enter entry equal error event every exact exist extra faith false fault field fifth fifty fight final first fixed flash fleet floor focus force forth forty forum found frame fresh front fruit fully funny giant given glass globe going grace grade grand grant grass great green group grown guard guess guest guide happy heart heavy horse hotel house human ideal image index inner input issue joint judge known label large laser later laugh layer learn least leave legal level light limit local logic loose lower lucky lunch magic major maker march match maybe mayor metal might minor model money month moral motor mount mouse mouth movie music never night noise north novel nurse occur ocean offer often order other ought paint panel paper party peace phase phone photo piano piece pilot pitch place plain plane plant plate point pound power press price pride prime print prior prize proof proud prove quick quiet quite radio raise range rapid ratio reach ready realm refer relax reply right rival river robot roman rough round route royal rural scale scene scope score sense serve seven shall shape share sharp sheet shelf shell shift shine shirt shock shoot short shown sight silly since sixth sixty skill sleep slide small smart smile smoke solid solve sorry sound south space speak speed spend spent split spoke sport staff stage stake stand start state steam steel stick still stock stone stood store storm story strip stuck study stuff style sugar suite super sweet table taken taste taxes teach teeth thank theft their theme there these thick thing think third those three threw throw tight times tired title today topic total touch tough tower track trade train treat trend trial tried truck truly trust truth twice under union unity until upper upset urban usage usual valid value video virus visit vital voice waste watch water wheel where which while white whole whose woman women world worry worse worst worth would write wrong wrote yield young youth").split(" ");
+
+  var answer = "";
+  var guesses = [];
+  var current = "";
+  var row = 0;
+  var over = false;
+
+  var board = document.getElementById("board");
+  var keysEl = document.getElementById("keys");
+  var statusEl = document.getElementById("status");
+
+  var ROWS = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+
+  function buildBoard() {
+    board.innerHTML = "";
+    for (var r = 0; r < 6; r++) {
+      var rowEl = document.createElement("div");
+      rowEl.className = "row";
+      for (var c = 0; c < 5; c++) {
+        var tile = document.createElement("div");
+        tile.className = "tile";
+        tile.setAttribute("role", "gridcell");
+        tile.dataset.r = String(r);
+        tile.dataset.c = String(c);
+        rowEl.appendChild(tile);
+      }
+      board.appendChild(rowEl);
+    }
+  }
+
+  function buildKeys() {
+    keysEl.innerHTML = "";
+    ROWS.forEach(function (letters, index) {
+      var rowEl = document.createElement("div");
+      rowEl.className = "keyrow";
+      if (index === 2) rowEl.appendChild(makeKey("enter", "Enter", true));
+      letters.split("").forEach(function (ch) { rowEl.appendChild(makeKey(ch, ch, false)); });
+      if (index === 2) rowEl.appendChild(makeKey("back", "Del", true));
+      keysEl.appendChild(rowEl);
+    });
+  }
+
+  function makeKey(action, label, wide) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "key" + (wide ? " wide" : "");
+    b.dataset.key = action;
+    b.textContent = label;
+    b.setAttribute("aria-label", action === "enter" ? "Submit guess" : action === "back" ? "Delete letter" : "Letter " + label);
+    return b;
+  }
+
+  function tilesFor(r) {
+    return board.querySelectorAll('.row')[r].querySelectorAll(".tile");
+  }
+
+  function paint() {
+    var tiles = tilesFor(row);
+    for (var i = 0; i < 5; i++) {
+      tiles[i].textContent = current[i] || "";
+      tiles[i].classList.toggle("filled", !!current[i]);
+    }
+  }
+
+  function evaluate(guess, target) {
+    var result = new Array(5).fill("absent");
+    var remaining = {};
+    for (var i = 0; i < 5; i++) {
+      if (guess[i] === target[i]) result[i] = "correct";
+      else remaining[target[i]] = (remaining[target[i]] || 0) + 1;
+    }
+    for (var j = 0; j < 5; j++) {
+      if (result[j] === "correct") continue;
+      if (remaining[guess[j]] > 0) {
+        result[j] = "present";
+        remaining[guess[j]]--;
+      }
+    }
+    return result;
+  }
+
+  var LETTER_SCORE = { absent: 0, present: 1, correct: 2 };
+
+  function colourKeys(guess, result) {
+    for (var i = 0; i < 5; i++) {
+      var ch = guess[i];
+      var key = keysEl.querySelector('[data-key="' + ch + '"]');
+      if (!key) continue;
+      var currentScore = LETTER_SCORE[key.dataset.score || "absent"] || 0;
+      var nextScore = LETTER_SCORE[result[i]];
+      if (nextScore > currentScore || !key.dataset.score) {
+        key.dataset.score = result[i];
+        key.classList.remove("absent", "present", "correct");
+        key.classList.add(result[i]);
+      }
+    }
+  }
+
+  function submit() {
+    if (over) return;
+    if (current.length !== 5) {
+      statusEl.textContent = "Five letters, then enter.";
+      shake();
+      return;
+    }
+    if (WORDS.indexOf(current) === -1) {
+      statusEl.textContent = "\"" + current.toUpperCase() + "\" is not in this word list.";
+      shake();
+      return;
+    }
+    var guess = current;
+    var result = evaluate(guess, answer);
+    var tiles = tilesFor(row);
+    for (var i = 0; i < 5; i++) {
+      (function (index) {
+        setTimeout(function () {
+          tiles[index].textContent = guess[index].toUpperCase();
+          tiles[index].classList.add("flip");
+          setTimeout(function () { tiles[index].classList.remove("flip"); }, 200);
+          tiles[index].classList.add(result[index]);
+        }, index * 90);
+      })(i);
+    }
+    colourKeys(guess, result);
+    guesses.push(guess);
+    statusEl.textContent = "";
+    if (guess === answer) {
+      over = true;
+      setTimeout(function () { statusEl.textContent = "Got it in " + guesses.length + (guesses.length === 1 ? " guess." : " guesses."); }, 500);
+    } else if (row === 5) {
+      over = true;
+      setTimeout(function () { statusEl.textContent = "Out of guesses. The word was " + answer.toUpperCase() + "."; }, 500);
+    } else {
+      row++;
+    }
+    current = "";
+  }
+
+  function shake() {
+    var tiles = tilesFor(row);
+    tiles[0].parentElement.classList.add("shake");
+    setTimeout(function () { tiles[0].parentElement.classList.remove("shake"); }, 320);
+  }
+
+  function press(key) {
+    if (over) return;
+    if (key === "enter") { submit(); return; }
+    if (key === "back") {
+      current = current.slice(0, -1);
+      paint();
+      return;
+    }
+    if (/^[a-z]$/.test(key) && current.length < 5) {
+      current += key;
+      paint();
+    }
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === "Enter") { press("enter"); e.preventDefault(); }
+    else if (e.key === "Backspace") { press("back"); e.preventDefault(); }
+    else if (/^[a-zA-Z]$/.test(e.key)) { press(e.key.toLowerCase()); e.preventDefault(); }
+  });
+
+  keysEl.addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-key]");
+    if (btn) press(btn.dataset.key);
+  });
+
+  function newWord() {
+    answer = WORDS[Math.floor(Math.random() * WORDS.length)];
+    guesses = [];
+    current = "";
+    row = 0;
+    over = false;
+    statusEl.textContent = "";
+    buildBoard();
+    buildKeys();
+    paint();
+  }
+
+  document.getElementById("newWord").addEventListener("click", newWord);
+  newWord();
+})();
+</script>
+</body>
+</html>

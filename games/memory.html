@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Match: A Free Card Pairing Game</title>
+<meta name="description" content="Turn over twelve cards and find six pairs. A move counter, a timer that starts on your first flip, and a best score kept only in your own browser.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/memory.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Memory Match: A Free Card Pairing Game">
+<meta property="og:description" content="Twelve cards, six pairs, one move counter. Free, no account, nothing to download.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/memory.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Memory Match: A Free Card Pairing Game">
+<meta name="twitter:description" content="Twelve cards, six pairs, one move counter.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<style>
+  .meta { display: flex; gap: 18px; justify-content: space-between; font-size: .9rem; color: var(--muted); margin: 8px 0 14px; max-width: 420px; }
+  .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 420px; }
+  .card {
+    position: relative; aspect-ratio: 3 / 4; border: 0; border-radius: 12px;
+    background: linear-gradient(160deg, #23304f, #18213a); cursor: pointer; padding: 0;
+    perspective: 700px; -webkit-tap-highlight-color: transparent;
+  }
+  .card .face {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    border-radius: 12px; backface-visibility: hidden; transition: transform .3s ease;
+    font-size: clamp(1.6rem, 8vw, 2.2rem);
+  }
+  .card .back { background: linear-gradient(160deg, #2b3a60, #1a2440); border: 1px solid rgba(255, 209, 102, .25); color: var(--gold); font-size: 1.1rem; }
+  .card .front { background: #101a31; border: 1px solid rgba(255, 255, 255, .14); transform: rotateY(180deg); }
+  .card.flipped .back { transform: rotateY(180deg); }
+  .card.flipped .front { transform: rotateY(0); }
+  .card.matched .front { border-color: rgba(95, 214, 138, .7); background: #12291f; }
+  .card.matched { cursor: default; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/">Games</a>
+      <a href="/games/sudoku.html">Sudoku</a>
+      <a href="/games/word-guess.html">Word Guess</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Memory Match</h1>
+    <p class="updated">Twelve cards, six pairs, and a move counter that does not lie.</p>
+
+    <div class="toolbar">
+      <button class="btn" id="restart" type="button">New game</button>
+      <span class="hint" id="best"></span>
+    </div>
+
+    <div class="meta">
+      <span id="moves">Moves: 0</span>
+      <span id="pairs">Pairs: 0 / 6</span>
+      <span id="timer">00:00</span>
+    </div>
+
+    <div class="board" id="board" aria-label="Memory card board"></div>
+
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <h2>How to play</h2>
+    <p>Every card hides one of six symbols, and each symbol appears exactly twice. Turn over two cards per move. If they match, they stay face up; if they do not, they turn back after a moment and the move is counted. Clear the board and the game is over.</p>
+    <p>There is no countdown. The timer starts on your first flip and stops when the last pair is found, so a slow, careful game costs you nothing but time you chose to spend.</p>
+
+    <h2>Playing it well</h2>
+    <p>Matching is mostly a memory exercise, but the last few moves are not. Once six cards remain and you know where three pairs are, the order you flip them in does not matter — you cannot lose. The moves that decide your score are the early ones, where a card you have already seen is worth more than a card you have not.</p>
+    <p>The counter is honest: every pair of flips is one move, including a pair you already know matches. A perfect game with no wasted flips is impossible unless you get lucky, but ten to twelve moves is a good run.</p>
+
+    <h2>What gets saved</h2>
+    <p>Your best move count is stored in your browser's local storage under a single key, so it survives a refresh and stays on your device. Nothing is sent anywhere, there is no name attached to it, and clearing your browser data clears the record too.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SYMBOLS = ["🦊", "🐼", "🌵", "🍄", "🚀", "🎧"];
+  var STORAGE_KEY = "mg-memory-best";
+
+  var board = document.getElementById("board");
+  var movesEl = document.getElementById("moves");
+  var pairsEl = document.getElementById("pairs");
+  var timerEl = document.getElementById("timer");
+  var statusEl = document.getElementById("status");
+  var bestEl = document.getElementById("best");
+
+  var first = null;
+  var second = null;
+  var lock = false;
+  var moves = 0;
+  var pairs = 0;
+  var seconds = 0;
+  var ticking = null;
+  var started = false;
+
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function fmt(total) {
+    var m = Math.floor(total / 60), s = total % 60;
+    return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+  }
+
+  function startTimer() {
+    if (started) return;
+    started = true;
+    ticking = setInterval(function () {
+      seconds++;
+      timerEl.textContent = fmt(seconds);
+    }, 1000);
+  }
+
+  function stopTimer() {
+    if (ticking) clearInterval(ticking);
+    ticking = null;
+  }
+
+  function showBest() {
+    var best = null;
+    try { best = localStorage.getItem(STORAGE_KEY); } catch (e) { best = null; }
+    bestEl.textContent = best ? "Best: " + best + " moves" : "No best score yet";
+  }
+
+  function saveBest() {
+    try {
+      var current = localStorage.getItem(STORAGE_KEY);
+      if (!current || moves < Number(current)) {
+        localStorage.setItem(STORAGE_KEY, String(moves));
+      }
+    } catch (e) { /* storage can be blocked; the game still works */ }
+    showBest();
+  }
+
+  function deal() {
+    board.innerHTML = "";
+    first = null;
+    second = null;
+    lock = false;
+    moves = 0;
+    pairs = 0;
+    seconds = 0;
+    started = false;
+    stopTimer();
+    movesEl.textContent = "Moves: 0";
+    pairsEl.textContent = "Pairs: 0 / 6";
+    timerEl.textContent = "00:00";
+    statusEl.textContent = "";
+
+    var deck = shuffle(SYMBOLS.concat(SYMBOLS));
+    deck.forEach(function (symbol, index) {
+      var card = document.createElement("button");
+      card.type = "button";
+      card.className = "card";
+      card.dataset.symbol = symbol;
+      card.setAttribute("aria-label", "Card " + (index + 1) + ", face down");
+      card.innerHTML = '<span class="face back" aria-hidden="true">?</span><span class="face front" aria-hidden="true">' + symbol + "</span>";
+      card.addEventListener("click", function () { flip(card); });
+      board.appendChild(card);
+    });
+  }
+
+  function flip(card) {
+    if (lock || card === first || card.classList.contains("matched") || card.classList.contains("flipped")) return;
+    startTimer();
+    card.classList.add("flipped");
+    card.setAttribute("aria-label", "Card showing " + card.dataset.symbol);
+    if (!first) { first = card; return; }
+    second = card;
+    moves++;
+    movesEl.textContent = "Moves: " + moves;
+    if (first.dataset.symbol === second.dataset.symbol) {
+      first.classList.add("matched");
+      second.classList.add("matched");
+      pairs++;
+      pairsEl.textContent = "Pairs: " + pairs + " / 6";
+      first = null;
+      second = null;
+      if (pairs === 6) finish();
+    } else {
+      lock = true;
+      setTimeout(function () {
+        [first, second].forEach(function (c) {
+          c.classList.remove("flipped");
+          c.setAttribute("aria-label", "Card, face down");
+        });
+        first = null;
+        second = null;
+        lock = false;
+      }, 750);
+    }
+  }
+
+  function finish() {
+    stopTimer();
+    saveBest();
+    statusEl.textContent = "Cleared in " + moves + " moves and " + fmt(seconds) + ".";
+  }
+
+  document.getElementById("restart").addEventListener("click", deal);
+  showBest();
+  deal();
+})();
+</script>
+</body>
+</html>
