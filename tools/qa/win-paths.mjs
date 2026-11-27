@@ -1070,8 +1070,10 @@ add({
   q.clickSel("#restart");
   await q.sleep(40);
   const after = { score: q.txt("#score"), top: q.txt("#topTile"), best: q.txt("#best") };
+  // A fresh board deals two random tiles, so the highest can be 2 or 4.
+  const afterTop = Number(after.top);
   return {
-    ok: moves > 20 && score > 0 && best === score && after.score === "0" && after.top === "2",
+    ok: moves > 20 && score > 0 && best === score && after.score === "0" && (afterTop === 2 || afterTop === 4),
     moves, score, top, best, after, note: "the 2048 banner needs a much longer game than a QA run allows"
   };
 `
