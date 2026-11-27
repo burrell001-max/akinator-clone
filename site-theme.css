@@ -3,15 +3,15 @@
    <style> block / guide.css, so it overrides the old dark theme without touching content. */
 
 :root {
-  --ink: #17384c;
-  --ink-soft: #3b6078;
+  --ink: #0f1c25;
+  --ink-soft: #22323d;
   --blue: #1c63ad;
   --blue-deep: #0e4f9c;
   --orange: #d98200;
   --line: #cfe0f7;
   /* the old pages read colours from these variables, so re-pointing them re-themes most things */
-  --white: #17384c;
-  --smoke: #3b6078;
+  --white: #0f1c25;
+  --smoke: #22323d;
   --gold: #d98200;
   --gold-dim: #1c63ad;
   --glow: #4a8df0;
@@ -92,7 +92,7 @@ strong { color: var(--ink); }
 main a, article a, .wrap a { color: var(--blue); }
 main a:hover, article a:hover, .wrap a:hover { color: var(--blue-deep); }
 .kicker { color: var(--blue); letter-spacing: .5px; text-transform: none; font-size: .85rem; font-weight: 600; }
-.meta, .pg-note, .time-estimate, .updated { color: #41647a; }
+.meta, .pg-note, .time-estimate, .updated { color: #33505f; }
 .trait-list strong, .round strong { color: var(--ink); }
 
 /* ── Chips, cards, lists ── */

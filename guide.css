@@ -2,8 +2,8 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --ink: #17384c;
-  --ink-soft: #3b6078;
+  --ink: #0f1c25;
+  --ink-soft: #22323d;
   --blue: #1c63ad;
   --blue-deep: #0e4f9c;
   --orange: #d98200;
@@ -52,7 +52,7 @@ body::before {
 .top-nav a:hover { color: var(--blue-deep); }
 .top-nav a.nav-play { color: var(--blue-deep); font-weight: 700; }
 
-.breadcrumbs { font-size: .8rem; color: #28506a; margin: 4px 0 16px; }
+.breadcrumbs { font-size: .8rem; color: #26414f; margin: 4px 0 16px; }
 .breadcrumbs a { color: var(--blue); text-decoration: none; }
 .breadcrumbs a:hover { color: var(--blue-deep); text-decoration: underline; }
 
@@ -72,7 +72,7 @@ article h1 {
   line-height: 1.2;
   margin-bottom: 10px;
 }
-.byline { font-size: .82rem; color: #41647a; margin-bottom: 22px; }
+.byline { font-size: .82rem; color: #33505f; margin-bottom: 22px; }
 .lede { font-size: 1.05rem; line-height: 1.75; color: var(--ink); margin-bottom: 22px; }
 
 .quick-facts {
