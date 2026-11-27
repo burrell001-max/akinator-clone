@@ -152,6 +152,60 @@ footer {
 footer a { color: var(--muted); text-decoration: none; }
 footer a:hover { color: var(--text); }
 
+/* Shared game components added with the category library. */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 8px; }
+.chip {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .16);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 7px 13px;
+  font-size: .85rem;
+  cursor: pointer;
+}
+.chip:hover { border-color: rgba(255, 209, 102, .5); color: var(--text); }
+.chip[aria-pressed="true"] {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #20180a;
+  font-weight: 700;
+}
+.filter-note { font-size: .85rem; color: var(--muted); margin: 0 0 6px; }
+.empty-state {
+  border: 1px dashed rgba(255, 209, 102, .35);
+  border-radius: 14px;
+  padding: 22px;
+  margin: 18px 0;
+  color: var(--muted);
+}
+.empty-state strong { color: var(--gold); }
+.game-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+}
+.stat-row { display: flex; gap: 20px; flex-wrap: wrap; font-size: .9rem; color: var(--muted); margin: 0 0 12px; }
+.stat-row b { color: var(--text); font-weight: 700; }
+.big { font-size: 1.5rem; font-weight: 700; color: var(--gold); }
+.note {
+  border-left: 3px solid var(--gold-dim);
+  background: rgba(255, 209, 102, .06);
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: .92rem;
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.pill {
+  display: inline-block; font-size: .72rem; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--muted); border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 999px; padding: 3px 9px; margin: 0 6px 6px 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }

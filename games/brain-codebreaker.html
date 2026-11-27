@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codebreaker: A Free Logic and Deduction Brain Game</title>
+<meta name="description" content="Break a hidden code using exact and near-miss feedback. Three difficulty levels, ten guesses, keyboard or keypad play, and a best score stored on your device.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/brain-codebreaker.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Codebreaker: A Free Logic and Deduction Brain Game">
+<meta property="og:description" content="Guess a hidden code from exact and near-miss feedback. Three difficulty levels, no account needed.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/brain-codebreaker.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Codebreaker: A Free Logic and Deduction Brain Game">
+<meta name="twitter:description" content="Guess a hidden code from exact and near-miss feedback.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Codebreaker",
+  "url": "https://mindgenieai.xyz/games/brain-codebreaker.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A deductive codebreaking game with exact and near-miss feedback, three difficulty levels and a locally stored best score.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .board { display: grid; gap: 8px; margin: 0 0 16px; }
+  .guess-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; background: #111a30; border: 1px solid rgba(255,255,255,.08); border-radius: 10px; padding: 8px 10px; }
+  .slots { display: flex; gap: 6px; }
+  .slot {
+    width: 34px; height: 40px; display: grid; place-items: center; border-radius: 7px;
+    background: #0c1426; border: 1px solid rgba(255,255,255,.12);
+    color: var(--text); font-weight: 700; font-size: 1.05rem;
+  }
+  .slot.current { border-color: var(--gold); }
+  .feedback { display: flex; gap: 8px; font-size: .8rem; color: var(--muted); white-space: nowrap; }
+  .feedback .exact { color: var(--ok); font-weight: 700; }
+  .feedback .near { color: var(--gold); font-weight: 700; }
+  .keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-width: 420px; }
+  .keypad button {
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--line);
+    border-radius: 10px; padding: 14px 0; font-size: 1.05rem; font-weight: 700; cursor: pointer;
+  }
+  .keypad button:hover { border-color: rgba(255,209,102,.55); }
+  .keypad .wide { grid-column: span 2; font-size: .84rem; }
+  .rules-list li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/word-anagram.html">Anagram Hunt</a>
+      <a href="/games/memory-echo.html">Pattern Echo</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Codebreaker</h1>
+    <p class="updated">A deduction game: find the hidden code from feedback alone.</p>
+
+    <div class="toolbar">
+      <label for="level" class="hint">Difficulty</label>
+      <select id="level">
+        <option value="easy">Easy — 3 digits, 1–5, no repeats</option>
+        <option value="medium" selected>Medium — 4 digits, 1–6</option>
+        <option value="hard">Hard — 5 digits, 1–8</option>
+      </select>
+      <button class="btn" type="button" id="restart">New code</button>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Guess <b id="guessNo">1</b> of <b id="guessMax">10</b></span>
+        <span>Best: <b id="best">—</b></span>
+      </div>
+
+      <div class="board" id="board" aria-label="Your guesses"></div>
+
+      <div class="slot-row" id="entry" aria-label="Current guess" style="display:flex;gap:6px;margin:0 0 14px"></div>
+
+      <div class="keypad" id="pad"></div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <p class="hint">Green number: right digit, right position. Gold number: right digit, wrong position.</p>
+    </div>
+
+    <h2>How to play</h2>
+    <p>A hidden code has been chosen from the digits allowed by your difficulty. Type a guess of the right length and submit it. Each guess is scored twice: <strong>exact</strong> counts digits that are correct and in the right position, and <strong>near</strong> counts digits that are in the code but in a different position.</p>
+    <p>Digits can repeat on Medium and Hard, so a guess of <code>1124</code> is legal. When a digit appears more than once, the scoring uses the smallest of the counts on each side — three 2s in your guess cannot all match a single 2 in the code.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul class="rules-list">
+      <li><strong>Easy:</strong> three digits from 1 to 5, no repeats, eight guesses.</li>
+      <li><strong>Medium:</strong> four digits from 1 to 6, repeats allowed, ten guesses.</li>
+      <li><strong>Hard:</strong> five digits from 1 to 8, repeats allowed, twelve guesses.</li>
+      <li>You win by matching the code exactly. Your score is the number of guesses it took, and the lowest score per difficulty is kept in your browser.</li>
+      <li>Running out of guesses reveals the code, and the round counts as a loss — the best score is not touched.</li>
+    </ul>
+
+    <h2>Strategy that actually helps</h2>
+    <p>Open with a guess that uses distinct digits, even on a difficulty that allows repeats. A code like <code>1124</code> tells you less about the other digits than <code>1234</code> does, because a repeat wastes one of your scoring slots on information you already had.</p>
+    <p>Then work by elimination rather than by inspiration. If a digit scores zero exact and zero near, it is not in the code and you can remove it from every future guess. If a digit scores near but never exact, it belongs somewhere other than where you put it, and moving it one place at a time tells you which place. On Hard, the winning habit is to spend the first three guesses mapping which digits exist before trying to order them at all.</p>
+
+    <h2>Why this is a brain game</h2>
+    <p>Codebreaking is the smallest complete deduction game there is: every guess produces a constraint, and the solution follows from the constraints alone. There is no luck once the code is set and no way to grind — the only thing that improves is your ability to read the feedback. That is also why the score is guesses rather than time.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var LEVELS = {
+    easy:   { length: 3, digits: 5, repeats: false, guesses: 8 },
+    medium: { length: 4, digits: 6, repeats: true,  guesses: 10 },
+    hard:   { length: 5, digits: 8, repeats: true,  guesses: 12 }
+  };
+
+  var levelEl = document.getElementById("level");
+  var boardEl = document.getElementById("board");
+  var entryEl = document.getElementById("entry");
+  var padEl = document.getElementById("pad");
+  var statusEl = document.getElementById("status");
+  var guessNoEl = document.getElementById("guessNo");
+  var guessMaxEl = document.getElementById("guessMax");
+  var bestEl = document.getElementById("best");
+
+  var cfg = LEVELS.medium;
+  var code = [];
+  var entry = "";
+  var history = [];
+  var over = false;
+
+  function bestKey() { return "mg-codebreaker-best-" + levelEl.value; }
+
+  function showBest() {
+    var best = MG.store.get(bestKey(), null);
+    bestEl.textContent = best === null ? "—" : best + (best === 1 ? " guess" : " guesses");
+  }
+
+  function makeCode() {
+    var pool = [];
+    for (var d = 1; d <= cfg.digits; d++) pool.push(String(d));
+    if (!cfg.repeats) {
+      code = MG.shuffle(pool).slice(0, cfg.length);
+      return;
+    }
+    code = [];
+    for (var i = 0; i < cfg.length; i++) code.push(MG.pick(pool));
+  }
+
+  function score(guess) {
+    var exact = 0, near = 0;
+    var codeCounts = {}, guessCounts = {};
+    for (var i = 0; i < cfg.length; i++) {
+      if (guess[i] === code[i]) exact++;
+      else {
+        codeCounts[code[i]] = (codeCounts[code[i]] || 0) + 1;
+        guessCounts[guess[i]] = (guessCounts[guess[i]] || 0) + 1;
+      }
+    }
+    Object.keys(guessCounts).forEach(function (d) {
+      near += Math.min(guessCounts[d], codeCounts[d] || 0);
+    });
+    return { exact: exact, near: near };
+  }
+
+  function renderEntry() {
+    entryEl.innerHTML = "";
+    for (var i = 0; i < cfg.length; i++) {
+      var slot = document.createElement("div");
+      slot.className = "slot" + (i === entry.length ? " current" : "");
+      slot.textContent = entry[i] || "";
+      entryEl.appendChild(slot);
+    }
+  }
+
+  function renderHistory() {
+    boardEl.innerHTML = "";
+    history.forEach(function (row, index) {
+      var wrap = document.createElement("div");
+      wrap.className = "guess-row";
+      var slots = document.createElement("div");
+      slots.className = "slots";
+      row.guess.split("").forEach(function (d) {
+        var s = document.createElement("div");
+        s.className = "slot";
+        s.textContent = d;
+        slots.appendChild(s);
+      });
+      var fb = document.createElement("div");
+      fb.className = "feedback";
+      fb.innerHTML = '<span class="exact">' + row.exact + ' exact</span><span class="near">' + row.near + " near</span>";
+      var label = document.createElement("span");
+      label.className = "sr-only";
+      label.textContent = "Guess " + (index + 1) + ": " + row.guess.split("").join(" ") + ", " + row.exact + " exact, " + row.near + " near";
+      wrap.appendChild(slots);
+      wrap.appendChild(fb);
+      wrap.appendChild(label);
+      boardEl.appendChild(wrap);
+    });
+  }
+
+  function buildPad() {
+    padEl.innerHTML = "";
+    for (var d = 1; d <= 8; d++) {
+      (function (digit) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.textContent = String(digit);
+        b.dataset.digit = String(digit);
+        b.disabled = digit > cfg.digits;
+        padEl.appendChild(b);
+      })(d);
+    }
+    var del = document.createElement("button");
+    del.type = "button";
+    del.className = "wide";
+    del.dataset.action = "del";
+    del.textContent = "Delete";
+    padEl.appendChild(del);
+
+    var enter = document.createElement("button");
+    enter.type = "button";
+    enter.className = "wide";
+    enter.dataset.action = "enter";
+    enter.textContent = "Submit";
+    padEl.appendChild(enter);
+  }
+
+  function submit() {
+    if (over) return;
+    if (entry.length !== cfg.length) {
+      statusEl.textContent = "The code is " + cfg.length + " digits long.";
+      return;
+    }
+    if (history.length && entry === history[history.length - 1].guess) {
+      statusEl.textContent = "You already tried that one.";
+      return;
+    }
+    var s = score(entry);
+    history.push({ guess: entry, exact: s.exact, near: s.near });
+    renderHistory();
+    entry = "";
+    renderEntry();
+    guessNoEl.textContent = String(Math.min(history.length + 1, cfg.guesses));
+
+    if (s.exact === cfg.length) {
+      over = true;
+      var used = history.length;
+      var best = MG.store.get(bestKey(), null);
+      if (best === null || used < best) {
+        MG.store.set(bestKey(), used);
+        showBest();
+        statusEl.textContent = "Cracked in " + used + (used === 1 ? " guess" : " guesses") + " — a new best.";
+      } else {
+        statusEl.textContent = "Cracked in " + used + (used === 1 ? " guess" : " guesses") + ".";
+      }
+      return;
+    }
+    if (history.length >= cfg.guesses) {
+      over = true;
+      statusEl.textContent = "Out of guesses. The code was " + code.join(" ") + ".";
+      return;
+    }
+    statusEl.textContent = "";
+  }
+
+  function press(digit) {
+    if (over || entry.length >= cfg.length) return;
+    entry += digit;
+    renderEntry();
+  }
+
+  function backspace() {
+    if (over) return;
+    entry = entry.slice(0, -1);
+    renderEntry();
+  }
+
+  function newGame() {
+    cfg = LEVELS[levelEl.value];
+    code = [];
+    entry = "";
+    history = [];
+    over = false;
+    guessMaxEl.textContent = String(cfg.guesses);
+    guessNoEl.textContent = "1";
+    statusEl.textContent = "";
+    makeCode();
+    buildPad();
+    renderEntry();
+    renderHistory();
+    showBest();
+  }
+
+  padEl.addEventListener("click", function (e) {
+    var btn = e.target.closest("button");
+    if (!btn || btn.disabled) return;
+    if (btn.dataset.action === "del") backspace();
+    else if (btn.dataset.action === "enter") submit();
+    else press(btn.dataset.digit);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (/^[1-8]$/.test(e.key)) {
+      if (Number(e.key) <= cfg.digits) { press(e.key); e.preventDefault(); }
+    } else if (e.key === "Backspace") { backspace(); e.preventDefault(); }
+    else if (e.key === "Enter") { submit(); e.preventDefault(); }
+  });
+
+  document.getElementById("restart").addEventListener("click", newGame);
+  levelEl.addEventListener("change", newGame);
+
+  newGame();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Nonogram: A Six-by-Six Picture Logic Puzzle</title>
+<meta name="description" content="One small nonogram per day, generated from the date so everyone gets the same grid. Read the number clues, fill the cells, and keep a streak.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/daily-nonogram.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Daily Nonogram: A Six-by-Six Picture Logic Puzzle">
+<meta property="og:description" content="One date-seeded nonogram per day. Read the clues, fill the cells, keep your streak.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/daily-nonogram.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Daily Nonogram: A Six-by-Six Picture Logic Puzzle">
+<meta name="twitter:description" content="One date-seeded nonogram per day, with a streak to keep.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Daily Nonogram",
+  "url": "https://mindgenieai.xyz/games/daily-nonogram.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A date-seeded six-by-six nonogram with row and column clues, daily completion tracking and a streak.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .board-scroll { overflow-x: auto; padding-bottom: 6px; }
+  table.nono { border-collapse: collapse; margin: 6px auto 0; }
+  table.nono th, table.nono td { border: 1px solid rgba(255, 255, 255, .14); padding: 0; }
+  table.nono th { color: var(--muted); font-weight: 600; font-size: .8rem; vertical-align: bottom; padding: 4px 2px; }
+  table.nono th.rowclue { text-align: right; padding: 0 8px; white-space: nowrap; letter-spacing: .04em; }
+  table.nono th.rowclue span, table.nono th.colclue span { display: inline-block; }
+  table.nono th.colclue { height: 64px; width: 34px; }
+  table.nono th.colclue span { display: block; font-size: .78rem; line-height: 1.15; }
+  .cell {
+    width: 38px; height: 38px; background: #101a31; border: 0; cursor: pointer;
+    color: var(--muted); font-size: .95rem; font-weight: 700;
+  }
+  .cell:hover { background: #17233d; }
+  .cell.filled { background: var(--gold); }
+  .cell.marked { color: #6f7b96; }
+  .cell.solved { background: #2f7d55; }
+  .mode-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/brain-codebreaker.html">Codebreaker</a>
+      <a href="/games/memory-echo.html">Pattern Echo</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Daily Nonogram</h1>
+    <p class="updated">Puzzle for <span id="dateLabel">today</span> — the same grid for everyone, all day.</p>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Streak: <b id="streak">0</b></span>
+        <span>Solved today: <b id="todayState">no</b></span>
+        <span>Filled: <b id="filledCount">0</b></span>
+      </div>
+
+      <div class="board-scroll">
+        <table class="nono" id="board" aria-label="Six by six nonogram grid"></table>
+      </div>
+
+      <div class="mode-row">
+        <button class="btn ghost" type="button" id="clear">Clear marks</button>
+        <button class="btn" type="button" id="check">Check</button>
+      </div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <p class="hint">Tap a cell to fill it, tap again to mark it empty with an ✕, tap a third time to clear it.</p>
+    </div>
+
+    <h2>How to play</h2>
+    <p>A nonogram gives you numbers instead of a picture. Each number beside a row or above a column is the length of a run of filled cells, in order. Two numbers mean two separate runs with at least one empty cell between them.</p>
+    <p>On a row labelled <strong>2 1</strong>, six cells long, the row contains a block of two filled cells, then at least one gap, then a single filled cell. The gap could be one cell or several, and the runs could start anywhere that fits — that is the puzzle. Use the ✕ mark for cells you have proved are empty; it does not count as filled and it will not block a win.</p>
+    <p>You win when every row and every column shows exactly the runs its clue asks for. The check is on the clues, not on one stored answer, so any arrangement that satisfies all twelve clues counts as solved.</p>
+
+    <h2>Solving a small grid</h2>
+    <p>Start with the biggest numbers. A clue of 6 on a six-cell row means every cell is filled; a clue of 5 leaves only two possible positions. Add the runs and the gaps together: if the numbers in a row plus the minimum gaps between them equal the width, the row is fully determined and can be filled in immediately.</p>
+    <p>Columns and rows constrain each other, so a single deduction is often worth two. Once a cell is filled, the column clue above it loses one from a run, and once a cell is marked empty it splits a column into two shorter problems. On a six-by-six grid the whole puzzle usually falls to five or six deductions.</p>
+
+    <h2>The daily part</h2>
+    <p>The grid is generated from the calendar date, so it is identical for everyone playing today and different tomorrow. Solve it and the date is saved in your browser; the streak counts consecutive days back from today, and it survives a refresh because it never left your device.</p>
+    <p>There is no timer and no failure state — a wrong mark is just a mark. Clear the board and start again if you talk yourself into a corner.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var SIZE = 6;
+  var STORE_KEY = "mg-nonogram-solved";
+
+  var boardEl = document.getElementById("board");
+  var statusEl = document.getElementById("status");
+  var streakEl = document.getElementById("streak");
+  var todayEl = document.getElementById("todayState");
+  var filledEl = document.getElementById("filledCount");
+  var dateEl = document.getElementById("dateLabel");
+
+  var solution = [];
+  var rowClues = [];
+  var colClues = [];
+  var grid = [];
+  var solved = false;
+
+  function runsOf(line) {
+    var out = [], run = 0;
+    for (var i = 0; i < line.length; i++) {
+      if (line[i] === 1) run++;
+      else if (run) { out.push(run); run = 0; }
+    }
+    if (run) out.push(run);
+    return out.length ? out : [0];
+  }
+
+  function sameRuns(a, b) {
+    if (a.length !== b.length) return false;
+    for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    return true;
+  }
+
+  function buildPuzzle() {
+    var seed = "nonogram-" + MG.today();
+    var filled = 0;
+    var attempt = 0;
+    while (attempt < 40) {
+      var rng = MG.seeded(seed + "-" + attempt);
+      solution = [];
+      filled = 0;
+      for (var i = 0; i < SIZE * SIZE; i++) {
+        var on = rng() < 0.55 ? 1 : 0;
+        solution.push(on);
+        filled += on;
+      }
+      if (filled >= 14 && filled <= 24) break;
+      attempt++;
+    }
+    rowClues = [];
+    colClues = [];
+    for (var r = 0; r < SIZE; r++) rowClues.push(runsOf(solution.slice(r * SIZE, r * SIZE + SIZE)));
+    for (var c = 0; c < SIZE; c++) {
+      var col = [];
+      for (var k = 0; k < SIZE; k++) col.push(solution[k * SIZE + c]);
+      colClues.push(runsOf(col));
+    }
+    grid = new Array(SIZE * SIZE).fill(0);
+    solved = false;
+  }
+
+  function solvedDates() {
+    var list = MG.store.get(STORE_KEY, []);
+    return Array.isArray(list) ? list : [];
+  }
+
+  function markSolvedToday() {
+    var list = solvedDates();
+    if (list.indexOf(MG.today()) === -1) {
+      list.push(MG.today());
+      if (list.length > 400) list = list.slice(list.length - 400);
+      MG.store.set(STORE_KEY, list);
+    }
+  }
+
+  function streakCount() {
+    var list = solvedDates();
+    var cursor = new Date();
+    function key(d) {
+      return d.getFullYear() + "-" + MG.pad(d.getMonth() + 1) + "-" + MG.pad(d.getDate());
+    }
+    if (list.indexOf(key(cursor)) === -1) cursor.setDate(cursor.getDate() - 1);
+    var n = 0;
+    while (list.indexOf(key(cursor)) !== -1 && n < 400) {
+      n++;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    return n;
+  }
+
+  function render() {
+    boardEl.innerHTML = "";
+    var thead = document.createElement("thead");
+    var headRow = document.createElement("tr");
+    var corner = document.createElement("th");
+    corner.setAttribute("aria-hidden", "true");
+    headRow.appendChild(corner);
+    colClues.forEach(function (clue) {
+      var th = document.createElement("th");
+      th.className = "colclue";
+      th.scope = "col";
+      clue.forEach(function (n) {
+        var span = document.createElement("span");
+        span.textContent = String(n);
+        th.appendChild(span);
+      });
+      th.setAttribute("aria-label", "Column clue " + clue.join(" "));
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    boardEl.appendChild(thead);
+
+    var tbody = document.createElement("tbody");
+    for (var r = 0; r < SIZE; r++) {
+      var tr = document.createElement("tr");
+      var th = document.createElement("th");
+      th.className = "rowclue";
+      th.scope = "row";
+      th.textContent = rowClues[r].join(" ");
+      th.setAttribute("aria-label", "Row clue " + rowClues[r].join(" "));
+      tr.appendChild(th);
+      for (var c = 0; c < SIZE; c++) {
+        var idx = r * SIZE + c;
+        var td = document.createElement("td");
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "cell";
+        btn.dataset.idx = String(idx);
+        btn.setAttribute("aria-label", "Row " + (r + 1) + " column " + (c + 1));
+        td.appendChild(btn);
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    }
+    boardEl.appendChild(tbody);
+    paint();
+  }
+
+  function paint() {
+    var cells = boardEl.querySelectorAll(".cell");
+    var count = 0;
+    Array.prototype.forEach.call(cells, function (cell) {
+      var v = grid[Number(cell.dataset.idx)];
+      cell.classList.toggle("filled", v === 1);
+      cell.classList.toggle("marked", v === 2);
+      cell.classList.toggle("solved", solved && v === 1);
+      cell.textContent = v === 2 ? "✕" : "";
+      if (v === 1) count++;
+    });
+    filledEl.textContent = String(count);
+  }
+
+  function cluesMatch() {
+    for (var r = 0; r < SIZE; r++) {
+      var row = grid.slice(r * SIZE, r * SIZE + SIZE).map(function (v) { return v === 1 ? 1 : 0; });
+      if (!sameRuns(runsOf(row), rowClues[r])) return false;
+    }
+    for (var c = 0; c < SIZE; c++) {
+      var col = [];
+      for (var k = 0; k < SIZE; k++) col.push(grid[k * SIZE + c] === 1 ? 1 : 0);
+      if (!sameRuns(runsOf(col), colClues[c])) return false;
+    }
+    return true;
+  }
+
+  function toggle(idx) {
+    if (solved) return;
+    grid[idx] = (grid[idx] + 1) % 3;
+    paint();
+    if (cluesMatch()) {
+      solved = true;
+      markSolvedToday();
+      paint();
+      updateStats();
+      statusEl.textContent = "Solved. Every row and column matches its clue — come back tomorrow for a new grid.";
+    }
+  }
+
+  function updateStats() {
+    var list = solvedDates();
+    todayEl.textContent = list.indexOf(MG.today()) === -1 ? "no" : "yes";
+    streakEl.textContent = String(streakCount());
+  }
+
+  boardEl.addEventListener("click", function (e) {
+    var cell = e.target.closest(".cell");
+    if (cell) toggle(Number(cell.dataset.idx));
+  });
+
+  document.getElementById("clear").addEventListener("click", function () {
+    if (solved) return;
+    grid = new Array(SIZE * SIZE).fill(0);
+    paint();
+    statusEl.textContent = "Board cleared.";
+  });
+
+  document.getElementById("check").addEventListener("click", function () {
+    if (solved) { statusEl.textContent = "Already solved."; return; }
+    var wrongRows = 0, wrongCols = 0;
+    for (var r = 0; r < SIZE; r++) {
+      var row = grid.slice(r * SIZE, r * SIZE + SIZE).map(function (v) { return v === 1 ? 1 : 0; });
+      if (!sameRuns(runsOf(row), rowClues[r])) wrongRows++;
+    }
+    for (var c = 0; c < SIZE; c++) {
+      var col = [];
+      for (var k = 0; k < SIZE; k++) col.push(grid[k * SIZE + c] === 1 ? 1 : 0);
+      if (!sameRuns(runsOf(col), colClues[c])) wrongCols++;
+    }
+    if (!wrongRows && !wrongCols) statusEl.textContent = "All twelve clues match.";
+    else statusEl.textContent = wrongRows + (wrongRows === 1 ? " row" : " rows") + " and " + wrongCols + (wrongCols === 1 ? " column" : " columns") + " do not match yet.";
+  });
+
+  var now = new Date();
+  dateEl.textContent = now.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  buildPuzzle();
+  render();
+  updateStats();
+  if (solvedDates().indexOf(MG.today()) !== -1) {
+    statusEl.textContent = "You have already solved today's puzzle. The grid is still here to inspect, and a new one arrives tomorrow.";
+    solved = true;
+    paint();
+  }
+})();
+</script>
+</body>
+</html>
