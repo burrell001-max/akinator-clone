@@ -22,7 +22,8 @@ await load(
   "langs.js", "games/i18n-slugs.js",
   "games/i18n-data-a.js", "games/i18n-data-b.js", "games/i18n-data-c.js",
   "games/i18n-data-d.js", "games/i18n-data-e.js", "games/i18n-data-f.js",
-  "games/i18n-data-g.js", "games/i18n-data-h.js", "games/i18n-data-i.js"
+  "games/i18n-data-g.js", "games/i18n-data-h.js", "games/i18n-data-i.js",
+  "games/i18n-guides.js"
 );
 
 const LANGS = sandbox.LANGS;
@@ -63,14 +64,27 @@ for (const { code } of LANGS) {
   if (broken.length) warn(`${code}: ${broken.length} status line(s) with wrong placeholders, e.g. ${broken[0]}`);
 }
 
-/* Guides: one entry per mechanic family in every language. */
+/* Guides: one entry per mechanic family in every language, plus the rules and
+   scoring bullets the English pages list. */
 const guideParts = [E, F].map((part) => part.guides);
+const guidePoints = sandbox.MGI18N_GUIDE_POINTS || {};
+const bulletCount = (code, family) => (guidePoints[code] && guidePoints[code][family] ? guidePoints[code][family].length : 0);
+const expectedBullets = 4;
 for (const { code } of LANGS) {
   const table = guideParts.reduce((merged, part) => Object.assign(merged, part[code] || {}), {});
   for (const family of FAMILIES) {
     const paragraphs = table[family];
     if (!paragraphs || !paragraphs.length) warn(`${code}: missing guide for ${family}`);
     else if (paragraphs.some((para) => !para || para.length < 25)) warn(`${code}: thin guide paragraph in ${family}`);
+
+    const bullets = (guidePoints[code] && guidePoints[code][family]) || [];
+    if (bullets.length < expectedBullets) warn(`${code}: ${family} has ${bullets.length} of ${expectedBullets} rules bullets`);
+    else if (bullets.some((line) => typeof line !== "string" || line.slice(0, 2) !== "- " || line.length < 15)) {
+      warn(`${code}: malformed rules bullet in ${family}`);
+    }
+    if (code !== "en" && bulletCount(code, family) !== bulletCount("en", family)) {
+      warn(`${code}: ${family} rules bullets do not match the English count`);
+    }
   }
 }
 

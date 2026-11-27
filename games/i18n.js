@@ -63,6 +63,36 @@
     });
   });
 
+  /* Rules and scoring bullets live in their own table and are appended to the
+     lead paragraphs of the same family. The table is large, so it is fetched
+     only once a non-English language is in use. */
+  function mergeGuidePoints() {
+    var points = window.MGI18N_GUIDE_POINTS || {};
+    Object.keys(points).forEach(function (code) {
+      var table = DATA.guides[code];
+      if (!table) return;
+      Object.keys(points[code]).forEach(function (family) {
+        if (Array.isArray(table[family])) table[family] = table[family].concat(points[code][family]);
+        else table[family] = points[code][family].slice();
+      });
+    });
+  }
+
+  var guidePointsPending = false;
+  function loadGuidePoints() {
+    if (window.MGI18N_GUIDE_POINTS || guidePointsPending) return;
+    if (!document.querySelector("[data-mg-guide]")) return;
+    guidePointsPending = true;
+    var script = document.createElement("script");
+    script.src = "/games/i18n-guides.js?v=6";
+    script.async = true;
+    script.onload = function () {
+      mergeGuidePoints();
+      apply(document);
+    };
+    document.head.appendChild(script);
+  }
+
   function langMeta(code) {
     for (var i = 0; i < LANGS.length; i++) if (LANGS[i].code === code) return LANGS[i];
     return null;
@@ -395,7 +425,25 @@
       }
       el.hidden = false;
       el.textContent = "";
+      var list = null;
       paragraphs.forEach(function (text) {
+        /* A leading "- " marks a rules or scoring bullet. */
+        if (typeof text === "string" && text.slice(0, 2) === "- ") {
+          if (!list) {
+            var heading = document.createElement("h3");
+            heading.className = "mg-guide-h";
+            heading.textContent = t("rules") || "Rules and scoring";
+            el.appendChild(heading);
+            list = document.createElement("ul");
+            list.className = "mg-guide-list";
+            el.appendChild(list);
+          }
+          var item = document.createElement("li");
+          item.textContent = text.slice(2);
+          list.appendChild(item);
+          return;
+        }
+        list = null;
         var para = document.createElement("p");
         para.textContent = text;
         el.appendChild(para);
@@ -403,6 +451,7 @@
     });
 
     each(document, STATUS_SELECTOR, function (el) { renderStatusEl(el, true); });
+    if (current !== "en") loadGuidePoints();
     paintSwitcher();
 
     var event;

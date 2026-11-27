@@ -60,10 +60,10 @@ const SCRIPTS = `    <script src="/langs.js"></script>
     <script src="/games/i18n-data-g.js"></script>
     <script src="/games/i18n-data-h.js"></script>
     <script src="/games/i18n-data-i.js?v=5"></script>
-    <script src="/games/i18n.js?v=5"></script>
+<script src="/games/i18n.js?v=6"></script>
 `;
 
-const CSS = '<link rel="stylesheet" href="/games/i18n.css?v=3">';
+const CSS = '<link rel="stylesheet" href="/games/i18n.css?v=6">';
 const CSS_AFTER = '<link rel="stylesheet" href="/games/ribbon.css">';
 
 const changed = [];
@@ -82,19 +82,30 @@ function ensureCss(html) {
 }
 
 function ensureScripts(html, marker) {
-  if (html.includes("/games/i18n-data-i.js?v=5")) return html;
+  if (html.includes("/games/i18n-data-i.js")) return html;
   if (html.includes("/games/i18n-data-h.js")) {
     return html.replace('<script src="/games/i18n-data-h.js"></script>',
-      '<script src="/games/i18n-data-h.js"></script>\n    <script src="/games/i18n-data-i.js?v=5"></script>');
+      `<script src="/games/i18n-data-h.js"></script>
+    <script src="/games/i18n-data-i.js?v=5"></script>`);
   }
   if (html.includes("/games/i18n-data-e.js")) {
     return html.replace('<script src="/games/i18n-data-e.js"></script>',
-      '<script src="/games/i18n-data-e.js"></script>\n    <script src="/games/i18n-data-f.js"></script>\n    <script src="/games/i18n-data-g.js"></script>\n    <script src="/games/i18n-data-h.js"></script>');
+      `<script src="/games/i18n-data-e.js"></script>
+    <script src="/games/i18n-data-f.js"></script>
+    <script src="/games/i18n-data-g.js"></script>
+    <script src="/games/i18n-data-h.js"></script>
+    <script src="/games/i18n-data-i.js?v=5"></script>`);
   }
   if (html.includes("/games/i18n.js")) {
     /* An older tag pass already added the first six files. */
-    return html.replace('<script src="/games/i18n.js?v=5"></script>',
-      '<script src="/games/i18n-data-d.js"></script>\n    <script src="/games/i18n-data-e.js"></script>\n    <script src="/games/i18n-data-f.js"></script>\n    <script src="/games/i18n-data-g.js"></script>\n    <script src="/games/i18n-data-h.js"></script>\n    <script src="/games/i18n.js?v=5"></script>');
+    return html.replace('<script src="/games/i18n.js?v=6"></script>',
+      `<script src="/games/i18n-data-d.js"></script>
+    <script src="/games/i18n-data-e.js"></script>
+    <script src="/games/i18n-data-f.js"></script>
+    <script src="/games/i18n-data-g.js"></script>
+    <script src="/games/i18n-data-h.js"></script>
+    <script src="/games/i18n-data-i.js?v=5"></script>
+<script src="/games/i18n.js?v=6"></script>`);
   }
   const at = html.indexOf(marker);
   if (at === -1) return html;

@@ -105,3 +105,7 @@ html[dir="rtl"] .section-head { text-align: right; }
 html:not([data-lang="en"]) .mg-guide-en { display: none; }
 html[data-lang="en"] .mg-guide { display: none; }
 .mg-guide p { max-width: 68ch; color: var(--text, #e9edf8); }
+.mg-guide-h { margin: 20px 0 8px; font-size: 1.02em; letter-spacing: .01em; }
+.mg-guide-list { margin: 0 0 18px; padding-left: 1.25em; max-width: 68ch; color: var(--text, #e9edf8); }
+.mg-guide-list li { margin: 0 0 7px; line-height: 1.5; }
+[dir="rtl"] .mg-guide-list { padding-left: 0; padding-right: 1.25em; }
