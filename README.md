@@ -11,7 +11,7 @@ The 50-character guessing game, its character guides, and the engine that answer
 
 ## Renamed character guides
 
-Four guides were renamed in November 2026. The domain sits behind Cloudflare in front of GitHub Pages, and four Redirect Rules answer the old addresses with `301`:
+Four guides were renamed in November 2026:
 
 | Old address | New page |
 | --- | --- |
@@ -20,4 +20,4 @@ Four guides were renamed in November 2026. The domain sits behind Cloudflare in 
 | `/elsa.html` | `/elsa-frozen.html` |
 | `/trinity.html` | `/trinity-the-matrix.html` |
 
-The old file names also exist as `noindex` meta-refresh stubs, which are the fallback for any host that cannot answer with a status code.
+The old file names stay in place as `noindex` meta-refresh stubs. GitHub Pages cannot answer a renamed path with a status code, so the stub is the redirect: it carries the canonical URL of the new page and is kept out of `sitemap.xml`.
