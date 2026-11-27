@@ -22,6 +22,41 @@ const SITE = "https://mindgenieai.xyz";
 const OG_DIR = "games/og";
 const pagePath = (cat) => join(ROOT, "games", cat.slug, "index.html");
 
+/* The English one-line instructions are the source for the card copy; the
+   translations already live in the arcade dictionaries, index-aligned to the
+   slug list. Reading them here keeps generated pages in step with the games. */
+const i18nSandbox = {};
+for (const file of ["langs.js", "games/i18n-slugs.js", "games/i18n-data-a.js"]) {
+  new Function("window", await readFile(join(ROOT, file), "utf8"))(i18nSandbox);
+}
+const SLUGS = i18nSandbox.MGI18N_SLUGS || [];
+const LANGS = i18nSandbox.LANGS || [];
+const HOWTO_EN = (i18nSandbox.MGI18N_DATA_A && i18nSandbox.MGI18N_DATA_A.howto && i18nSandbox.MGI18N_DATA_A.howto.en) || [];
+const howto = (game) => HOWTO_EN[SLUGS.indexOf(game.slug)] || game.blurb;
+const DIFFICULTY_KEY = { Easy: "easy", Medium: "medium", Hard: "hard", Expert: "expert" };
+
+const HREFLANG_START = "<!-- mg-hreflang:start (generated) -->";
+const HREFLANG_END = "<!-- mg-hreflang:end -->";
+
+/* One alternate per supported language. The site keeps a single clean
+   canonical URL per page; the language lives in ?lang=, which the runtime
+   honours on load, so these point at real, equivalent documents. */
+function hreflangBlock(pathname) {
+  const clean = `${SITE}${pathname}`;
+  const separator = pathname.includes("?") ? "&" : "?";
+  const links = LANGS.map((lang) =>
+    `  <link rel="alternate" hreflang="${lang.code}" href="${clean}${separator}lang=${lang.code}">`
+  ).join("\n");
+  return `${HREFLANG_START}\n${links}\n  <link rel="alternate" hreflang="x-default" href="${clean}">\n${HREFLANG_END}`;
+}
+
+function replaceHreflang(html, pathname) {
+  const block = hreflangBlock(pathname);
+  const existing = new RegExp(`\\n?[ \\t]*${escapeRe(HREFLANG_START)}[\\s\\S]*?${escapeRe(HREFLANG_END)}`, "g");
+  const out = html.replace(existing, "");
+  return out.includes("</head>") ? out.replace("</head>", `${block}\n</head>`) : out;
+}
+
 const bySlug = new Map(GAMES.map((game) => [game.slug, game]));
 const inCategory = (key) => GAMES.filter((game) => game.cats.includes(key));
 const esc = (text) => String(text)
@@ -41,11 +76,12 @@ const ogImage = (name) => `${SITE}/${OG_DIR}/${name}.jpg`;
 /* ── Category pages ──────────────────────────────────────────────────────── */
 
 function card(game, key) {
+  const diffKey = DIFFICULTY_KEY[game.difficulty] || "medium";
   return `      <a class="card cat-card" href="/games/${game.slug}.html">
         <span class="cat-card-glyph" aria-hidden="true">${game.glyph}</span>
         <h3 data-mg-title="${game.slug}">${esc(game.name)}</h3>
-        <p>${esc(game.blurb)}</p>
-        <span class="tag">${esc(game.difficulty)}</span>${game.tags.map((tag) => `<span class="tag">${esc(tag)}</span>`).join("")}
+        <p data-mg-howto="${game.slug}">${esc(howto(game))}</p>
+        <span class="tag" data-mg-text="${diffKey}">${esc(game.difficulty)}</span>
       </a>`;
 }
 
@@ -102,6 +138,7 @@ ${itemList}
 <link rel="canonical" href="${canonical}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MindGenie AI">
+<meta property="og:locale" content="en_US">
 <meta property="og:title" content="${esc(cat.title)}">
 <meta property="og:description" content="${esc(cat.description)}">
 <meta property="og:url" content="${canonical}">
@@ -119,6 +156,7 @@ ${itemList}
 <link rel="stylesheet" href="/games/games.css">
 <link rel="stylesheet" href="/games/ribbon.css">
 <link rel="stylesheet" href="/games/i18n.css?v=3">
+${hreflangBlock(`/games/${cat.slug}/`)}
 <script type="application/ld+json">
 ${jsonLd}
 </script>
@@ -139,20 +177,20 @@ ${RIBBON(key)}
   </nav>
 
   <main>
-    <p class="eyebrow">Category &middot; ${count} ${count === 1 ? "game" : "games"}</p>
+    <p class="eyebrow" data-mg-count="category_count" data-mg-n="${count}">${count} games in this category</p>
     <h1 data-mg-cat="${key}" data-title-en="${esc(cat.title)}">${esc(cat.name)}</h1>
-    <p class="lede">${esc(cat.lede)}</p>
-    <p class="updated">Free to play in the browser &middot; no account &middot; scores saved on this device</p>
+    <p class="lede" data-mg-prose="catLede:${key}">${esc(cat.lede)}</p>
+    <p class="updated" data-mg-text="arcade_note">Free to play in the browser &middot; no account &middot; scores saved on this device</p>
 
     <div class="toolbar">
       <a class="btn" href="/games/" data-i18n="all_games">All 30 games</a>
-      <a class="btn ghost" href="/games/#${key}">Filter the hub to ${esc(cat.name)}</a>
+      <a class="btn ghost" href="/games/#${key}"><span data-i18n="filter_hub">Filter the hub to</span> <span data-mg-cat="${key}">${esc(cat.name)}</span></a>
     </div>
 
     <section aria-labelledby="cat-games">
       <div class="section-head">
-        <h2 id="cat-games">Games in this category</h2>
-        <span class="filter-note">${count} playable &middot; this shelf's own games first</span>
+        <h2 id="cat-games" data-i18n="games_in_category">Games in this category</h2>
+        <span class="filter-note" data-mg-count="category_count" data-mg-n="${count}">${count} games in this category</span>
       </div>
       <div class="grid cat-grid">
 ${games.map((game) => card(game, key)).join("\n")}
@@ -160,30 +198,26 @@ ${games.map((game) => card(game, key)).join("\n")}
     </section>
 
     <section aria-labelledby="cat-overview">
-      <h2 id="cat-overview">What ${esc(cat.name.toLowerCase())} are</h2>
-${cat.overview.map((para) => `      <p>${esc(para)}</p>`).join("\n")}
-      <h3>What they train</h3>
-      <p>${esc(cat.trains)}</p>
+      <h2 id="cat-overview" data-i18n="about_category">About this category</h2>
+      <p data-mg-prose="catOverview:${key}">${esc(cat.overview[0])}</p>
+      <h3 data-i18n="what_they_train">What they train</h3>
+      <p data-mg-prose="catTrains:${key}">${esc(cat.trains)}</p>
     </section>
 
     <section aria-labelledby="cat-howto">
       <h2 id="cat-howto" data-i18n="how_to_play">How to play</h2>
-${cat.howto.map((para) => `      <p>${esc(para)}</p>`).join("\n")}
+      <p data-mg-text="category_howto">Every game opens straight into its board. Tap, click or use the arrow keys; each card above explains the goal in one line.</p>
+      <ul class="cat-howto-list">
+${games.map((game) => `        <li><strong data-mg-title="${game.slug}">${esc(game.name)}</strong> &mdash; <span data-mg-howto="${game.slug}">${esc(howto(game))}</span></li>`).join("\n")}
+      </ul>
       <div class="note">
-        <strong>No setup required.</strong> Every game opens straight into a board. Progress is stored in your own browser under <code>mg-</code> keys &mdash; clearing site data resets it.
+        <strong data-mg-text="no_setup">No setup required.</strong> <span data-mg-text="progress_note">Progress is stored in your own browser under mg- keys &mdash; clearing site data resets it.</span>
       </div>
     </section>
 
-    <section aria-labelledby="cat-tips">
-      <h2 id="cat-tips">Tips that actually help</h2>
-      <ul>
-${cat.tips.map((tip) => `        <li>${esc(tip)}</li>`).join("\n")}
-      </ul>
-    </section>
-
     <section aria-labelledby="cat-other">
-      <h2 id="cat-other">Other shelves in the arcade</h2>
-      <p class="filter-note">Ten categories, thirty games, one page each.</p>
+      <h2 id="cat-other" data-i18n="other_shelves">Other shelves in the arcade</h2>
+      <p class="filter-note" data-mg-text="other_shelves_note">Ten categories, thirty games, one page each.</p>
       <div class="chips">
 ${others.map((other) => `        <a class="chip" href="/games/${CATEGORIES[other].slug}/" data-mg-cat="${other}">${esc(CATEGORIES[other].name)}</a>`).join("\n")}
       </div>
@@ -193,8 +227,8 @@ ${others.map((other) => `        <a class="chip" href="/games/${CATEGORIES[other
   <footer>
     <a href="/games/" data-i18n="all_games">All games</a>
     <a href="/">MindGenie AI</a>
-    <a href="/blog.html">Blog</a>
-    <a href="/privacy-policy.html">Privacy Policy</a>
+    <a href="/blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="/privacy-policy.html" data-i18n="nav_privacy">Privacy Policy</a>
   </footer>
 </div>
 <script src="/langs.js"></script>
@@ -208,6 +242,11 @@ ${others.map((other) => `        <a class="chip" href="/games/${CATEGORIES[other
 <script src="/games/i18n-data-g.js"></script>
 <script src="/games/i18n-data-h.js"></script>
 <script src="/games/i18n-data-i.js?v=5"></script>
+<script src="/games/i18n-data-j.js?v=1"></script>
+<script src="/games/i18n-prose.js?v=1"></script>
+<script src="/games/i18n-prose-b.js?v=1"></script>
+<script src="/games/i18n-prose-c.js?v=1"></script>
+<script src="/games/i18n-prose-d.js?v=1"></script>
 <script src="/games/i18n.js?v=7"></script>
 </body>
 </html>
@@ -232,6 +271,13 @@ function rewriteImage(html, image, alt) {
     .replace(/[ \t]*<meta property="og:image"[^>]*>\r?\n?/g, "")
     .replace(/[ \t]*<meta property="og:image:(?:width|height|alt)"[^>]*>\r?\n?/g, "")
     .replace(/[ \t]*<meta name="twitter:image"[^>]*>\r?\n?/g, "");
+
+  if (!out.includes('property="og:locale"')) {
+    out = out.replace(
+      '<meta property="og:site_name" content="MindGenie AI">',
+      '<meta property="og:site_name" content="MindGenie AI">\n<meta property="og:locale" content="en_US">'
+    );
+  }
 
   if (out.includes('<meta name="robots"')) {
     out = out.replace(/[ \t]*<meta name="robots"/, `${imageBlock}\n<meta name="robots"`);
@@ -298,6 +344,7 @@ function patchGamePage(html, game) {
 
   const cat = CATEGORIES[game.cats[0]];
   out = rewriteImage(out, ogImage(game.slug), `${game.name} - ${cat.name} on MindGenieAI`);
+  out = replaceHreflang(out, `/games/${game.slug}.html`);
   return out;
 }
 
@@ -312,10 +359,14 @@ function patchHub(html) {
   let out = html.replace(new RegExp(`\\n?[ \\t]*${escapeRe(HUB_START)}[\\s\\S]*?${escapeRe(HUB_END)}`, "g"), "");
   const row = `${HUB_START}
   <nav class="hub-catlinks" aria-label="Category pages">
-    <span class="hub-catlinks-label">Browse by category</span>
+    <span class="hub-catlinks-label" data-mg-hub="3">Browse by category</span>
 ${CATEGORY_ORDER.map((key) => `    <a href="/games/${CATEGORIES[key].slug}/">${esc(CATEGORIES[key].name)}</a>`).join("\n")}
   </nav>
   ${HUB_END}`;
+  out = replaceHreflang(out, "/games/");
+  if (!out.includes('property="og:locale"')) {
+    out = out.replace('<meta property="og:site_name" content="MindGenie AI">', '<meta property="og:site_name" content="MindGenie AI">\n<meta property="og:locale" content="en_US">');
+  }
   const at = out.indexOf('<footer class="hub-footer">');
   if (at === -1) throw new Error("games/index.html: hub footer not found");
   const anchor = out.lastIndexOf("\n", at) + 1;

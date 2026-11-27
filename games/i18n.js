@@ -43,11 +43,13 @@
   var PARTS = [
     window.MGI18N_DATA_A, window.MGI18N_DATA_B, window.MGI18N_DATA_C,
     window.MGI18N_DATA_D, window.MGI18N_DATA_E, window.MGI18N_DATA_F,
-    window.MGI18N_DATA_G, window.MGI18N_DATA_H, window.MGI18N_DATA_I
+    window.MGI18N_DATA_G, window.MGI18N_DATA_H, window.MGI18N_DATA_I,
+    window.MGI18N_DATA_J
   ];
   var LANGS = window.LANGS || [{ code: "en", name: "English" }];
   var listeners = [];
   var current = "en";
+  var TITLE_EN = document.title;
 
   /* Merge the three data files into one {ui, titles, howto, cats, hub}. */
   var DATA = { ui: {}, titles: {}, howto: {}, cats: {}, hub: {}, status: {}, guides: {} };
@@ -67,6 +69,29 @@
       });
     });
   });
+
+  /* Hub and category prose lives in its own files so a game page does not pay
+     for copy it never renders. Each part is { code: { catLede, catOverview,
+     catTrains } }; the merge is shallow per language. */
+  var PROSE = {};
+  (window.MGI18N_PROSE_PARTS || []).forEach(function (part) {
+    if (!part) return;
+    Object.keys(part).forEach(function (code) {
+      var incoming = part[code] || {};
+      var existing = PROSE[code] || (PROSE[code] = {});
+      Object.keys(incoming).forEach(function (kind) { existing[kind] = incoming[kind]; });
+    });
+  });
+
+  function prose(kind, key) {
+    var table = PROSE[current] || {};
+    var value = table[kind] && table[kind][key];
+    if (value === undefined) {
+      var english = PROSE.en || {};
+      value = english[kind] && english[kind][key];
+    }
+    return value === undefined ? "" : value;
+  }
 
   /* Rules and scoring bullets live in their own table and are appended to the
      lead paragraphs of the same family. The table is large, so it is fetched
@@ -271,8 +296,10 @@
 
   function fromQuery() {
     try {
-      var code = new URLSearchParams(window.location.search).get("lang");
-      return code && langMeta(code) ? code : "";
+      var raw = new URLSearchParams(window.location.search).get("lang");
+      if (!raw) return "";
+      var code = String(raw).trim().toLowerCase().split(/[-_]/)[0];
+      return langMeta(code) ? code : "";
     } catch (error) {
       return "";
     }
@@ -404,6 +431,80 @@
     });
   }
 
+  /* ── Meta: localized description, Open Graph and Twitter ──
+     The site is static, so the head stays English in the HTML and this pass
+     rewrites it whenever a shared ?lang= link or the switcher selects another
+     language. hreflang in the markup points crawlers at every variant. */
+  var OG_LOCALE = {
+    en: "en_US", ar: "ar_AR", zh: "zh_CN", de: "de_DE", es: "es_ES", fr: "fr_FR",
+    he: "he_IL", it: "it_IT", ja: "ja_JP", ko: "ko_KR", nl: "nl_NL", pl: "pl_PL",
+    pt: "pt_PT", ru: "ru_RU", tr: "tr_TR", id: "id_ID", vi: "vi_VN", fa: "fa_IR"
+  };
+  var META_SELECTORS = [
+    'meta[name="description"]',
+    'meta[property="og:title"]',
+    'meta[property="og:description"]',
+    'meta[name="twitter:title"]',
+    'meta[name="twitter:description"]'
+  ];
+
+  function metaEl(selector) {
+    return document.head ? document.head.querySelector(selector) : null;
+  }
+
+  function rememberMeta() {
+    META_SELECTORS.forEach(function (selector) {
+      var el = metaEl(selector);
+      if (el && !el.hasAttribute("data-en")) el.setAttribute("data-en", el.getAttribute("content") || "");
+    });
+    var locale = metaEl('meta[property="og:locale"]');
+    if (locale && !locale.hasAttribute("data-en")) locale.setAttribute("data-en", locale.getAttribute("content") || "en_US");
+  }
+
+  function pageMeta() {
+    var gameH1 = document.querySelector("h1[data-mg-title]");
+    if (gameH1) {
+      var slug = gameH1.getAttribute("data-mg-title");
+      return { title: game(slug, "title") + " \u00b7 MindGenie AI", desc: game(slug, "howto") };
+    }
+    var catH1 = document.querySelector("h1[data-mg-cat]");
+    if (catH1) {
+      var key = catH1.getAttribute("data-mg-cat");
+      return { title: cat(key) + " \u00b7 MindGenie AI", desc: prose("catLede", key) };
+    }
+    if (document.querySelector(".hub-hero h1[data-mg-hub]")) {
+      return { title: hub(0) + " \u00b7 MindGenie AI", desc: hub(1) };
+    }
+    return null;
+  }
+
+  function paintMeta() {
+    var info = pageMeta();
+    if (!info) return;
+    document.title = current === "en" ? TITLE_EN : info.title;
+
+    META_SELECTORS.forEach(function (selector) {
+      var el = metaEl(selector);
+      if (!el) return;
+      var english = el.getAttribute("data-en") || "";
+      var value = english;
+      if (current !== "en") {
+        if (selector.indexOf("description") !== -1 || selector.indexOf("og:description") !== -1 || selector.indexOf("twitter:description") !== -1) {
+          if (info.desc) value = info.desc;
+        } else if (info.title) {
+          value = info.title;
+        }
+      }
+      if (el.getAttribute("content") !== value) el.setAttribute("content", value);
+    });
+
+    var locale = metaEl('meta[property="og:locale"]');
+    if (locale) {
+      var localeValue = current === "en" ? (locale.getAttribute("data-en") || "en_US") : (OG_LOCALE[current] || "en_US");
+      if (locale.getAttribute("content") !== localeValue) locale.setAttribute("content", localeValue);
+    }
+  }
+
   /* ── Page rendering ── */
   function apply(root) {
     var scope = root || document;
@@ -440,6 +541,14 @@
     each(scope, "[data-mg-howto]", function (el) {
       el.textContent = game(el.getAttribute("data-mg-howto"), "howto");
     });
+    each(scope, "[data-mg-blurb]", function (el) {
+      el.textContent = game(el.getAttribute("data-mg-blurb"), "howto");
+    });
+    each(scope, "[data-mg-prose]", function (el) {
+      var pair = el.getAttribute("data-mg-prose").split(":");
+      var value = prose(pair[0], pair[1]);
+      if (value) el.textContent = value;
+    });
     each(scope, "[data-mg-cat]", function (el) {
       el.textContent = cat(el.getAttribute("data-mg-cat"));
     });
@@ -468,6 +577,8 @@
           : cat(catH1.getAttribute("data-mg-cat")) + " \u00b7 MindGenie AI";
       }
     }
+
+    paintMeta();
 
     /* The translated guide replaces the English essays outside English. */
     each(scope, "[data-mg-guide]", function (el) {
@@ -562,6 +673,7 @@
     each(document, "[data-i18n], [data-mg-hub]", function (el) {
       if (!el.hasAttribute("data-en")) el.setAttribute("data-en", el.textContent);
     });
+    rememberMeta();
     mountSwitcher();
     apply(document);
     watchStatuses();
@@ -578,6 +690,7 @@
     game: game,
     cat: cat,
     hub: hub,
+    prose: prose,
     status: status,
     guide: guide,
     setText: setText,

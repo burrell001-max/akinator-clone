@@ -9,6 +9,7 @@ a dependency to the site: the pages stay plain HTML/CSS/JS with no build step.
 | `node tools/qa/check-site.mjs` | Static: duplicate ids, missing local links/assets, unbalanced inline scripts, hub cards and category keys, ribbon presence and targets, sitemap entries and arcade coverage, category pages and their game lists, generated related-game blocks, unique `og:image` files that exist on disk, `localStorage` key naming |
 | `node tools/qa/check-i18n.mjs` | Localization: key/title/instruction/category parity, status placeholders, rules-bullet numbers, difficulty labels and `mg-` keys, page `data-i18n`/`data-mg-*` bindings (including live counters and script-written labels), `<option>` text, the homepage dictionary in `/i18n.js`, English leaks into non-Latin translations, `freebuff` leftovers, the hero subtitle's hook, dictionary text and width, and a coverage report of visible English with no translation hook (`--strict-ui` makes that report fail) |
 | `node tools/qa/win-paths.mjs` | Browser: every arcade game played from its initial state to a win, then the stored record and the reset path; plus the hub's category links |
+| `node tools/qa/check-lang.mjs` | Language contract: all 18 languages carry the 30 hub/category prose strings, every key page has 18 hreflang alternates plus `x-default`, and `?lang=` on the homepage, hub, category and game pages sets `<html lang/dir>`, `localStorage`, the localized description and `og:locale`; unknown codes fall back, and both switchers write the query string back |
 | `node tools/build/build-pages.mjs` | Regenerates `/games/<category>/` pages, the "more in this category" blocks and every game's social tags from `tools/content/games-data.mjs` |
 | `node tools/build/make-og.mjs` | Renders the 41 `og:image` cards into `games/og/` with headless Chrome |
 
@@ -27,6 +28,7 @@ node tools/qa/check-i18n.mjs          # exits 1 on a localization defect
 node tools/qa/check-i18n.mjs --strict-ui   # also fail on the coverage notes
 node tools/qa/win-paths.mjs           # exits 1 if any scenario fails
 node tools/qa/win-paths.mjs --only=memory,memory-echo,sudoku
+node tools/qa/check-lang.mjs          # language contract and ?lang= links
 
 # Only after editing tools/content/games-data.mjs: rebuild what it generates.
 node tools/build/build-pages.mjs      # category pages, related blocks, social tags
@@ -44,6 +46,16 @@ the English status template. It also validates every `data-i18n` and
 key that would otherwise render as a raw key on the page. The homepage has a
 separate dictionary in `/i18n.js` with its own key set and 28-question list;
 that is checked too.
+
+`check-lang.mjs` is the repeatable language test. It reads the same
+dictionaries in a bare sandbox to prove every language has its own hub and
+category prose, then launches headless Chrome (no Playwright, no packages) to
+open `/?lang=de`, `/games/?lang=pt`, a category page and a game page, checking
+`<html lang/dir>`, the stored preference, the translated heading and the
+localized `<meta name="description">` / `og:locale`. It also exercises both
+language switchers (URL, storage and `html lang`), `?lang=zz` fallback and the
+Arabic RTL direction. A shared `?lang=` link therefore cannot regress without
+the browser job failing. It runs locally in roughly 20 seconds.
 
 `check-i18n.mjs` is also a CI step: `.github/workflows/qa.yml` runs it on every
 push to `main` and every pull request next to `check-site.mjs`, so a missing key,

@@ -307,3 +307,12 @@ footer a:hover { color: var(--text); }
 .mg-related-alt a { color: var(--gold-dim); }
 .mg-related-alt a:hover { color: var(--gold); }
 .mg-dot { color: var(--muted); margin: 0 4px; }
+
+/* Category pages: localized game-by-game instructions under "How to play". */
+.cat-howto-list {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 20px;
+  padding-inline-start: 20px;
+}
+.cat-howto-list li { line-height: 1.55; }

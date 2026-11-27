@@ -30,8 +30,30 @@
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#4f86d8">
     <link rel="canonical" href="https://mindgenieai.xyz/">
+<!-- mg-hreflang:start (generated) -->
+  <link rel="alternate" hreflang="en" href="https://mindgenieai.xyz/?lang=en">
+  <link rel="alternate" hreflang="ar" href="https://mindgenieai.xyz/?lang=ar">
+  <link rel="alternate" hreflang="zh" href="https://mindgenieai.xyz/?lang=zh">
+  <link rel="alternate" hreflang="de" href="https://mindgenieai.xyz/?lang=de">
+  <link rel="alternate" hreflang="es" href="https://mindgenieai.xyz/?lang=es">
+  <link rel="alternate" hreflang="fr" href="https://mindgenieai.xyz/?lang=fr">
+  <link rel="alternate" hreflang="he" href="https://mindgenieai.xyz/?lang=he">
+  <link rel="alternate" hreflang="it" href="https://mindgenieai.xyz/?lang=it">
+  <link rel="alternate" hreflang="ja" href="https://mindgenieai.xyz/?lang=ja">
+  <link rel="alternate" hreflang="ko" href="https://mindgenieai.xyz/?lang=ko">
+  <link rel="alternate" hreflang="nl" href="https://mindgenieai.xyz/?lang=nl">
+  <link rel="alternate" hreflang="pl" href="https://mindgenieai.xyz/?lang=pl">
+  <link rel="alternate" hreflang="pt" href="https://mindgenieai.xyz/?lang=pt">
+  <link rel="alternate" hreflang="ru" href="https://mindgenieai.xyz/?lang=ru">
+  <link rel="alternate" hreflang="tr" href="https://mindgenieai.xyz/?lang=tr">
+  <link rel="alternate" hreflang="id" href="https://mindgenieai.xyz/?lang=id">
+  <link rel="alternate" hreflang="vi" href="https://mindgenieai.xyz/?lang=vi">
+  <link rel="alternate" hreflang="fa" href="https://mindgenieai.xyz/?lang=fa">
+  <link rel="alternate" hreflang="x-default" href="https://mindgenieai.xyz/">
+<!-- mg-hreflang:end -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MindGenie AI">
+<meta property="og:locale" content="en_US">
 <meta property="og:title" content="MindGenie AI: Free Character Guessing Game">
 <meta property="og:description" content="Think of any character and let the Genie guess it. A free 20 questions game covering movie, TV, anime, game and historical characters, with no sign-up.">
 <meta property="og:url" content="https://mindgenieai.xyz/">
@@ -2538,9 +2560,27 @@
         document.addEventListener('click', (e) => { if (!document.getElementById('lang').contains(e.target)) closeLangMenu(); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLangMenu(); });
 
+        const META_LOCALES = { en: 'en_US', ar: 'ar_AR', zh: 'zh_CN', de: 'de_DE', es: 'es_ES', fr: 'fr_FR', he: 'he_IL', it: 'it_IT', ja: 'ja_JP', ko: 'ko_KR', nl: 'nl_NL', pl: 'pl_PL', pt: 'pt_PT', ru: 'ru_RU', tr: 'tr_TR', id: 'id_ID', vi: 'vi_VN', fa: 'fa_IR' };
+        function langFromQuery() {
+            try {
+                const raw = new URLSearchParams(window.location.search).get('lang');
+                if (!raw) return '';
+                const code = String(raw).trim().toLowerCase().split(/[-_]/)[0];
+                return langReady(code) ? code : '';
+            } catch (e) { return ''; }
+        }
+        function syncLangUrl(code) {
+            try {
+                const url = new URL(window.location.href);
+                if (code === 'en') url.searchParams.delete('lang');
+                else url.searchParams.set('lang', code);
+                window.history.replaceState(null, '', url.toString());
+            } catch (e) {}
+        }
         function setLang(code) {
             LANG = code;
             try { localStorage.setItem('mindgenie_lang', code); } catch (e) {}
+            syncLangUrl(code);
             trackEvent('language_selected', { lang: code });
             applyLang();
         }
@@ -2549,6 +2589,23 @@
             document.documentElement.lang = LANG;
             document.documentElement.dir = meta.rtl ? 'rtl' : 'ltr';
             langCur.textContent = meta.name;
+
+            /* Shared ?lang= links should also carry localized search and social
+               metadata, not just a translated page body. English is restored
+               from the authored values captured on the first pass. */
+            const desc = t('meta_desc');
+            document.querySelectorAll('meta[name="description"], meta[property="og:description"], meta[name="twitter:description"]').forEach(el => {
+                if (!el.dataset.en) el.dataset.en = el.getAttribute('content') || '';
+                el.setAttribute('content', LANG === 'en' ? el.dataset.en : desc);
+            });
+            const socialTitle = LANG === 'en' ? 'MindGenie AI: Free Character Guessing Game' : t('hello') + ' · MindGenie AI';
+            document.querySelectorAll('meta[property="og:title"], meta[name="twitter:title"]').forEach(el => {
+                if (!el.dataset.en) el.dataset.en = el.getAttribute('content') || '';
+                el.setAttribute('content', LANG === 'en' ? el.dataset.en : socialTitle);
+            });
+            document.title = LANG === 'en' ? 'MindGenie AI: Free Character Guessing Game' : socialTitle;
+            const locale = document.querySelector('meta[property="og:locale"]');
+            if (locale) locale.setAttribute('content', LANG === 'en' ? 'en_US' : (META_LOCALES[LANG] || 'en_US'));
             document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
             document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
             optionButtons.forEach(btn => { btn.dataset.label = t('a' + btn.dataset.key); });
@@ -2568,7 +2625,8 @@
                 .map(x => String(x).slice(0, 2).toLowerCase());
             return prefs.find(langReady) || 'en';
         }
-        LANG = detectLang();
+        LANG = langFromQuery() || detectLang();
+        if (langFromQuery()) { try { localStorage.setItem('mindgenie_lang', LANG); } catch (e) {} }
         applyLang();
 
         // ── KEYBOARD SUPPORT ──

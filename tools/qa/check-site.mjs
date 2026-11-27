@@ -35,6 +35,11 @@ const byPath = new Set(files.map((file) => file.replace(/\\/g, "/")));
 
 const CATEGORY_KEYS = ["brain", "daily", "number", "word", "crossword", "sudoku", "memory", "sort", "math", "puzzle"];
 
+/* The language list is shared with the runtime; hreflang has to match it. */
+const langSandbox = {};
+new Function("window", await readFile(join(ROOT, "langs.js"), "utf8"))(langSandbox);
+const LANG_CODES = (langSandbox.LANGS || []).map((lang) => lang.code);
+
 function attr(tag, name) {
   const match = tag.match(new RegExp(`${name}\\s*=\\s*"([^"]*)"`, "i"));
   return match ? match[1] : "";
@@ -301,6 +306,39 @@ for (const url of sitemapUrls) {
   const target = path === "" || path.endsWith("/") ? join(ROOT, path, "index.html") : join(ROOT, path);
   if (!existsSync(target)) fail("sitemap.xml", `entry points at a missing file: ${url}`);
 }
+
+/* ── hreflang: every key page offers all 18 languages ──────────────────── */
+/* The site keeps one canonical URL per page and selects a language through
+   ?lang=, so the alternates are query variants of that canonical. */
+const hreflangPages = [
+  "index.html",
+  "games/index.html",
+  ...CATEGORY_ORDER.map((key) => `games/${CATEGORIES[key].slug}/index.html`),
+  ...GAMES.map((game) => `games/${game.slug}.html`)
+];
+for (const page of hreflangPages) {
+  const html = await readFile(join(ROOT, page), "utf8");
+  const canonical = (html.match(/<link rel="canonical" href="([^"]+)">/) || [])[1];
+  if (!canonical) {
+    fail(page, "missing canonical for hreflang");
+    continue;
+  }
+  const links = [...html.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)">/g)];
+  const codes = links.map((match) => match[1]);
+  for (const code of [...LANG_CODES, "x-default"]) {
+    if (!codes.includes(code)) fail(page, `missing hreflang="${code}"`);
+  }
+  const xDefault = (links.find((match) => match[1] === "x-default") || [])[2];
+  if (xDefault !== canonical) fail(page, "x-default does not match the canonical URL");
+  for (const [, code, href] of links) {
+    if (!href.startsWith("https://mindgenieai.xyz/")) fail(page, `hreflang ${code} is not absolute`);
+    if (code !== "x-default" && !new RegExp(`[?&]lang=${code}$`).test(href)) {
+      fail(page, `hreflang ${code} does not select that language`);
+    }
+  }
+  if (!/property="og:locale"/.test(html)) fail(page, "missing og:locale");
+}
+if (!problems.length) notes.push(`${hreflangPages.length} pages carry 18 hreflang alternates plus x-default`);
 
 /* The arcade is the part that must never drop out of the sitemap. */
 for (const file of htmlFiles) {

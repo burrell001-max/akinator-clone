@@ -202,7 +202,7 @@ window.I18N = {
   de: {
     hello: "Hallo, ich bin MindGenie",
     tagline: "Denk an eine Figur. Ich errate, wer es ist.",
-    subtitle: "Kostenlos KI-Figuren erraten und mehr",
+    subtitle: "Kostenlos Figuren erraten mit KI und mehr",
     intro: "<strong>Denk an eine echte oder erfundene Figur.</strong><br>Ich versuche zu erraten, wer es ist.",
     play: "Spielen", sub: "Kostenlos, ohne Anmeldung, etwa eine Minute",
     themeTitle: "<strong>Wähle ein Thema.</strong><br>Was für eine Figur hast du im Kopf?",
@@ -225,7 +225,7 @@ window.I18N = {
     thanks: "Danke für dein Feedback! ✨", thanksSaved: "Danke, dein Feedback wurde gespeichert. ✨",
     who: "An wen hast du gedacht? (optional)", whoPh: "z. B. Han Solo", send: "Senden", skip: "Überspringen",
     shareRes: "🎉 Mein Ergebnis teilen", challenge: "🤝 Freund herausfordern", random: "🎲 Zufällige Figurenideen",
-    replay: "Kannst du den Dschinn schlagen? Denk an eine schwierigere Figur.", playAgain: "Nochmal spielen", playNow: "Jetzt spielen",
+    replay: "Kannst du den Dschinn schlagen? Denk an eine schwierigere Figur.", playAgain: "Erneut spielen", playNow: "Jetzt spielen",
     histTitle: "Deine letzten Spiele", histLegend: "✓ erraten · ✗ du hast mich geschlagen",
     markOk: "Erraten", markMiss: "Du hast mich geschlagen",
     record: "Deine Bilanz: {g} von {n} erraten; du hast mich {s}-mal geschlagen.",
@@ -876,16 +876,16 @@ window.I18N = {
 
   pt: {
     hello: "Olá, eu sou o MindGenie",
-    tagline: "Pense em um personagem. Vou adivinhar quem é.",
-    subtitle: "Jogo de IA grátis: adivinhe e muito mais",
-    intro: "<strong>Pense em um personagem real ou fictício.</strong><br>Vou tentar adivinhar quem é.",
+    tagline: "Pensa num personagem. Eu adivinho quem é.",
+    subtitle: "Adivinha personagens com IA, grátis e muito mais",
+    intro: "<strong>Pensa num personagem real ou fictício.</strong><br>Vou tentar adivinhar quem é.",
     play: "Jogar", sub: "Grátis, sem cadastro, cerca de um minuto",
-    themeTitle: "<strong>Escolha um tema.</strong><br>Em que tipo de personagem você está pensando?",
-    goodPick: "<strong>Boa escolha! Pense em {name}.</strong><br>Toque em Jogar quando estiver pronto.",
+    themeTitle: "<strong>Escolha um tema.</strong><br>Em que tipo de personagem estás a pensar?",
+    goodPick: "<strong>Boa escolha! Pensa em {name}.</strong><br>Toca em Jogar quando estiveres pronto.",
     th_movies: "Filmes", th_tv: "Séries de TV", th_games: "Videogames", th_anime: "Anime", th_history: "História", th_any: "Qualquer um",
     a1: "Sim", a2: "Não", a3: "Provavelmente", a4: "Provavelmente não", a5: "Não sei",
-    hint: "💡 Dica: pressione 1–5 no teclado para responder mais rápido.",
-    loading1: "🔮 O Gênio está lendo seus pensamentos...<br>Carregando sua primeira pergunta...",
+    hint: "💡 Dica: prime 1–5 no teclado para responder mais rápido.",
+    loading1: "🔮 O Génio está a ler os teus pensamentos...<br>A carregar a tua primeira pergunta...",
     connLost: "A conexão com o reino dos espíritos foi perdida.<br>Tente novamente em instantes.",
     tryAgain: "Tentar novamente", starting: "Iniciando…",
     conf: "Confiança", conf2: "Estreitando as opções", conf3: "Cada vez mais confiante", conf4: "Quase certo",
@@ -894,26 +894,26 @@ window.I18N = {
     unexpected: "Hmm, os espíritos deram um sinal estranho que não reconheci.<br>Você pode responder de novo ou começar uma nova rodada.",
     answered: "Você respondeu:", ofq: "Pergunta {n} de ~{m}",
     slipped: "A visão desapareceu...<br>Os espíritos perderam a conexão. Tente responder de novo.",
-    reveal1: "Eu sei em quem você está pensando...", reveal2: "EU SEI EM QUEM VOCÊ ESTÁ PENSANDO...",
+    reveal1: "Eu sei em quem estás a pensar...", reveal2: "EU SEI EM QUEM ESTÁS A PENSAR...",
     guessed: "Adivinhei: {name}!<br>Acertei?",
     ideas: "Não consegue pensar em ninguém? Experimente: {names} — ou qualquer outro!",
-    thanks: "Obrigado pelo feedback! ✨", thanksSaved: "Obrigado, seu feedback foi salvo. ✨",
-    who: "Em quem você estava pensando? (opcional)", whoPh: "ex.: Han Solo", send: "Enviar", skip: "Pular",
+    thanks: "Obrigado pelo teu comentário! ✨", thanksSaved: "Obrigado — o teu comentário foi guardado. ✨",
+    who: "Em quem estavas a pensar? (opcional)", whoPh: "ex.: Han Solo", send: "Enviar", skip: "Saltar",
     shareRes: "🎉 Compartilhar meu resultado", challenge: "🤝 Desafiar um amigo", random: "🎲 Ideias aleatórias de personagens",
-    replay: "Você consegue vencer o Gênio? Pense em um personagem mais difícil.", playAgain: "Jogar de novo", playNow: "Jogar agora",
-    histTitle: "Suas últimas partidas", histLegend: "✓ eu acertei · ✗ você me venceu",
-    markOk: "Eu acertei", markMiss: "Você me venceu",
-    record: "Seu placar: acertei {g} de {n}; você me venceu {s} vezes.",
-    shareGameTxt: "Essa IA consegue adivinhar seu personagem favorito? Jogue MindGenie AI agora!",
-    shareResTxt: "O MindGenie AI adivinhou que eu estava pensando em {name}! Acha que consegue vencê-lo?",
+    replay: "Consegues vencer o Génio? Pensa num personagem mais difícil.", playAgain: "Jogar novamente", playNow: "Jogar agora",
+    histTitle: "As tuas últimas partidas", histLegend: "✓ eu acertei · ✗ venceste-me",
+    markOk: "Eu acertei", markMiss: "Venceste-me",
+    record: "O teu placar: acertei {g} de {n}; venceste-me {s} vezes.",
+    shareGameTxt: "Esta IA consegue adivinhar o teu personagem favorito? Joga MindGenie AI agora!",
+    shareResTxt: "O MindGenie AI adivinhou que eu estava a pensar em {name}! Acha que consegue vencê-lo?",
     shareResTxt2: "O MindGenie AI acabou de ler minha mente! Acha que consegue vencê-lo?",
     challengeTxt: "Acabei de jogar MindGenie AI: pense em um personagem e veja se ele adivinha quem é!",
     copied: "Link copiado para a área de transferência!",
-    wake: "⏳ Preparando o Gênio... isso só acontece na primeira vez de hoje.",
-    think: ["Lendo sua resposta", "Procurando em filmes", "Procurando em séries", "Procurando em jogos", "Procurando em anime e história", "Fazendo o palpite final"],
+    wake: "⏳ A preparar o Génio... isto só acontece na primeira vez do dia.",
+    think: ["A ler a tua resposta", "Procurando em filmes", "Procurando em séries", "Procurando em jogos", "Procurando em anime e história", "Fazendo o palpite final"],
     played: "Jogado mais de {n} vezes",
     c_movies: "🎬 Filmes", c_tv: "📺 TV", c_games: "🎮 Jogos", c_anime: "🎌 Anime", need: "Precisa de ideias?",
-    cta_h: "✨ Acha que consegue vencer o Gênio?", cta_p: "Escolha um novo personagem e veja se ele lê sua mente de novo.",
+    cta_h: "✨ Achas que consegues vencer o Génio?", cta_p: "Escolhe um novo personagem e vê se ele volta a ler a tua mente.",
     nav_play: "🔮 Jogar", nav_faq: "Perguntas frequentes", nav_blog: "Blog", nav_contact: "Contato",
     f_share: "📢 Compartilhar jogo", f_about: "Sobre", f_privacy: "Política de privacidade", f_terms: "Termos de serviço",
     soon: "em breve",
@@ -1324,3 +1324,31 @@ window.I18N = {
     ]
   }
 };
+
+/* One localized search/social description per language, used by the homepage
+   <head> when ?lang= or the saved preference selects a language. */
+(function () {
+  var desc = {
+    en: "Think of any character and let the Genie guess it. A free 20 questions game covering movie, TV, anime, game and historical characters, with no sign-up.",
+    de: "Denk an eine Figur und lass den Dschinn raten. Ein kostenloses 20-Fragen-Spiel mit Film-, Serien-, Anime-, Game- und historischen Figuren – ohne Anmeldung.",
+    pt: "Pensa num personagem e deixa o Génio adivinhar. Um jogo grátis de 20 perguntas com personagens de filmes, séries, anime, jogos e história, sem registo.",
+    es: "Piensa en un personaje y deja que el Genio lo adivine. Un juego gratis de 20 preguntas con personajes de cine, series, anime, videojuegos e historia, sin registro.",
+    fr: "Pensez à un personnage et laissez le Génie deviner. Un jeu gratuit de 20 questions avec des personnages de films, séries, anime, jeux et histoire, sans inscription.",
+    it: "Pensa a un personaggio e lascia che il Genio indovini. Un gioco gratuito di 20 domande con personaggi di film, serie, anime, videogiochi e storia, senza registrazione.",
+    nl: "Denk aan een personage en laat de Genie raden. Een gratis 20-questionsspel met personages uit films, series, anime, games en geschiedenis, zonder account.",
+    pl: "Pomyśl o postaci i pozwól Dżinowi zgadnąć. Darmowa gra w 20 pytań z postaciami z filmów, seriali, anime, gier i historii, bez rejestracji.",
+    ru: "Загадайте персонажа — Джинн попробует угадать. Бесплатная игра в 20 вопросов с героями кино, сериалов, аниме, игр и истории, без регистрации.",
+    tr: "Bir karakter düşün, Cin tahmin etsin. Film, dizi, anime, oyun ve tarih karakterleriyle ücretsiz 20 soru oyunu — kayıt yok.",
+    ar: "فكر في شخصية ودع الجني يخمنها. لعبة مجانية من 20 سؤالًا تشمل شخصيات الأفلام والمسلسلات والأنمي والألعاب والتاريخ، دون تسجيل.",
+    he: "חשבו על דמות ותנו לג'יני לנחש. משחק חינם של 20 שאלות עם דמויות מסרטים, סדרות, אנימה, משחקים והיסטוריה — בלי הרשמה.",
+    fa: "به یک شخصیت فکر کن و بگذار جن آن را حدس بزند. بازی رایگان بیست سؤالی با شخصیت‌های فیلم، سریال، انیمه، بازی و تاریخ، بدون ثبت‌نام.",
+    zh: "想一个角色，让精灵来猜。免费二十问游戏，涵盖电影、剧集、动漫、游戏与历史人物，无需注册。",
+    ja: "キャラクターを思い浮かべて、精霊に当てさせましょう。映画・ドラマ・アニメ・ゲーム・歴史の人物が登場する無料の20の質問ゲーム。登録不要。",
+    ko: "캐릭터를 생각하고 지니가 맞히게 하세요. 영화, 드라마, 애니메이션, 게임, 역사 인물을 다루는 무료 20개 질문 게임. 가입 없음.",
+    id: "Pikirkan sebuah karakter dan biarkan Genie menebaknya. Game 20 pertanyaan gratis dengan karakter film, serial, anime, game, dan sejarah, tanpa pendaftaran.",
+    vi: "Hãy nghĩ về một nhân vật và để Thần Đèn đoán. Trò chơi 20 câu hỏi miễn phí với nhân vật phim, phim bộ, anime, game và lịch sử, không cần đăng ký."
+  };
+  Object.keys(desc).forEach(function (code) {
+    if (window.I18N && window.I18N[code]) window.I18N[code].meta_desc = desc[code];
+  });
+})();

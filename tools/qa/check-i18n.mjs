@@ -36,7 +36,9 @@ await load("langs.js", "i18n.js", "games/i18n-slugs.js");
 await load(
   "games/i18n-data-a.js", "games/i18n-data-b.js", "games/i18n-data-c.js",
   "games/i18n-data-d.js", "games/i18n-data-e.js", "games/i18n-data-f.js",
-  "games/i18n-data-g.js", "games/i18n-data-h.js", "games/i18n-data-i.js"
+  "games/i18n-data-g.js", "games/i18n-data-h.js", "games/i18n-data-i.js",
+  "games/i18n-data-j.js", "games/i18n-prose.js", "games/i18n-prose-b.js",
+  "games/i18n-prose-c.js", "games/i18n-prose-d.js"
 );
 const LANGS = sandbox.LANGS || [];
 const CODES = LANGS.map((lang) => lang.code);
@@ -52,7 +54,8 @@ for (const code of CODES) {
 
 const SLUGS = sandbox.MGI18N_SLUGS || [];
 const CATS = sandbox.MGI18N_CAT_ORDER || [];
-const PARTS = ["A", "B", "C", "D", "E", "F", "G", "H", "I"].map((letter) => sandbox[`MGI18N_DATA_${letter}`] || {});
+const PARTS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"].map((letter) => sandbox[`MGI18N_DATA_${letter}`] || {});
+const PROSE_PARTS = sandbox.MGI18N_PROSE_PARTS || [];
 const GUIDE_OF = sandbox.MGI18N_GUIDE || {};
 const FAMILIES = [...new Set(Object.values(GUIDE_OF))];
 const GUIDE_POINTS = sandbox.MGI18N_GUIDE_POINTS || {};
@@ -84,6 +87,34 @@ const CATS_BY_LANG = section("cats");
 const HUB = section("hub");
 const STATUS = section("status");
 const GUIDES = section("guides");
+const PROSE = {};
+for (const part of PROSE_PARTS) {
+  for (const [code, table] of Object.entries(part)) {
+    PROSE[code] = Object.assign(PROSE[code] || {}, table);
+  }
+}
+const PROSE_KINDS = ["catLede", "catOverview", "catTrains"];
+
+/* Every language must carry its own hub and category prose. Falling back to
+   English is a graceful runtime default, not a shipping state. */
+for (const code of CODES) {
+  for (const kind of PROSE_KINDS) {
+    for (const key of CATS) {
+      const value = PROSE[code] && PROSE[code][kind] && PROSE[code][kind][key];
+      if (typeof value !== "string" || !value.trim()) fail(`prose: ${code}.${kind}.${key} is missing`);
+    }
+  }
+}
+for (const kind of PROSE_KINDS) {
+  for (const key of CATS) {
+    const english = PROSE.en && PROSE.en[kind] && PROSE.en[kind][key];
+    if (!english) fail(`prose: en.${kind}.${key} is missing`);
+    for (const code of ["de", "pt"]) {
+      const value = PROSE[code] && PROSE[code][kind] && PROSE[code][kind][key];
+      if (value && value === english) fail(`prose: ${code}.${kind}.${key} is still English`);
+    }
+  }
+}
 
 const EN = {
   ui: UI.en || {},
@@ -398,7 +429,12 @@ const readPage = async (page) => {
 for (const page of pages) {
   const html = await readPage(page);
   if (!html) continue;
-  for (const asset of ["/langs.js", "/games/i18n-slugs.js", "/games/i18n-data-a.js", "/games/i18n-data-b.js", "/games/i18n-data-c.js", "/games/i18n-data-d.js", "/games/i18n-data-e.js", "/games/i18n-data-f.js", "/games/i18n-data-g.js", "/games/i18n-data-h.js", "/games/i18n-data-i.js", "/games/i18n.js"]) {
+  /* Hub and category pages render editorial prose, so they load the prose and
+     shell-chrome dictionaries; game pages do not need either. */
+  const shellPage = page === "games/index.html" || page.endsWith("/index.html");
+  const assets = ["/langs.js", "/games/i18n-slugs.js", "/games/i18n-data-a.js", "/games/i18n-data-b.js", "/games/i18n-data-c.js", "/games/i18n-data-d.js", "/games/i18n-data-e.js", "/games/i18n-data-f.js", "/games/i18n-data-g.js", "/games/i18n-data-h.js", "/games/i18n-data-i.js", "/games/i18n.js"];
+  if (shellPage) assets.push("/games/i18n-data-j.js", "/games/i18n-prose.js");
+  for (const asset of assets) {
     if (!html.includes(asset)) fail(`${page}: missing ${asset}`);
   }
   if (!html.includes("/games/i18n.css")) fail(`${page}: missing /games/i18n.css`);
@@ -437,7 +473,7 @@ for (const page of pages) {
     if (/<[a-z]/i.test(inner)) fail(`${page}: a data-i18n element wraps markup, which translation would erase`);
   }
 
-  const slugHooks = [...html.matchAll(/data-mg-(title|howto)="([^"]+)"/g)];
+  const slugHooks = [...html.matchAll(/data-mg-(title|howto|blurb)="([^"]+)"/g)];
   for (const [, attr, slug] of slugHooks) {
     if (!SLUGS.includes(slug)) fail(`${page}: data-mg-${attr}="${slug}" is not a game slug`);
   }
@@ -446,6 +482,12 @@ for (const page of pages) {
   }
   for (const [, index] of html.matchAll(/data-mg-hub="([^"]+)"/g)) {
     if (!/^[0-7]$/.test(index)) fail(`${page}: data-mg-hub="${index}" is outside 0–7`);
+  }
+  for (const [, pair] of html.matchAll(/data-mg-prose="([^"]+)"/g)) {
+    const [kind, key] = pair.split(":");
+    if (!PROSE_KINDS.includes(kind)) fail(`${page}: data-mg-prose="${pair}" uses an unknown prose kind`);
+    if (!CATS.includes(key)) fail(`${page}: data-mg-prose="${pair}" uses an unknown category`);
+    if (!(PROSE.en[kind] || {})[key]) fail(`${page}: data-mg-prose="${pair}" has no English prose`);
   }
   for (const [, slugOrFamily] of html.matchAll(/data-mg-guide="([^"]+)"/g)) {
     if (!SLUGS.includes(slugOrFamily) && !FAMILIES.includes(slugOrFamily)) fail(`${page}: data-mg-guide="${slugOrFamily}" is not a game slug or guide family`);
