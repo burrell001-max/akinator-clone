@@ -1,87 +1,22 @@
-/* Games hub: category filtering, catalogue order and sorting.
-   Standalone — the game pages do not use this file. */
+/* Games hub: category pills, live result count and ?cat=/#key deep links.
+   The cards carry space-separated keys in data-cats, so a game can sit in more
+   than one category (Sudoku is also a number game, the crossword also a word
+   game). Pills use the same keys in data-filter. */
 (function () {
   "use strict";
 
-  var grid = document.getElementById("gameGrid");
-  var cards = Array.prototype.slice.call(document.querySelectorAll("[data-cats]"));
-  var chips = Array.prototype.slice.call(document.querySelectorAll("[data-filter]"));
-  var empty = document.getElementById("filterEmpty");
-  var count = document.getElementById("filterCount");
-  var sortEl = document.getElementById("sort");
+  var bar = document.getElementById("hubCatBar");
+  var grid = document.getElementById("hubGamesGrid");
+  if (!bar || !grid) return;
 
-  if (!cards.length) return;
+  var pills = Array.prototype.slice.call(bar.querySelectorAll(".cat-pill"));
+  var cards = Array.prototype.slice.call(grid.querySelectorAll(".game-card"));
+  var countEl = document.getElementById("hubCount");
 
-  /* Remember the hand-written order so "Catalogue order" is restorable. */
-  cards.forEach(function (card, i) { card.dataset.order = String(i); });
-
-  var filter = "all";
-
-  function matches(card) {
-    if (filter === "all") return true;
-    return (card.dataset.cats || "").split(/\s+/).indexOf(filter) !== -1;
-  }
-
-  function sorted(list) {
-    var mode = sortEl ? sortEl.value : "catalogue";
-    var copy = list.slice();
-    if (mode === "az") {
-      copy.sort(function (a, b) {
-        return a.dataset.title.toLowerCase().localeCompare(b.dataset.title.toLowerCase());
-      });
-    } else if (mode === "category") {
-      copy.sort(function (a, b) {
-        var c = a.dataset.cat.localeCompare(b.dataset.cat);
-        if (c !== 0) return c;
-        return a.dataset.title.localeCompare(b.dataset.title);
-      });
-    } else {
-      copy.sort(function (a, b) { return Number(a.dataset.order) - Number(b.dataset.order); });
-    }
-    return copy;
-  }
-
-  function render() {
-    var visible = cards.filter(matches);
-    var ordered = sorted(visible);
-
-    /* Reordering the DOM renumbers the CSS counters as well. */
-    ordered.forEach(function (card) {
-      card.hidden = false;
-      grid.appendChild(card);
-    });
-    cards.forEach(function (card) {
-      if (visible.indexOf(card) === -1) card.hidden = true;
-    });
-
-    chips.forEach(function (chip) {
-      chip.setAttribute("aria-pressed", String(chip.dataset.filter === filter));
-    });
-
-    if (empty) empty.hidden = visible.length !== 0;
-    if (count) count.textContent = visible.length === 1 ? "1 game" : visible.length + " games";
-  }
-
-  function setFilter(next, updateHash) {
-    filter = next;
-    render();
-    if (updateHash && window.history && window.history.replaceState) {
-      var hash = next === "all" ? "" : "#" + next;
-      window.history.replaceState(null, "", window.location.pathname + hash);
-    }
-  }
-
-  chips.forEach(function (chip) {
-    chip.addEventListener("click", function () { setFilter(chip.dataset.filter, true); });
-  });
-
-  if (sortEl) {
-    sortEl.addEventListener("change", function () { render(); });
-  }
-
-  /* Category links elsewhere on the site use readable labels (?cat=Word%20Games);
-     the rail speaks in short keys, so translate before falling back to the hash. */
+  /* Readable labels so links elsewhere can say ?cat=Word%20Games. */
   var LABELS = {
+    "all categories": "all",
+    "all": "all",
     "brain games": "brain",
     "daily games": "daily",
     "number games": "number",
@@ -94,15 +29,41 @@
     "puzzle games": "puzzle"
   };
 
+  function apply(key, remember) {
+    pills.forEach(function (pill) {
+      var on = pill.dataset.filter === key;
+      pill.classList.toggle("is-active", on);
+      pill.setAttribute("aria-pressed", String(on));
+    });
+
+    var shown = 0;
+    cards.forEach(function (card) {
+      var cats = (card.dataset.cats || "").split(/\s+/);
+      var match = key === "all" || cats.indexOf(key) !== -1;
+      card.classList.toggle("is-hidden", !match);
+      if (match) shown++;
+    });
+
+    if (countEl) countEl.textContent = shown === 1 ? "1 game" : shown + " games";
+
+    if (remember && window.history && window.history.replaceState) {
+      window.history.replaceState(null, "", window.location.pathname + (key === "all" ? "" : "#" + key));
+    }
+  }
+
+  pills.forEach(function (pill) {
+    pill.addEventListener("click", function () { apply(pill.dataset.filter, true); });
+  });
+
   var requested = "";
   try {
     requested = (new URLSearchParams(window.location.search).get("cat") || "").trim().toLowerCase();
   } catch (e) {
     requested = "";
   }
-  var fromQuery = LABELS[requested] || requested;
-  var fromHash = (window.location.hash || "").replace("#", "");
-  var wanted = fromQuery || fromHash;
-  var known = chips.some(function (chip) { return chip.dataset.filter === wanted; });
-  setFilter(known ? wanted : "all", false);
+  var key = LABELS[requested] || requested;
+  if (!key) key = (window.location.hash || "").replace("#", "").toLowerCase();
+
+  var known = pills.some(function (pill) { return pill.dataset.filter === key; });
+  apply(known ? key : "all", false);
 })();
