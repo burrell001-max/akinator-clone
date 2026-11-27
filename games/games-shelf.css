@@ -2,13 +2,16 @@
    Loaded only by index.html; every selector is prefixed fb- so the page theme is untouched. */
 
 .fb-games-section {
-  /* Wide by default: full-bleed to the viewport edges, with the content capped
-     at 1440px so a large desktop shows seven cards at once and an ultrawide
-     screen gets equal gutters instead of a stretched rail. The page sets
-     overflow-x: hidden and the gutters absorb the few pixels a scrollbar adds
-     to 100vw. Add class="is-constrained" for a 1120px centred column. */
-  --fb-max: 1440px;
-  --fb-edge: clamp(20px, 4vw, 64px);
+  /* A 1120px centred column, matching the width of the site's other wide
+     content blocks. The homepage's .page-wrap is only 1080px wide, so the
+     shelf steps out to the viewport edges with the negative-margin trick and
+     then pads itself back in: once the viewport passes --fb-max the padding
+     resolves to (100vw - 1120px) / 2, which centres the content and leaves
+     equal gutters. Below that the --fb-edge padding takes over so the shelf
+     keeps clean margins on tablets and phones. The page sets overflow-x:
+     hidden, which absorbs the few pixels a desktop scrollbar adds to 100vw. */
+  --fb-max: 1120px;
+  --fb-edge: clamp(16px, 3vw, 32px);
   --fb-card: 185px;
   --fb-gap: 1rem;
   --fb-arrow: 38px;
@@ -22,14 +25,9 @@
   font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   text-align: left;
 }
-
-/* Opt-in narrow layout: 1120px centred, like a normal content column. */
+/* Kept as an alias for markup written before 1120px became the default. */
 .fb-games-section.is-constrained {
-  width: 100%;
-  max-width: 1120px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-inline: 1rem;
+  padding-inline: max(var(--fb-edge), calc((100vw - var(--fb-max)) / 2));
 }
 .fb-shelf-header {
   display: flex;
@@ -206,14 +204,26 @@
   .fb-games-section { --fb-card: 170px; --fb-gap: 1.15rem; }
 }
 
+@media (min-width: 1000px) {
+  /* Eleven pills add up to ~1250px, a little wider than the 1120px column, so
+     they wrap onto a second row and centre instead of hiding the last two off
+     the right edge of a scrolling bar. */
+  .fb-category-bar {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    justify-content: center;
+    gap: 0.5rem;
+    padding-bottom: 0;
+  }
+}
+
 @media (min-width: 1280px) {
   .fb-games-section {
-    /* Slightly smaller cards at large widths: seven and a half fit in a 1440
-       viewport instead of six. */
+    /* Slightly smaller cards on big screens: six fit in the 1120px column
+       beside the arrows. */
     --fb-card: 160px;
     --fb-gap: 1.2rem;
     --fb-arrow: 44px;
-    --fb-edge: clamp(24px, 4vw, 80px);
   }
 }
 
