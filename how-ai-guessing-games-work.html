@@ -89,7 +89,7 @@ ul { color:#cfc7e8; line-height:1.8; font-size:0.97rem; padding-left: 20px; marg
 <p>If you've played MindGenie AI, you've probably wondered how a website can guess who — or what — you're thinking of after just a dozen or so yes-or-no questions. It can feel like magic, but the idea behind it is actually a fairly old and elegant piece of game logic, dressed up with some modern AI polish.</p>
 
 <h2>It starts with 20 Questions</h2>
-<p>The "guess the character" format didn't start on the internet. It's a digital descendant of the classic parlor game 20 Questions, where one player thinks of a person, place, or thing, and the other tries to identify it using only yes-or-no questions. The trick to playing it well is asking questions that split the remaining possibilities roughly in half each time — that's what lets a skilled human (or a good algorithm) zero in on an answer surprisingly fast, even out of thousands of options.</p>
+<p>The "guess the character" format didn't start on the internet. It's a digital descendant of the classic parlor game 20 Questions, where one player thinks of a person, place, or thing, and the other tries to identify it using only yes-or-no questions. The trick to playing it well is asking questions that split the remaining possibilities roughly in half each time. That is what lets a skilled human, or a good algorithm, zero in on an answer surprisingly fast — even out of thousands of options.</p>
 <p>MindGenie AI works on the same core principle. Every question you're asked isn't random — it's chosen because your answer to it will eliminate as many wrong guesses as possible, as efficiently as possible.</p>
 
 <h2>Behind the scenes: how the Genie narrows things down</h2>
@@ -108,7 +108,7 @@ ul { color:#cfc7e8; line-height:1.8; font-size:0.97rem; padding-left: 20px; marg
 <p>Every time you confirm whether the Genie's final guess was right or wrong, that feedback gets folded back into the system. Over thousands of rounds, this kind of feedback loop helps refine which questions are actually useful and helps correct traits that might have been tagged incorrectly.</p>
 
 <h2>Try to beat it</h2>
-<p>Pick a character with a lot of overlapping traits with someone else — two similar-looking anime rivals, for example, or two historical figures from the same era — answer carefully, and see how many questions it takes before the Genie either nails it or gives up.</p>
+<p>Pick a character with a lot of overlapping traits with someone else — two similar-looking anime rivals, for example, or two historical figures from the same era. Answer carefully, and see how many questions it takes before the Genie either nails it or gives up.</p>
 
 <h2>Why the number of questions is not fixed</h2>
 <p>A fixed list of twenty questions is easy to build and easy to explain, and it is also easy to beat. The problem is that a fixed list cannot react. Once you know what the fourth question asks, you can prepare for it, and the round becomes a memory test rather than a deduction. The engine on this site avoids that by picking each question after reading the answers so far, so there is no order to memorise.</p>
