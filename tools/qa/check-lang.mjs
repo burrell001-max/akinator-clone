@@ -30,6 +30,7 @@ for (const file of ["langs.js", "games/i18n-slugs.js", "games/i18n-data-a.js", "
   new Function("window", await readFile(join(ROOT, file), "utf8"))(sandbox);
 }
 const LANGS = sandbox.LANGS || [];
+const sandboxParts = ["A", "B", "C", "J"].map((letter) => sandbox[`MGI18N_DATA_${letter}`] || {});
 const CODES = LANGS.map((lang) => lang.code);
 const PROSE = {};
 for (const part of sandbox.MGI18N_PROSE_PARTS || []) {
@@ -52,6 +53,47 @@ for (const code of CODES) {
   }
 }
 if (!problems.length) pass("all 18 languages carry 30 prose strings (lede, overview, training)");
+
+/* DE and PT are the two locales the editorial pass covers directly. Fail if a
+   key disappears or silently falls back to English; brand names and loanwords
+   are the only values allowed to match English exactly. */
+const section = (name) => {
+  const merged = {};
+  for (const part of sandboxParts) {
+    const table = part[name];
+    if (!table) continue;
+    for (const [code, value] of Object.entries(table)) {
+      merged[code] = Array.isArray(value) ? value : Object.assign(merged[code] || {}, value);
+    }
+  }
+  return merged;
+};
+const EN_UI = section("ui").en || {};
+const UI = section("ui");
+const TITLES = section("titles");
+const HOWTO = section("howto");
+const CAT_NAMES = section("cats");
+const HUB_STRINGS = section("hub");
+const ALLOW_SAME_UI = new Set(["nav_blog", "start", "level"]);
+
+for (const code of ["de", "pt"]) {
+  for (const key of Object.keys(EN_UI)) {
+    const value = UI[code] && UI[code][key];
+    if (typeof value !== "string" || !value.trim()) fail(`${code}: UI key ${key} is missing`);
+    else if (value === EN_UI[key] && !ALLOW_SAME_UI.has(key)) fail(`${code}: UI key ${key} is still English`);
+  }
+  for (const [name, table] of [["title", TITLES], ["howto", HOWTO], ["category", CAT_NAMES], ["hub", HUB_STRINGS]]) {
+    const english = table.en || [];
+    const translated = table[code] || [];
+    if (translated.length < english.length) fail(`${code}: ${name} list has ${translated.length} of ${english.length} entries`);
+    english.forEach((value, index) => {
+      const actual = translated[index];
+      if (typeof actual !== "string" || !actual.trim()) fail(`${code}: ${name}[${index}] is missing`);
+      else if (actual === value && value !== "Sudoku") fail(`${code}: ${name}[${index}] is still English (${value})`);
+    });
+  }
+}
+if (!problems.length) pass("de/pt cover every UI key, title, instruction, category and hub string");
 
 /* The main switcher must honour ?lang= and keep storage/URL in step. */
 const runtime = await readFile(join(ROOT, "games/i18n.js"), "utf8");

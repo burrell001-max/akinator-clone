@@ -137,6 +137,15 @@ notes.push(`${ribbonCount} pages carry the category ribbon`);
    checks compare the output back against that data, so a hand edit that drifts
    from the source of truth fails here instead of shipping. */
 
+/* The catalog floor: every category must offer at least five genuinely
+   playable games. Cross-listing is allowed (a Sudoku is also a number game),
+   because the shelf and hub filter on the full list. */
+for (const key of CATEGORY_ORDER) {
+  const count = GAMES.filter((game) => game.cats.includes(key)).length;
+  if (count < 5) fail("tools/content/games-data.mjs", `${CATEGORIES[key].name} has ${count} game(s), needs at least 5`);
+}
+notes.push("category floor: every category lists at least five games");
+
 const hubCardCats = new Map();
 for (const card of cards) {
   const slug = attr(card, "href").replace("/games/", "").replace(".html", "");
