@@ -114,12 +114,15 @@
   </footer>
 </div>
 
+<script src="/games/games.js"></script>
+<script src="/games/memory-engine.js"></script>
 <script>
 (function () {
   "use strict";
 
   var SYMBOLS = ["🦊", "🐼", "🌵", "🍄", "🚀", "🎧"];
   var STORAGE_KEY = "mg-memory-best";
+  var PAIRS = SYMBOLS.length;
 
   var board = document.getElementById("board");
   var movesEl = document.getElementById("moves");
@@ -128,129 +131,79 @@
   var statusEl = document.getElementById("status");
   var bestEl = document.getElementById("best");
 
-  var first = null;
-  var second = null;
-  var lock = false;
-  var moves = 0;
-  var pairs = 0;
-  var seconds = 0;
-  var ticking = null;
-  var started = false;
-
-  function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
-
   function fmt(total) {
     var m = Math.floor(total / 60), s = total % 60;
     return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
   }
 
-  function startTimer() {
-    if (started) return;
-    started = true;
-    ticking = setInterval(function () {
-      seconds++;
-      timerEl.textContent = fmt(seconds);
-    }, 1000);
-  }
-
-  function stopTimer() {
-    if (ticking) clearInterval(ticking);
-    ticking = null;
-  }
-
   function showBest() {
-    var best = null;
-    try { best = localStorage.getItem(STORAGE_KEY); } catch (e) { best = null; }
-    bestEl.textContent = best ? "Best: " + best + " moves" : "No best score yet";
+    var best = MGMemory.bestValue(STORAGE_KEY);
+    bestEl.textContent = best === null ? "No best score yet" : "Best: " + best + " moves";
   }
 
-  function saveBest() {
-    try {
-      var current = localStorage.getItem(STORAGE_KEY);
-      if (!current || moves < Number(current)) {
-        localStorage.setItem(STORAGE_KEY, String(moves));
-      }
-    } catch (e) { /* storage can be blocked; the game still works */ }
-    showBest();
-  }
+  /* The matching rules, the move counter, the clock and the win check come
+     from memory-engine.js, which the other memory games share. This page owns
+     only the twelve cards and the counters around them. */
+  var game = MGMemory.matchGame({
+    pairs: PAIRS,
+    lockMs: 750,
+    isFaceUp: function (card) {
+      return card.classList.contains("flipped") || card.classList.contains("matched");
+    },
+    onFlip: function (card) {
+      card.classList.add("flipped");
+      card.setAttribute("aria-label", "Card showing " + card.dataset.symbol);
+    },
+    onMove: function (moves) {
+      movesEl.textContent = "Moves: " + moves;
+    },
+    onMatch: function (a, b, pairs) {
+      a.classList.add("matched");
+      b.classList.add("matched");
+      pairsEl.textContent = "Pairs: " + pairs + " / " + PAIRS;
+    },
+    onMismatch: function (a, b) {
+      [a, b].forEach(function (card) {
+        if (!card) return;
+        card.classList.remove("flipped");
+        card.setAttribute("aria-label", "Card, face down");
+      });
+    },
+    onClock: function (seconds) {
+      timerEl.textContent = fmt(seconds);
+    },
+    onWin: function (result) {
+      var best = MGMemory.commitBest(STORAGE_KEY, result.moves, true);
+      showBest();
+      statusEl.textContent = "Cleared in " + result.moves + " moves and " + fmt(result.seconds) + "." +
+        (best.improved ? " That is a new best." : "");
+    }
+  });
 
   function deal() {
     board.innerHTML = "";
-    first = null;
-    second = null;
-    lock = false;
-    moves = 0;
-    pairs = 0;
-    seconds = 0;
-    started = false;
-    stopTimer();
+    game.reset();
     movesEl.textContent = "Moves: 0";
-    pairsEl.textContent = "Pairs: 0 / 6";
+    pairsEl.textContent = "Pairs: 0 / " + PAIRS;
     timerEl.textContent = "00:00";
     statusEl.textContent = "";
 
-    var deck = shuffle(SYMBOLS.concat(SYMBOLS));
-    deck.forEach(function (symbol, index) {
+    MGMemory.deck(SYMBOLS).forEach(function (symbol, index) {
       var card = document.createElement("button");
       card.type = "button";
       card.className = "card";
       card.dataset.symbol = symbol;
       card.setAttribute("aria-label", "Card " + (index + 1) + ", face down");
-      card.innerHTML = '<span class="face back" aria-hidden="true">?</span><span class="face front" aria-hidden="true">' + symbol + "</span>";
-      card.addEventListener("click", function () { flip(card); });
+      card.innerHTML = '<span class="face back" aria-hidden="true">?</span>' +
+        '<span class="face front" aria-hidden="true">' + symbol + "</span>";
+      card.addEventListener("click", function () { game.choose(card); });
       board.appendChild(card);
     });
-  }
 
-  function flip(card) {
-    if (lock || card === first || card.classList.contains("matched") || card.classList.contains("flipped")) return;
-    startTimer();
-    card.classList.add("flipped");
-    card.setAttribute("aria-label", "Card showing " + card.dataset.symbol);
-    if (!first) { first = card; return; }
-    second = card;
-    moves++;
-    movesEl.textContent = "Moves: " + moves;
-    if (first.dataset.symbol === second.dataset.symbol) {
-      first.classList.add("matched");
-      second.classList.add("matched");
-      pairs++;
-      pairsEl.textContent = "Pairs: " + pairs + " / 6";
-      first = null;
-      second = null;
-      if (pairs === 6) finish();
-    } else {
-      lock = true;
-      // Hold the two cards locally: a New game click can null the shared
-      // first/second pointers before this timeout fires.
-      var wrongA = first, wrongB = second;
-      first = null;
-      second = null;
-      setTimeout(function () {
-        [wrongA, wrongB].forEach(function (c) {
-          if (!c) return;
-          c.classList.remove("flipped");
-          c.setAttribute("aria-label", "Card, face down");
-        });
-        lock = false;
-      }, 750);
-    }
-  }
-
-  function finish() {
-    stopTimer();
-    saveBest();
-    statusEl.textContent = "Cleared in " + moves + " moves and " + fmt(seconds) + ".";
+    showBest();
   }
 
   document.getElementById("restart").addEventListener("click", deal);
-  showBest();
   deal();
 })();
 </script>

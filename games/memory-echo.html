@@ -125,6 +125,7 @@
   </footer>
 </div>
 <script src="/games/games.js"></script>
+<script src="/games/memory-engine.js"></script>
 <script>
 (function () {
   "use strict";
@@ -140,167 +141,102 @@
   var startBtn = document.getElementById("start");
   var replayBtn = document.getElementById("replay");
 
-  var sequence = [];
-  var inputIndex = 0;
-  var playing = false;
-  var running = false;
-  var level = 0;
-  var actx = null;
-  /* Incremented by every new playback; a loop whose token is stale stops, so
-     restarting mid-sequence cannot leave two flash loops fighting each other. */
-  var playToken = 0;
-
   function buildPads() {
     padsEl.innerHTML = "";
     for (var i = 0; i < PAD_COUNT; i++) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "pad pad-" + i;
-      b.dataset.pad = String(i);
-      b.disabled = true;
-      b.setAttribute("aria-label", "Pad " + (i + 1));
-      padsEl.appendChild(b);
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "pad pad-" + i;
+      button.dataset.pad = String(i);
+      button.disabled = true;
+      button.setAttribute("aria-label", "Pad " + (i + 1));
+      padsEl.appendChild(button);
     }
-  }
-
-  function tone(freq) {
-    try {
-      if (!actx) {
-        var Ctx = window.AudioContext || window.webkitAudioContext;
-        if (!Ctx) return;
-        actx = new Ctx();
-      }
-      if (actx.state === "suspended" && actx.resume) actx.resume();
-      var osc = actx.createOscillator();
-      var gain = actx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = freq;
-      gain.gain.value = 0.07;
-      osc.connect(gain);
-      gain.connect(actx.destination);
-      osc.start();
-      osc.stop(actx.currentTime + 0.2);
-    } catch (e) { /* audio is a bonus, not a requirement */ }
   }
 
   function flash(index, duration) {
     var pad = padsEl.querySelector('[data-pad="' + index + '"]');
     if (!pad) return;
     pad.classList.add("lit");
-    tone(FREQS[index]);
-    setTimeout(function () { pad.classList.remove("lit"); }, duration || 260);
+    window.setTimeout(function () { pad.classList.remove("lit"); }, duration || 260);
   }
 
   function showBest() {
-    var best = MG.store.get(BEST_KEY, 0);
+    var best = MGMemory.bestValue(BEST_KEY) || 0;
     bestEl.textContent = best ? best + (best === 1 ? " step" : " steps") : "—";
   }
 
   function setPadEnabled(on) {
-    Array.prototype.forEach.call(padsEl.querySelectorAll(".pad"), function (p) {
-      p.disabled = !on;
+    Array.prototype.forEach.call(padsEl.querySelectorAll(".pad"), function (pad) {
+      pad.disabled = !on;
     });
   }
 
-  function playSequence() {
-    playToken++;
-    var token = playToken;
-    playing = true;
-    setPadEnabled(false);
-    replayBtn.disabled = true;
-    statusEl.textContent = "Watch the sequence…";
-    var i = 0;
-    function step() {
-      if (token !== playToken) return;
-      if (i >= sequence.length) {
-        playing = false;
-        setPadEnabled(true);
-        replayBtn.disabled = false;
-        statusEl.textContent = "Your turn: " + sequence.length + (sequence.length === 1 ? " step." : " steps.");
-        return;
-      }
-      flash(sequence[i]);
-      i++;
-      setTimeout(step, 620);
-    }
-    setTimeout(step, 420);
-  }
-
-  function nextRound() {
-    level++;
-    levelEl.textContent = String(level);
-    sequence.push(Math.floor(Math.random() * PAD_COUNT));
-    inputIndex = 0;
-    running = true;
-    playSequence();
-  }
-
-  function fail() {
-    playToken++;
-    running = false;
-    setPadEnabled(false);
-    replayBtn.disabled = true;
-    var best = MG.store.get(BEST_KEY, 0);
-    var cleared = level - 1;
-    var message = "Wrong pad. You cleared " + cleared + (cleared === 1 ? " step." : " steps.");
-    if (cleared > best) {
-      MG.store.set(BEST_KEY, cleared);
+  /* Rounds, playback order, per-pad tones and restart-safe scheduling come
+     from memory-engine.js. A restart inside the "next round" gap cancels the
+     pending callback instead of replaying it into the new game. */
+  var game = MGMemory.sequenceGame({
+    pool: PAD_COUNT,
+    flashMs: 260,
+    stepMs: 620,
+    leadMs: 420,
+    gapMs: 800,
+    flash: flash,
+    toneFor: function (pad) { return FREQS[pad]; },
+    setEnabled: setPadEnabled,
+    onStart: function () {
+      levelEl.textContent = "0";
+      startBtn.textContent = "Restart";
+      statusEl.textContent = "";
       showBest();
-      message += " That is a new best.";
-    } else {
-      message += " Best: " + best + ".";
-    }
-    statusEl.textContent = message;
-    startBtn.textContent = "Play again";
-  }
-
-  function press(index) {
-    if (!running || playing) return;
-    flash(index, 180);
-    if (index !== sequence[inputIndex]) {
-      fail();
-      return;
-    }
-    inputIndex++;
-    if (inputIndex === sequence.length) {
-      running = false;
-      setPadEnabled(false);
+    },
+    onAdvance: function (level) {
+      levelEl.textContent = String(level);
+    },
+    onPlaybackStart: function () {
       replayBtn.disabled = true;
-      var cleared = level;
-      var best = MG.store.get(BEST_KEY, 0);
-      if (cleared > best) { MG.store.set(BEST_KEY, cleared); showBest(); }
-      statusEl.textContent = "Correct — " + cleared + (cleared === 1 ? " step." : " steps.") + " Next round coming.";
-      setTimeout(nextRound, 800);
+      statusEl.textContent = "Watch the sequence…";
+    },
+    onTurn: function (length) {
+      replayBtn.disabled = false;
+      statusEl.textContent = "Your turn: " + length + (length === 1 ? " step." : " steps.");
+    },
+    onClear: function (result) {
+      var best = MGMemory.commitBest(BEST_KEY, result.cleared);
+      if (best.improved) showBest();
+      statusEl.textContent = "Correct — " + result.cleared +
+        (result.cleared === 1 ? " step." : " steps.") + " Next round coming.";
+    },
+    onFail: function (result) {
+      var best = MGMemory.commitBest(BEST_KEY, result.cleared);
+      var message = "Wrong pad. You cleared " + result.cleared +
+        (result.cleared === 1 ? " step." : " steps.");
+      if (best.improved) {
+        showBest();
+        message += " That is a new best.";
+      } else {
+        message += " Best: " + (MGMemory.bestValue(BEST_KEY) || 0) + ".";
+      }
+      statusEl.textContent = message;
+      startBtn.textContent = "Play again";
     }
-  }
-
-  function start() {
-    playToken++;
-    sequence = [];
-    inputIndex = 0;
-    playing = false;
-    running = false;
-    level = 0;
-    levelEl.textContent = "0";
-    startBtn.textContent = "Restart";
-    showBest();
-    nextRound();
-  }
-
-  padsEl.addEventListener("click", function (e) {
-    var pad = e.target.closest(".pad");
-    if (pad) press(Number(pad.dataset.pad));
   });
 
-  document.addEventListener("keydown", function (e) {
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
-    if (/^[1-4]$/.test(e.key)) { press(Number(e.key) - 1); e.preventDefault(); }
+  padsEl.addEventListener("click", function (event) {
+    var pad = event.target.closest(".pad");
+    if (pad) game.press(Number(pad.dataset.pad));
   });
 
-  startBtn.addEventListener("click", start);
-  replayBtn.addEventListener("click", function () {
-    if (running && !playing) playSequence();
+  document.addEventListener("keydown", function (event) {
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if (/^[1-4]$/.test(event.key)) {
+      game.press(Number(event.key) - 1);
+      event.preventDefault();
+    }
   });
+
+  startBtn.addEventListener("click", game.start);
+  replayBtn.addEventListener("click", game.replay);
 
   buildPads();
   showBest();

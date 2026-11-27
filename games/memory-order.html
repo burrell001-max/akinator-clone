@@ -143,6 +143,7 @@
 </div>
 
 <script src="/games/games.js"></script>
+<script src="/games/memory-engine.js"></script>
 <script>
 (function () {
   "use strict";
@@ -174,12 +175,15 @@
   var target = [];
   var progress = 0;
   var accepting = false;
+  var timers = MGMemory.timers();
 
   function paintProgress() {
     barFill.style.width = (target.length ? (progress / target.length) * 100 : 0) + "%";
   }
 
   function startSession() {
+    /* Cancels the pending scatter and next-round callbacks of the old run. */
+    timers.clear();
     count = 4;
     round = 0;
     run = 0;
@@ -209,7 +213,7 @@
     phaseLabel.textContent = "Reading the order…";
     statusEl.textContent = "Memorise the order of the " + count + " shapes.";
     var wait = 700 + count * 650;
-    window.setTimeout(function () { scatter(); }, wait);
+    timers.after(wait, scatter);
   }
 
   function scatter() {
@@ -240,15 +244,14 @@
       paintProgress();
       if (progress === target.length) {
         accepting = false;
-        MG.saveBest("mg-orderrecall-best", count);
+        MGMemory.commitBest("mg-orderrecall-best", count);
         bestEl.textContent = String(MG.getBest("mg-orderrecall-best", 0));
-        var streak = MG.getBest("mg-orderrecall-streak", 0) + 1;
-        MG.store.set("mg-orderrecall-streak", streak);
+        var streak = MGMemory.counter("mg-orderrecall-streak");
         streakEl.textContent = String(streak);
         phaseLabel.textContent = "Round cleared.";
         statusEl.textContent = "Correct order. Next round uses " + Math.min(count + 1, SHAPES.length) + " shapes.";
         if (count < SHAPES.length) count++;
-        window.setTimeout(nextRound, 900);
+        timers.after(900, nextRound);
       } else {
         statusEl.textContent = (progress) + " of " + target.length + " placed. Next one?";
       }

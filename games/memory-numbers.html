@@ -145,6 +145,7 @@
 </div>
 
 <script src="/games/games.js"></script>
+<script src="/games/memory-engine.js"></script>
 <script>
 (function () {
   "use strict";
@@ -165,6 +166,7 @@
   var round = 0;
   var run = 0;
   var showing = false;
+  var timers = MGMemory.timers();
 
   function renderDigits(shown) {
     digitsEl.innerHTML = "";
@@ -177,6 +179,9 @@
   }
 
   function startSession() {
+    /* Drops the pending "one digit longer" callback from the round that just
+       ended, so a quick restart cannot skip straight to round two. */
+    timers.clear();
     length = 3;
     round = 0;
     run = 0;
@@ -200,7 +205,7 @@
     phaseLabel.textContent = "Memorise…";
     statusEl.textContent = "";
     var showFor = 700 + length * 350;
-    window.setTimeout(function () {
+    timers.after(showFor, function () {
       if (!showing) return;
       showing = false;
       renderDigits(false);
@@ -208,7 +213,7 @@
       submitBtn.disabled = false;
       input.focus();
       phaseLabel.textContent = "Type it back.";
-    }, showFor);
+    });
   }
 
   function submit() {
@@ -221,13 +226,13 @@
     }
     if (typed === sequence) {
       run++;
-      MG.saveBest("mg-digitecho-streak", run);
+      MGMemory.commitBest("mg-digitecho-streak", run);
       streakEl.textContent = String(MG.getBest("mg-digitecho-streak", 0));
-      MG.saveBest("mg-digitecho-best", length);
+      MGMemory.commitBest("mg-digitecho-best", length);
       bestEl.textContent = String(MG.getBest("mg-digitecho-best", 0));
       statusEl.textContent = "Correct: " + sequence.split("").join(" ") + ". One digit longer next.";
       length++;
-      window.setTimeout(nextRound, 800);
+      timers.after(800, nextRound);
     } else {
       end(typed);
     }

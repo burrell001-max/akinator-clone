@@ -143,6 +143,7 @@
 </div>
 
 <script src="/games/games.js"></script>
+<script src="/games/memory-engine.js"></script>
 <script>
 (function () {
   "use strict";
@@ -162,6 +163,8 @@
   var level = 0;
   var cells = [];
   var accepting = false;
+  var timers = MGMemory.timers();
+  var streak = MGMemory.streak("mg-gridflash-streak");
 
   function buildGrid() {
     gridEl.innerHTML = "";
@@ -189,11 +192,12 @@
   }
 
   function startGame() {
+    timers.clear();
     level = 0;
     found = 0;
     levelEl.textContent = "0";
     bestEl.textContent = String(MG.getBest("mg-gridflash-best", 0));
-    streakEl.textContent = String(MG.getStreak("mg-gridflash-streak").count);
+    streakEl.textContent = String(streak.value());
     nextLevel();
   }
 
@@ -211,13 +215,15 @@
     phaseLabel.textContent = "Watch closely…";
     statusEl.textContent = "Memorise the " + count + " gold squares.";
     target.forEach(function (index) { cells[index].classList.add("is-lit"); });
-    window.setTimeout(function () {
+    /* Scheduled through the engine so a restart during the reveal cancels it
+       instead of arming the new board with the old round's pattern. */
+    timers.after(1100, function () {
       target.forEach(function (index) { cells[index].classList.remove("is-lit"); });
       accepting = true;
       cells.forEach(function (tile) { tile.disabled = false; });
       phaseLabel.textContent = "Now click them.";
       statusEl.textContent = "Click the " + count + " squares that were lit. " + found + " of " + count + " so far.";
-    }, 1100);
+    });
   }
 
   function tap(index) {
@@ -242,20 +248,20 @@
       cells.forEach(function (t) { t.disabled = true; });
       phaseLabel.textContent = "Level cleared.";
       statusEl.textContent = "Level " + level + " cleared. Next round lights " + (target.length + 1) + " squares.";
-      MG.saveBest("mg-gridflash-best", level);
+      MGMemory.commitBest("mg-gridflash-best", level);
       bestEl.textContent = String(MG.getBest("mg-gridflash-best", 0));
-      window.setTimeout(nextLevel, 900);
+      streakEl.textContent = String(streak.bump());
+      timers.after(900, nextLevel);
     }
   }
 
   function endRound() {
     phaseLabel.textContent = "Round over.";
     var cleared = level - 1;
-    var streak = MG.bumpStreak("mg-gridflash-streak");
-    streakEl.textContent = String(streak);
+    streakEl.textContent = String(streak.reset());
     statusEl.textContent = "You cleared " + cleared + (cleared === 1 ? " level" : " levels") +
       " and reached " + target.length + " squares. Press Start to try again.";
-    MG.saveBest("mg-gridflash-best", cleared);
+    MGMemory.commitBest("mg-gridflash-best", cleared);
     bestEl.textContent = String(MG.getBest("mg-gridflash-best", 0));
     startBtn.textContent = "Play again";
   }

@@ -89,14 +89,29 @@ a { color: #5b21b6; }
   border-color: transparent;
 }
 
-.hub-count {
+.hub-count-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
   margin: 0 0 1rem;
+}
+.hub-count {
+  margin: 0;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #6d6585;
 }
+.hub-clear {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #5b21b6;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.hub-clear[hidden] { display: none; }
 
 /* Cards */
 .games-grid {
