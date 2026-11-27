@@ -86,7 +86,10 @@
 
       var selected = btn.dataset.category;
       cards.forEach(function (card) {
-        var match = selected === "all" || card.dataset.category === selected;
+        /* Cards carry every category they belong to, pipe-separated, so a
+           category filter shows the same cross-listed set as the hub. */
+        var list = (card.dataset.cats || card.dataset.category || "").split("|");
+        var match = selected === "all" || list.indexOf(selected) !== -1;
         card.classList.toggle("is-hidden", !match);
       });
 

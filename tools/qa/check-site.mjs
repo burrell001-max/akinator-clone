@@ -145,6 +145,45 @@ for (const game of GAMES) {
   }
 }
 
+/* ── Homepage shelf: cards, cross-listing and five-per-category ──────────── */
+/* The shelf used to filter on a single home category, so a pill showed one or
+   two cards even though the catalog had five or more. Each card now carries
+   every category name it belongs to, and this check keeps it in sync with
+   games-data.mjs and enforces the five-per-category floor. */
+const homePath = join(ROOT, "index.html");
+const homeHtml = await readFile(homePath, "utf8");
+const shelfStart = homeHtml.indexOf('id="mg-games-shelf"');
+const shelf = homeHtml.slice(homeHtml.lastIndexOf("<section", shelfStart), homeHtml.indexOf("</section>", shelfStart));
+const shelfCards = [...shelf.matchAll(/<a class="fb-game-card"[\s\S]*?<\/a>/g)].map((match) => match[0]);
+if (!shelfCards.length) fail("index.html", "games shelf has no cards");
+const shelfCats = new Map();
+const knownNames = CATEGORY_KEYS.map((key) => CATEGORIES[key].name);
+for (const card of shelfCards) {
+  const href = attr(card, "href");
+  const slug = href.replace("/games/", "").replace(".html", "");
+  const names = attr(card, "data-cats").split("|").filter(Boolean);
+  if (!existsSync(join(ROOT, href))) fail("index.html", `shelf card target missing "${href}"`);
+  if (!names.length) fail("index.html", `shelf card ${slug} has no data-cats`);
+  for (const name of names) {
+    if (!knownNames.includes(name)) fail("index.html", `shelf card ${slug} uses unknown category "${name}"`);
+  }
+  shelfCats.set(slug, names);
+}
+for (const game of GAMES) {
+  const expected = game.cats.map((key) => CATEGORIES[key].name);
+  const actual = shelfCats.get(game.slug);
+  if (!actual) fail("index.html", `no shelf card for ${game.slug}`);
+  else if (actual.join("|") !== expected.join("|")) {
+    fail("index.html", `shelf card ${game.slug} says "${actual.join("|")}", games-data.mjs says "${expected.join("|")}"`);
+  }
+}
+for (const key of CATEGORY_KEYS) {
+  const name = CATEGORIES[key].name;
+  const count = [...shelfCats.values()].filter((names) => names.includes(name)).length;
+  if (count < 5) fail("index.html", `shelf category "${name}" has ${count} card(s), needs at least 5`);
+}
+notes.push(`homepage shelf: ${shelfCards.length} cards, at least five per category`);
+
 const ogTitles = new Map();
 const ogImages = new Map();
 const listedOn = new Map();
