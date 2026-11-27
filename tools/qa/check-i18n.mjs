@@ -18,7 +18,12 @@ const load = async (...files) => {
     new Function("window", source)(sandbox);
   }
 };
-await load("langs.js", "games/i18n-slugs.js", "games/i18n-data-a.js", "games/i18n-data-b.js", "games/i18n-data-c.js");
+await load(
+  "langs.js", "games/i18n-slugs.js",
+  "games/i18n-data-a.js", "games/i18n-data-b.js", "games/i18n-data-c.js",
+  "games/i18n-data-d.js", "games/i18n-data-e.js", "games/i18n-data-f.js",
+  "games/i18n-data-g.js", "games/i18n-data-h.js", "games/i18n-data-i.js"
+);
 
 const LANGS = sandbox.LANGS;
 const SLUGS = sandbox.MGI18N_SLUGS;
@@ -26,6 +31,14 @@ const CATS = sandbox.MGI18N_CAT_ORDER;
 const A = sandbox.MGI18N_DATA_A;
 const B = sandbox.MGI18N_DATA_B;
 const C = sandbox.MGI18N_DATA_C;
+const D = sandbox.MGI18N_DATA_D;
+const E = sandbox.MGI18N_DATA_E;
+const F = sandbox.MGI18N_DATA_F;
+const G = sandbox.MGI18N_DATA_G;
+const H = sandbox.MGI18N_DATA_H;
+const I = sandbox.MGI18N_DATA_I;
+const GUIDE_OF = sandbox.MGI18N_GUIDE || {};
+const FAMILIES = [...new Set(Object.values(GUIDE_OF))];
 
 if (!LANGS || LANGS.length !== 18) warn(`expected 18 languages, found ${LANGS && LANGS.length}`);
 if (!SLUGS || SLUGS.length !== 30) warn(`expected 30 game slugs, found ${SLUGS && SLUGS.length}`);
@@ -35,6 +48,31 @@ const titles = (code) => (A.titles[code] || B.titles[code] || []);
 const howto = (code) => (A.howto[code] || B.howto[code] || []);
 const cats = (code) => (C.cats[code] || []);
 const hub = (code) => (C.hub[code] || []);
+
+/* Status lines: every language must cover every English key, and keep its
+   placeholders, or a translated line would print the wrong value. */
+const statusParts = [D, G, H, I].map((part) => part.status);
+const statusEn = Object.assign({}, ...statusParts.map((part) => part.en));
+const statusKeys = Object.keys(statusEn);
+const placeholders = (text) => (String(text).match(/\{\d+\}/g) || []).sort().join(",");
+for (const { code } of LANGS) {
+  const table = statusParts.reduce((merged, part) => Object.assign(merged, part[code] || {}), {});
+  const missing = statusKeys.filter((key) => !table[key]);
+  if (missing.length) warn(`${code}: ${missing.length} missing status line(s)`);
+  const broken = statusKeys.filter((key) => table[key] && placeholders(table[key]) !== placeholders(statusEn[key]));
+  if (broken.length) warn(`${code}: ${broken.length} status line(s) with wrong placeholders, e.g. ${broken[0]}`);
+}
+
+/* Guides: one entry per mechanic family in every language. */
+const guideParts = [E, F].map((part) => part.guides);
+for (const { code } of LANGS) {
+  const table = guideParts.reduce((merged, part) => Object.assign(merged, part[code] || {}), {});
+  for (const family of FAMILIES) {
+    const paragraphs = table[family];
+    if (!paragraphs || !paragraphs.length) warn(`${code}: missing guide for ${family}`);
+    else if (paragraphs.some((para) => !para || para.length < 25)) warn(`${code}: thin guide paragraph in ${family}`);
+  }
+}
 
 const enKeys = Object.keys(A.ui.en);
 for (const { code } of LANGS) {
@@ -68,11 +106,16 @@ const pages = [
 ];
 for (const page of pages) {
   const html = await readFile(join(ROOT, page), "utf8");
-  for (const asset of ["/langs.js", "/games/i18n-slugs.js", "/games/i18n-data-a.js", "/games/i18n-data-b.js", "/games/i18n-data-c.js", "/games/i18n.js"]) {
+  for (const asset of ["/langs.js", "/games/i18n-slugs.js", "/games/i18n-data-a.js", "/games/i18n-data-b.js", "/games/i18n-data-c.js", "/games/i18n-data-d.js", "/games/i18n-data-e.js", "/games/i18n-data-f.js", "/games/i18n-data-g.js", "/games/i18n-data-h.js", "/games/i18n-data-i.js", "/games/i18n.js"]) {
     if (!html.includes(asset)) warn(`${page}: missing ${asset}`);
   }
   if (!html.includes("/games/i18n.css")) warn(`${page}: missing /games/i18n.css`);
   if (!/data-mg-(title|cat|hub|howto)/.test(html)) warn(`${page}: no localization hooks`);
+  /* Game pages carry a guide; pocket-sudoku is a one-line pointer page. */
+  const slug = page.startsWith("games/") ? page.slice(6, -5) : "";
+  if (SLUGS.includes(slug) && slug !== "pocket-sudoku" && !html.includes("mg-guide-en")) {
+    warn(`${page}: English guide is not wrapped for replacement`);
+  }
   if (/freebuff/i.test(html)) warn(`${page}: contains "freebuff"`);
 }
 

@@ -11,3 +11,38 @@ window.MGI18N_SLUGS = [
   "crossword-clues", "crossword-anagrams", "crossword-daily",
   "crossword-detective"
 ];
+
+/* Games share a guide when they share a mechanic, so a short translated guide
+   can replace the long English essay without repeating it eight times. */
+window.MGI18N_GUIDE = {
+  "brain-codebreaker": "codebreak",
+  "daily-nonogram": "nonogram",
+  "number-merge": "merge",
+  "word-anagram": "anagram",
+  "word-guess": "wordguess",
+  "crossword-mini": "crossword",
+  "crossword-clues": "crossword",
+  "crossword-anagrams": "crossword",
+  "crossword-daily": "crossword",
+  "crossword-detective": "crossword",
+  "pocket-sudoku": "sudoku",
+  "sudoku": "sudoku",
+  "sudoku-daily": "sudoku",
+  "sudoku-six": "sudoku",
+  "sudoku-mini": "sudoku",
+  "memory": "pairs",
+  "memory-echo": "sequence",
+  "memory-grid": "sequence",
+  "memory-numbers": "sequence",
+  "memory-order": "sequence",
+  "sort-sequence": "sort",
+  "sort-fractions": "sort",
+  "sort-bins": "sort",
+  "sort-shifter": "sort",
+  "sort-timeline": "sort",
+  "math-speed": "math",
+  "math-missing": "math",
+  "math-target": "math",
+  "daily-pattern": "pattern",
+  "puzzle-slide": "slide"
+};

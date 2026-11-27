@@ -98,3 +98,10 @@ html[dir="rtl"] .section-head { text-align: right; }
 
 /* The shelf play tag keeps its arrow when the label is translated. */
 .play-tag::after { content: "\2192"; }
+
+/* Guides: only one language is shown at a time. */
+.mg-guide { margin: 0 0 18px; }
+.mg-guide[hidden] { display: none; }
+html:not([data-lang="en"]) .mg-guide-en { display: none; }
+html[data-lang="en"] .mg-guide { display: none; }
+.mg-guide p { max-width: 68ch; color: var(--text, #e9edf8); }

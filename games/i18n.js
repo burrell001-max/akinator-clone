@@ -33,21 +33,32 @@
 
   var STORAGE_KEY = "mindgenie_lang";
   var SLUGS = window.MGI18N_SLUGS || [];
+  var GUIDE_OF = window.MGI18N_GUIDE || {};
   var CAT_ORDER = window.MGI18N_CAT_ORDER || [];
-  var PARTS = [window.MGI18N_DATA_A, window.MGI18N_DATA_B, window.MGI18N_DATA_C];
+  var PARTS = [
+    window.MGI18N_DATA_A, window.MGI18N_DATA_B, window.MGI18N_DATA_C,
+    window.MGI18N_DATA_D, window.MGI18N_DATA_E, window.MGI18N_DATA_F,
+    window.MGI18N_DATA_G, window.MGI18N_DATA_H, window.MGI18N_DATA_I
+  ];
   var LANGS = window.LANGS || [{ code: "en", name: "English" }];
   var listeners = [];
   var current = "en";
 
   /* Merge the three data files into one {ui, titles, howto, cats, hub}. */
-  var DATA = { ui: {}, titles: {}, howto: {}, cats: {}, hub: {} };
+  var DATA = { ui: {}, titles: {}, howto: {}, cats: {}, hub: {}, status: {}, guides: {} };
   PARTS.forEach(function (part) {
     if (!part) return;
     Object.keys(part).forEach(function (section) {
       var table = part[section];
       if (!table) return;
       Object.keys(table).forEach(function (code) {
-        DATA[section][code] = DATA[section][code] || table[code];
+        var incoming = table[code];
+        var existing = DATA[section][code];
+        var bothObjects = incoming && existing &&
+          typeof incoming === "object" && typeof existing === "object" &&
+          !Array.isArray(incoming) && !Array.isArray(existing);
+        if (!existing) DATA[section][code] = incoming;
+        else if (bothObjects) Object.assign(existing, incoming);
       });
     });
   });
@@ -95,6 +106,87 @@
   function hub(index) {
     var list = DATA.hub[current] || DATA.hub.en || [];
     return list[index] !== undefined ? list[index] : (DATA.hub.en || [])[index] || "";
+  }
+
+  /* Status lines are written by the games in English. Numbers, times and the
+     odd shouted word are replaced with {0}, {1}… so one key covers every run. */
+  function normaliseStatus(text) {
+    var values = [];
+    var key = String(text)
+      /* A run of digits such as a guessed code or an echoed string is one value. */
+      .replace(/\b\d+(?:\s+\d+)+\b/g, function (match) {
+        values.push(match);
+        return "{" + (values.length - 1) + "}";
+      })
+      .replace(/\b\d+(?::\d+)?\b|\b[A-Z][A-Z0-9]{2,}\b/g, function (match) {
+      values.push(match);
+      return "{" + (values.length - 1) + "}";
+    });
+    return { key: key.replace(/\s+/g, " ").trim(), values: values };
+  }
+
+  function fillPlaceholders(template, values) {
+    return String(template).replace(/\{(\d+)\}/g, function (match, index) {
+      return values[Number(index)] === undefined ? match : values[Number(index)];
+    });
+  }
+
+  /* One line at a time: undefined when the dictionary does not know it. */
+  function translateLine(text) {
+    var parts = normaliseStatus(text);
+    if (!parts.values.length && !/[A-Za-z]/.test(parts.key)) return text;
+    var table = DATA.status[current] || {};
+    var template = table[parts.key];
+    if (template === undefined) template = (DATA.status.en || {})[parts.key];
+    if (template === undefined) return undefined;
+    return fillPlaceholders(template, parts.values);
+  }
+
+  /* Scores are often two sentences joined in the page script, so a whole line
+     the dictionary has never seen can still translate sentence by sentence. */
+  function splitSentences(text) {
+    var parts = [];
+    var start = 0;
+    for (var i = 0; i < text.length; i++) {
+      if (".!?…".indexOf(text.charAt(i)) === -1) continue;
+      if (text.charAt(i + 1) !== " ") continue;
+      parts.push(text.slice(start, i + 1));
+      start = i + 2;
+      i++;
+    }
+    if (start < text.length) parts.push(text.slice(start));
+    return parts;
+  }
+
+  function status(text) {
+    var line = translateLine(text);
+    if (line !== undefined) return line;
+
+    var sentences = splitSentences(text);
+    if (sentences.length > 1) {
+      var translated = false;
+      var joined = sentences.map(function (sentence) {
+        var out = translateLine(sentence);
+        if (out === undefined) return sentence;
+        translated = true;
+        return out;
+      }).join(" ");
+      if (translated) return joined;
+    }
+
+    if (current !== "en" && window.console && console.warn) {
+      console.warn("[i18n] untranslated status:", normaliseStatus(text).key);
+    }
+    return text;
+  }
+
+  /* The translated guide for a game's mechanic, as an array of paragraphs. */
+  function guide(slug) {
+    var family = GUIDE_OF[slug];
+    if (!family) return [];
+    var table = DATA.guides[current] || DATA.guides.en || {};
+    if (!table[family]) table = DATA.guides.en || {};
+    return table[family] || [];
   }
 
   function fromQuery() {
@@ -189,6 +281,49 @@
     for (var i = 0; i < nodes.length; i++) fn(nodes[i]);
   }
 
+  /* ── Live status lines ──
+     Games keep writing English. We remember the English in data-mg-src, show
+     the translation, and ignore the mutation that our own write caused. */
+  var STATUS_SELECTOR = ".status, [role='status'], .hint, .meta span";
+
+  function renderStatusEl(el, force) {
+    if (el.children.length) return;
+    var shown = el.getAttribute("data-mg-out");
+    var text = el.textContent;
+
+    if (force) {
+      var src = el.getAttribute("data-mg-src");
+      if (src === null) return;
+      var fresh = status(src);
+      if (fresh !== text) el.textContent = fresh;
+      el.setAttribute("data-mg-out", fresh);
+      return;
+    }
+
+    if (text === shown) return;
+    if (!text.trim()) {
+      el.setAttribute("data-mg-src", "");
+      el.setAttribute("data-mg-out", "");
+      return;
+    }
+    el.setAttribute("data-mg-src", text);
+    var out = status(text);
+    if (out !== text) el.textContent = out;
+    el.setAttribute("data-mg-out", out);
+  }
+
+  function watchStatuses() {
+    each(document, STATUS_SELECTOR, function (el) {
+      if (el.__mgWatched) return;
+      el.__mgWatched = true;
+      renderStatusEl(el, false);
+      if (window.MutationObserver) {
+        new MutationObserver(function () { renderStatusEl(el, false); })
+          .observe(el, { childList: true, characterData: true, subtree: true });
+      }
+    });
+  }
+
   /* ── Page rendering ── */
   function apply(root) {
     var scope = root || document;
@@ -250,6 +385,24 @@
       }
     }
 
+    /* The translated guide replaces the English essays outside English. */
+    each(scope, "[data-mg-guide]", function (el) {
+      var paragraphs = guide(el.getAttribute("data-mg-guide"));
+      if (current === "en" || !paragraphs.length) {
+        el.hidden = true;
+        el.textContent = "";
+        return;
+      }
+      el.hidden = false;
+      el.textContent = "";
+      paragraphs.forEach(function (text) {
+        var para = document.createElement("p");
+        para.textContent = text;
+        el.appendChild(para);
+      });
+    });
+
+    each(document, STATUS_SELECTOR, function (el) { renderStatusEl(el, true); });
     paintSwitcher();
 
     var event;
@@ -297,6 +450,7 @@
     });
     mountSwitcher();
     apply(document);
+    watchStatuses();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
@@ -310,6 +464,8 @@
     game: game,
     cat: cat,
     hub: hub,
+    status: status,
+    guide: guide,
     setLang: setLang,
     onChange: onChange,
     apply: apply

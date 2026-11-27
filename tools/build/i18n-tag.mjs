@@ -54,10 +54,16 @@ const SCRIPTS = `    <script src="/langs.js"></script>
     <script src="/games/i18n-data-a.js"></script>
     <script src="/games/i18n-data-b.js"></script>
     <script src="/games/i18n-data-c.js"></script>
-    <script src="/games/i18n.js"></script>
+    <script src="/games/i18n-data-d.js"></script>
+    <script src="/games/i18n-data-e.js"></script>
+    <script src="/games/i18n-data-f.js"></script>
+    <script src="/games/i18n-data-g.js"></script>
+    <script src="/games/i18n-data-h.js"></script>
+    <script src="/games/i18n-data-i.js?v=5"></script>
+    <script src="/games/i18n.js?v=5"></script>
 `;
 
-const CSS = '<link rel="stylesheet" href="/games/i18n.css">';
+const CSS = '<link rel="stylesheet" href="/games/i18n.css?v=3">';
 const CSS_AFTER = '<link rel="stylesheet" href="/games/ribbon.css">';
 
 const changed = [];
@@ -76,7 +82,20 @@ function ensureCss(html) {
 }
 
 function ensureScripts(html, marker) {
-  if (html.includes("/games/i18n.js")) return html;
+  if (html.includes("/games/i18n-data-i.js?v=5")) return html;
+  if (html.includes("/games/i18n-data-h.js")) {
+    return html.replace('<script src="/games/i18n-data-h.js"></script>',
+      '<script src="/games/i18n-data-h.js"></script>\n    <script src="/games/i18n-data-i.js?v=5"></script>');
+  }
+  if (html.includes("/games/i18n-data-e.js")) {
+    return html.replace('<script src="/games/i18n-data-e.js"></script>',
+      '<script src="/games/i18n-data-e.js"></script>\n    <script src="/games/i18n-data-f.js"></script>\n    <script src="/games/i18n-data-g.js"></script>\n    <script src="/games/i18n-data-h.js"></script>');
+  }
+  if (html.includes("/games/i18n.js")) {
+    /* An older tag pass already added the first six files. */
+    return html.replace('<script src="/games/i18n.js?v=5"></script>',
+      '<script src="/games/i18n-data-d.js"></script>\n    <script src="/games/i18n-data-e.js"></script>\n    <script src="/games/i18n-data-f.js"></script>\n    <script src="/games/i18n-data-g.js"></script>\n    <script src="/games/i18n-data-h.js"></script>\n    <script src="/games/i18n.js?v=5"></script>');
+  }
   const at = html.indexOf(marker);
   if (at === -1) return html;
   return html.slice(0, at) + SCRIPTS + html.slice(at);
@@ -133,11 +152,48 @@ for (const slug of SLUGS) {
     html = html.replace(/<h1>([^<]*)<\/h1>/, `<h1 data-mg-title="${slug}" data-title-en="${docTitle}">$1</h1>`);
   }
 
-  if (!html.includes("data-mg-howto")) {
-    html = html.replace(/(<h2[^>]*>)How to play<\/h2>/, (m, open) =>
-      `${open.replace(/>$/, ' data-i18n="how_to_play">')}How to play</h2>\n    <p class="mg-howto" data-mg-howto="${slug}"></p>`);
-  }
+  /* Pages spell the heading differently, so normalise it first. */
+  html = html.replace(/<h2>\s*How to play\s*<\/h2>/i, '<h2 data-i18n="how_to_play">How to play</h2>');
   html = html.replace(/<h2>Rules and scoring<\/h2>/g, '<h2 data-i18n="rules">Rules and scoring</h2>');
+
+  if (!html.includes("data-mg-howto")) {
+    const headingAt = html.search(/<h2[^>]*data-i18n="how_to_play"/);
+    if (headingAt !== -1) {
+      const close = html.indexOf("</h2>", headingAt) + 5;
+      html = html.slice(0, close) +
+        `\n    <p class="mg-howto" data-mg-howto="${slug}"></p>` +
+        html.slice(close);
+    }
+  }
+
+  /* Everything from the guide heading to the end of the article is the English
+     guide; outside English a translated guide replaces it. Pages without a
+     How-to-play heading fall back to the first heading after the controls. */
+  if (!html.includes("mg-guide-en")) {
+    const mainEnd = html.indexOf("</main>");
+    let start = html.search(/<h2[^>]*data-i18n="how_to_play"/);
+    if (start === -1) {
+      const mainStart = html.indexOf("<main");
+      const lastInteractive = Math.max(mainStart, ...["</button>", "</select>", "</canvas>", 'id="board"', 'id="grid"', 'class="pad"']
+        .map((mark) => html.lastIndexOf(mark, mainEnd)));
+      let cursor = lastInteractive;
+      while (cursor !== -1) {
+        const h2 = html.indexOf("<h2", cursor);
+        if (h2 === -1 || h2 > mainEnd) break;
+        const close = html.indexOf("</h2>", h2);
+        const text = html.slice(h2, close).replace(/<[^>]*>/g, "").trim();
+        if (!text || /^(clues|across|down|menu|settings)$/i.test(text)) { cursor = close; continue; }
+        start = h2;
+        break;
+      }
+    }
+    if (start !== -1 && start < mainEnd) {
+      html = html.slice(0, start) +
+        `<div class="mg-guide" data-mg-guide="${slug}"></div>\n    <div class="mg-guide-en" lang="en">\n` +
+        html.slice(start, mainEnd) +
+        `    </div>\n  ` + html.slice(mainEnd);
+    }
+  }
 
   await writeFile(file, note(`games/${slug}.html`, before, html));
 }
