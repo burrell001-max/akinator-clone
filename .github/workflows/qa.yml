@@ -1,0 +1,54 @@
+name: QA
+
+# Runs the committed harness on every push and pull request. Nothing paid and
+# nothing to install: the static checks are plain Node, and the browser checks
+# use the Chrome that the ubuntu runner image already provides.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static:
+    name: Static checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Internal links, ids, scripts, category pages, sitemap, social cards
+        run: node tools/qa/check-site.mjs
+      - name: Generated pages match tools/content/games-data.mjs
+        run: |
+          node tools/build/build-pages.mjs
+          git diff --exit-code -- games tools/content
+      - name: OG cards are all present
+        run: |
+          test "$(ls games/og/*.jpg | wc -l)" -ge 41
+
+  browser:
+    name: Game win paths
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Browser version
+        run: google-chrome --version
+      - name: Play every game to a win
+        run: node tools/qa/win-paths.mjs
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
