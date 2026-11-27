@@ -3,8 +3,8 @@
    <style> block / guide.css, so it overrides the old dark theme without touching content. */
 
 :root {
-  --ink: #0f1c25;
-  --ink-soft: #22323d;
+  --ink: #0a1116;
+  --ink-soft: #18212a;
   --blue: #1c63ad;
   --blue-deep: #0e4f9c;
   --orange: #d98200;
@@ -160,16 +160,17 @@ div.cta p { color: var(--ink-soft) !important; }
 a.back:hover { color: var(--blue-deep); }
 
 /* ── Footer: dark teal band, same as homepage ── */
-.last-updated { color: #28506a !important; }
+.last-updated { color: #1d2b35 !important; }
 footer {
   width: 100%;
   background: #17475e;
   border-top: 0;
-  color: #a9c7d9;
+  color: #eaf4fc;
   padding: 26px 20px;
   margin-top: 36px;
 }
-footer a, footer .footer-copy a { color: #dbeaf7; font-size: .9rem; }
+footer a, footer .footer-copy a { color: #ffffff; font-size: .9rem; }
+footer .footer-copy { color: #eaf4fc; }
 footer a:hover, footer .footer-copy a:hover { color: #fff; }
 
 /* ── Stray inline links that used the old gold colour ── */
