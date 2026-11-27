@@ -286,6 +286,9 @@
   });
 
   document.addEventListener("keydown", function (e) {
+    // Let a focused select/input keep its own arrow-key behaviour.
+    var tag = (e.target.tagName || "").toLowerCase();
+    if (tag === "select" || tag === "input" || tag === "textarea") return;
     var br = Math.floor(blank / n), bc = blank % n, target = -1;
     if (e.key === "ArrowLeft" && bc < n - 1) target = blank + 1;
     else if (e.key === "ArrowRight" && bc > 0) target = blank - 1;

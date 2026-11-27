@@ -42,11 +42,15 @@
     }, 170);
   }
 
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
   function scrollByStep(direction) {
     var max = track.scrollWidth - track.clientWidth;
     var left = Math.min(Math.max(track.scrollLeft + direction * step(), 0), max);
     track.classList.add("is-scrolling");
-    track.scrollTo({ left: left, behavior: "smooth" });
+    track.scrollTo({ left: left, behavior: prefersReducedMotion() ? "auto" : "smooth" });
     scheduleSettle();
   }
 

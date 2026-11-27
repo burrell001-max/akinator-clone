@@ -235,6 +235,9 @@
       showBest();
     }
     cells.forEach(function (cell) { cell.classList.add("ok"); cell.disabled = true; });
+    // Hinting and checking are meaningless now; Clear grid becomes a replay.
+    document.getElementById("hint").disabled = true;
+    document.getElementById("clear").textContent = "Play again";
   }
 
   function showBest() {
@@ -315,8 +318,12 @@
   });
 
   document.getElementById("clear").addEventListener("click", function () {
-    if (solved) return;
+    // Works after a solve too, so the grid can be replayed instead of freezing.
+    solved = false;
+    document.getElementById("hint").disabled = false;
+    document.getElementById("clear").textContent = "Clear grid";
     cells.forEach(function (cell) {
+      cell.disabled = false;
       cell.value = "";
       cell.classList.remove("ok", "bad", "hinted");
     });

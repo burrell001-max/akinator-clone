@@ -324,6 +324,8 @@
 
   document.addEventListener("keydown", function (e) {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
+    // Enter on a focused button should press the button, not submit a guess.
+    if (e.key === "Enter" && (e.target.tagName || "").toLowerCase() === "button") return;
     if (/^[1-8]$/.test(e.key)) {
       if (Number(e.key) <= cfg.digits) { press(e.key); e.preventDefault(); }
     } else if (e.key === "Backspace") { backspace(); e.preventDefault(); }

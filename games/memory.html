@@ -204,13 +204,17 @@
       if (pairs === 6) finish();
     } else {
       lock = true;
+      // Hold the two cards locally: a New game click can null the shared
+      // first/second pointers before this timeout fires.
+      var wrongA = first, wrongB = second;
+      first = null;
+      second = null;
       setTimeout(function () {
-        [first, second].forEach(function (c) {
+        [wrongA, wrongB].forEach(function (c) {
+          if (!c) return;
           c.classList.remove("flipped");
           c.setAttribute("aria-label", "Card, face down");
         });
-        first = null;
-        second = null;
         lock = false;
       }, 750);
     }

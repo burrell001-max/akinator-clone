@@ -123,6 +123,9 @@
   var running = false;
   var level = 0;
   var actx = null;
+  /* Incremented by every new playback; a loop whose token is stale stops, so
+     restarting mid-sequence cannot leave two flash loops fighting each other. */
+  var playToken = 0;
 
   function buildPads() {
     padsEl.innerHTML = "";
@@ -177,12 +180,15 @@
   }
 
   function playSequence() {
+    playToken++;
+    var token = playToken;
     playing = true;
     setPadEnabled(false);
     replayBtn.disabled = true;
     statusEl.textContent = "Watch the sequence…";
     var i = 0;
     function step() {
+      if (token !== playToken) return;
       if (i >= sequence.length) {
         playing = false;
         setPadEnabled(true);
@@ -207,6 +213,7 @@
   }
 
   function fail() {
+    playToken++;
     running = false;
     setPadEnabled(false);
     replayBtn.disabled = true;
@@ -245,6 +252,7 @@
   }
 
   function start() {
+    playToken++;
     sequence = [];
     inputIndex = 0;
     playing = false;

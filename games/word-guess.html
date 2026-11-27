@@ -260,6 +260,10 @@
 
   document.addEventListener("keydown", function (e) {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
+    // Enter or Space on a focused button must activate that button, not
+    // submit a guess (the New word button was impossible to trigger by keyboard).
+    var tag = (e.target.tagName || "").toLowerCase();
+    if ((e.key === "Enter" || e.key === " ") && (tag === "button" || tag === "a")) return;
     if (e.key === "Enter") { press("enter"); e.preventDefault(); }
     else if (e.key === "Backspace") { press("back"); e.preventDefault(); }
     else if (/^[a-zA-Z]$/.test(e.key)) { press(e.key.toLowerCase()); e.preventDefault(); }
