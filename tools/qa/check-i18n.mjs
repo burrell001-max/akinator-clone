@@ -356,6 +356,27 @@ for (const code of CODES) {
   }
 }
 
+/* The hero subtitle is a homepage string with its own markup hook: the authored
+   English must match the dictionary, the element must be hooked, and every
+   translation must stay short enough to sit on one or two lines on a phone. */
+{
+  const home = await readFile(join(ROOT, "index.html"), "utf8");
+  const hero = home.match(/<span class="h1-sub"[^>]*>([^<]*)<\/span>/);
+  if (!hero) fail("index.html: no .h1-sub hero subtitle");
+  else {
+    if (!/class="h1-sub"[^>]*data-i18n="subtitle"/.test(home)) fail('index.html: .h1-sub has no data-i18n="subtitle"');
+    if (text(hero[1]) !== text(HOME.en.subtitle || "")) fail("index.html: .h1-sub text differs from i18n.js subtitle");
+  }
+  const visual = (value) => [...text(value)].reduce((total, character) =>
+    total + (/\p{Script=Han}|\p{Script=Hiragana}|\p{Script=Katakana}|\p{Script=Hangul}/u.test(character) ? 2 : 1), 0);
+  CODES.forEach((code) => {
+    const value = HOME[code] && HOME[code].subtitle;
+    if (!value) return; /* the key-parity check above reports it */
+    const width = visual(value);
+    if (width > 50) fail(`i18n.js ${code}: subtitle is ${width} columns wide (max 50)`);
+  });
+}
+
 /* ── Page hooks: every data-i18n and data-mg-* value must resolve ──────── */
 
 const pages = [

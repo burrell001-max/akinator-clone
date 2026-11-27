@@ -7,6 +7,7 @@ window.I18N = {
   en: {
     hello: "Hello, I am MindGenie",
     tagline: "Think of a character. I'll guess who it is.",
+    subtitle: "Free AI Character Guessing Game and More",
     intro: "<strong>Think of a real or fictional character.</strong><br>I'll try to guess who it is.",
     play: "Play", sub: "Free, no sign-up, about a minute",
     themeTitle: "<strong>Select a theme.</strong><br>Which kind of character are you thinking of?",
@@ -51,6 +52,7 @@ window.I18N = {
   es: {
     hello: "Hola, soy MindGenie",
     tagline: "Piensa en un personaje. Yo adivinaré cuál es.",
+    subtitle: "Adivina personajes con IA, gratis y más",
     intro: "<strong>Piensa en un personaje real o ficticio.</strong><br>Intentaré adivinar quién es.",
     play: "Jugar", sub: "Gratis, sin registro, en un minuto",
     themeTitle: "<strong>Elige una temática.</strong><br>¿De qué tipo es tu personaje?",
@@ -125,6 +127,7 @@ window.I18N = {
   fr: {
     hello: "Bonjour, je suis MindGenie",
     tagline: "Pensez à un personnage. Je devine lequel.",
+    subtitle: "Jeu d'IA gratuit : devinez des personnages",
     intro: "<strong>Pensez à un personnage réel ou fictif.</strong><br>Je vais essayer de deviner qui c'est.",
     play: "Jouer", sub: "Gratuit, sans inscription, environ une minute",
     themeTitle: "<strong>Choisissez un thème.</strong><br>À quel type de personnage pensez-vous ?",
@@ -199,6 +202,7 @@ window.I18N = {
   de: {
     hello: "Hallo, ich bin MindGenie",
     tagline: "Denk an eine Figur. Ich errate, wer es ist.",
+    subtitle: "Kostenlos KI-Figuren erraten und mehr",
     intro: "<strong>Denk an eine echte oder erfundene Figur.</strong><br>Ich versuche zu erraten, wer es ist.",
     play: "Spielen", sub: "Kostenlos, ohne Anmeldung, etwa eine Minute",
     themeTitle: "<strong>Wähle ein Thema.</strong><br>Was für eine Figur hast du im Kopf?",
@@ -273,6 +277,7 @@ window.I18N = {
   ar: {
     hello: "مرحبًا، أنا MindGenie",
     tagline: "فكّر في شخصية، وسأخمّن من هي.",
+    subtitle: "لعبة مجانية بالذكاء الاصطناعي لتخمين الشخصيات",
     intro: "<strong>فكّر في شخصية حقيقية أو خيالية.</strong><br>سأحاول أن أخمّن من هي.",
     play: "العب", sub: "مجاني، بدون تسجيل، في دقيقة تقريبًا",
     themeTitle: "<strong>اختر فئة.</strong><br>أي نوع من الشخصيات تفكّر فيه؟",
@@ -347,6 +352,7 @@ window.I18N = {
   zh: {
     hello: "你好，我是 MindGenie",
     tagline: "想一个角色，我来猜猜他是谁。",
+    subtitle: "免费 AI 角色猜谜游戏及更多",
     intro: "<strong>想一个真实或虚构的角色。</strong><br>我来试着猜出他是谁。",
     play: "开始", sub: "免费，无需注册，大约一分钟",
     themeTitle: "<strong>选择一个主题。</strong><br>你想的是哪一类角色？",
@@ -421,6 +427,7 @@ window.I18N = {
   he: {
     hello: "שלום, אני MindGenie",
     tagline: "חשבו על דמות. אני אנחש מי היא.",
+    subtitle: "משחק AI חינם לניחוש דמויות ועוד",
     intro: "<strong>חשבו על דמות אמיתית או בדיונית.</strong><br>אנסה לנחש מי היא.",
     play: "שחקו", sub: "בחינם, בלי הרשמה, בערך דקה",
     themeTitle: "<strong>בחרו נושא.</strong><br>איזה סוג של דמות חשבתם עליה?",
@@ -495,6 +502,7 @@ window.I18N = {
   it: {
     hello: "Ciao, sono MindGenie",
     tagline: "Pensa a un personaggio. Indovinerò chi è.",
+    subtitle: "Gioco IA gratis: indovina personaggi e altro",
     intro: "<strong>Pensa a un personaggio reale o di fantasia.</strong><br>Cercherò di indovinare chi è.",
     play: "Gioca", sub: "Gratis, senza registrazione, circa un minuto",
     themeTitle: "<strong>Scegli un tema.</strong><br>Che tipo di personaggio hai in mente?",
@@ -569,6 +577,7 @@ window.I18N = {
   ja: {
     hello: "こんにちは、MindGenieです",
     tagline: "キャラクターを思い浮かべてください。誰か当ててみせます。",
+    subtitle: "無料AIキャラクター当てゲームなど",
     intro: "<strong>実在または架空のキャラクターを思い浮かべてください。</strong><br>誰なのか当ててみます。",
     play: "プレイ", sub: "無料・登録不要・約1分",
     themeTitle: "<strong>テーマを選んでください。</strong><br>どんなキャラクターを思い浮かべましたか？",
@@ -643,6 +652,7 @@ window.I18N = {
   ko: {
     hello: "안녕하세요, MindGenie예요",
     tagline: "캐릭터를 떠올려 보세요. 제가 맞혀 볼게요.",
+    subtitle: "무료 AI 캐릭터 맞히기 게임 외 더보기",
     intro: "<strong>실존 인물이나 가상의 캐릭터를 떠올려 보세요.</strong><br>누구인지 맞혀 볼게요.",
     play: "플레이", sub: "무료, 가입 없이, 약 1분",
     themeTitle: "<strong>테마를 선택하세요.</strong><br>어떤 종류의 캐릭터를 떠올리셨나요?",
@@ -717,6 +727,7 @@ window.I18N = {
   nl: {
     hello: "Hallo, ik ben MindGenie",
     tagline: "Denk aan een personage. Ik raad wie het is.",
+    subtitle: "Gratis AI-spel: raad personages en meer",
     intro: "<strong>Denk aan een echt of verzonnen personage.</strong><br>Ik probeer te raden wie het is.",
     play: "Spelen", sub: "Gratis, zonder account, ongeveer een minuut",
     themeTitle: "<strong>Kies een thema.</strong><br>Aan wat voor personage denk je?",
@@ -791,6 +802,7 @@ window.I18N = {
   pl: {
     hello: "Cześć, jestem MindGenie",
     tagline: "Pomyśl o postaci. Zgadnę, kim jest.",
+    subtitle: "Darmowa gra AI: odgadnij postać i więcej",
     intro: "<strong>Pomyśl o prawdziwej lub fikcyjnej postaci.</strong><br>Spróbuję zgadnąć, kto to.",
     play: "Graj", sub: "Za darmo, bez rejestracji, około minuty",
     themeTitle: "<strong>Wybierz motyw.</strong><br>O jakiej postaci myślisz?",
@@ -865,6 +877,7 @@ window.I18N = {
   pt: {
     hello: "Olá, eu sou o MindGenie",
     tagline: "Pense em um personagem. Vou adivinhar quem é.",
+    subtitle: "Jogo de IA grátis: adivinhe e muito mais",
     intro: "<strong>Pense em um personagem real ou fictício.</strong><br>Vou tentar adivinhar quem é.",
     play: "Jogar", sub: "Grátis, sem cadastro, cerca de um minuto",
     themeTitle: "<strong>Escolha um tema.</strong><br>Em que tipo de personagem você está pensando?",
@@ -939,6 +952,7 @@ window.I18N = {
   ru: {
     hello: "Привет, я MindGenie",
     tagline: "Загадай персонажа. Я попробую угадать, кто это.",
+    subtitle: "Бесплатная игра с ИИ: угадай персонажа",
     intro: "<strong>Загадай реального или вымышленного персонажа.</strong><br>Я попробую угадать, кто это.",
     play: "Играть", sub: "Бесплатно, без регистрации, около минуты",
     themeTitle: "<strong>Выбери тему.</strong><br>Какого персонажа ты загадал?",
@@ -1013,6 +1027,7 @@ window.I18N = {
   tr: {
     hello: "Merhaba, ben MindGenie",
     tagline: "Bir karakter düşün. Kim olduğunu ben tahmin edeyim.",
+    subtitle: "Ücretsiz AI karakter tahmin oyunu ve dahası",
     intro: "<strong>Gerçek ya da kurgusal bir karakter düşün.</strong><br>Kim olduğunu tahmin etmeye çalışacağım.",
     play: "Oyna", sub: "Ücretsiz, kayıt yok, yaklaşık bir dakika",
     themeTitle: "<strong>Bir tema seç.</strong><br>Nasıl bir karakter düşünüyorsun?",
@@ -1087,6 +1102,7 @@ window.I18N = {
   id: {
     hello: "Halo, aku MindGenie",
     tagline: "Pikirkan sebuah karakter. Aku akan menebak siapa dia.",
+    subtitle: "Game tebak karakter AI gratis dan lainnya",
     intro: "<strong>Pikirkan karakter nyata atau fiksi.</strong><br>Aku akan mencoba menebak siapa dia.",
     play: "Main", sub: "Gratis, tanpa daftar, sekitar satu menit",
     themeTitle: "<strong>Pilih tema.</strong><br>Karakter seperti apa yang kamu pikirkan?",
@@ -1161,6 +1177,7 @@ window.I18N = {
   vi: {
     hello: "Xin chào, mình là MindGenie",
     tagline: "Hãy nghĩ về một nhân vật. Mình sẽ đoán đó là ai.",
+    subtitle: "Đoán nhân vật bằng AI miễn phí và nhiều hơn",
     intro: "<strong>Hãy nghĩ về một nhân vật có thật hoặc hư cấu.</strong><br>Mình sẽ thử đoán đó là ai.",
     play: "Chơi", sub: "Miễn phí, không cần đăng ký, khoảng một phút",
     themeTitle: "<strong>Chọn một chủ đề.</strong><br>Bạn đang nghĩ đến loại nhân vật nào?",
@@ -1235,6 +1252,7 @@ window.I18N = {
   fa: {
     hello: "سلام، من MindGenie هستم",
     tagline: "به یک شخصیت فکر کن. من حدس می‌زنم کیست.",
+    subtitle: "بازی رایگان هوش مصنوعی برای حدس شخصیت",
     intro: "<strong>به یک شخصیت واقعی یا خیالی فکر کن.</strong><br>سعی می‌کنم حدس بزنم کیست.",
     play: "بازی", sub: "رایگان، بدون ثبت‌نام، حدود یک دقیقه",
     themeTitle: "<strong>یک موضوع انتخاب کن.</strong><br>به چه نوع شخصیتی فکر می‌کنی؟",
