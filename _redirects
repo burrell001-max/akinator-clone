@@ -1,0 +1,9 @@
+# Permanent redirects for the four character guides renamed in November 2026.
+# Honoured by hosts that read this file (Cloudflare Pages, Netlify): status 301,
+# relative targets keep the request on whichever domain serves the site.
+# GitHub Pages ignores underscore-prefixed files, so this file is inert there.
+# The production 301s come from Cloudflare Redirect Rules - see README.md.
+/spongebob.html  /spongebob-squarepants.html  301
+/eleven.html     /eleven-stranger-things.html 301
+/elsa.html       /elsa-frozen.html            301
+/trinity.html    /trinity-the-matrix.html     301
