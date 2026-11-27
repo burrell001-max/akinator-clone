@@ -1,14 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK and Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5783852883880667">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Play MindGenie AI</title>
-<meta property="article:modified_time" content="2026-11-01">
-<meta name="description" content="A full guide to playing MindGenie AI: the rules, the five answer types, and tips for getting the most accurate guess from the Genie.">
+<title>How to Play MindGenie AI: Rules and Answers</title>
+<meta name="description" content="A short guide to playing the Genie: what each answer option means, how long a round runs, and what to do when the final guess turns out wrong.">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#4f86d8">
 <link rel="canonical" href="https://mindgenieai.xyz/how-to-play.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="How to Play MindGenie AI: Rules and Answers">
+<meta property="og:description" content="A short guide to playing the Genie: what each answer option means, how long a round runs, and what to do when the final guess turns out wrong.">
+<meta property="og:url" content="https://mindgenieai.xyz/how-to-play.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Play MindGenie AI: Rules and Answers">
+<meta name="twitter:description" content="A short guide to playing the Genie: what each answer option means, how long a round runs, and what to do when the final guess turns out wrong.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,6 +77,46 @@ footer a:hover{color:var(--white)}
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/site-theme.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "What does each answer option do?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes and No are strong signals. Probably and Probably not are weaker ones. Not sure carries no signal at all."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How many questions will a round take?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Between six and fourteen. The engine stops early when one character is clearly ahead."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I change an answer after I give it?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. A round moves forward only, so an answer you regret stays in the record for that round."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Do I have to rate the guess?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. Rating is optional, and you can start a new round without it."
+   }
+  }
+ ]
+}
+</script>
 </head>
 <body>
 <div class="page-wrap">
@@ -85,7 +159,18 @@ footer a:hover{color:var(--white)}
 
         <h2>Why the first round of the day can feel slow</h2>
         <p>Our guessing engine runs on a server that goes to sleep when no one's actively playing. The very first round after a period of inactivity can take up to 30 seconds to "wake up" the server — every round after that loads quickly. This only ever happens once per idle period, not on every question.</p>
-    </main>
+    <h2>How to read the result screen</h2>
+<p>When a round ends, the screen names one character and asks you to confirm or deny it. If you deny it, you can type the character you were thinking of. That box is the only place the game ever asks you to type anything, and it is optional. There is no field for your name, your email address or your age, and no way to attach a note to a round beyond the character name itself.</p>
+<p>If you confirm the guess, the round is recorded as a success and you can start again. Nothing is scored, saved to an account, or compared with other players. The history you see on the page is stored in your own browser.</p>
+
+<h2>Mistakes that make a round go wrong</h2>
+<p>The first mistake is answering for a different version than the one you picked. Deciding halfway through that you meant the film version rather than the book version produces contradictions the engine cannot resolve.</p>
+<p>The second is treating a soft answer as a safe one. Probably and Probably not are not neutral; they nudge the engine towards or away from a trait without committing. Using them for everything leaves every character roughly where it started, which is how a round ends in a wrong guess after the full set of questions.</p>
+<p>The third is answering for your opinion instead of the character's role. Whether you personally like a character has no bearing on whether the story treats them as a hero.</p>
+
+<h2>Frequently asked questions</h2>
+<div class="faq-list"><div class="faq-item"><h3>What does each answer option do?</h3><p>Yes and No are strong signals. Probably and Probably not are weaker ones. Not sure carries no signal at all.</p></div><div class="faq-item"><h3>How many questions will a round take?</h3><p>Between six and fourteen. The engine stops early when one character is clearly ahead.</p></div><div class="faq-item"><h3>Can I change an answer after I give it?</h3><p>No. A round moves forward only, so an answer you regret stays in the record for that round.</p></div><div class="faq-item"><h3>Do I have to rate the guess?</h3><p>No. Rating is optional, and you can start a new round without it.</p></div></div>
+</main>
 
     <div class="cta">
         <h3>🔮 Put it into practice</h3>
@@ -95,8 +180,16 @@ footer a:hover{color:var(--white)}
 </div>
 <p class="last-updated" style="text-align:center;color:#9a9cb5;font-size:.8rem;margin:24px 0 0">Last updated: <time datetime="2026-11-01">November 1, 2026</time></p>
 <footer>
-    <div><a href="https://mindgenieai.xyz/about.html">About</a><a href="https://mindgenieai.xyz/contact.html">Contact</a><a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a><a href="https://mindgenieai.xyz/#blog">Blog</a><a href="https://mindgenieai.xyz/terms.html">Terms of Service</a><a href="https://mindgenieai.xyz/legal.html">Legal</a></div>
-    <div style="margin-top:10px">© 2026 MindGenie AI — All rights reserved</div>
+  <div class="footer-links">
+    <a href="https://mindgenieai.xyz/about.html">About</a>
+    <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie Policy</a>
+    <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+    <a href="https://mindgenieai.xyz/legal.html">Legal</a>
+    <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+  </div>
+  <div class="footer-copy">© 2026 MindGenie AI — All rights reserved · <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a></div>
 </footer>
 </body>
 </html>

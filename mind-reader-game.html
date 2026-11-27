@@ -1,18 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK and Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5783852883880667">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mind Reader Game: Can the Genie Read Your Mind? | MindGenie AI</title>
-<meta property="article:modified_time" content="2026-11-01">
-<meta name="description" content="A free online mind reader game. Think of any real or fictional character, answer a few questions, and see if the Genie can guess who it is.">
+<title>Mind Reader Game: How the Genie Reads You</title>
+<meta name="description" content="A mind reader game that runs on questions rather than magic. Think of a character, answer honestly, and watch the Genie narrow the field to one name.">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#4f86d8">
 <link rel="canonical" href="https://mindgenieai.xyz/mind-reader-game.html">
-<meta property="og:title" content="Mind Reader Game: Can the Genie Read Your Mind? | MindGenie AI">
-<meta property="og:description" content="A free online mind reader game. Think of any real or fictional character, answer a few questions, and see if the Genie can guess who it is.">
-<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Mind Reader Game: How the Genie Reads You">
+<meta property="og:description" content="A mind reader game that runs on questions rather than magic. Think of a character, answer honestly, and watch the Genie narrow the field to one name.">
 <meta property="og:url" content="https://mindgenieai.xyz/mind-reader-game.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mind Reader Game: How the Genie Reads You">
+<meta name="twitter:description" content="A mind reader game that runs on questions rather than magic. Think of a character, answer honestly, and watch the Genie narrow the field to one name.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,6 +72,46 @@ footer a:hover{color:var(--white)}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/site-theme.css">
 <style>.cta{display:inline-block;margin:6px 0 10px;padding:13px 24px;background:linear-gradient(180deg,#4a97f2,#2a74d8);color:#fff!important;font-family:Fredoka,sans-serif;font-weight:600;font-size:1.05rem;border-radius:999px;text-decoration:none;box-shadow:0 3px 0 #1a54a0}.cta:hover{filter:brightness(1.07)}main ol{color:var(--ink-soft);line-height:1.85;font-size:.95rem;margin:0 0 16px 22px}main li{margin-bottom:6px}</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Can the Genie actually read my mind?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. It works from the answers you give, and nothing else."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Does it know what I searched for before?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. The game has no access to your browsing history, your accounts or your device."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why does it ask about the version of a character?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Because the same character can be written very differently across films, books and games, and the answers change with the version."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Is a mind reader game the same as 20 questions?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "They are the same idea with different framing. This site runs the twenty-questions format and calls the questioner the Genie."
+   }
+  }
+ ]
+}
+</script>
 </head>
 <body>
 <div class="page-wrap">
@@ -55,7 +125,7 @@ footer a:hover{color:var(--white)}
 <p><a class="cta" href="https://mindgenieai.xyz/#play">🔮 Start the mind reader game</a></p>
 
 <h2>It isn't telepathy, but it's close</h2>
-<p>The Genie can't actually see inside your head, of course. What it does is ask questions that split the possibilities in half as quickly as it can: is the character real, are they human, do they appear in a movie, do they wear a mask. Every answer removes a large group of characters from the running, and a confidence meter climbs as the field narrows. After roughly 10 to 20 questions it usually has enough to make a guess. If you want the full explanation, read <a href="https://mindgenieai.xyz/how-ai-guessing-games-work.html">how an AI guessing game works</a>.</p>
+<p>The Genie can't actually see inside your head, of course. What it does is ask questions that split the possibilities in half as quickly as it can: is the character real, are they human, do they appear in a movie, do they wear a mask. Every answer removes a large group of characters from the running, and a confidence meter climbs as the field narrows. After roughly 6 to 14 questions it usually has enough to make a guess. If you want the full explanation, read <a href="https://mindgenieai.xyz/how-ai-guessing-games-work.html">how an AI guessing game works</a>.</p>
 
 <h2>How to play</h2>
 <ul>
@@ -70,14 +140,32 @@ footer a:hover{color:var(--white)}
 <h2>Works on phones and computers</h2>
 <p>The game runs in your browser and is built to be played on a phone as easily as on a desktop. The first round of the day can take a few extra seconds while the guessing engine wakes up; after that, rounds start straight away.</p>
 
+<h2>Why the questions feel personal</h2>
+<p>A mind reader game works because the questioner is allowed to ask about things only you know: which character you picked, which version of them you are picturing, how you would describe them to a friend. None of that is information the site already has. It is information you hand over one answer at a time, which is why the effect feels uncanny even though the mechanism is ordinary.</p>
+<p>It is worth being clear about what the page does not do. It cannot see your screen, your messages or your search history, and it does not know who you are. Every round starts from the same roster and the same questions. The only thing that changes between players is the answers.</p>
+
+<h2>When the trick is obvious</h2>
+<p>Play a second round immediately and the effect weakens, because you can hear the question pattern. The early questions are almost always broad: real or fictional, human or not, powers or no powers. The good rounds are the ones where a later question is unexpectedly specific, usually because your earlier answers ruled out almost everything at once. That is the machine working, not a lucky guess.</p>
+
+<h2>Frequently asked questions</h2>
+<div class="faq-list"><div class="faq-item"><h3>Can the Genie actually read my mind?</h3><p>No. It works from the answers you give, and nothing else.</p></div><div class="faq-item"><h3>Does it know what I searched for before?</h3><p>No. The game has no access to your browsing history, your accounts or your device.</p></div><div class="faq-item"><h3>Why does it ask about the version of a character?</h3><p>Because the same character can be written very differently across films, books and games, and the answers change with the version.</p></div><div class="faq-item"><h3>Is a mind reader game the same as 20 questions?</h3><p>They are the same idea with different framing. This site runs the twenty-questions format and calls the questioner the Genie.</p></div></div>
+
 <h2>More ways to play</h2>
 <p>Try the <a href="https://mindgenieai.xyz/genie-guessing-game.html">genie guessing game</a>, play it as an online <a href="https://mindgenieai.xyz/20-questions-online.html">20 questions</a> game, or browse the <a href="https://mindgenieai.xyz/character-guesser.html">character guesser</a> categories.</p>
 
 </main>
 </div>
 <footer>
-    <div><a href="https://mindgenieai.xyz/about.html">About</a><a href="https://mindgenieai.xyz/contact.html">Contact</a><a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a><a href="https://mindgenieai.xyz/#blog">Blog</a><a href="https://mindgenieai.xyz/terms.html">Legal</a></div>
-    <div style="margin-top:10px">© 2026 MindGenie AI — All rights reserved</div>
+  <div class="footer-links">
+    <a href="https://mindgenieai.xyz/about.html">About</a>
+    <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie Policy</a>
+    <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+    <a href="https://mindgenieai.xyz/legal.html">Legal</a>
+    <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+  </div>
+  <div class="footer-copy">© 2026 MindGenie AI — All rights reserved · <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a></div>
 </footer>
 </body>
 </html>

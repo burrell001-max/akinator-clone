@@ -1,13 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK and Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5783852883880667">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How Does an AI Guessing Game Actually Work? - MindGenie AI</title>
-<meta property="article:modified_time" content="2026-11-01">
+<title>How AI Guessing Games Work</title>
 <link rel="canonical" href="https://mindgenieai.xyz/how-ai-guessing-games-work.html">
-<meta name="description" content="A look at the logic behind MindGenie AI and other 20-questions style guessing games — how the Genie narrows down your character.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="How AI Guessing Games Work">
+<meta property="og:description" content="A plain explanation of how a guessing engine chooses its questions, why early rounds stay broad, and what happens when two answers contradict each other.">
+<meta property="og:url" content="https://mindgenieai.xyz/how-ai-guessing-games-work.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How AI Guessing Games Work">
+<meta name="twitter:description" content="A plain explanation of how a guessing engine chooses its questions, why early rounds stay broad, and what happens when two answers contradict each other.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
 <meta name="robots" content="index, follow">
+<meta property="og:site_name" content="MindGenie AI">
+
+<meta name="description" content="A plain explanation of how a guessing engine chooses its questions, why early rounds stay broad, and what happens when two answers contradict each other.">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
 * { box-sizing: border-box; }
@@ -24,11 +60,31 @@ ul { color:#cfc7e8; line-height:1.8; font-size:0.97rem; padding-left: 20px; marg
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/site-theme.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "How Does an AI Guessing Game Actually Work?",
+ "datePublished": "2026-08-03",
+ "dateModified": "2026-11-27",
+ "author": {
+  "@type": "Organization",
+  "name": "MindGenie AI",
+  "url": "https://mindgenieai.xyz/about.html"
+ },
+ "publisher": {
+  "@type": "Organization",
+  "name": "MindGenie AI"
+ },
+ "mainEntityOfPage": "https://mindgenieai.xyz/how-ai-guessing-games-work.html"
+}
+</script>
 </head>
 <body>
 <div class="wrap">
 <h1>How Does an AI Guessing Game Actually Work?</h1>
-<p class="meta">MindGenie AI Blog</p>
+<p class="updated" style="margin-bottom:22px">By the MindGenie AI team · Published <time datetime="2026-08-03">3 August 2026</time> · <a href="https://mindgenieai.xyz/about.html">About the writer</a></p>
+
 
 <p>If you've played MindGenie AI, you've probably wondered how a website can guess who — or what — you're thinking of after just a dozen or so yes-or-no questions. It can feel like magic, but the idea behind it is actually a fairly old and elegant piece of game logic, dressed up with some modern AI polish.</p>
 
@@ -54,10 +110,40 @@ ul { color:#cfc7e8; line-height:1.8; font-size:0.97rem; padding-left: 20px; marg
 <h2>Try to beat it</h2>
 <p>Pick a character with a lot of overlapping traits with someone else — two similar-looking anime rivals, for example, or two historical figures from the same era — answer carefully, and see how many questions it takes before the Genie either nails it or gives up.</p>
 
+<h2>Why the number of questions is not fixed</h2>
+<p>A fixed list of twenty questions is easy to build and easy to explain, and it is also easy to beat. The problem is that a fixed list cannot react. Once you know what the fourth question asks, you can prepare for it, and the round becomes a memory test rather than a deduction. The engine on this site avoids that by picking each question after reading the answers so far, so there is no order to memorise.</p>
+<p>The cost is unpredictability: two players thinking of the same character can see different questions, and one may finish in eight while the other needs twelve. That is not a bug in one of the rounds. It reflects how much information each set of answers carried. A confident, consistent set eliminates more characters per question, which means fewer questions are needed.</p>
+
+<h2>What happens when a round cannot be solved</h2>
+<p>Some rounds genuinely cannot be resolved. A character outside the roster is the clearest case, but there are subtler ones: two characters who differ on almost nothing the engine can ask about, or a player whose answers fit no single character well. In those cases the round does not fail loudly. It simply runs to the end of its question allowance and then offers the least-bad match.</p>
+<p>That is why a wrong guess is worth rating. A rated round is the only way to see where the trait data is too thin to separate two characters. Without those ratings, the roster would look fine from the outside and stay wrong on the inside.</p>
+
+<h2>What the engine is not doing</h2>
+<p>It is worth separating the engine here from the way AI is usually described. There is no chatbot writing questions about you, no profile being built, and no model being trained on the answers you give. The questions are a fixed set of broad traits, and the engine's only job is to choose which of them to ask next and when to stop. The clever part is the ordering, not the language.</p>
+
 <a class="cta" href="https://mindgenieai.xyz/#play">🔮 Play MindGenie AI Now</a>
 <br>
+<h2>Related reading</h2>
+<ul class="related-posts">
+<li><a href="https://mindgenieai.xyz/guide-inside-a-round.html">Inside a round: the engine step by step</a></li>
+<li><a href="https://mindgenieai.xyz/guide-answering-when-unsure.html">What the middle answers actually do</a></li>
+<li><a href="https://mindgenieai.xyz/how-to-play.html">How to play MindGenie AI</a></li>
+</ul>
+
 <a class="back" href="https://mindgenieai.xyz/">← Back to MindGenie AI</a>
 </div>
 <p class="last-updated" style="text-align:center;color:#9a9cb5;font-size:.8rem;margin:24px 0 0">Last updated: <time datetime="2026-11-01">November 1, 2026</time></p>
+<footer>
+  <div class="footer-links">
+    <a href="https://mindgenieai.xyz/about.html">About</a>
+    <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie Policy</a>
+    <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+    <a href="https://mindgenieai.xyz/legal.html">Legal</a>
+    <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+  </div>
+  <div class="footer-copy">© 2026 MindGenie AI — All rights reserved · <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a></div>
+</footer>
 </body>
 </html>

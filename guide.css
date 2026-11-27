@@ -151,3 +151,12 @@ footer { width: 100%; background: #17475e; margin-top: auto; }
 .footer-copy { text-align: center; padding: 14px 20px; font-size: .78rem; color: #a9c7d9; background: #103847; }
 
 @media (prefers-reduced-motion: reduce) { * { transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+
+/* FAQ blocks and related-post lists used by the guides and articles */
+.faq-list { margin: 6px 0 20px; }
+.faq-item { padding: 12px 0; border-bottom: 1px solid rgba(127,127,127,.25); }
+.faq-item:last-child { border-bottom: 0; }
+.faq-item h3 { font-size: 1rem; margin: 0 0 6px; color: inherit; }
+.faq-item p { margin: 0 0 6px; }
+.related-posts { list-style: none; margin: 4px 0 18px; padding: 0; }
+.related-posts li { margin-bottom: 8px; }

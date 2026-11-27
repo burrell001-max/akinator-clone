@@ -1,13 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK and Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5783852883880667">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The History Behind "20 Questions" Style Guessing Games - MindGenie AI</title>
-<meta property="article:modified_time" content="2026-11-01">
+<title>The History of 20 Questions Games</title>
 <link rel="canonical" href="https://mindgenieai.xyz/history-of-20-questions-games.html">
-<meta name="description" content="From a 1946 radio show to a handheld toy to Akinator — the surprisingly long history behind character-guessing games like MindGenie AI.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="The History of 20 Questions Games">
+<meta property="og:description" content="Where the guessing game came from, how it moved from parlour play to radio and television, and why browser versions still ask questions the same way.">
+<meta property="og:url" content="https://mindgenieai.xyz/history-of-20-questions-games.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The History of 20 Questions Games">
+<meta name="twitter:description" content="Where the guessing game came from, how it moved from parlour play to radio and television, and why browser versions still ask questions the same way.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
 <meta name="robots" content="index, follow">
+<meta property="og:site_name" content="MindGenie AI">
+
+<meta name="description" content="Where the guessing game came from, how it moved from parlour play to radio and television, and why browser versions still ask questions the same way.">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
 * { box-sizing: border-box; }
@@ -23,11 +59,31 @@ p { color:#cfc7e8; line-height:1.8; font-size:0.97rem; margin-bottom: 14px; }
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/site-theme.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "The History Behind \"20 Questions\" Style Guessing Games",
+ "datePublished": "2026-08-03",
+ "dateModified": "2026-11-27",
+ "author": {
+  "@type": "Organization",
+  "name": "MindGenie AI",
+  "url": "https://mindgenieai.xyz/about.html"
+ },
+ "publisher": {
+  "@type": "Organization",
+  "name": "MindGenie AI"
+ },
+ "mainEntityOfPage": "https://mindgenieai.xyz/history-of-20-questions-games.html"
+}
+</script>
 </head>
 <body>
 <div class="wrap">
 <h1>The History Behind "20 Questions" Style Guessing Games</h1>
-<p class="meta">MindGenie AI Blog</p>
+<p class="updated" style="margin-bottom:22px">By the MindGenie AI team · Published <time datetime="2026-08-03">3 August 2026</time> · <a href="https://mindgenieai.xyz/about.html">About the writer</a></p>
+
 
 <p>MindGenie AI feels like a modern invention — a website that reads your mind using AI — but the game format underneath it is over a century old. Understanding where it came from makes the "AI" part feel a lot less mysterious, and a lot more like the latest chapter in a very long story.</p>
 
@@ -48,10 +104,37 @@ p { color:#cfc7e8; line-height:1.8; font-size:0.97rem; margin-bottom: 14px; }
 <h2>Why the format has lasted so long</h2>
 <p>Games rarely survive across radio, handheld toys, and the internet by accident. 20 Questions and its descendants work because they hit a genuine sweet spot: simple enough to explain in one sentence, but with just enough unpredictability to make each round feel a little different from the last.</p>
 
+<h2>Why the format survived the move to the web</h2>
+<p>The parlour game has an unusual advantage over other games of its era: it does not need equipment, it does not need a board, and it does not need a particular number of players. All it needs is a secret and a willingness to ask questions. That made it easy to translate into software, because there was nothing to simulate beyond the narrowing itself.</p>
+<p>What software adds is memory. A person playing out loud loses track of four or five candidates and starts asking wild questions to compensate. A program can score fifty characters against every answer you have given and still know which question would help most. Nothing about the game changed; the bookkeeping simply stopped being the bottleneck.</p>
+
+<h2>What the web changed about difficulty</h2>
+<p>On paper, twenty questions is a game of clever questioning. In a browser, it becomes a game of honest answering, because the questioner is no longer the weak link. That shifts where rounds are won and lost. A player who gives consistent answers to a character the roster knows will almost always be guessed. A player who mixes versions of a character, or who gives a confident answer to a trait they are unsure about, creates the contradictions that stretch a round out.</p>
+<p>It also changes what counts as a good result. Getting guessed on question nine is not a defeat; it means the answers were clear. The interesting rounds are the ones where the program hesitates, because those are the rounds where the roster still has something to learn.</p>
+
 <a class="cta" href="https://mindgenieai.xyz/#play">🔮 Play MindGenie AI Now</a>
 <br>
+<h2>Related reading</h2>
+<ul class="related-posts">
+<li><a href="https://mindgenieai.xyz/guide-inside-a-round.html">Inside a round: how the questions are chosen</a></li>
+<li><a href="https://mindgenieai.xyz/history.html">Historical figures in the roster</a></li>
+<li><a href="https://mindgenieai.xyz/faq.html">Frequently asked questions</a></li>
+</ul>
+
 <a class="back" href="https://mindgenieai.xyz/">← Back to MindGenie AI</a>
 </div>
 <p class="last-updated" style="text-align:center;color:#9a9cb5;font-size:.8rem;margin:24px 0 0">Last updated: <time datetime="2026-11-01">November 1, 2026</time></p>
+<footer>
+  <div class="footer-links">
+    <a href="https://mindgenieai.xyz/about.html">About</a>
+    <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie Policy</a>
+    <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+    <a href="https://mindgenieai.xyz/legal.html">Legal</a>
+    <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+  </div>
+  <div class="footer-copy">© 2026 MindGenie AI — All rights reserved · <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a></div>
+</footer>
 </body>
 </html>

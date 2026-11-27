@@ -1,14 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK and Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5783852883880667">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Historical Figures | MindGenie AI</title>
-<meta property="article:modified_time" content="2026-11-08">
-<meta name="description" content="The historical figures the MindGenie AI Genie can guess, from rulers to inventors, with difficulty ratings and the lookalikes it confuses them with.">
+<title>Historical Figures the Genie Can Guess</title>
+<meta name="description" content="The real people in the Genie's roster, from Lincoln and Cleopatra to Tesla, with difficulty notes, closest lookalikes and answering tips for each one.">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#4f86d8">
 <link rel="canonical" href="https://mindgenieai.xyz/history.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Historical Figures the Genie Can Guess">
+<meta property="og:description" content="The real people in the Genie's roster, from Lincoln and Cleopatra to Tesla, with difficulty notes, closest lookalikes and answering tips for each one.">
+<meta property="og:url" content="https://mindgenieai.xyz/history.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Historical Figures the Genie Can Guess">
+<meta name="twitter:description" content="The real people in the Genie's roster, from Lincoln and Cleopatra to Tesla, with difficulty notes, closest lookalikes and answering tips for each one.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,6 +102,46 @@ footer a:hover{color:var(--white)}
 .tier-med .card{border-left:3px solid rgba(255,209,102,.6)}</style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/site-theme.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Are the historical figures in the roster real people?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes. They are recorded as non-fictional, which is the first answer in every one of their rounds."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why is Abraham Lincoln easier than Cleopatra?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Because his nearest neighbour in the trait data is further away. Fame is not the deciding factor; overlap with other characters is."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I suggest a historical figure?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes. The contact page explains what to include, though figures with a stable popular image are easier to add."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why do some cards have no guide?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Only characters with a written guide are linked. The others are listed for completeness so you know what the engine can guess."
+   }
+  }
+ ]
+}
+</script>
 </head>
 <body>
 <div class="page-wrap">
@@ -99,7 +173,17 @@ footer a:hover{color:var(--white)}
         <p>The biggest difference with historical figures is the first question, <strong>"Is your character completely fictional?"</strong>, which is a clear No for everyone on this page. After that, the trickiest questions are about morals and role. Whether Genghis Khan counts as a villain, or whether Cleopatra counts as a hero, depends on whom you ask, and honest in-between answers are the right choice.</p>
         <p>History also blurs fact and legend. Details of Joan of Arc's visions, Tesla's rivalries and Cleopatra's life were shaped by later retellings, and the Genie answers about the popular picture of each person. If a question about weapons, magic or special abilities comes up, think about how the person is usually portrayed, then use "Probably" for anything that would require a debate.</p>
 
-        <h2>Browse other categories</h2>
+        <h2>Why there are five historical figures and not fifty</h2>
+<p>A real person is harder to record than a fictional one. Characters in stories have a fixed set of facts their writers control; historical figures have a life, a reputation, and often a century of argument about both. Adding a ruler or a scientist to the roster means deciding which widely accepted version of them the questions will describe, and that takes longer than adding a character from a film with one clear appearance.</p>
+<p>The five here were chosen because their popular image is stable enough to answer questions about. Where a question depends on interpretation — whether a conqueror counts as a villain, whether a ruler counts as a hero — the honest answer is usually a soft one, and the guides say so on each page.</p>
+
+<h2>How the difficulty rating is worked out</h2>
+<p>Each character's rating comes from its distance to the nearest other character in the engine's trait data. A figure who differs from everyone else on several answers is easy to separate and lands in the easy group. A figure whose nearest neighbour differs by only one or two answers lands in the hard group, because a single uncertain reply is enough to move the round to the wrong person. The rating describes the data, not the fame of the person.</p>
+
+<h2>Frequently asked questions</h2>
+<div class="faq-list"><div class="faq-item"><h3>Are the historical figures in the roster real people?</h3><p>Yes. They are recorded as non-fictional, which is the first answer in every one of their rounds.</p></div><div class="faq-item"><h3>Why is Abraham Lincoln easier than Cleopatra?</h3><p>Because his nearest neighbour in the trait data is further away. Fame is not the deciding factor; overlap with other characters is.</p></div><div class="faq-item"><h3>Can I suggest a historical figure?</h3><p>Yes. The contact page explains what to include, though figures with a stable popular image are easier to add.</p></div><div class="faq-item"><h3>Why do some cards have no guide?</h3><p>Only characters with a written guide are linked. The others are listed for completeness so you know what the engine can guess.</p></div></div>
+
+<h2>Browse other categories</h2>
         <div class="related">
             <a href="https://mindgenieai.xyz/movies.html">Movies</a><a href="https://mindgenieai.xyz/tv-shows.html">TV shows</a><a href="https://mindgenieai.xyz/anime.html">Anime</a><a href="https://mindgenieai.xyz/video-games.html">Video games</a><a href="https://mindgenieai.xyz/how-to-play.html">How to play</a><a href="https://mindgenieai.xyz/faq.html">FAQ</a>
         </div>
@@ -113,8 +197,16 @@ footer a:hover{color:var(--white)}
 </div>
 <p class="last-updated" style="text-align:center;color:#9a9cb5;font-size:.8rem;margin:24px 0 0">Last updated: <time datetime="2026-11-08">November 8, 2026</time></p>
 <footer>
-    <div><a href="https://mindgenieai.xyz/about.html">About</a><a href="https://mindgenieai.xyz/contact.html">Contact</a><a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a><a href="https://mindgenieai.xyz/#blog">Blog</a><a href="https://mindgenieai.xyz/terms.html">Terms of Service</a><a href="https://mindgenieai.xyz/legal.html">Legal</a></div>
-    <div style="margin-top:10px">© 2026 MindGenie AI — All rights reserved</div>
+  <div class="footer-links">
+    <a href="https://mindgenieai.xyz/about.html">About</a>
+    <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie Policy</a>
+    <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+    <a href="https://mindgenieai.xyz/legal.html">Legal</a>
+    <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+  </div>
+  <div class="footer-copy">© 2026 MindGenie AI — All rights reserved · <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a></div>
 </footer>
 </body>
 </html>

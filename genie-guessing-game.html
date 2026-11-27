@@ -1,18 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK and Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5783852883880667">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Genie Guessing Game Online: Think of a Character, the Genie Guesses | MindGenie AI</title>
-<meta property="article:modified_time" content="2026-11-01">
-<meta name="description" content="Play a free genie guessing game online. Think of a character, answer the Genie's questions, and watch its confidence meter climb until it names who you picked.">
+<title>Genie Guessing Game: Free to Play Online</title>
+<meta name="description" content="Think of someone and answer the Genie's questions. A free genie guessing game with no download, no account, and a guess after a short round.">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#4f86d8">
 <link rel="canonical" href="https://mindgenieai.xyz/genie-guessing-game.html">
-<meta property="og:title" content="Genie Guessing Game Online: Think of a Character, the Genie Guesses | MindGenie AI">
-<meta property="og:description" content="Play a free genie guessing game online. Think of a character, answer the Genie's questions, and watch its confidence meter climb until it names who you picked.">
-<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Genie Guessing Game: Free to Play Online">
+<meta property="og:description" content="Think of someone and answer the Genie's questions. A free genie guessing game with no download, no account, and a guess after a short round.">
 <meta property="og:url" content="https://mindgenieai.xyz/genie-guessing-game.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Genie Guessing Game: Free to Play Online">
+<meta name="twitter:description" content="Think of someone and answer the Genie's questions. A free genie guessing game with no download, no account, and a guess after a short round.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,6 +72,46 @@ footer a:hover{color:var(--white)}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/site-theme.css">
 <style>.cta{display:inline-block;margin:6px 0 10px;padding:13px 24px;background:linear-gradient(180deg,#4a97f2,#2a74d8);color:#fff!important;font-family:Fredoka,sans-serif;font-weight:600;font-size:1.05rem;border-radius:999px;text-decoration:none;box-shadow:0 3px 0 #1a54a0}.cta:hover{filter:brightness(1.07)}main ol{color:var(--ink-soft);line-height:1.85;font-size:.95rem;margin:0 0 16px 22px}main li{margin-bottom:6px}</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Is the Genie a real artificial intelligence?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "It is a guessing engine that scores characters against your answers and picks the question that splits them best. It is not a chatbot and it does not generate text about you."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why does the meter sometimes drop?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Because a later answer can contradict an earlier one, which brings other characters back into contention."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Can the Genie guess someone who is not in the roster?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. It chooses from the characters it holds, so a character outside the roster will always end in a wrong guess."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Is there a limit on rounds?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. You can start a new round as soon as one finishes."
+   }
+  }
+ ]
+}
+</script>
 </head>
 <body>
 <div class="page-wrap">
@@ -71,14 +141,32 @@ footer a:hover{color:var(--white)}
 <h2>Is it free?</h2>
 <p>Yes. There are no purchases, no downloads and no accounts. The site is supported by ads, and you can read exactly what we collect in the <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>.</p>
 
+<h2>Why the genie framing matters</h2>
+<p>A genie is a figure from folk tales who knows things you do not and answers in riddles. That is a good fit for a guessing game, because the interesting part is not the answer but the route to it. The Genie here asks plain questions rather than riddles, but the shape is the same: you hold something in your head, it works towards the same thing from the outside, and the final reveal either lands or does not.</p>
+<p>It also explains the tone. A wrong guess is not a failure of the game; it is the moment the Genie admits it guessed wrong, which is more interesting than a screen that claims to be right every time.</p>
+
+<h2>What the confidence meter is telling you</h2>
+<p>The meter is a summary of how far ahead the leading character is, not a prediction about whether the guess will be correct. It climbs quickly when your answers rule out large groups of characters and stalls when two candidates stay close together. A round that ends with a low reading is usually one where the answers were mixed, and the guess that follows is exactly the one worth rating.</p>
+
+<h2>Frequently asked questions</h2>
+<div class="faq-list"><div class="faq-item"><h3>Is the Genie a real artificial intelligence?</h3><p>It is a guessing engine that scores characters against your answers and picks the question that splits them best. It is not a chatbot and it does not generate text about you.</p></div><div class="faq-item"><h3>Why does the meter sometimes drop?</h3><p>Because a later answer can contradict an earlier one, which brings other characters back into contention.</p></div><div class="faq-item"><h3>Can the Genie guess someone who is not in the roster?</h3><p>No. It chooses from the characters it holds, so a character outside the roster will always end in a wrong guess.</p></div><div class="faq-item"><h3>Is there a limit on rounds?</h3><p>No. You can start a new round as soon as one finishes.</p></div></div>
+
 <h2>Keep playing</h2>
 <p>Want a different flavour? Try the <a href="https://mindgenieai.xyz/mind-reader-game.html">mind reader game</a> or the classic <a href="https://mindgenieai.xyz/20-questions-online.html">20 questions online</a>.</p>
 
 </main>
 </div>
 <footer>
-    <div><a href="https://mindgenieai.xyz/about.html">About</a><a href="https://mindgenieai.xyz/contact.html">Contact</a><a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a><a href="https://mindgenieai.xyz/#blog">Blog</a><a href="https://mindgenieai.xyz/terms.html">Legal</a></div>
-    <div style="margin-top:10px">© 2026 MindGenie AI — All rights reserved</div>
+  <div class="footer-links">
+    <a href="https://mindgenieai.xyz/about.html">About</a>
+    <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie Policy</a>
+    <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+    <a href="https://mindgenieai.xyz/legal.html">Legal</a>
+    <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+  </div>
+  <div class="footer-copy">© 2026 MindGenie AI — All rights reserved · <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a></div>
 </footer>
 </body>
 </html>

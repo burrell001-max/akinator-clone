@@ -1,22 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK and Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5783852883880667">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About MindGenie AI</title>
-<meta property="article:modified_time" content="2026-11-01">
-<meta name="description" content="What MindGenie AI is, how the guessing engine works, and why we built a free browser-based character guessing game.">
+<title>About MindGenie AI: Who Runs the Site</title>
+<meta name="description" content="Why the game exists, how the guessing engine is put together, what stays on your device, and how the site is funded and kept up to date.">
+<link rel="canonical" href="https://mindgenieai.xyz/about.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="About MindGenie AI: Who Runs the Site">
+<meta property="og:description" content="Why the game exists, how the guessing engine is put together, what stays on your device, and how the site is funded and kept up to date.">
+<meta property="og:url" content="https://mindgenieai.xyz/about.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About MindGenie AI: Who Runs the Site">
+<meta name="twitter:description" content="Why the game exists, how the guessing engine is put together, what stays on your device, and how the site is funded and kept up to date.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#4f86d8">
-<link rel="canonical" href="https://mindgenieai.xyz/about.html">
 <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
-<script type="application/ld+json">
-{ "@context": "https://schema.org", "@type": "AboutPage", "url": "https://mindgenieai.xyz/about.html",
-  "mainEntity": { "@type": "Organization", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" } }
-</script>
+<link rel="stylesheet" href="/site-theme.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--violet:#7b4dff;--gold:#ffd166;--gold-dim:#c9993a;--white:#f8f8ff;--smoke:#c4c6d6}
@@ -28,63 +60,77 @@ body{background:radial-gradient(circle at top,#243b72 0%,#171c3b 35%,#10162d 70%
 .breadcrumb{font-size:.78rem;color:var(--smoke);margin-bottom:20px}
 .breadcrumb a{color:var(--gold-dim);text-decoration:none}
 .breadcrumb a:hover{color:var(--gold)}
-h1{font-family:'Cinzel',serif;font-size:clamp(1.8rem,6vw,2.4rem);color:var(--gold);text-shadow:0 0 20px rgba(240,192,64,.35);margin-bottom:24px}
-h2{font-family:'Cinzel',serif;font-size:1.25rem;color:var(--gold);margin:30px 0 12px}
-p{color:var(--smoke);line-height:1.8;font-size:.98rem;margin-bottom:14px}
-ul{color:var(--smoke);line-height:1.85;font-size:.98rem;margin:0 0 16px 22px}
+h1{font-family:'Cinzel',serif;font-size:clamp(1.8rem,6vw,2.2rem);color:var(--gold);text-shadow:0 0 20px rgba(240,192,64,.35);margin-bottom:8px}
+.updated{font-size:.8rem;color:var(--smoke);margin-bottom:24px}
+h2{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin:28px 0 10px}
+h3{font-size:.98rem;color:var(--white);margin:20px 0 6px}
+p{color:var(--smoke);line-height:1.8;font-size:.95rem;margin-bottom:14px}
+ul,ol{color:var(--smoke);line-height:1.85;font-size:.95rem;margin:0 0 16px 22px}
 li{margin-bottom:6px}
 strong{color:var(--white)}
-.cta{text-align:center;background:rgba(108,63,200,.08);border:1px solid rgba(108,63,200,.25);border-radius:16px;padding:26px 22px;margin:36px 0 10px}
-.cta h3{font-family:'Cinzel',serif;color:var(--gold);font-size:1.1rem;margin-bottom:10px}
-.cta a.btn{display:inline-block;margin-top:6px;background:linear-gradient(135deg,var(--violet),#5a2ec9);color:var(--white);text-decoration:none;font-weight:600;padding:12px 26px;border-radius:30px;box-shadow:0 6px 24px rgba(108,63,200,.5)}
+a{color:var(--gold-dim)}
+a:hover{color:var(--gold)}
 footer{width:100%;text-align:center;padding:24px 20px;font-size:.78rem;color:#4a4a6a;border-top:1px solid rgba(255,255,255,.05);margin-top:30px}
 footer a{color:var(--smoke);text-decoration:none;margin:0 8px}
 footer a:hover{color:var(--white)}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.related a{text-decoration:none;font-size:.88rem;border:1px solid rgba(108,63,200,.3);padding:8px 14px;border-radius:20px}
 </style>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;display=swap">
-<link rel="stylesheet" href="/site-theme.css">
 </head>
 <body>
 <div class="page-wrap">
-    <div class="top-bar"><a href="https://mindgenieai.xyz/">&larr; Back to MindGenie AI</a></div>
-    <nav class="breadcrumb"><a href="https://mindgenieai.xyz/">Home</a> &rsaquo; About</nav>
+  <div class="top-bar"><a href="https://mindgenieai.xyz/">&larr; Back to MindGenie AI</a></div>
+  <nav class="breadcrumb"><a href="https://mindgenieai.xyz/">Home</a> &rsaquo; About</nav>
+  <main>
 
-    <main>
-        <h1>About MindGenie AI</h1>
+<h1>About MindGenie AI</h1>
+<div class="updated">Last updated: <time datetime="2026-11-27">November 27, 2026</time></div>
 
-        <p>MindGenie AI is a free, browser-based character guessing game. You think of a character — a movie hero, a historical figure, an anime villain, anyone — and a guessing engine we call the Genie asks a short series of yes-or-no style questions until it names who you were thinking of. No account, no download, and no payment is required to play.</p>
+<p>MindGenie AI is a free character guessing game that runs in a browser. You think of a character, the Genie asks a short run of yes-or-no style questions, and it ends with a name. There is no account, no download and no payment. This page explains why the site exists, who runs it, how the guesses are actually produced, and what happens to the information you type or tap while you play.</p>
 
-        <h2>Why we built it</h2>
-        <p>The "20 Questions" guessing format has been around for the better part of a century, first as a parlor game, then a radio and TV show, and more recently as browser games like Akinator. We wanted a lightweight, fast-loading version of that format that ran entirely in the browser and worked well on phones — without asking players for an account or any personal information.</p>
+<h2>Why the site exists</h2>
+<p>The twenty-questions format is old and simple: one person holds a secret, the other asks questions that split the possibilities until only one answer is left. It works well without a second person, which is exactly the kind of game a browser can host. Most versions of it, though, want an account, push an app install, or take a while to load on a phone. This one was built in the opposite direction: one page, one roster of characters, and a round that starts as soon as the page is ready.</p>
 
-        <h2>How the Genie decides what to ask</h2>
-        <p>Each round starts with a large pool of possible characters. The Genie picks questions designed to split that pool as evenly as possible, using traits recorded for each character (a power, an era, a job, a medium). Each answer rules characters in or out, and the field narrows until one character stands out. You can read a full breakdown of the mechanics on our <a href="https://mindgenieai.xyz/how-ai-guessing-games-work.html" style="color:var(--gold-dim)">how AI guessing games work</a> post.</p>
-        <p>After each guess you can tell the Genie whether it was right, and if it was wrong you can optionally type who you were thinking of. Those ratings and corrections are saved without any personal information, and we review them to find characters that are guessed too easily or too rarely, fix questions that mislead players, and decide which characters to add next.</p>
+<h2>What it does</h2>
+<p>The Genie carries a roster of characters drawn from films, television, anime, video games and history. Every character in that roster has recorded values for a fixed set of traits: whether they are fictional, whether they have powers, whether they wear a mask, lead a group, use a weapon, and so on. A round is the process of narrowing that roster down using your answers until one character is far enough ahead of the rest.</p>
+<p>The site also publishes written guides. Each category page lists the characters in that category and how difficult each one tends to be, and each character guide explains the traits that identify that character and the questions players most often answer inconsistently.</p>
 
-        <h2>What we don't do</h2>
-        <ul>
-            <li>We don't require sign-up, login, or any personal information to play a round.</li>
-            <li>We don't link anything you tell us to who you are. If you choose to type who you were thinking of after a wrong guess, that name is saved with a random session ID, not with any account or contact detail.</li>
-            <li>We don't sell or share individual gameplay data with third parties. See our <a href="https://mindgenieai.xyz/privacy-policy.html" style="color:var(--gold-dim)">Privacy Policy</a> for the full details on cookies and analytics used on this site.</li>
-        </ul>
+<h2>Who runs it</h2>
+<p>MindGenie AI is written and maintained by one independent developer, working on it in their own time. There is no company behind it and no editorial team. That means the site is small and the person answering your email is also the person who fixes the bug. If a guess is wrong, a page is broken, or a character is missing, <a href="https://mindgenieai.xyz/contact.html">the contact page</a> reaches them directly at <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a>.</p>
 
-        <h2>How the site is funded</h2>
-        <p>MindGenie AI is free to play. The site is supported by advertising served through Google AdSense, which is why you may see ads on some pages. Ads never change which character the Genie guesses.</p>
+<h2>How the guesses are produced</h2>
+<p>Nothing about a guess is a coincidence, and nothing is looked up about you. The engine scores every character in the roster against the answers you have given so far. Characters that fit your answers closely get more weight, characters that contradict them get less. To choose the next question, it tests each unasked trait and measures how unevenly that trait is spread across the characters still in contention. The trait that would split the field most sharply is the one you are asked about next.</p>
+<p>The round does not stop on the first plausible name. It runs for at least six questions and never more than fourteen, and it ends early only when the leading character is clearly ahead of the next one. If your answers are contradictory, no character pulls ahead, the round runs longer, and the final guess is more likely to be wrong. That is why the middle answers exist: "probably" and "not sure" carry less weight than a confident yes or no, so a half-remembered detail does less damage than a guess dressed up as certainty.</p>
+<p>After the guess you can say whether it was right. If it was wrong, you can optionally type the name you had in mind. That correction is stored without any name, email address or account attached, and it is used to see which characters the engine cannot yet tell apart.</p>
 
-        <h2>The team</h2>
-        <p>MindGenie AI is built and maintained by a small independent team who work on it outside of day jobs. We treat it as an ongoing project rather than a finished product — questions, character coverage, and the interface all continue to change as more people play. If something's broken or a guess seems way off, we genuinely want to hear about it through our <a href="https://mindgenieai.xyz/contact.html" style="color:var(--gold-dim)">Contact page</a>.</p>
-    </main>
+<h2>What stays on your device</h2>
+<p>The site keeps a small amount of information in your browser's local storage so the game behaves sensibly between visits: your chosen interface language, a short history of your last rounds, and a local count of page views used as a fallback for the visitor counter. Those values stay in your browser and are not sent to us as a profile of you. The site itself does not set advertising or tracking cookies of its own; the cookies you may receive come from Google's advertising and analytics services. The <a href="https://mindgenieai.xyz/privacy-policy.html">privacy policy</a> lists them one by one, and the <a href="https://mindgenieai.xyz/cookie-policy.html">cookie policy</a> explains how to remove them.</p>
 
-    <div class="cta">
-        <h3>🔮 See it in action</h3>
-        <p style="margin-bottom:14px;font-size:.9rem">Think of a character and find out how the Genie handles it.</p>
-        <a class="btn" href="https://mindgenieai.xyz/#play">Play MindGenie AI</a>
-    </div>
+<h2>How the site is funded</h2>
+<p>MindGenie AI is free, and advertising through Google AdSense is what covers the hosting. Ads appear in fixed positions on some pages. They have no influence on the roster, the questions or the guess: the engine does not read ad data, and nothing about an advertiser changes which character wins a round. Visitors in the European Economic Area, the United Kingdom and Switzerland are asked for consent through Google's consent message before personalised advertising cookies are used.</p>
+
+<h2>How the content is kept up to date</h2>
+<p>The guides are written from the same trait data the engine uses, so when a character's values change or a new character joins the roster, the matching guide is revised rather than left to drift. Corrections from players are the main source of those changes: a character that is repeatedly missed is usually a character whose traits are too close to a neighbour's. Pages carry a last-updated date when their substance changes.</p>
+
+<div class="related">
+  <a href="https://mindgenieai.xyz/how-to-play.html">How to play</a>
+  <a href="https://mindgenieai.xyz/faq.html">Frequently asked questions</a>
+  <a href="https://mindgenieai.xyz/contact.html">Contact</a>
 </div>
-<p class="last-updated" style="text-align:center;color:#9a9cb5;font-size:.8rem;margin:24px 0 0">Last updated: <time datetime="2026-11-01">November 1, 2026</time></p>
+
+  </main>
+</div>
 <footer>
-    <div><a href="https://mindgenieai.xyz/about.html">About</a><a href="https://mindgenieai.xyz/contact.html">Contact</a><a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a><a href="https://mindgenieai.xyz/#blog">Blog</a><a href="https://mindgenieai.xyz/terms.html">Terms of Service</a><a href="https://mindgenieai.xyz/legal.html">Legal</a></div>
-    <div style="margin-top:10px">© 2026 MindGenie AI — All rights reserved</div>
+  <div class="footer-links">
+    <a href="https://mindgenieai.xyz/about.html">About</a>
+    <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie Policy</a>
+    <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+    <a href="https://mindgenieai.xyz/legal.html">Legal</a>
+    <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+  </div>
+  <div class="footer-copy">© 2026 MindGenie AI — All rights reserved · <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a></div>
 </footer>
 </body>
 </html>

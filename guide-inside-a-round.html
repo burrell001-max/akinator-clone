@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK and Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5783852883880667">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inside a Round: What the Genie Is Doing</title>
+<meta name="description" content="A walkthrough of the guessing engine: twenty traits, a weighted split at each step, and a stop rule. What happens between your first answer and the guess.">
+<link rel="canonical" href="https://mindgenieai.xyz/guide-inside-a-round.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Inside a Round: What the Genie Is Doing">
+<meta property="og:description" content="A walkthrough of the guessing engine: twenty traits, a weighted split at each step, and a stop rule. What happens between your first answer and the guess.">
+<meta property="og:url" content="https://mindgenieai.xyz/guide-inside-a-round.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Inside a Round: What the Genie Is Doing">
+<meta name="twitter:description" content="A walkthrough of the guessing engine: twenty traits, a weighted split at each step, and a stop rule. What happens between your first answer and the guess.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#4f86d8">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/site-theme.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--violet:#7b4dff;--gold:#ffd166;--gold-dim:#c9993a;--white:#f8f8ff;--smoke:#c4c6d6}
+body{background:radial-gradient(circle at top,#243b72 0%,#171c3b 35%,#10162d 70%,#090d18 100%);font-family:'Inter',sans-serif;color:var(--white);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.page-wrap{width:100%;max-width:680px;padding:0 20px 60px}
+.top-bar{padding:18px 0}
+.top-bar a{color:var(--smoke);text-decoration:none;font-size:.85rem}
+.top-bar a:hover{color:var(--white)}
+.breadcrumb{font-size:.78rem;color:var(--smoke);margin-bottom:20px}
+.breadcrumb a{color:var(--gold-dim);text-decoration:none}
+.breadcrumb a:hover{color:var(--gold)}
+h1{font-family:'Cinzel',serif;font-size:clamp(1.8rem,6vw,2.2rem);color:var(--gold);text-shadow:0 0 20px rgba(240,192,64,.35);margin-bottom:8px}
+.updated{font-size:.8rem;color:var(--smoke);margin-bottom:24px}
+h2{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin:28px 0 10px}
+h3{font-size:.98rem;color:var(--white);margin:20px 0 6px}
+p{color:var(--smoke);line-height:1.8;font-size:.95rem;margin-bottom:14px}
+ul,ol{color:var(--smoke);line-height:1.85;font-size:.95rem;margin:0 0 16px 22px}
+li{margin-bottom:6px}
+strong{color:var(--white)}
+a{color:var(--gold-dim)}
+a:hover{color:var(--gold)}
+footer{width:100%;text-align:center;padding:24px 20px;font-size:.78rem;color:#4a4a6a;border-top:1px solid rgba(255,255,255,.05);margin-top:30px}
+footer a{color:var(--smoke);text-decoration:none;margin:0 8px}
+footer a:hover{color:var(--white)}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.related a{text-decoration:none;font-size:.88rem;border:1px solid rgba(108,63,200,.3);padding:8px 14px;border-radius:20px}
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Inside a Round: What the Genie Is Doing Between Questions",
+ "datePublished": "2026-11-27",
+ "dateModified": "2026-11-27",
+ "author": {
+  "@type": "Organization",
+  "name": "MindGenie AI",
+  "url": "https://mindgenieai.xyz/about.html"
+ },
+ "publisher": {
+  "@type": "Organization",
+  "name": "MindGenie AI"
+ },
+ "description": "A walkthrough of the guessing engine: twenty traits, a weighted split at each step, and a stop rule. What happens between your first answer and the guess.",
+ "mainEntityOfPage": "https://mindgenieai.xyz/guide-inside-a-round.html"
+}
+</script>
+</head>
+<body>
+<div class="page-wrap">
+  <div class="top-bar"><a href="https://mindgenieai.xyz/">&larr; Back to MindGenie AI</a></div>
+  <nav class="breadcrumb"><a href="https://mindgenieai.xyz/">Home</a> &rsaquo; Blog</nav>
+  <main>
+<h1>Inside a Round: What the Genie Is Doing Between Questions</h1>
+<p class="updated" style="margin-bottom:22px">By the MindGenie AI team · Published <time datetime="2026-11-27">27 November 2026</time> · <a href="https://mindgenieai.xyz/about.html">About the writer</a></p>
+<p>A round looks simple from the outside: a question appears, you tap an answer, another question appears. Underneath, each tap does two things. It changes how plausible every character in the roster looks, and it changes which question is worth asking next. This article walks through that process in order, using the way this site's engine actually works.</p>
+
+<h2>Step one: the roster and its traits</h2>
+<p>The engine holds a roster of fifty characters. Each one has a recorded value for a set of broad traits: whether they are fictional, whether they are human, whether they have powers, whether they wear a mask or costume, whether they are part of a group, whether they have a job, and similar. Those values are the only facts the engine has. It does not read descriptions of the character, and it does not search the web during a round.</p>
+<p>This is worth knowing because it explains most surprises. If the engine says something odd about a character, the answer is almost always in the recorded traits rather than in the character's actual story, and those traits can be corrected over time.</p>
+
+<h2>Step two: scoring the answers</h2>
+<p>As you answer, the engine compares your answers with every character's recorded traits. A character that matches your answers closely accumulates a high score; a character that contradicts them drops away. The comparison uses the strength of your answer as well as its direction, which is why a confident yes counts for more than a probably.</p>
+<p>Two things follow from this. First, an early answer is worth more than a late one, because it removes more characters while the field is still large. Second, contradictions are expensive: a character that matches nine answers but contradicts a confident tenth will fall behind a character that matches eight consistently.</p>
+
+<h2>Step three: choosing the next question</h2>
+<p>Before each question, the engine looks at the characters still in contention and tests every unasked trait. For each trait, it measures how unevenly that trait is spread across those characters. A trait that splits the remaining candidates roughly in half is valuable, because whichever way you answer, a large group is eliminated. A trait that almost every remaining character shares is useless, because the answer tells the engine nothing new.</p>
+<p>The trait with the most uneven spread becomes your next question. This is why early questions are broad and later ones are specific: with fifty characters in play, broad traits split the field best, and only when the field is small do narrow traits become informative.</p>
+
+<h2>Step four: knowing when to stop</h2>
+<p>The engine never guesses before the sixth question, and it never asks more than fourteen. Between those limits it stops early when the leading character is clearly ahead of the next one. If no character is clearly ahead, it keeps asking until it reaches the limit, and then guesses the strongest candidate anyway.</p>
+<p>That early stop is what makes some rounds feel abrupt. The engine has not run out of questions; it has decided that more questions would not change the answer much. When the field is still close, it behaves in the opposite way and uses the whole allowance.</p>
+
+<h2>Step five: the guess and the rating</h2>
+<p>The guess is the character with the highest score at the moment the round ends. It is a best fit, not a certainty, and the engine has no way of knowing whether the character you meant was in the roster at all. Rating the guess is the only feedback loop in the system: a wrong rating with the correct name tells the maintainer which two characters cannot yet be separated, and that is what drives changes to the trait data.</p>
+
+<h2>What none of this does</h2>
+<p>No part of the process looks at who you are. There is no account, no profile and no history carried between rounds beyond what your own browser stores. The engine does not learn from your answers during a round beyond reordering the remaining questions, and it does not train a model on them afterwards. It is a scoring system with a stopping rule, working from a fixed list of characters and a fixed list of questions.</p>
+
+<h2>Why this matters to a player</h2>
+<p>Knowing the shape of the process makes the game easier to play well. Answer for one version of one character. Give confident answers only when you are confident, because a confident error removes the character you meant. And treat a wrong guess with a low-mounted field as information rather than failure: it usually means two characters in the roster are close enough that the questions cannot separate them yet.</p>
+<h2>Related reading</h2>
+<ul class="related-posts">
+<li><a href="https://mindgenieai.xyz/guide-answering-when-unsure.html">What the middle answers actually do</a></li>
+<li><a href="https://mindgenieai.xyz/how-ai-guessing-games-work.html">How AI guessing games work</a></li>
+<li><a href="https://mindgenieai.xyz/how-to-play.html">How to play MindGenie AI</a></li>
+</ul>
+<div class="related"><a href="https://mindgenieai.xyz/blog.html">All posts</a><a href="https://mindgenieai.xyz/">Play MindGenie AI</a><a href="https://mindgenieai.xyz/about.html">About the site</a></div>
+  </main>
+</div>
+<footer>
+  <div class="footer-links">
+    <a href="https://mindgenieai.xyz/about.html">About</a>
+    <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie Policy</a>
+    <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+    <a href="https://mindgenieai.xyz/legal.html">Legal</a>
+    <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+  </div>
+  <div class="footer-copy">© 2026 MindGenie AI — All rights reserved · <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a></div>
+</footer>
+</body>
+</html>

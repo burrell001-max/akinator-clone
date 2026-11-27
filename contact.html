@@ -1,18 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK and Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5783852883880667">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact | MindGenie AI</title>
-<meta property="article:modified_time" content="2026-11-01">
-<meta name="description" content="Get in touch with the MindGenie AI team — bug reports, character suggestions, and general feedback.">
+<title>Contact MindGenie AI</title>
+<meta name="description" content="Email the person who runs MindGenie AI about a bug, a wrong guess, a character suggestion or a privacy request, and what to include in the message.">
+<link rel="canonical" href="https://mindgenieai.xyz/contact.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Contact MindGenie AI">
+<meta property="og:description" content="Email the person who runs MindGenie AI about a bug, a wrong guess, a character suggestion or a privacy request, and what to include in the message.">
+<meta property="og:url" content="https://mindgenieai.xyz/contact.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contact MindGenie AI">
+<meta name="twitter:description" content="Email the person who runs MindGenie AI about a bug, a wrong guess, a character suggestion or a privacy request, and what to include in the message.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#4f86d8">
-<link rel="canonical" href="https://mindgenieai.xyz/contact.html">
 <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/site-theme.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--violet:#7b4dff;--gold:#ffd166;--gold-dim:#c9993a;--white:#f8f8ff;--smoke:#c4c6d6}
@@ -24,51 +60,73 @@ body{background:radial-gradient(circle at top,#243b72 0%,#171c3b 35%,#10162d 70%
 .breadcrumb{font-size:.78rem;color:var(--smoke);margin-bottom:20px}
 .breadcrumb a{color:var(--gold-dim);text-decoration:none}
 .breadcrumb a:hover{color:var(--gold)}
-h1{font-family:'Cinzel',serif;font-size:clamp(1.8rem,6vw,2.4rem);color:var(--gold);text-shadow:0 0 20px rgba(240,192,64,.35);margin-bottom:18px}
-h2{font-family:'Cinzel',serif;font-size:1.15rem;color:var(--gold);margin:26px 0 10px}
-p{color:var(--smoke);line-height:1.8;font-size:.98rem;margin-bottom:14px}
-.contact-card{background:rgba(20,14,50,.6);border:1px solid rgba(108,63,200,.3);border-radius:14px;padding:22px 24px;margin:10px 0}
-.contact-card a{color:var(--gold);text-decoration:none;font-weight:600}
-.contact-card a:hover{color:var(--gold-dim)}
-.reason-list{list-style:none;margin:0 0 14px}
-.reason-list li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.92rem;color:var(--smoke)}
-.reason-list li strong{color:var(--white)}
+h1{font-family:'Cinzel',serif;font-size:clamp(1.8rem,6vw,2.2rem);color:var(--gold);text-shadow:0 0 20px rgba(240,192,64,.35);margin-bottom:8px}
+.updated{font-size:.8rem;color:var(--smoke);margin-bottom:24px}
+h2{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin:28px 0 10px}
+h3{font-size:.98rem;color:var(--white);margin:20px 0 6px}
+p{color:var(--smoke);line-height:1.8;font-size:.95rem;margin-bottom:14px}
+ul,ol{color:var(--smoke);line-height:1.85;font-size:.95rem;margin:0 0 16px 22px}
+li{margin-bottom:6px}
+strong{color:var(--white)}
+a{color:var(--gold-dim)}
+a:hover{color:var(--gold)}
 footer{width:100%;text-align:center;padding:24px 20px;font-size:.78rem;color:#4a4a6a;border-top:1px solid rgba(255,255,255,.05);margin-top:30px}
 footer a{color:var(--smoke);text-decoration:none;margin:0 8px}
 footer a:hover{color:var(--white)}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.related a{text-decoration:none;font-size:.88rem;border:1px solid rgba(108,63,200,.3);padding:8px 14px;border-radius:20px}
 </style>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;display=swap">
-<link rel="stylesheet" href="/site-theme.css">
 </head>
 <body>
 <div class="page-wrap">
-    <div class="top-bar"><a href="https://mindgenieai.xyz/">&larr; Back to MindGenie AI</a></div>
-    <nav class="breadcrumb"><a href="https://mindgenieai.xyz/">Home</a> &rsaquo; Contact</nav>
+  <div class="top-bar"><a href="https://mindgenieai.xyz/">&larr; Back to MindGenie AI</a></div>
+  <nav class="breadcrumb"><a href="https://mindgenieai.xyz/">Home</a> &rsaquo; Contact</nav>
+  <main>
 
-    <main>
-        <h1>Contact</h1>
-        <p>Found a bug, have a character suggestion, or just want to say the Genie guessed wrong in an interesting way? We'd like to hear about it.</p>
+<h1>Contact MindGenie AI</h1>
+<div class="updated">Last updated: <time datetime="2026-11-27">November 27, 2026</time></div>
 
-        <div class="contact-card">
-            <p style="margin-bottom:6px">Email us at:</p>
-            <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a>
-        </div>
+<p>One person reads everything sent to this address. Bug reports, wrong guesses, character suggestions, advertising and privacy questions all go to the same inbox, and all of them get read.</p>
 
-        <h2>What's useful to include</h2>
-        <ul class="reason-list">
-            <li><strong>Bug reports</strong> — what you were doing, what device/browser you were on, and what happened.</li>
-            <li><strong>Wrong guesses</strong> — the character you were thinking of and roughly what questions felt off.</li>
-            <li><strong>Character suggestions</strong> — characters you think the Genie should know but doesn't.</li>
-            <li><strong>Anything else</strong> — general feedback is genuinely read, not just filed away.</li>
-        </ul>
+<h2>Email</h2>
+<p><strong><a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a></strong></p>
+<p>Please use a plain subject line that says what the message is about, for example "wrong guess", "broken page" or "privacy request". Messages are usually answered within three to five working days. There is no support phone number and no live chat, because there is no support team behind them.</p>
 
-        <p>We're a small team, so responses may take a few days, but every message gets read.</p>
-    </main>
+<h2>What to include</h2>
+<h3>A wrong guess</h3>
+<p>Say which character you were thinking of, roughly how many questions the round ran, and which question you felt pushed it off course. If you can remember the answer you gave that felt wrong, that is the most useful part. You do not need to send your session ID; if you still have the result screen open, the character names are enough to investigate.</p>
+
+<h3>A broken page or a bug</h3>
+<p>Include the address of the page, what you were doing, what you expected, and what actually happened. The browser and device help more than you would expect: "Safari on an iPhone 12" or "Chrome on Windows 11" narrows a problem quickly. A screenshot is welcome as long as it does not contain anything personal.</p>
+
+<h3>A character that should be added</h3>
+<p>Name the character and the work they come from. Characters with distinctive, stable traits are easier to add than characters who change heavily between versions. Sending the same suggestion twice does not move it up any list, but it is not ignored either.</p>
+
+<h3>Advertising, consent or privacy</h3>
+<p>If an ad looks broken or inappropriate, include the page address and, if possible, the advertiser's name or the ad's destination. For a question about what is stored when you play, read the <a href="https://mindgenieai.xyz/privacy-policy.html">privacy policy</a> first; it explains what the game keeps, what Google's advertising services may set, and how to ask for a record to be removed. If you have already read it and something is still unclear, write to the address above and say which section you are asking about.</p>
+
+<h2>What not to send</h2>
+<p>Please do not send passwords, identity documents, payment details or anything else sensitive. The game has no accounts, so there is nothing to recover and no password to reset. Messages that contain personal data are deleted once the question is answered.</p>
+
+<div class="related">
+  <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy policy</a>
+  <a href="https://mindgenieai.xyz/about.html">About the site</a>
+  <a href="https://mindgenieai.xyz/faq.html">FAQ</a>
 </div>
-<p class="last-updated" style="text-align:center;color:#9a9cb5;font-size:.8rem;margin:24px 0 0">Last updated: <time datetime="2026-11-01">November 1, 2026</time></p>
+
+  </main>
+</div>
 <footer>
-    <div><a href="https://mindgenieai.xyz/about.html">About</a><a href="https://mindgenieai.xyz/contact.html">Contact</a><a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a><a href="https://mindgenieai.xyz/#blog">Blog</a><a href="https://mindgenieai.xyz/terms.html">Terms of Service</a><a href="https://mindgenieai.xyz/legal.html">Legal</a></div>
-    <div style="margin-top:10px">© 2026 MindGenie AI — All rights reserved</div>
+  <div class="footer-links">
+    <a href="https://mindgenieai.xyz/about.html">About</a>
+    <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie Policy</a>
+    <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+    <a href="https://mindgenieai.xyz/legal.html">Legal</a>
+    <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+  </div>
+  <div class="footer-copy">© 2026 MindGenie AI — All rights reserved · <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a></div>
 </footer>
 </body>
 </html>

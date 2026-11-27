@@ -3,56 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How Does an AI Guessing Game Actually Work? - MindGenie AI</title>
-<meta name="description" content="A look at the logic behind MindGenie AI and other 20-questions style guessing games — how the Genie narrows down your character.">
-<meta name="robots" content="index, follow">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
-* { box-sizing: border-box; }
-body { background:#0a0a1a; color:#f5f0ff; font-family:'Inter',sans-serif; margin:0; padding:0 20px 60px; display:flex; flex-direction:column; align-items:center; }
-.wrap { max-width: 700px; width:100%; padding-top:40px; }
-a { color:#f0c040; }
-h1 { font-family:'Cinzel',serif; color:#f0c040; font-size:2rem; margin-bottom: 20px; }
-h2 { color:#f0c040; font-size:1.1rem; margin: 24px 0 10px; }
-p { color:#cfc7e8; line-height:1.8; font-size:0.97rem; margin-bottom: 14px; }
-ul { color:#cfc7e8; line-height:1.8; font-size:0.97rem; padding-left: 20px; margin-bottom:14px; }
-.back { display:inline-block; margin-top: 40px; color:#a89bc2; text-decoration:none; font-size:0.85rem; }
-.cta { display:inline-block; margin-top:10px; padding:12px 22px; background:#f0c040; color:#0a0a1a; font-weight:700; border-radius:8px; text-decoration:none; }
-.meta { color:#a89bc2; font-size:0.8rem; margin-bottom:30px; }
-</style>
+<title>Moved: how ai guessing games work</title>
+<link rel="canonical" href="https://mindgenieai.xyz/how-ai-guessing-games-work.html">
+<meta name="robots" content="noindex, follow">
+<meta http-equiv="refresh" content="0; url=https://mindgenieai.xyz/how-ai-guessing-games-work.html">
 </head>
 <body>
-<div class="wrap">
-<h1>How Does an AI Guessing Game Actually Work?</h1>
-<p class="meta">MindGenie AI Blog</p>
-
-<p>If you've played MindGenie AI, you've probably wondered how a website can guess who — or what — you're thinking of after just a dozen or so yes-or-no questions. It can feel like magic, but the idea behind it is actually a fairly old and elegant piece of game logic, dressed up with some modern AI polish.</p>
-
-<h2>It starts with 20 Questions</h2>
-<p>The "guess the character" format didn't start on the internet. It's a digital descendant of the classic parlor game 20 Questions, where one player thinks of a person, place, or thing, and the other tries to identify it using only yes-or-no questions. The trick to playing it well is asking questions that split the remaining possibilities roughly in half each time — that's what lets a skilled human (or a good algorithm) zero in on an answer surprisingly fast, even out of thousands of options.</p>
-<p>MindGenie AI works on the same core principle. Every question you're asked isn't random — it's chosen because your answer to it will eliminate as many wrong guesses as possible, as efficiently as possible.</p>
-
-<h2>Behind the scenes: how the Genie narrows things down</h2>
-<p>When you start a round, the Genie technically doesn't "know" anything about your character yet. What it has is a large pool of possible characters — movie heroes, anime leads, historical figures, celebrities, video game protagonists, and more — each one tagged with a set of characteristics.</p>
-<ul>
-<li>A "Yes" keeps characters matching that trait in the running and discards the rest.</li>
-<li>A "No" does the opposite.</li>
-<li>Answers like "Probably" or "Probably not" nudge the odds without fully eliminating anyone, since human memory and opinion are rarely black-and-white.</li>
-</ul>
-<p>After each answer, the pool of remaining candidates shrinks, and the Genie's confidence score climbs. Once one character stands out clearly above the rest, or the question budget runs low, the Genie commits to its best guess.</p>
-
-<h2>Why some characters are harder to guess than others</h2>
-<p>Popular, well-documented characters (think Batman, Mario, or Harry Potter) tend to get guessed quickly because there's a lot of consistent data about them. Obscure characters, or ones that share a lot of traits with someone more famous, are much harder — and that difficulty curve is intentional. It's part of what makes the game interesting to replay.</p>
-
-<h2>The "learning" part</h2>
-<p>Every time you confirm whether the Genie's final guess was right or wrong, that feedback gets folded back into the system. Over thousands of rounds, this kind of feedback loop helps refine which questions are actually useful and helps correct traits that might have been tagged incorrectly.</p>
-
-<h2>Try to beat it</h2>
-<p>Pick a character with a lot of overlapping traits with someone else — two similar-looking anime rivals, for example, or two historical figures from the same era — answer carefully, and see how many questions it takes before the Genie either nails it or gives up.</p>
-
-<a class="cta" href="index.html#play">🔮 Play MindGenie AI Now</a>
-<br>
-<a class="back" href="index.html">← Back to MindGenie AI</a>
-</div>
+<p>This article now lives at <a href="https://mindgenieai.xyz/how-ai-guessing-games-work.html">https://mindgenieai.xyz/how-ai-guessing-games-work.html</a>.</p>
 </body>
 </html>

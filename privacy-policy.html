@@ -1,18 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK and Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5783852883880667">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacy Policy | MindGenie AI</title>
-<meta property="article:modified_time" content="2026-11-01">
-<meta name="description" content="MindGenie AI's privacy policy — what data we collect, the cookies and analytics we use, and how to contact us about your data.">
+<title>Privacy Policy: What MindGenie AI Stores</title>
+<meta name="description" content="What is stored when you play, which cookies Google uses for ads, how consent works in Europe, and how to ask for your records to be deleted.">
+<link rel="canonical" href="https://mindgenieai.xyz/privacy-policy.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Privacy Policy: What MindGenie AI Stores">
+<meta property="og:description" content="What is stored when you play, which cookies Google uses for ads, how consent works in Europe, and how to ask for your records to be deleted.">
+<meta property="og:url" content="https://mindgenieai.xyz/privacy-policy.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Privacy Policy: What MindGenie AI Stores">
+<meta name="twitter:description" content="What is stored when you play, which cookies Google uses for ads, how consent works in Europe, and how to ask for your records to be deleted.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#4f86d8">
-<link rel="canonical" href="https://mindgenieai.xyz/privacy-policy.html">
 <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/site-theme.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--violet:#7b4dff;--gold:#ffd166;--gold-dim:#c9993a;--white:#f8f8ff;--smoke:#c4c6d6}
@@ -27,63 +63,92 @@ body{background:radial-gradient(circle at top,#243b72 0%,#171c3b 35%,#10162d 70%
 h1{font-family:'Cinzel',serif;font-size:clamp(1.8rem,6vw,2.2rem);color:var(--gold);text-shadow:0 0 20px rgba(240,192,64,.35);margin-bottom:8px}
 .updated{font-size:.8rem;color:var(--smoke);margin-bottom:24px}
 h2{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin:28px 0 10px}
+h3{font-size:.98rem;color:var(--white);margin:20px 0 6px}
 p{color:var(--smoke);line-height:1.8;font-size:.95rem;margin-bottom:14px}
-ul{color:var(--smoke);line-height:1.85;font-size:.95rem;margin:0 0 16px 22px}
+ul,ol{color:var(--smoke);line-height:1.85;font-size:.95rem;margin:0 0 16px 22px}
 li{margin-bottom:6px}
 strong{color:var(--white)}
+a{color:var(--gold-dim)}
+a:hover{color:var(--gold)}
 footer{width:100%;text-align:center;padding:24px 20px;font-size:.78rem;color:#4a4a6a;border-top:1px solid rgba(255,255,255,.05);margin-top:30px}
 footer a{color:var(--smoke);text-decoration:none;margin:0 8px}
 footer a:hover{color:var(--white)}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.related a{text-decoration:none;font-size:.88rem;border:1px solid rgba(108,63,200,.3);padding:8px 14px;border-radius:20px}
 </style>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;display=swap">
-<link rel="stylesheet" href="/site-theme.css">
 </head>
 <body>
 <div class="page-wrap">
-    <div class="top-bar"><a href="https://mindgenieai.xyz/">&larr; Back to MindGenie AI</a></div>
-    <nav class="breadcrumb"><a href="https://mindgenieai.xyz/">Home</a> &rsaquo; Privacy Policy</nav>
+  <div class="top-bar"><a href="https://mindgenieai.xyz/">&larr; Back to MindGenie AI</a></div>
+  <nav class="breadcrumb"><a href="https://mindgenieai.xyz/">Home</a> &rsaquo; Privacy Policy</nav>
+  <main>
 
-    <main>
-        <h1>Privacy Policy</h1>
-        <div class="updated">Last updated: November 2026</div>
+<h1>Privacy Policy</h1>
+<div class="updated">Last updated: <time datetime="2026-11-27">November 27, 2026</time></div>
 
-        <p>MindGenie AI ("we," "us," or "the Genie") is a free browser-based game. This policy explains what data is collected when you visit mindgenieai.xyz and why.</p>
+<p>This policy explains what happens to information when you visit mindgenieai.xyz, what the game stores, and what choices you have. It covers the site itself and the third-party services the site uses. It does not cover other websites you reach by following a link.</p>
 
-        <h2>What we don't collect</h2>
-        <p>Playing MindGenie AI does not require an account, and we don't ask for your name, email address, or any other personal information to play a round. The character you think of is not linked to any identity. It is not sent to us at all unless you choose to type it in after a wrong guess (see "Ratings and optional corrections" below).</p>
+<h2>What the game does not need</h2>
+<p>There is no account, no sign-up and no login. You are never asked for your name, email address, date of birth or payment details to play. The character you are thinking of is not transmitted to us unless you choose to type it in after a wrong guess, and even then it is stored without anything that identifies you.</p>
 
-        <h2>Cookies and analytics</h2>
-        <p>Like most websites, we use a small number of third-party services that may set cookies or use similar technologies in your browser:</p>
-        <ul>
-            <li><strong>Google Analytics</strong> — helps us understand overall traffic patterns (e.g. how many people play, which pages are visited). This data is aggregated and not tied to your real-world identity.</li>
-            <li><strong>GoatCounter</strong> — a lightweight, privacy-focused analytics tool we use for basic visit counts.</li>
-            <li><strong>Google AdSense</strong> — we display ads through Google AdSense, which may use cookies to serve ads based on your visit to this and other sites. You can learn more about how Google uses this data and manage your ad preferences at Google's Ads Settings.</li>
-        </ul>
-        <p>Third-party vendors, including Google, use cookies to serve ads based on your previous visits to this site or other sites. Google's use of advertising cookies enables it and its partners to serve ads to you based on your visits to this and other sites on the internet. You can opt out of personalized advertising in <a href="https://adssettings.google.com" style="color:var(--gold-dim)">Google's Ads Settings</a>, or opt out of some third-party vendors' use of cookies for personalized advertising at <a href="https://www.aboutads.info" style="color:var(--gold-dim)">aboutads.info</a>. To learn how Google uses data from sites that use its services, see <a href="https://policies.google.com/technologies/partner-sites" style="color:var(--gold-dim)">How Google uses information from sites or apps that use our services</a>.</p>
-        <p>You can also disable cookies through your browser settings at any time. Doing so may affect how ads are personalized but will not prevent you from playing the game.</p>
+<h2>What is stored on your device</h2>
+<p>The site uses your browser's local storage, not cookies, for three things:</p>
+<ul>
+  <li><strong>Language preference</strong> — the interface language you last selected, so the page opens in the same language next time.</li>
+  <li><strong>Round history</strong> — the outcomes of your recent rounds, kept in your browser so the game can show your own history. It holds a maximum of fifty entries and never leaves your device.</li>
+  <li><strong>A local view counter</strong> — a number incremented in your browser if the visitor counter cannot be fetched.</li>
+</ul>
+<p>You can clear all of it at any time through your browser's site-data settings. Clearing it does not affect your ability to play.</p>
 
-        <h2>Session data</h2>
-        <p>When you play a round, our server tracks a random session ID and your in-progress answers so the Genie can ask the next question and remember where you are in the game. This session data is not linked to any personal identity and is used only to run the round.</p>
+<h2>What the game's server records</h2>
+<p>Rounds are run by a server so the engine can pick the next question. While a round is in progress the server holds a random session ID, your answers so far and which questions have already been asked. Sessions expire after two hours and are held in memory; they are not linked to a name, email address or account.</p>
+<p>When a round ends, you can rate the guess. A rating stores the guessed character, whether it was right, and the random session ID. If you typed the character you had in mind, that name is stored too. These records are anonymous in the sense that there is no identifier that leads back to a person, and they are used only to review which characters are confused with each other.</p>
+<p>Our hosting providers keep ordinary server logs, such as IP address, timestamp and requested page, for security and troubleshooting. These are kept by the providers under their own retention rules.</p>
 
-        <h2>Ratings and optional corrections</h2>
-        <p>After the Genie makes a guess, you can tell us whether it was right. If you do, we save your rating (right or wrong), the character the Genie guessed, and the random session ID. If the guess was wrong you can also type who you were thinking of; that is optional, and if you do it is saved the same way. We don't collect your name, email address or any other identifier with these records, so we generally can't look up or delete one person's records on request. We use them to review how well the game performs and to decide which characters and questions to add or improve.</p>
+<h2>Google AdSense and advertising cookies</h2>
+<p>Advertising on this site is served by Google AdSense. Google and its partners use cookies to serve ads based on your prior visits to this site or other sites. Third-party vendors, including Google, use cookies to enable them to serve ads based on your visits to this and other sites on the internet.</p>
+<p>You can opt out of personalised advertising in <a href="https://adssettings.google.com" rel="noopener">Google Ads Settings</a>, or opt out of some third-party vendors' use of cookies for personalised advertising at <a href="https://www.aboutads.info" rel="noopener">aboutads.info</a>. Google's own explanation of how it uses data from sites that use its services is at <a href="https://policies.google.com/technologies/partner-sites" rel="noopener">policies.google.com/technologies/partner-sites</a>.</p>
+<p>Advertising cookies are set by Google, not by this site. The <a href="https://mindgenieai.xyz/cookie-policy.html">cookie policy</a> lists what they are used for and how to remove them.</p>
 
-        <h2>Hosting and fonts</h2>
-        <p>The site's pages are delivered from our web host, and the guessing engine runs on a separate server at a hosting provider (Render). Fonts are loaded from Google Fonts, which means your browser requests them from Google's servers and Google receives your IP address as part of that request. Our hosting providers also keep standard server logs (such as IP address and timestamp) for security and troubleshooting.</p>
+<h2>Google Analytics</h2>
+<p>The home page uses Google Analytics to count visits and see which pages are opened. It records page views and general information such as device type, browser and approximate location derived from the request. It is not used to identify individual visitors, and the site does not send it the text you type into any field.</p>
+<p>GoatCounter is also used for a simple, cookie-free page view count. It records the page requested and a coarse referrer; it does not set cookies and does not build a profile of you.</p>
 
-        <h2>Children's privacy</h2>
-        <p>MindGenie AI is a general-audience game and does not knowingly collect personal information from children. If you believe a child has provided us with personal information, contact us and we will address it.</p>
+<h2>Consent in the EEA, the UK and Switzerland</h2>
+<p>Visitors in the European Economic Area, the United Kingdom and Switzerland are shown Google's consent message before advertising or analytics cookies are used. Advertising storage, ad user data, ad personalisation and analytics storage are all set to denied by default in those regions, and are only granted if you accept through that message. If you decline, you can still play; the site simply serves non-personalised advertising or no advertising cookies at all.</p>
 
-        <h2>Changes to this policy</h2>
-        <p>We may update this policy from time to time as the site or the services we use change. The "Last updated" date at the top of this page reflects the most recent revision.</p>
+<h2>Advertising choices in the United States</h2>
+<p>Visitors in states with advertising privacy laws can manage their advertising privacy choices through Google's privacy message, which appears on the site and links to Google's ad settings. The same <a href="https://adssettings.google.com" rel="noopener">Google Ads Settings</a> page works for anyone who wants to turn off personalised ads.</p>
 
-        <h2>Contact</h2>
-        <p>Questions about this policy or your data? Reach out via our <a href="https://mindgenieai.xyz/contact.html" style="color:var(--gold-dim)">Contact page</a>.</p>
-    </main>
+<h2>Children</h2>
+<p>The game is written for a general audience and is not directed at children under 13. No personal information is knowingly collected from children, and there is nothing to sign up for. If you believe a child has sent personal information by email, contact us and the message will be deleted.</p>
+
+<h2>Asking for deletion</h2>
+<p>Because rounds are stored under a random session ID with no contact details, there is normally no record that can be tied to you. If you sent an email and want it deleted, write to <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a> from the same address and ask. If you have a session ID from a specific round and want its rating record removed, include it and the character involved; that is enough to find the row. Requests are handled within 30 days.</p>
+<p>To remove what is stored in your browser, clear site data for mindgenieai.xyz in your browser settings. For advertising and analytics cookies set by Google, use the links in the <a href="https://mindgenieai.xyz/cookie-policy.html">cookie policy</a> or your browser's cookie controls.</p>
+
+<h2>Changes to this policy</h2>
+<p>If the services the site uses change, this page changes with them, and the date at the top is updated. Substantial changes are noted in the section they affect rather than silently rewritten.</p>
+
+<div class="related">
+  <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie policy</a>
+  <a href="https://mindgenieai.xyz/terms.html">Terms of service</a>
+  <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+</div>
+
+  </main>
 </div>
 <footer>
-    <div><a href="https://mindgenieai.xyz/about.html">About</a><a href="https://mindgenieai.xyz/contact.html">Contact</a><a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a><a href="https://mindgenieai.xyz/#blog">Blog</a><a href="https://mindgenieai.xyz/terms.html">Terms of Service</a><a href="https://mindgenieai.xyz/legal.html">Legal</a></div>
-    <div style="margin-top:10px">© 2026 MindGenie AI — All rights reserved</div>
+  <div class="footer-links">
+    <a href="https://mindgenieai.xyz/about.html">About</a>
+    <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie Policy</a>
+    <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+    <a href="https://mindgenieai.xyz/legal.html">Legal</a>
+    <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+  </div>
+  <div class="footer-copy">© 2026 MindGenie AI — All rights reserved · <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a></div>
 </footer>
 </body>
 </html>
