@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from typing import Dict
 import random
@@ -20,6 +21,18 @@ app.add_middleware(
 
 sessions: Dict[str, Dict] = {}
 SESSION_TTL_SECONDS = 2 * 60 * 60  # drop abandoned sessions so memory doesn't grow forever
+
+# Character guides renamed during the November 2026 URL cleanup. The .html
+# stubs left at the old addresses are a fallback for static hosts that cannot
+# answer with a status code; a real server should answer with these 301s so old
+# links reach the new page in a single hop.
+GUIDES_BASE_URL = "https://mindgenieai.xyz"
+LEGACY_GUIDE_REDIRECTS = {
+    "spongebob": "spongebob-squarepants",
+    "eleven": "eleven-stranger-things",
+    "elsa": "elsa-frozen",
+    "trinity": "trinity-the-matrix",
+}
 
 
 def _purge_old_sessions():
@@ -551,3 +564,13 @@ def submit_answer(data: AnswerInput):
         "status": "guess",
         "character_guess": best_match,
     }
+
+
+# Declared last so it can never shadow the game endpoints above.
+@app.get("/{legacy_slug}", include_in_schema=False)
+@app.get("/{legacy_slug}.html", include_in_schema=False)
+def legacy_guide_redirect(legacy_slug: str):
+    target = LEGACY_GUIDE_REDIRECTS.get(legacy_slug.lower())
+    if target is None:
+        raise HTTPException(status_code=404, detail="Not Found")
+    return RedirectResponse(f"{GUIDES_BASE_URL}/{target}.html", status_code=301)
