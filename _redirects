@@ -2,12 +2,14 @@
 # Edge hosts that read this file (Cloudflare Pages, Netlify) answer the old
 # addresses below with a single-hop redirect; the HTML stubs with the same
 # names stay in place as a fallback wherever this file is not honoured.
+# Targets are extensionless because both hosts strip ".html" from the new
+# address, so a ".html" target would cost a second hop.
 
-/spongebob.html   /spongebob-squarepants.html   301
-/spongebob        /spongebob-squarepants.html   301
-/eleven.html      /eleven-stranger-things.html  301
-/eleven           /eleven-stranger-things.html  301
-/elsa.html        /elsa-frozen.html             301
-/elsa             /elsa-frozen.html             301
-/trinity.html     /trinity-the-matrix.html      301
-/trinity          /trinity-the-matrix.html      301
+/spongebob.html   /spongebob-squarepants   301
+/spongebob        /spongebob-squarepants   301
+/eleven.html      /eleven-stranger-things  301
+/eleven           /eleven-stranger-things  301
+/elsa.html        /elsa-frozen             301
+/elsa             /elsa-frozen             301
+/trinity.html     /trinity-the-matrix      301
+/trinity          /trinity-the-matrix      301
