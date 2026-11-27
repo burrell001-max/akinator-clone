@@ -10,6 +10,27 @@
   --ok: #5fd68a;
   --bad: #ff8a8a;
   --line: rgba(255, 209, 102, .18);
+  --rule: rgba(255, 255, 255, .08);
+
+  /* Shared shape and depth, so cards, buttons and pills match everywhere. */
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
+  --shadow: 0 10px 24px rgba(4, 8, 20, .38);
+  --shadow-soft: 0 4px 14px rgba(4, 8, 20, .26);
+
+  /* One colour per category, used by hub labels and listed here as the single
+     source of truth. --cat-* mirror the card art gradients on the homepage. */
+  --cat-brain: #a78bfa;
+  --cat-daily: #38bdf8;
+  --cat-number: #60a5fa;
+  --cat-word: #fbbf24;
+  --cat-crossword: #34d399;
+  --cat-sudoku: #fb923c;
+  --cat-memory: #f472b6;
+  --cat-sort: #e879f9;
+  --cat-math: #22d3ee;
+  --cat-puzzle: #c084fc;
 }
 
 * { box-sizing: border-box; }
@@ -28,6 +49,8 @@ a { color: var(--gold-dim); }
 a:hover { color: var(--gold); }
 
 .wrap { max-width: 940px; margin: 0 auto; padding: 0 20px 56px; }
+/* The hub and any future index-style page use the wider column. */
+.wrap--wide { max-width: 1120px; }
 
 .top {
   display: flex;
@@ -78,13 +101,18 @@ p, li { color: var(--muted); }
   display: block;
   background: linear-gradient(180deg, var(--panel-2), var(--panel));
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius);
   padding: 18px 18px 16px;
   text-decoration: none;
   color: inherit;
-  transition: transform .15s ease, border-color .15s ease;
+  box-shadow: var(--shadow-soft);
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
-.card:hover, .card:focus-visible { transform: translateY(-2px); border-color: rgba(255, 209, 102, .5); }
+.card:hover, .card:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(255, 209, 102, .5);
+  box-shadow: var(--shadow);
+}
 .card h3 { margin: 0 0 6px; color: var(--gold); font-size: 1.05rem; }
 .card p { margin: 0; font-size: .92rem; }
 .card .tag {
@@ -152,6 +180,24 @@ footer {
 footer a { color: var(--muted); text-decoration: none; }
 footer a:hover { color: var(--text); }
 
+/* ── Shared components: the same pills, cards and headings on every page ── */
+.eyebrow {
+  margin: 0 0 10px;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+}
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 0 0 10px;
+}
+
 /* Shared game components added with the category library. */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 8px; }
 .chip {
@@ -164,12 +210,28 @@ footer a:hover { color: var(--text); }
   cursor: pointer;
 }
 .chip:hover { border-color: rgba(255, 209, 102, .5); color: var(--text); }
-.chip[aria-pressed="true"] {
+.chip[aria-pressed="true"],
+.chip.is-active {
   background: var(--gold);
   border-color: var(--gold);
   color: #20180a;
   font-weight: 700;
 }
+.chip b { margin-left: 6px; font-weight: 400; font-size: .92em; opacity: .75; }
+.chip[aria-pressed="true"] b { opacity: .9; }
+
+/* Category labels: one class per category, coloured from the tokens above. */
+.cat-label { font-weight: 600; }
+.cat-brain { color: var(--cat-brain); }
+.cat-daily { color: var(--cat-daily); }
+.cat-number { color: var(--cat-number); }
+.cat-word { color: var(--cat-word); }
+.cat-crossword { color: var(--cat-crossword); }
+.cat-sudoku { color: var(--cat-sudoku); }
+.cat-memory { color: var(--cat-memory); }
+.cat-sort { color: var(--cat-sort); }
+.cat-math { color: var(--cat-math); }
+.cat-puzzle { color: var(--cat-puzzle); }
 .filter-note { font-size: .85rem; color: var(--muted); margin: 0 0 6px; }
 .empty-state {
   border: 1px dashed rgba(255, 209, 102, .35);

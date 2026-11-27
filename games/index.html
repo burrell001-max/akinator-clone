@@ -17,8 +17,9 @@
 <meta name="twitter:description" content="Twelve original browser games across ten categories, written by hand and run entirely in the page.">
 <meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#0e1613">
+<meta name="theme-color" content="#0a101f">
 <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
 <link rel="stylesheet" href="/games/hub.css">
 <script type="application/ld+json">
 {
@@ -50,9 +51,9 @@
 </script>
 </head>
 <body>
-<div class="shell">
-  <header class="masthead">
-    <a class="brand" href="https://mindgenieai.xyz/">MindGenie <em>AI</em></a>
+<div class="wrap wrap--wide">
+  <header class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
     <nav aria-label="Primary">
       <a href="https://mindgenieai.xyz/">Play the Genie</a>
       <a href="/games/" aria-current="page">Games</a>
@@ -95,7 +96,7 @@
         <section aria-labelledby="startH">
           <h2 class="eyebrow" id="startH">If you only play one</h2>
           <div class="start-here">
-            <a class="spot lead" href="/games/daily-nonogram.html">
+            <a class="spot card lead" href="/games/daily-nonogram.html">
               <div>
                 <span class="label">Today's grid</span>
                 <h3>Daily Nonogram</h3>
@@ -103,7 +104,7 @@
               </div>
               <span class="go">Play today's grid &rarr;</span>
             </a>
-            <a class="spot" href="/games/brain-codebreaker.html">
+            <a class="spot card" href="/games/brain-codebreaker.html">
               <div>
                 <span class="label">Deduction</span>
                 <h3>Codebreaker</h3>
@@ -111,7 +112,7 @@
               </div>
               <span class="go">Start guessing &rarr;</span>
             </a>
-            <a class="spot" href="/games/crossword-mini.html">
+            <a class="spot card" href="/games/crossword-mini.html">
               <div>
                 <span class="label">Words</span>
                 <h3>Mini Crossword</h3>
@@ -136,12 +137,12 @@
           </div>
           <p class="filter-note" id="filterCount" aria-live="polite">12 games</p>
 
-          <div class="grid" id="gameGrid">
+          <div class="ledger" id="gameGrid">
             <a class="entry" href="/games/brain-codebreaker.html" data-cats="brain" data-cat="Brain Games" data-title="Codebreaker">
               <div class="body">
                 <h3>Codebreaker</h3>
                 <p>Guess a hidden code from exact and near-miss feedback. Three difficulty levels and ten guesses.</p>
-                <span class="meta"><span class="cat">Brain Games</span>Digits · three levels</span>
+                <span class="meta"><span class="cat cat-label cat-brain">Brain Games</span>Digits · three levels</span>
               </div>
               <span class="arrow" aria-hidden="true">&rarr;</span>
             </a>
@@ -150,7 +151,7 @@
               <div class="body">
                 <h3>Daily Nonogram</h3>
                 <p>One six-by-six picture logic grid per day, built from the date. Tracks your streak.</p>
-                <span class="meta"><span class="cat">Daily Games</span>6×6 · one a day</span>
+                <span class="meta"><span class="cat cat-label cat-daily">Daily Games</span>6×6 · one a day</span>
               </div>
               <span class="arrow" aria-hidden="true">&rarr;</span>
             </a>
@@ -159,7 +160,7 @@
               <div class="body">
                 <h3>Anagram Hunt</h3>
                 <p>Ten scrambled words, a clue for each, and points that fall the longer you take.</p>
-                <span class="meta"><span class="cat">Word Games</span>10 words · clues</span>
+                <span class="meta"><span class="cat cat-label cat-word">Word Games</span>10 words · clues</span>
               </div>
               <span class="arrow" aria-hidden="true">&rarr;</span>
             </a>
@@ -168,7 +169,7 @@
               <div class="body">
                 <h3>Pattern Echo</h3>
                 <p>Watch four pads light up in sequence, then repeat it back. One longer every round.</p>
-                <span class="meta"><span class="cat">Memory Games</span>4 pads · growing runs</span>
+                <span class="meta"><span class="cat cat-label cat-memory">Memory Games</span>4 pads · growing runs</span>
               </div>
               <span class="arrow" aria-hidden="true">&rarr;</span>
             </a>
@@ -177,7 +178,7 @@
               <div class="body">
                 <h3>Sudoku</h3>
                 <p>A generated nine-by-nine grid with four difficulties, conflict highlighting and a timer.</p>
-                <span class="meta"><span class="cat">Sudoku</span>9×9 · four levels</span>
+                <span class="meta"><span class="cat cat-label cat-sudoku">Sudoku</span>9×9 · four levels</span>
               </div>
               <span class="arrow" aria-hidden="true">&rarr;</span>
             </a>
@@ -186,7 +187,7 @@
               <div class="body">
                 <h3>Word Guess</h3>
                 <p>Six tries at a hidden five-letter word, with green and amber letter feedback.</p>
-                <span class="meta"><span class="cat">Word Games</span>5 letters · six tries</span>
+                <span class="meta"><span class="cat cat-label cat-word">Word Games</span>5 letters · six tries</span>
               </div>
               <span class="arrow" aria-hidden="true">&rarr;</span>
             </a>
@@ -195,7 +196,7 @@
               <div class="body">
                 <h3>Memory Match</h3>
                 <p>Twelve cards, six pairs, one move counter. Your best run stays in your browser.</p>
-                <span class="meta"><span class="cat">Memory Games</span>12 cards · 6 pairs</span>
+                <span class="meta"><span class="cat cat-label cat-memory">Memory Games</span>12 cards · 6 pairs</span>
               </div>
               <span class="arrow" aria-hidden="true">&rarr;</span>
             </a>
@@ -204,7 +205,7 @@
               <div class="body">
                 <h3>Merge Up</h3>
                 <p>Slide tiles on a four-by-four board and merge equal numbers to double them.</p>
-                <span class="meta"><span class="cat">Number Games</span>4×4 · endless</span>
+                <span class="meta"><span class="cat cat-label cat-number">Number Games</span>4×4 · endless</span>
               </div>
               <span class="arrow" aria-hidden="true">&rarr;</span>
             </a>
@@ -213,7 +214,7 @@
               <div class="body">
                 <h3>Mini Crossword</h3>
                 <p>A six-by-six word square: six clues, and every answer reads across and down.</p>
-                <span class="meta"><span class="cat">Crosswords</span>6×6 · six clues</span>
+                <span class="meta"><span class="cat cat-label cat-crossword">Crosswords</span>6×6 · six clues</span>
               </div>
               <span class="arrow" aria-hidden="true">&rarr;</span>
             </a>
@@ -222,7 +223,7 @@
               <div class="body">
                 <h3>Sort Sprint</h3>
                 <p>Click a shuffled set into order — numbers low to high, or words from A to Z — against the clock.</p>
-                <span class="meta"><span class="cat">Sort Games</span>6–10 items · timed</span>
+                <span class="meta"><span class="cat cat-label cat-sort">Sort Games</span>6–10 items · timed</span>
               </div>
               <span class="arrow" aria-hidden="true">&rarr;</span>
             </a>
@@ -231,7 +232,7 @@
               <div class="body">
                 <h3>Quick Sums</h3>
                 <p>Sixty seconds of addition, subtraction, multiplication and division, with a streak to protect.</p>
-                <span class="meta"><span class="cat">Math Games</span>60 seconds</span>
+                <span class="meta"><span class="cat cat-label cat-math">Math Games</span>60 seconds</span>
               </div>
               <span class="arrow" aria-hidden="true">&rarr;</span>
             </a>
@@ -240,7 +241,7 @@
               <div class="body">
                 <h3>Slide Fifteen</h3>
                 <p>The classic sliding tile puzzle on three-by-three or four-by-four. Every shuffle is solvable.</p>
-                <span class="meta"><span class="cat">Puzzle Games</span>3×3 or 4×4</span>
+                <span class="meta"><span class="cat cat-label cat-puzzle">Puzzle Games</span>3×3 or 4×4</span>
               </div>
               <span class="arrow" aria-hidden="true">&rarr;</span>
             </a>
