@@ -44,7 +44,7 @@ jobs:
           test "$(ls games/og/*.jpg | wc -l)" -ge 41
 
   browser:
-    name: Game win paths
+    name: Game win paths and language contract
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -56,5 +56,9 @@ jobs:
         run: google-chrome --version
       - name: Play every game to a win
         run: node tools/qa/win-paths.mjs
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+      - name: Language contract (?lang=, prose, hreflang)
+        run: node tools/qa/check-lang.mjs
         env:
           CHROME_PATH: /usr/bin/google-chrome
