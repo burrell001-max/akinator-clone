@@ -1,0 +1,150 @@
+/* Board, cell and number-pad styling for every Sudoku page.
+   Pair with /games/sudoku-core.js, which builds the markup and sets
+   --sg-cols, --sg-pad-cols and --sg-erase-span on the containers.
+
+   The dark palette is the arcade default; add data-theme="light" to the grid
+   for Pocket Sudoku's warm paper look. */
+
+.sudoku-grid {
+  --sg-cols: 9;
+  --sg-max: 430px;
+  --sg-font: clamp(.9rem, 4vw, 1.15rem);
+  --sg-bg: #101830;
+  --sg-line: rgba(255, 255, 255, .12);
+  --sg-box-line: rgba(255, 209, 102, .55);
+  --sg-text: #e9edf8;
+  --sg-given-text: #ffd166;
+  --sg-given-bg: rgba(255, 209, 102, .07);
+  --sg-peer-bg: #17213d;
+  --sg-sel-bg: #24345f;
+  --sg-sel-ring: #ffd166;
+  --sg-bad: #ff8a8a;
+  --sg-bad-bg: #3a1d26;
+  --sg-solved-bg: #16342a;
+
+  display: grid;
+  grid-template-columns: repeat(var(--sg-cols), 1fr);
+  gap: 0;
+  width: min(100%, var(--sg-max));
+  margin: 0 auto;
+  border: 2px solid var(--sg-box-line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--sg-bg);
+}
+
+.sudoku-grid[data-size="6"] { --sg-max: 330px; --sg-font: clamp(1rem, 5vw, 1.3rem); }
+.sudoku-grid[data-size="4"] { --sg-max: 260px; --sg-font: clamp(1.2rem, 7vw, 1.6rem); }
+
+.sudoku-grid[data-theme="light"] {
+  --sg-bg: #ffffff;
+  --sg-line: #e7e5e4;
+  --sg-box-line: #292524;
+  --sg-text: #c2410c;
+  --sg-given-text: #1c1917;
+  --sg-given-bg: #f5f5f4;
+  --sg-peer-bg: #ffedd5;
+  --sg-sel-bg: #ffedd5;
+  --sg-sel-ring: #c2410c;
+  --sg-bad: #b91c1c;
+  --sg-bad-bg: #fee2e2;
+  --sg-solved-bg: #dcfce7;
+  border-radius: 0;
+}
+
+.sudoku-cell {
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid var(--sg-line);
+  border-bottom: 1px solid var(--sg-line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--sg-text);
+  font: inherit;
+  font-size: var(--sg-font);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color .12s ease, color .12s ease;
+}
+.sudoku-cell:last-child { border-right: 0; border-bottom: 0; }
+
+.sudoku-cell.is-given { color: var(--sg-given-text); background: var(--sg-given-bg); cursor: default; }
+.sudoku-cell.is-peer { background: var(--sg-peer-bg); }
+.sudoku-cell.is-selected {
+  background: var(--sg-sel-bg);
+  color: #fff;
+  box-shadow: inset 0 0 0 2px var(--sg-sel-ring);
+}
+.sudoku-grid[data-theme="light"] .sudoku-cell.is-selected { color: #1c1917; }
+.sudoku-cell.is-conflict { color: var(--sg-bad); }
+.sudoku-cell.is-wrong { background: var(--sg-bad-bg); color: var(--sg-bad); }
+.sudoku-cell.is-solved { background: var(--sg-solved-bg); }
+.sudoku-cell.is-box-right { border-right: 2px solid var(--sg-box-line); }
+.sudoku-cell.is-box-bottom { border-bottom: 2px solid var(--sg-box-line); }
+
+/* The grid is one tab stop; arrows move around it. */
+.sudoku-grid:focus { outline: none; }
+.sudoku-grid:focus-visible {
+  outline: 2px solid var(--sg-sel-ring);
+  outline-offset: 3px;
+}
+
+.sudoku-pad {
+  display: grid;
+  grid-template-columns: repeat(var(--sg-pad-cols, 9), 1fr);
+  gap: 6px;
+  width: min(100%, var(--sg-max, 430px));
+  margin: 14px auto 0;
+}
+.sudoku-pad button {
+  padding: 11px 0;
+  border: 1px solid var(--sg-line, rgba(255, 255, 255, .12));
+  border-radius: 9px;
+  background: var(--panel-2, #1b2748);
+  color: var(--text, #e9edf8);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.sudoku-pad button:hover {
+  border-color: rgba(255, 209, 102, .55);
+  color: var(--gold, #ffd166);
+}
+.sudoku-pad button.is-erase {
+  grid-column: span var(--sg-erase-span, 9);
+  font-size: .85rem;
+  font-weight: 600;
+}
+.sudoku-pad button:focus-visible {
+  outline: 2px solid var(--gold, #ffd166);
+  outline-offset: 2px;
+}
+
+/* Pocket Sudoku's light card: cream keys on a white board. */
+.sudoku-pad[data-theme="light"] button,
+.sudoku-grid[data-theme="light"] ~ .sudoku-pad button {
+  background: #ffedd5;
+  border-color: #fdba74;
+  color: #9a3412;
+}
+.sudoku-pad[data-theme="light"] button:hover,
+.sudoku-grid[data-theme="light"] ~ .sudoku-pad button:hover {
+  background: #fed7aa;
+  color: #7c2d12;
+}
+
+@media (max-width: 420px) {
+  .sudoku-cell { font-size: clamp(.8rem, 4.4vw, 1.05rem); }
+  .sudoku-grid[data-size="4"] .sudoku-cell { font-size: clamp(1.1rem, 6vw, 1.4rem); }
+  .sudoku-grid[data-size="6"] .sudoku-cell { font-size: clamp(.95rem, 4.6vw, 1.15rem); }
+  .sudoku-pad button { min-height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sudoku-cell { transition: none; }
+}

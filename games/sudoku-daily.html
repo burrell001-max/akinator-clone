@@ -20,6 +20,8 @@
 <meta name="theme-color" content="#0a101f">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/games.css">
+<link rel="stylesheet" href="/games/sudoku.css">
+<link rel="stylesheet" href="/games/ribbon.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -33,46 +35,6 @@
   "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
 }
 </script>
-<style>
-  #grid {
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
-    gap: 0;
-    width: min(100%, 430px);
-    margin: 0 auto;
-    border: 2px solid rgba(255, 209, 102, .5);
-    border-radius: 8px;
-    overflow: hidden;
-    background: #0c1426;
-  }
-  .cell {
-    aspect-ratio: 1 / 1;
-    display: grid; place-items: center;
-    border: 0;
-    border-right: 1px solid rgba(255, 255, 255, .09);
-    border-bottom: 1px solid rgba(255, 255, 255, .09);
-    background: transparent;
-    color: var(--text);
-    font: inherit; font-size: clamp(.9rem, 4vw, 1.15rem); font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    cursor: pointer;
-    padding: 0;
-  }
-  .cell.is-fixed { color: var(--gold); background: rgba(255, 209, 102, .06); cursor: default; }
-  .cell.is-selected { background: rgba(255, 209, 102, .22); color: #fff; }
-  .cell.is-peer { background: rgba(255, 255, 255, .06); }
-  .cell.is-bad { color: var(--bad); background: rgba(255, 138, 138, .14); }
-  .cell.is-boxright { border-right: 2px solid rgba(255, 209, 102, .35); }
-  .cell.is-boxbottom { border-bottom: 2px solid rgba(255, 209, 102, .35); }
-  .numpad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; width: min(100%, 430px); margin: 14px auto 0; }
-  .numpad button {
-    background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px;
-    color: var(--text); font: inherit; font-weight: 700; padding: 11px 0; cursor: pointer;
-  }
-  .numpad button:hover { border-color: rgba(255, 209, 102, .55); color: var(--gold); }
-  .numpad button.erase { grid-column: span 3; font-size: .85rem; }
-  @media (max-width: 420px) { .cell { font-size: .85rem; } }
-</style>
 </head>
 <body>
 <div class="wrap">
@@ -85,6 +47,28 @@
       <a href="/games/pocket-sudoku.html">Pocket Sudoku</a>
     </nav>
   </div>
+
+  <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
+    <a href="/games/#brain">Brain Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#daily">Daily Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#number">Number Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#word">Word Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#crossword">Crosswords</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#sudoku">Sudoku</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#memory">Memory Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#sort">Sort Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#math">Math Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#puzzle">Puzzle Games</a>
+  </nav>
 
   <main>
     <h1>Daily Sudoku</h1>
@@ -140,247 +124,35 @@
 </div>
 
 <script src="/games/games.js"></script>
+<script src="/games/sudoku-core.js"></script>
 <script>
 (function () {
   "use strict";
 
-  var SIZE = 9, BOX_H = 3, BOX_W = 3, GIVENS = 40;
-  var gridEl = document.getElementById("grid");
-  var numpadEl = document.getElementById("numpad");
-  var statusEl = document.getElementById("status");
-  var timeEl = document.getElementById("time");
-  var filledEl = document.getElementById("filled");
-  var mistakesEl = document.getElementById("mistakes");
-  var streakEl = document.getElementById("streak");
-  var bestEl = document.getElementById("best");
   var dateLabel = document.getElementById("dateLabel");
+  var parts = MG.today().split("-");
+  dateLabel.textContent = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]))
+    .toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
 
-  var solution = [];
-  var values = [];
-  var fixed = [];
-  var selected = { r: 0, c: 0 };
-  var mistakes = 0;
-  var started = 0;
-  var ticker = null;
-  var finished = false;
-
-  function build() {
-    var made = MG.sudoku(SIZE, BOX_H, BOX_W, GIVENS, MG.seeded("sudoku-daily-" + MG.today()));
-    solution = made.solution;
-    values = made.puzzle.map(function (row) { return row.slice(); });
-    fixed = made.puzzle.map(function (row) { return row.map(function (v) { return v !== 0; }); });
-    selected = { r: 0, c: 0 };
-    mistakes = 0;
-    finished = false;
-    if (ticker) { window.clearInterval(ticker); ticker = null; }
-    started = 0;
-    timeEl.textContent = "0:00";
-    mistakesEl.textContent = "0";
-    var best = MG.getBest("mg-sudoku-daily-best", 0);
-    bestEl.textContent = best ? MG.formatTime(best) : "—";
-    streakEl.textContent = String(MG.getStreak("mg-sudoku-daily-streak").count);
-    var parts = MG.today().split("-");
-    dateLabel.textContent = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]))
-      .toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
-    statusEl.textContent = "Click a cell, then use the number pad or your keyboard.";
-    render();
-    paintFilled();
-  }
-
-  function peers(r, c, sr, sc) {
-    return r === sr || c === sc ||
-      (Math.floor(r / BOX_H) === Math.floor(sr / BOX_H) && Math.floor(c / BOX_W) === Math.floor(sc / BOX_W));
-  }
-
-  function render() {
-    gridEl.innerHTML = "";
-    for (var r = 0; r < SIZE; r++) {
-      for (var c = 0; c < SIZE; c++) {
-        var cell = document.createElement("button");
-        cell.type = "button";
-        cell.className = "cell";
-        if (fixed[r][c]) cell.classList.add("is-fixed");
-        if (selected && selected.r === r && selected.c === c) cell.classList.add("is-selected");
-        else if (selected && peers(r, c, selected.r, selected.c)) cell.classList.add("is-peer");
-        if ((c + 1) % BOX_W === 0 && c < SIZE - 1) cell.classList.add("is-boxright");
-        if ((r + 1) % BOX_H === 0 && r < SIZE - 1) cell.classList.add("is-boxbottom");
-        var value = values[r][c];
-        cell.textContent = value ? String(value) : "";
-        cell.setAttribute("role", "gridcell");
-        cell.setAttribute("aria-label", "Row " + (r + 1) + ", column " + (c + 1) +
-          (value ? ", " + value : ", empty") + (fixed[r][c] ? ", given" : ""));
-        cell.dataset.r = String(r);
-        cell.dataset.c = String(c);
-        cell.addEventListener("click", function (event) {
-          var rr = Number(event.currentTarget.dataset.r);
-          var cc = Number(event.currentTarget.dataset.c);
-          selected = { r: rr, c: cc };
-          render();
-          if (!fixed[rr][cc]) gridEl.focus();
-        });
-        gridEl.appendChild(cell);
-      }
-    }
-    markConflicts();
-  }
-
-  function markConflicts() {
-    var seen = {};
-    for (var r = 0; r < SIZE; r++) {
-      for (var c = 0; c < SIZE; c++) {
-        var v = values[r][c];
-        if (!v) continue;
-        var bad = false;
-        for (var i = 0; i < SIZE; i++) {
-          if (i !== c && values[r][i] === v) bad = true;
-          if (i !== r && values[i][c] === v) bad = true;
-        }
-        var r0 = Math.floor(r / BOX_H) * BOX_H, c0 = Math.floor(c / BOX_W) * BOX_W;
-        for (var br = r0; br < r0 + BOX_H; br++) {
-          for (var bc = c0; bc < c0 + BOX_W; bc++) {
-            if ((br !== r || bc !== c) && values[br][bc] === v) bad = true;
-          }
-        }
-        if (bad) {
-          var cell = gridEl.children[r * SIZE + c];
-          if (cell) cell.classList.add("is-bad");
-        }
-      }
-    }
-  }
-
-  function paintFilled() {
-    var filled = 0, blanks = 0;
-    for (var r = 0; r < SIZE; r++) {
-      for (var c = 0; c < SIZE; c++) {
-        if (values[r][c]) filled++; else blanks++;
-      }
-    }
-    filledEl.textContent = filled + "/" + SIZE * SIZE;
-    return blanks;
-  }
-
-  function startClock() {
-    if (started) return;
-    started = Date.now();
-    ticker = window.setInterval(function () {
-      timeEl.textContent = MG.formatTime(Math.floor((Date.now() - started) / 1000));
-    }, 500);
-  }
-
-  function place(digit) {
-    if (finished) return;
-    var r = selected.r, c = selected.c;
-    if (r === null || fixed[r][c]) {
-      statusEl.textContent = "That digit is a given. Pick an empty cell first.";
-      return;
-    }
-    values[r][c] = digit;
-    startClock();
-    render();
-    paintFilled();
-    maybeFinish();
-  }
-
-  function clearCell() {
-    if (finished) return;
-    var r = selected.r, c = selected.c;
-    if (r === null || fixed[r][c]) return;
-    values[r][c] = 0;
-    render();
-    paintFilled();
-  }
-
-  function maybeFinish() {
-    for (var r = 0; r < SIZE; r++) {
-      for (var c = 0; c < SIZE; c++) {
-        if (values[r][c] !== solution[r][c]) return;
-      }
-    }
-    finished = true;
-    if (ticker) { window.clearInterval(ticker); ticker = null; }
-    var seconds = started ? Math.floor((Date.now() - started) / 1000) : 0;
-    var improved = MG.saveBest("mg-sudoku-daily-best", seconds, false);
-    if (improved) bestEl.textContent = MG.formatTime(seconds);
-    var streak = MG.bumpStreak("mg-sudoku-daily-streak");
-    streakEl.textContent = String(streak);
-    statusEl.textContent = "Solved in " + MG.formatTime(seconds) + " with " + mistakes +
-      (mistakes === 1 ? " mistake" : " mistakes") + (improved ? " — your fastest yet." : ".") +
-      " Daily streak: " + streak + ".";
-  }
-
-  function buildNumpad() {
-    numpadEl.innerHTML = "";
-    for (var d = 1; d <= 9; d++) {
-      (function (digit) {
-        var btn = document.createElement("button");
-        btn.type = "button";
-        btn.textContent = String(digit);
-        btn.setAttribute("aria-label", "Enter " + digit);
-        btn.addEventListener("click", function () { place(digit); });
-        numpadEl.appendChild(btn);
-      })(d);
-    }
-    var erase = document.createElement("button");
-    erase.type = "button";
-    erase.className = "erase";
-    erase.textContent = "Erase";
-    erase.addEventListener("click", clearCell);
-    numpadEl.appendChild(erase);
-  }
-
-  gridEl.addEventListener("keydown", function (event) {
-    if (!selected) return;
-    var r = selected.r, c = selected.c;
-    if (event.key === "ArrowUp") { selected = { r: Math.max(0, r - 1), c: c }; render(); event.preventDefault(); }
-    else if (event.key === "ArrowDown") { selected = { r: Math.min(SIZE - 1, r + 1), c: c }; render(); event.preventDefault(); }
-    else if (event.key === "ArrowLeft") { selected = { r: r, c: Math.max(0, c - 1) }; render(); event.preventDefault(); }
-    else if (event.key === "ArrowRight") { selected = { r: r, c: Math.min(SIZE - 1, c + 1) }; render(); event.preventDefault(); }
-    else if (/^[1-9]$/.test(event.key)) { place(Number(event.key)); event.preventDefault(); }
-    else if (event.key === "Backspace" || event.key === "Delete") { clearCell(); event.preventDefault(); }
+  var game = MGSudoku.create({
+    size: 9, boxH: 3, boxW: 3,
+    givens: 40,
+    grid: document.getElementById("grid"),
+    pad: document.getElementById("numpad"),
+    status: document.getElementById("status"),
+    time: document.getElementById("time"),
+    filled: document.getElementById("filled"),
+    mistakes: { el: document.getElementById("mistakes") },
+    streak: { key: "mg-sudoku-daily-streak", el: document.getElementById("streak") },
+    best: { key: "mg-sudoku-daily-best", el: document.getElementById("best") },
+    /* Everybody playing today gets the same grid, and it never changes. */
+    seed: function () { return MG.seeded("sudoku-daily-" + MG.today()); },
+    padCols: 9, eraseSpan: 3,
+    messages: { start: "Click a cell, then use the number pad or your keyboard." }
   });
 
-  document.getElementById("restart").addEventListener("click", function () {
-    for (var r = 0; r < SIZE; r++) {
-      for (var c = 0; c < SIZE; c++) {
-        if (!fixed[r][c]) values[r][c] = 0;
-      }
-    }
-    finished = false;
-    if (ticker) { window.clearInterval(ticker); ticker = null; }
-    started = 0;
-    timeEl.textContent = "0:00";
-    render();
-    paintFilled();
-    statusEl.textContent = "Your entries are cleared. The givens stay.";
-  });
-
-  document.getElementById("check").addEventListener("click", function () {
-    var wrong = 0;
-    for (var r = 0; r < SIZE; r++) {
-      for (var c = 0; c < SIZE; c++) {
-        if (values[r][c] && values[r][c] !== solution[r][c]) wrong++;
-      }
-    }
-    if (!wrong) {
-      statusEl.textContent = "Nothing wrong so far. Keep going.";
-      return;
-    }
-    mistakes += wrong;
-    mistakesEl.textContent = String(mistakes);
-    statusEl.textContent = wrong + (wrong === 1 ? " digit is" : " digits are") + " in the wrong place (marked red).";
-    for (var rr = 0; rr < SIZE; rr++) {
-      for (var cc = 0; cc < SIZE; cc++) {
-        if (values[rr][cc] && values[rr][cc] !== solution[rr][cc]) {
-          var cell = gridEl.children[rr * SIZE + cc];
-          if (cell) cell.classList.add("is-bad");
-        }
-      }
-    }
-  });
-
-  buildNumpad();
-  build();
+  document.getElementById("restart").addEventListener("click", game.clearEntries);
+  document.getElementById("check").addEventListener("click", game.check);
 })();
 </script>
 </body>

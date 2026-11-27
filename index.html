@@ -51,6 +51,7 @@
 
     <!-- Games shelf: homepage-only carousel, styled by its own file so this page's theme is untouched -->
     <link rel="stylesheet" href="/games/games-shelf.css">
+    <link rel="stylesheet" href="/games/ribbon.css">
 
     <!-- Open Graph / Twitter Card -->
     
@@ -283,6 +284,11 @@
 
         .logo-area {
             text-align: center;
+            /* Full width of the content column: the page-wrap centres its
+               children, and without this the area shrinks to the widest
+               child's max-content width, which the category ribbon made
+               ~980px wide on a phone. */
+            width: 100%;
             margin: 30px 0 10px;
             animation: introFadeDown 0.7s ease both;
         }

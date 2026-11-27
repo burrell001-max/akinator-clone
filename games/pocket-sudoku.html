@@ -19,6 +19,8 @@
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#fff7ed">
 <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/sudoku.css">
+<link rel="stylesheet" href="/games/ribbon.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -49,24 +51,12 @@
   button.sec { background: #e7e5e4; color: #292524; }
   button:hover { filter: brightness(1.05); }
   .solved-line { font-size: 0.9rem; color: #57534e; }
-  .sudoku-grid { display: grid; grid-template-columns: repeat(9, 1fr); border: 2.5px solid #292524; background: #fff; max-width: 450px; margin: 0 auto; }
-  .s-cell { width: 100%; aspect-ratio: 1 / 1; border: 1px solid #d6d3d1; text-align: center; font-size: 1.15rem; font-weight: 700; color: #c2410c; background: #fff; padding: 0; font-family: inherit; }
-  .s-cell.given { background: #f5f5f4; color: #1c1917; font-weight: 800; }
-  .s-cell.b-right { border-right: 2.5px solid #292524; }
-  .s-cell.b-bottom { border-bottom: 2.5px solid #292524; }
-  .s-cell.bad { background: #fee2e2; color: #b91c1c; }
-  .s-cell:focus { outline: none; background: #ffedd5; }
-  .numpad { display: grid; grid-template-columns: repeat(10, 1fr); gap: 0.3rem; max-width: 450px; margin: 0.85rem auto 0; }
-  .numpad button { padding: 0.55rem 0; background: #ffedd5; color: #9a3412; font-size: 0.95rem; }
-  .numpad button:hover { background: #fed7aa; }
+  #grid { --sg-max: 450px; }
   .msg { margin-top: 0.85rem; font-weight: 700; min-height: 1.4rem; text-align: center; }
-  a:focus-visible, button:focus-visible, select:focus-visible, .s-cell:focus-visible { outline: 2px solid #c2410c; outline-offset: 2px; }
+  a:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid #c2410c; outline-offset: 2px; }
   @media (max-width: 420px) {
     .wrap { margin: 1rem auto; }
     .card { padding: 1rem; border-radius: 12px; }
-    /* Two rows of five: ten buttons across a phone are too small to tap. */
-    .numpad { grid-template-columns: repeat(5, 1fr); gap: 0.35rem; }
-    .numpad button { min-height: 44px; font-size: 1.05rem; }
   }
 </style>
 </head>
@@ -76,6 +66,27 @@
     <a href="/">&larr; Back to MindGenieAI &amp; Shelf</a>
     <a href="/games/">All MindGenieAI Games</a>
   </div>
+    <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
+    <a href="/games/#brain">Brain Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#daily">Daily Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#number">Number Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#word">Word Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#crossword">Crosswords</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#sudoku">Sudoku</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#memory">Memory Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#sort">Sort Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#math">Math Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#puzzle">Puzzle Games</a>
+  </nav>
   <div class="card">
     <span class="badge">Sudoku</span>
     <h1>Pocket Sudoku</h1>
@@ -96,189 +107,51 @@
   </div>
 </div>
 
+<script src="/games/games.js"></script>
+<script src="/games/sudoku-core.js"></script>
 <script>
 (function () {
   "use strict";
 
   var SOLVED_KEY = "mg-pocket-sudoku-solved";
-  var BASE = [
-    [1,2,3,4,5,6,7,8,9],
-    [4,5,6,7,8,9,1,2,3],
-    [7,8,9,1,2,3,4,5,6],
-    [2,3,1,5,6,4,8,9,7],
-    [5,6,4,8,9,7,2,3,1],
-    [8,9,7,2,3,1,5,6,4],
-    [3,1,2,6,4,5,9,7,8],
-    [6,4,5,9,7,8,3,1,2],
-    [9,7,8,3,1,2,6,4,5]
-  ];
-
-  var gridEl = document.getElementById("grid");
+  var diffEl = document.getElementById("diffSelect");
   var msgEl = document.getElementById("msg");
-  var solvedEl = document.getElementById("solvedEl");
 
-  var solution = [];
-  var activeInput = null;
-  var solved = false;
-
-  function readSolved() {
-    try { return Number(localStorage.getItem(SOLVED_KEY)) || 0; } catch (e) { return 0; }
+  /* The select holds how many digits to hide, so givens are the rest. */
+  function givensFor(value) {
+    return 81 - (Number(value) || 44);
   }
 
-  function writeSolved(n) {
-    try { localStorage.setItem(SOLVED_KEY, String(n)); } catch (e) { /* storage can be blocked */ }
-  }
-
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
-
-  /* Shuffling digit labels, row bands and column bands keeps the base grid
-     valid, so every board has a complete, consistent solution. */
-  function generateSolution() {
-    var digits = shuffle([1,2,3,4,5,6,7,8,9]);
-    var rowBands = shuffle([0,1,2]);
-    var colBands = shuffle([0,1,2]);
-    var rows = [];
-    var cols = [];
-    rowBands.forEach(function (b) { shuffle([0,1,2]).forEach(function (r) { rows.push(b * 3 + r); }); });
-    colBands.forEach(function (b) { shuffle([0,1,2]).forEach(function (c) { cols.push(b * 3 + c); }); });
-    return rows.map(function (r) {
-      return cols.map(function (c) { return digits[BASE[r][c] - 1]; });
-    });
-  }
-
-  function setMessage(text, colour) {
-    msgEl.style.color = colour;
-    msgEl.textContent = text;
-  }
-
-  function startBoard() {
-    var blanks = Number(document.getElementById("diffSelect").value);
-    solution = generateSolution();
-    var positions = [];
-    for (var p = 0; p < 81; p++) positions.push(p);
-    positions = shuffle(positions);
-    var hidden = {};
-    positions.slice(0, blanks).forEach(function (i) { hidden[i] = true; });
-
-    gridEl.innerHTML = "";
-    activeInput = null;   /* the old cells are gone, so drop the stale reference */
-    solved = false;
-    msgEl.textContent = "";
-    solvedEl.textContent = String(readSolved());
-
-    for (var i = 0; i < 81; i++) {
-      var r = Math.floor(i / 9);
-      var c = i % 9;
-      var inp = document.createElement("input");
-      inp.type = "text";
-      inp.inputMode = "numeric";
-      inp.autocomplete = "off";
-      inp.maxLength = 1;
-      inp.className = "s-cell";
-      if (c === 2 || c === 5) inp.classList.add("b-right");
-      if (r === 2 || r === 5) inp.classList.add("b-bottom");
-      inp.dataset.ans = String(solution[r][c]);
-
-      if (!hidden[i]) {
-        inp.value = String(solution[r][c]);
-        inp.readOnly = true;
-        inp.classList.add("given");
-        inp.setAttribute("aria-label", "Row " + (r + 1) + " column " + (c + 1) + ", given " + solution[r][c]);
-      } else {
-        inp.setAttribute("aria-label", "Row " + (r + 1) + " column " + (c + 1) + ", empty");
-        /* Bound per cell: a plain closure over `inp` would leave every handler
-           pointing at the last cell created. */
-        (function (cell) {
-          cell.addEventListener("input", function () {
-            cell.classList.remove("bad");
-            cell.value = cell.value.replace(/[^1-9]/g, "").slice(-1);
-          });
-        })(inp);
+  var game = MGSudoku.create({
+    size: 9, boxH: 3, boxW: 3,
+    grid: document.getElementById("grid"),
+    pad: document.getElementById("numpad"),
+    status: msgEl,
+    theme: "light",
+    givens: givensFor(diffEl.value),
+    wins: { key: SOLVED_KEY, el: document.getElementById("solvedEl") },
+    padCols: 9, eraseSpan: 9,
+    messages: {
+      start: "Pick a cell, then a digit. Every board has exactly one solution.",
+      solved: function (info) {
+        return "Solved in " + MG.formatTime(info.seconds) + (info.improved ? " — a new best." : ".") +
+          " Boards solved here: " + info.wins + ".";
       }
-      gridEl.appendChild(inp);
-    }
-  }
-
-  /* One delegated listener for the whole board: focus, click and typing all
-     make the touched cell the target for the numpad, which keeps working after
-     New Board replaces every cell. */
-  function trackCell(event) {
-    var cell = event.target;
-    if (cell && cell.classList && cell.classList.contains("s-cell") && !cell.readOnly) {
-      activeInput = cell;
-    }
-  }
-  gridEl.addEventListener("focusin", trackCell);
-  gridEl.addEventListener("click", trackCell);
-  gridEl.addEventListener("input", trackCell);
-
-  function enter(value) {
-    if (!activeInput || activeInput.readOnly) {
-      setMessage("Tap an empty square first.", "#c2410c");
-      return;
-    }
-    activeInput.value = value;
-    activeInput.classList.remove("bad");
-    activeInput.focus();
-  }
-
-  var padEl = document.getElementById("numpad");
-  for (var n = 1; n <= 9; n++) {
-    (function (digit) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.textContent = String(digit);
-      b.setAttribute("aria-label", "Enter " + digit);
-      b.addEventListener("click", function () { enter(String(digit)); });
-      padEl.appendChild(b);
-    })(n);
-  }
-  var clearBtn = document.createElement("button");
-  clearBtn.type = "button";
-  clearBtn.textContent = "⌫";
-  clearBtn.setAttribute("aria-label", "Clear the selected square");
-  clearBtn.addEventListener("click", function () { enter(""); });
-  padEl.appendChild(clearBtn);
-
-  document.getElementById("checkBtn").addEventListener("click", function () {
-    if (solved) {
-      setMessage("Already solved — press New Board for another grid.", "#15803d");
-      return;
-    }
-    var cells = Array.prototype.slice.call(gridEl.querySelectorAll(".s-cell"));
-    var complete = true;
-    var errors = 0;
-    cells.forEach(function (cell) {
-      if (cell.readOnly) return;
-      if (!cell.value) complete = false;
-      else if (cell.value !== cell.dataset.ans) {
-        cell.classList.add("bad");
-        errors++;
-      }
-    });
-
-    if (errors > 0) {
-      setMessage(errors + (errors === 1 ? " cell conflicts" : " cells conflict") + " with the solution.", "#b91c1c");
-    } else if (!complete) {
-      setMessage("Looking good so far—keep filling the remaining squares!", "#c2410c");
-    } else {
-      solved = true;
-      var next = readSolved() + 1;
-      writeSolved(next);
-      solvedEl.textContent = String(next);
-      setMessage("Sudoku solved! Press New Board for another challenge.", "#15803d");
+    },
+    on: {
+      solve: function () { msgEl.style.color = "#15803d"; },
+      newPuzzle: function () { msgEl.style.color = ""; },
+      check: function () { msgEl.style.color = ""; }
     }
   });
 
-  document.getElementById("newGameBtn").addEventListener("click", startBoard);
-  startBoard();
+  diffEl.addEventListener("change", function () {
+    game.newPuzzle({ givens: givensFor(diffEl.value) });
+  });
+  document.getElementById("newGameBtn").addEventListener("click", function () {
+    game.newPuzzle({ givens: givensFor(diffEl.value) });
+  });
+  document.getElementById("checkBtn").addEventListener("click", game.check);
 })();
 </script>
 </body>

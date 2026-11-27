@@ -119,6 +119,18 @@
     var random = rng || Math.random;
     var i, j;
 
+    /* Shuffle with the supplied random source, so passing MG.seeded(...)
+       really does deal the same grid twice. MG.shuffle() uses Math.random()
+       and would quietly make a "daily" puzzle different on every load. */
+    function shuffleWith(list) {
+      var a = list.slice();
+      for (var k = a.length - 1; k > 0; k--) {
+        var pick = Math.floor(random() * (k + 1));
+        var t = a[k]; a[k] = a[pick]; a[pick] = t;
+      }
+      return a;
+    }
+
     function blank() {
       var g = [];
       for (i = 0; i < size; i++) g.push(new Array(size).fill(0));
@@ -146,7 +158,7 @@
       for (var r = 0; r < size; r++) {
         for (var c = 0; c < size; c++) {
           if (g[r][c] !== 0) continue;
-          var order = MG.shuffle(digits);
+          var order = shuffleWith(digits);
           for (var k = 0; k < order.length; k++) {
             if (!allowed(g, r, c, order[k])) continue;
             g[r][c] = order[k];
@@ -194,7 +206,7 @@
     var puzzle = solution.map(function (row) { return row.slice(); });
     var cells = [];
     for (i = 0; i < size * size; i++) cells.push(i);
-    cells = MG.shuffle(cells);
+    cells = shuffleWith(cells);
 
     var target = Math.max(size, Math.min(size * size, givens));
     var filled = size * size;

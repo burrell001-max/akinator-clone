@@ -20,32 +20,11 @@
 <meta name="theme-color" content="#0a101f">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/games/games.css">
+<link rel="stylesheet" href="/games/sudoku.css">
+<link rel="stylesheet" href="/games/ribbon.css">
 <style>
-  .board-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px; width: min(100%, 480px); }
-  .board { display: grid; grid-template-columns: repeat(9, 1fr); gap: 0; border: 2px solid rgba(255, 209, 102, .55); border-radius: 6px; overflow: hidden; }
-  .cell {
-    width: 100%; aspect-ratio: 1 / 1; border: 0;
-    border-right: 1px solid rgba(255, 255, 255, .12);
-    border-bottom: 1px solid rgba(255, 255, 255, .12);
-    background: #101830; color: var(--gold); text-align: center;
-    font-size: clamp(1rem, 4.6vw, 1.35rem); font-weight: 600; font-family: inherit;
-    padding: 0; border-radius: 0; cursor: pointer;
-  }
-  .cell:nth-child(9n) { border-right: 0; }
-  .cell:nth-child(n+73) { border-bottom: 0; }
-  .cell.box-right { border-right: 2px solid rgba(255, 209, 102, .45); }
-  .cell.box-bottom { border-bottom: 2px solid rgba(255, 209, 102, .45); }
-  .cell.given { color: #dfe6f7; background: #182342; cursor: default; }
-  .cell.peer { background: #17213d; }
-  .cell.sel { background: #24345f; box-shadow: inset 0 0 0 2px var(--gold); }
-  .cell.conflict { color: var(--bad); }
-  .cell.wrong { background: #3a1d26; color: var(--bad); }
-  .cell.solved { background: #16342a; }
-  .pad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 12px; }
-  .pad button { background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 12px 0; font-size: 1.05rem; font-weight: 600; cursor: pointer; }
-  .pad button:hover { border-color: rgba(255, 209, 102, .55); }
-  .pad button.erase { grid-column: span 1; font-size: .82rem; }
-  .meta { display: flex; justify-content: space-between; font-size: .88rem; color: var(--muted); margin-bottom: 10px; }
+  .board-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px; width: min(100%, 480px); margin: 0 auto; }
+  .meta { display: flex; justify-content: space-between; font-size: .88rem; color: var(--muted); margin-bottom: 10px; font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
@@ -59,6 +38,28 @@
       <a href="/games/memory.html">Memory</a>
     </nav>
   </div>
+
+  <nav class="mg-cat-ribbon mg-cat-ribbon--compact" aria-label="Game categories">
+    <a href="/games/#brain">Brain Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#daily">Daily Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#number">Number Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#word">Word Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#crossword">Crosswords</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#sudoku">Sudoku</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#memory">Memory Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#sort">Sort Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#math">Math Games</a>
+    <span class="mg-cat-sep" aria-hidden="true"></span>
+    <a href="/games/#puzzle">Puzzle Games</a>
+  </nav>
 
   <main>
     <h1>Sudoku</h1>
@@ -77,20 +78,9 @@
     </div>
 
     <div class="board-wrap">
-      <div class="meta"><span id="timer">00:00</span><span id="progress">0 of 81 filled</span></div>
-      <div class="board" id="board" role="grid" aria-label="Sudoku grid"></div>
-      <div class="pad" id="pad" aria-label="Number pad">
-        <button type="button" data-n="1">1</button>
-        <button type="button" data-n="2">2</button>
-        <button type="button" data-n="3">3</button>
-        <button type="button" data-n="4">4</button>
-        <button type="button" data-n="5">5</button>
-        <button type="button" data-n="6">6</button>
-        <button type="button" data-n="7">7</button>
-        <button type="button" data-n="8">8</button>
-        <button type="button" data-n="9">9</button>
-        <button type="button" class="erase" data-n="0">Erase</button>
-      </div>
+      <div class="meta"><span id="timer">0:00</span><span id="progress">0 of 81 filled</span></div>
+      <div id="board" role="grid" aria-label="Sudoku grid"></div>
+      <div id="pad" role="group" aria-label="Number pad"></div>
     </div>
 
     <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -111,303 +101,37 @@
   </footer>
 </div>
 
+<script src="/games/games.js"></script>
+<script src="/games/sudoku-core.js"></script>
 <script>
 (function () {
   "use strict";
 
-  var board = document.getElementById("board");
-  var statusEl = document.getElementById("status");
-  var timerEl = document.getElementById("timer");
-  var progressEl = document.getElementById("progress");
+  /* Givens kept: about forty-one on easy down to twenty-five on expert,
+     matching the eight-one-cell grid the copy describes. */
+  var GIVENS = { easy: 41, medium: 35, hard: 29, expert: 25 };
   var diffEl = document.getElementById("diff");
 
-  var solution = new Array(81).fill(0);
-  var puzzle = new Array(81).fill(0);
-  var cells = [];
-  var selected = 40;
-  var seconds = 0;
-  var ticking = null;
-  var solved = false;
-
-  var REMOVALS = { easy: 40, medium: 46, hard: 52, expert: 56 };
-
-  function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
-
-  function boxOf(i) {
-    var r = Math.floor(i / 9), c = i % 9;
-    return Math.floor(r / 3) * 3 + Math.floor(c / 3);
-  }
-
-  function canPlace(grid, i, v) {
-    var r = Math.floor(i / 9), c = i % 9, b = boxOf(i);
-    for (var k = 0; k < 9; k++) {
-      if (grid[r * 9 + k] === v) return false;
-      if (grid[k * 9 + c] === v) return false;
-    }
-    var br = Math.floor(b / 3) * 3, bc = (b % 3) * 3;
-    for (var rr = 0; rr < 3; rr++) {
-      for (var cc = 0; cc < 3; cc++) {
-        if (grid[(br + rr) * 9 + bc + cc] === v) return false;
-      }
-    }
-    return true;
-  }
-
-  function fill(grid) {
-    var empty = grid.indexOf(0);
-    if (empty === -1) return true;
-    var nums = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-    for (var n = 0; n < 9; n++) {
-      if (canPlace(grid, empty, nums[n])) {
-        grid[empty] = nums[n];
-        if (fill(grid)) return true;
-        grid[empty] = 0;
-      }
-    }
-    return false;
-  }
-
-  function countSolutions(grid, limit) {
-    var g = grid.slice();
-    var rows = new Array(9).fill(0), cols = new Array(9).fill(0), boxes = new Array(9).fill(0);
-    for (var i = 0; i < 81; i++) {
-      var v = g[i];
-      if (v) {
-        var bit = 1 << v;
-        rows[Math.floor(i / 9)] |= bit;
-        cols[i % 9] |= bit;
-        boxes[boxOf(i)] |= bit;
-      }
-    }
-    var found = 0;
-
-    function popcount(x) {
-      var n = 0;
-      while (x) { x &= x - 1; n++; }
-      return n;
-    }
-
-    function rec() {
-      if (found >= limit) return;
-      var best = -1, bestMask = 0, bestCount = 10;
-      for (var i = 0; i < 81; i++) {
-        if (g[i]) continue;
-        var r = Math.floor(i / 9), c = i % 9, b = boxOf(i);
-        var mask = (~(rows[r] | cols[c] | boxes[b])) & 0x3FE;
-        var n = popcount(mask);
-        if (n === 0) return;
-        if (n < bestCount) { bestCount = n; best = i; bestMask = mask; if (n === 1) break; }
-      }
-      if (best === -1) { found++; return; }
-      var br = Math.floor(best / 9), bc = best % 9, bb = boxOf(best);
-      var m = bestMask;
-      while (m) {
-        var bit = m & -m;
-        var val = Math.round(Math.log2(bit));
-        g[best] = val; rows[br] |= bit; cols[bc] |= bit; boxes[bb] |= bit;
-        rec();
-        g[best] = 0; rows[br] &= ~bit; cols[bc] &= ~bit; boxes[bb] &= ~bit;
-        if (found >= limit) return;
-        m ^= bit;
-      }
-    }
-
-    rec();
-    return found;
-  }
-
-  function makePuzzle(level) {
-    var grid = new Array(81).fill(0);
-    fill(grid);
-    solution = grid.slice();
-    var target = REMOVALS[level] || 46;
-    var order = shuffle(Array.from({ length: 81 }, function (_, i) { return i; }));
-    var removed = 0, misses = 0;
-    for (var k = 0; k < order.length && removed < target && misses < 30; k++) {
-      var idx = order[k];
-      var keep = grid[idx];
-      grid[idx] = 0;
-      if (countSolutions(grid, 2) === 1) { removed++; misses = 0; }
-      else { grid[idx] = keep; misses++; }
-    }
-    puzzle = grid.slice();
-  }
-
-  function buildBoard() {
-    board.innerHTML = "";
-    cells = [];
-    for (var i = 0; i < 81; i++) {
-      var c = i % 9, r = Math.floor(i / 9);
-      var input = document.createElement("input");
-      input.type = "text";
-      input.inputMode = "numeric";
-      input.maxLength = 1;
-      input.autocomplete = "off";
-      input.className = "cell";
-      input.dataset.idx = String(i);
-      input.setAttribute("role", "gridcell");
-      input.setAttribute("aria-label", "Row " + (r + 1) + " column " + (c + 1));
-      if (c === 2 || c === 5) input.classList.add("box-right");
-      if (r === 2 || r === 5) input.classList.add("box-bottom");
-      input.addEventListener("focus", function (e) { selectCell(Number(e.target.dataset.idx)); });
-      input.addEventListener("click", function (e) { selectCell(Number(e.target.dataset.idx)); });
-      input.addEventListener("input", function (e) { onInput(e.target); });
-      input.addEventListener("keydown", onKey);
-      board.appendChild(input);
-      cells.push(input);
-    }
-  }
-
-  function render() {
-    for (var i = 0; i < 81; i++) {
-      var cell = cells[i];
-      var v = puzzle[i];
-      cell.value = v ? String(v) : "";
-      cell.readOnly = !!v;
-      cell.classList.toggle("given", !!v);
-      cell.classList.toggle("wrong", false);
-      cell.classList.toggle("solved", solved);
-    }
-    highlightConflicts();
-    updateProgress();
-    highlightSelection();
-  }
-
-  function updateProgress() {
-    var filled = 0;
-    for (var i = 0; i < 81; i++) if (puzzle[i]) filled++;
-    progressEl.textContent = filled + " of 81 filled";
-  }
-
-  function selectCell(i) {
-    selected = i;
-    highlightSelection();
-  }
-
-  function highlightSelection() {
-    if (selected < 0) return;
-    var sr = Math.floor(selected / 9), sc = selected % 9, sb = boxOf(selected);
-    cells.forEach(function (cell, i) {
-      cell.classList.toggle("sel", i === selected);
-      var r = Math.floor(i / 9), c = i % 9;
-      cell.classList.toggle("peer", i !== selected && (r === sr || c === sc || boxOf(i) === sb));
-    });
-  }
-
-  function highlightConflicts() {
-    var counts = {};
-    for (var i = 0; i < 81; i++) {
-      var v = puzzle[i];
-      if (!v) continue;
-      var r = Math.floor(i / 9), c = i % 9, b = boxOf(i);
-      [["r", r, v], ["c", c, v], ["b", b, v]].forEach(function (k) {
-        var key = k[0] + k[1] + ":" + k[2];
-        counts[key] = (counts[key] || 0) + 1;
-      });
-    }
-    for (var j = 0; j < 81; j++) {
-      var val = puzzle[j];
-      var rr = Math.floor(j / 9), cc = j % 9, bb = boxOf(j);
-      var bad = val && (counts["r" + rr + ":" + val] > 1 || counts["c" + cc + ":" + val] > 1 || counts["b" + bb + ":" + val] > 1);
-      cells[j].classList.toggle("conflict", !!bad);
-    }
-  }
-
-  function onInput(el) {
-    var i = Number(el.dataset.idx);
-    if (puzzle[i] && cells[i].classList.contains("given")) { el.value = String(puzzle[i]); return; }
-    var digits = el.value.replace(/[^1-9]/g, "");
-    var v = digits ? Number(digits.charAt(digits.length - 1)) : 0;
-    setValue(i, v);
-  }
-
-  function setValue(i, v) {
-    if (cells[i].classList.contains("given")) return;
-    puzzle[i] = v;
-    cells[i].value = v ? String(v) : "";
-    cells[i].classList.remove("wrong");
-    highlightConflicts();
-    updateProgress();
-    checkSolved();
-  }
-
-  function checkSolved() {
-    for (var i = 0; i < 81; i++) if (puzzle[i] !== solution[i]) return;
-    solved = true;
-    stopTimer();
-    cells.forEach(function (c) { c.classList.add("solved"); });
-    statusEl.textContent = "Solved in " + timerEl.textContent + ". New puzzle when you are ready.";
-  }
-
-  function onKey(e) {
-    var i = Number(e.target.dataset.idx);
-    var r = Math.floor(i / 9), c = i % 9;
-    if (e.key === "ArrowLeft" && c > 0) { cells[i - 1].focus(); e.preventDefault(); }
-    else if (e.key === "ArrowRight" && c < 8) { cells[i + 1].focus(); e.preventDefault(); }
-    else if (e.key === "ArrowUp" && r > 0) { cells[i - 9].focus(); e.preventDefault(); }
-    else if (e.key === "ArrowDown" && r < 8) { cells[i + 9].focus(); e.preventDefault(); }
-    else if (e.key === "Backspace" || e.key === "Delete") { setValue(i, 0); e.preventDefault(); }
-    else if (/^[1-9]$/.test(e.key)) { setValue(i, Number(e.key)); e.preventDefault(); }
-  }
-
-  function startTimer() {
-    stopTimer();
-    seconds = 0;
-    timerEl.textContent = "00:00";
-    ticking = setInterval(function () {
-      seconds++;
-      var m = Math.floor(seconds / 60), s = seconds % 60;
-      timerEl.textContent = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
-    }, 1000);
-  }
-
-  function stopTimer() {
-    if (ticking) clearInterval(ticking);
-    ticking = null;
-  }
-
-  function newGame() {
-    statusEl.textContent = "Building a puzzle with a single solution…";
-    solved = false;
-    setTimeout(function () {
-      makePuzzle(diffEl.value);
-      buildBoard();
-      render();
-      startTimer();
-      statusEl.textContent = "";
-      cells[selected].focus();
-    }, 20);
-  }
-
-  document.getElementById("newGame").addEventListener("click", newGame);
-  document.getElementById("check").addEventListener("click", function () {
-    var wrong = 0;
-    for (var i = 0; i < 81; i++) {
-      if (puzzle[i] && puzzle[i] !== solution[i]) {
-        cells[i].classList.add("wrong");
-        wrong++;
-      }
-    }
-    statusEl.textContent = wrong === 0 ? "Nothing wrong so far." : wrong + (wrong === 1 ? " cell is wrong." : " cells are wrong.");
+  var game = MGSudoku.create({
+    size: 9, boxH: 3, boxW: 3,
+    grid: document.getElementById("board"),
+    pad: document.getElementById("pad"),
+    status: document.getElementById("status"),
+    time: document.getElementById("timer"),
+    filled: document.getElementById("progress"),
+    filledFormat: function (filled, total) { return filled + " of " + total + " filled"; },
+    givens: GIVENS[diffEl.value] || 35,
+    padCols: 9,
+    messages: { start: "Click a cell, then type a number." }
   });
 
-  document.getElementById("pad").addEventListener("click", function (e) {
-    var btn = e.target.closest("button");
-    if (!btn || selected < 0) return;
-    setValue(selected, Number(btn.dataset.n));
-    cells[selected].focus();
-  });
+  function deal() {
+    game.newPuzzle({ givens: GIVENS[diffEl.value] || 35 });
+  }
 
-  diffEl.addEventListener("change", newGame);
-
-  buildBoard();
-  newGame();
+  diffEl.addEventListener("change", deal);
+  document.getElementById("newGame").addEventListener("click", deal);
+  document.getElementById("check").addEventListener("click", game.check);
 })();
 </script>
 </body>

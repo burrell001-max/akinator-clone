@@ -1,0 +1,102 @@
+/* Category ribbon — the crimson pill bar that links every page to the ten
+   game categories. Shared by the homepage, the hub and every game page, so the
+   bar only needs to exist once.
+
+   Each link deep-links into /games/#<key>, where hub.js reads the hash and
+   filters the grid. Ten links plus dividers are wider than a phone, so the bar
+   scrolls sideways instead of wrapping, and the dividers scroll with it. */
+
+.mg-cat-ribbon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  /* The homepage's .logo-area is centred and shrink-to-fit, so it grows to the
+     bar's min-content width (~980px). Capping against the viewport keeps the
+     bar on screen on a phone, where it then scrolls sideways. */
+  max-width: min(100%, calc(100vw - 32px));
+  min-width: 0;
+  flex: 0 1 auto;
+  margin: 0 auto 16px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #a31621 0%, #89023e 55%, #6a0136 100%);
+  box-shadow: 0 10px 22px rgba(106, 1, 54, .26), inset 0 1px 0 rgba(255, 255, 255, .18);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.mg-cat-ribbon::-webkit-scrollbar { display: none; }
+
+.mg-cat-ribbon a {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: #ffffff;
+  font-family: 'Fredoka', 'Inter', system-ui, sans-serif;
+  font-size: .84rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+  line-height: 1.1;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: background-color .15s ease, color .15s ease;
+}
+.mg-cat-ribbon a:hover,
+.mg-cat-ribbon a:focus-visible {
+  background: rgba(255, 255, 255, .18);
+  color: #ffffff;
+  text-decoration-color: #ffe9f3;
+}
+.mg-cat-ribbon a:focus-visible {
+  outline: 2px solid #ffd166;
+  outline-offset: 2px;
+}
+/* The page the visitor came from stays visible as a pressed state. */
+.mg-cat-ribbon a[aria-current="page"] {
+  background: rgba(255, 255, 255, .22);
+  text-decoration-thickness: 2px;
+}
+
+/* Hairline dividers, drawn as an element so they never underline. */
+.mg-cat-sep {
+  flex: 0 0 auto;
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, .38);
+  margin: 0 1px;
+}
+
+@media (max-width: 720px) {
+  .mg-cat-ribbon {
+    justify-content: flex-start;
+    margin-bottom: 14px;
+    padding: 5px 8px;
+  }
+  /* 44px is the usual minimum touch target; these come close without making
+     the bar so tall that it pushes the wordmark down the screen. */
+  .mg-cat-ribbon a { font-size: .8rem; padding: 10px 11px; min-height: 40px; }
+  .mg-cat-ribbon--compact a { padding: 9px 10px; min-height: 38px; }
+}
+
+/* Compact variant: hub and game pages, where the ribbon is a utility bar
+   above a game rather than the masthead. Capped so it does not stretch on the
+   hub's 1360px column. */
+.mg-cat-ribbon--compact {
+  max-width: min(960px, calc(100vw - 32px));
+  margin: 0 auto 18px;
+  padding: 4px 8px;
+  box-shadow: 0 6px 16px rgba(106, 1, 54, .22);
+}
+.mg-cat-ribbon--compact a { font-size: .78rem; padding: 6px 9px; }
+.mg-cat-ribbon--compact .mg-cat-sep { height: 14px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-cat-ribbon a { transition: none; }
+}
