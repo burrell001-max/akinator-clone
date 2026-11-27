@@ -287,6 +287,10 @@
   current = detect();
 
   function boot() {
+    /* A shared ?lang= link should keep its language after the next click. */
+    if (fromQuery()) {
+      try { window.localStorage.setItem(STORAGE_KEY, current); } catch (error) { /* blocked */ }
+    }
     /* Remember the authored English before the first translation pass. */
     each(document, "[data-i18n], [data-mg-hub]", function (el) {
       if (!el.hasAttribute("data-en")) el.setAttribute("data-en", el.textContent);
