@@ -19,7 +19,10 @@
   --green: #2c9a5a;
 }
 
+*, *::before, *::after { box-sizing: border-box; }
+
 html { scroll-behavior: smooth; }
+body { margin: 0; }
 
 body {
   background: linear-gradient(180deg, #4f86d8 0%, #8fb0ee 38%, #c9d3fb 72%, #dfe6fb 100%) fixed;
