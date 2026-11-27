@@ -1,9 +1,9 @@
-/* FreeBuff games shelf: category filter plus arrow/wheel scrolling.
+/* MindGenieAI games shelf: category filter plus arrow/wheel scrolling.
    Runs only when the section is on the page, so it is inert everywhere else. */
 (function () {
   "use strict";
 
-  var section = document.getElementById("freebuff-games-shelf");
+  var section = document.getElementById("mg-games-shelf");
   if (!section) return;
 
   var track = section.querySelector("#fbCarouselTrack");

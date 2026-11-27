@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shift Sort: A Free Swap-and-Order Puzzle</title>
+<meta name="description" content="Repair a scrambled row of numbers with the fewest swaps. Click two tiles to trade places, watch the out-of-place count fall, and beat your own move record.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/sort-shifter.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Shift Sort: A Free Swap-and-Order Puzzle">
+<meta property="og:description" content="Click two tiles, swap them, and sort the row in as few moves as possible.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/sort-shifter.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Shift Sort: Swap and Order">
+<meta name="twitter:description" content="Click two tiles, swap them, and sort the row in as few moves as possible.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Shift Sort",
+  "url": "https://mindgenieai.xyz/games/sort-shifter.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A sorting puzzle: repair a scrambled row of numbers using as few swaps as possible.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .row-of-tiles { display: grid; gap: 10px; grid-template-columns: repeat(7, minmax(0, 1fr)); margin: 8px 0 16px; }
+  .tile {
+    aspect-ratio: 1 / 1;
+    display: grid; place-items: center;
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    color: var(--text);
+    font: inherit; font-size: clamp(1rem, 4.4vw, 1.5rem); font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    padding: 0;
+    transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+  }
+  .tile:hover { border-color: rgba(255, 209, 102, .5); }
+  .tile.is-picked {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(255, 209, 102, .35) inset;
+    color: var(--gold);
+    transform: translateY(-3px);
+  }
+  .tile.is-settled { border-color: rgba(95, 214, 138, .55); color: #bff0d1; }
+  .tile:disabled { cursor: default; }
+  @media (max-width: 520px) {
+    .row-of-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/sort-sequence.html">Sort Sprint</a>
+      <a href="/games/sort-bins.html">Sort Bins</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Shift Sort</h1>
+    <p class="updated">A scrambled row of seven numbers. Swap your way to ascending order.</p>
+
+    <div class="toolbar">
+      <button class="btn" type="button" id="newSet">New row</button>
+      <button class="btn ghost" type="button" id="reset">Undo all</button>
+      <span class="hint">Click one tile, then another, to swap them.</span>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Moves <b id="moves">0</b></span>
+        <span>Out of place <b id="wrong">7</b></span>
+        <span>Time <b id="time">0:00</b></span>
+        <span>Fewest moves <b id="best">—</b></span>
+      </div>
+
+      <div class="row-of-tiles" id="tiles" role="group" aria-label="Tiles to sort"></div>
+
+      <p class="status" id="status" role="status" aria-live="polite">Pick two tiles to swap. Numbers go from smallest on the left to largest on the right.</p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>Seven numbers are laid out in a random order. Click a tile to lift it, then click a second tile to swap the two. The move counter goes up by one. When the row reads smallest to largest from left to right, the puzzle is solved and the timer stops.</p>
+    <p>Nothing else changes the numbers: there is no shuffling button to rescue you mid-puzzle and no hints, only the out-of-place counter that tells you how many tiles are sitting away from their final positions. The aim is the fewest moves, not the fastest time &mdash; although the clock is shown so you can see how long the thinking took.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Every row contains seven different numbers, so the sorted order is unique.</li>
+      <li>One swap is one move, whether the two tiles were adjacent or at opposite ends.</li>
+      <li>Your fewest moves is kept in this browser under <code>mg-shift-best</code>; the time is recorded alongside it for interest.</li>
+      <li>Undo all restores the original scramble without resetting the move count &mdash; the count is a record of effort, not a criticism.</li>
+      <li>The keyboard works throughout: tab to a tile, press Enter to lift it, tab on, press Enter again.</li>
+    </ul>
+
+    <h2>The maths behind a good swap</h2>
+    <p>Any scramble can be solved in at most <em>n &minus; 1</em> swaps if you treat it as a set of cycles: pick an unsorted position, put the number that belongs there into it, and repeat. That is the guaranteed ceiling, and the panel's out-of-place counter is a rough guide to how close you are. It is not a perfect score, though, because a single swap can fix two positions at once &mdash; swapping a pair that are each other's targets costs one move and clears two tiles.</p>
+    <p>So the efficient habit is to look for two tiles that should trade places before anything else. Lift a number, read where it ought to sit, and check whether the number already in that slot wants the slot you are holding. When the answer is yes, one move does the work of two. Only when no such pair exists is a longer cycle the right move, and then the rule is to place one tile correctly per swap and not worry about the rest.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/sort-sequence.html">Sort Sprint</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var tilesEl = document.getElementById("tiles");
+  var statusEl = document.getElementById("status");
+  var movesEl = document.getElementById("moves");
+  var wrongEl = document.getElementById("wrong");
+  var timeEl = document.getElementById("time");
+  var bestEl = document.getElementById("best");
+
+  var values = [];
+  var original = [];
+  var picked = -1;
+  var moves = 0;
+  var started = 0;
+  var ticker = null;
+  var solved = false;
+
+  function scrambled() {
+    var set = MG.shuffle([3, 8, 14, 21, 27, 35, 44, 52, 61, 70, 78, 86]).slice(0, 7);
+    var sorted = set.slice().sort(function (a, b) { return a - b; });
+    var mix = MG.shuffle(set);
+    while (mix.join(",") === sorted.join(",")) mix = MG.shuffle(set);
+    return mix;
+  }
+
+  function newRow() {
+    values = scrambled();
+    original = values.slice();
+    picked = -1;
+    moves = 0;
+    started = 0;
+    solved = false;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    movesEl.textContent = "0";
+    timeEl.textContent = "0:00";
+    bestEl.textContent = MG.getBest("mg-shift-best", 0) ? String(MG.getBest("mg-shift-best", 0)) + " moves" : "—";
+    statusEl.textContent = "Pick two tiles to swap. Numbers go from smallest on the left to largest on the right.";
+    render();
+  }
+
+  function outOfPlace() {
+    var sorted = values.slice().sort(function (a, b) { return a - b; });
+    var count = 0;
+    for (var i = 0; i < values.length; i++) if (values[i] !== sorted[i]) count++;
+    return count;
+  }
+
+  function render() {
+    tilesEl.innerHTML = "";
+    var sorted = values.slice().sort(function (a, b) { return a - b; });
+    values.forEach(function (value, index) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "tile" + (index === picked ? " is-picked" : "") + (value === sorted[index] ? " is-settled" : "");
+      btn.textContent = String(value);
+      btn.dataset.index = String(index);
+      btn.setAttribute("aria-pressed", index === picked ? "true" : "false");
+      btn.setAttribute("aria-label", "Tile " + (index + 1) + " holds " + value +
+        (index === picked ? ", picked" : "") + (value === sorted[index] ? ", in place" : ""));
+      btn.addEventListener("click", function () { tap(index); });
+      tilesEl.appendChild(btn);
+    });
+    wrongEl.textContent = String(outOfPlace());
+  }
+
+  function tap(index) {
+    if (solved) return;
+    if (picked === -1) {
+      picked = index;
+      statusEl.textContent = "Holding " + values[index] + ". Now pick the tile to swap it with.";
+      render();
+      return;
+    }
+    if (picked === index) {
+      picked = -1;
+      statusEl.textContent = "Put it back down. Pick two tiles to swap.";
+      render();
+      return;
+    }
+    var a = picked, b = index;
+    var temp = values[a]; values[a] = values[b]; values[b] = temp;
+    picked = -1;
+    moves++;
+    movesEl.textContent = String(moves);
+    if (!started) {
+      started = Date.now();
+      ticker = window.setInterval(function () {
+        timeEl.textContent = MG.formatTime(Math.floor((Date.now() - started) / 1000));
+      }, 250);
+    }
+    render();
+    if (outOfPlace() === 0) finish();
+    else statusEl.textContent = "Swapped. " + outOfPlace() + " tiles still out of place.";
+  }
+
+  function finish() {
+    solved = true;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    var seconds = started ? Math.floor((Date.now() - started) / 1000) : 0;
+    timeEl.textContent = MG.formatTime(seconds);
+    var improved = MG.saveBest("mg-shift-best", moves, false);
+    if (improved) bestEl.textContent = moves + " moves";
+    statusEl.textContent = "Sorted in " + moves + (moves === 1 ? " move" : " moves") +
+      " and " + MG.formatTime(seconds) + (improved ? " — a new record." : ". Fewest so far: " + MG.getBest("mg-shift-best", 0) + ".");
+  }
+
+  document.getElementById("newSet").addEventListener("click", newRow);
+  document.getElementById("reset").addEventListener("click", function () {
+    values = original.slice();
+    picked = -1;
+    solved = false;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    started = 0;
+    timeEl.textContent = "0:00";
+    movesEl.textContent = String(moves);
+    statusEl.textContent = "Back to the original scramble. Moves so far: " + moves + ".";
+    render();
+  });
+
+  newRow();
+})();
+</script>
+</body>
+</html>

@@ -81,6 +81,141 @@
     el.textContent = message;
   };
 
+  /* ── Best score and daily streak, shared by every game in the library ── */
+  MG.getBest = function (key, fallback) {
+    var value = MG.store.get(key, fallback === undefined ? 0 : fallback);
+    return typeof value === "number" ? value : (fallback === undefined ? 0 : fallback);
+  };
+
+  /* Returns true when the value beats what was stored, and only then writes. */
+  MG.saveBest = function (key, value, higherIsBetter) {
+    var better = higherIsBetter === false ? value < MG.getBest(key, Infinity) : value > MG.getBest(key, 0);
+    if (better) MG.store.set(key, value);
+    return better;
+  };
+
+  /* Daily games store one record: { last: "YYYY-MM-DD", count: n }. */
+  MG.getStreak = function (key) {
+    var rec = MG.store.get(key, null);
+    if (!rec || typeof rec !== "object") return { last: "", count: 0 };
+    return { last: String(rec.last || ""), count: Number(rec.count) || 0 };
+  };
+
+  /* Called once when today's puzzle is solved; a missed day resets to one. */
+  MG.bumpStreak = function (key) {
+    var today = MG.today();
+    var rec = MG.getStreak(key);
+    if (rec.last === today) return rec.count;
+    var next = { last: today, count: rec.last === MG.yesterday() ? rec.count + 1 : 1 };
+    MG.store.set(key, next);
+    return next.count;
+  };
+
+  /* ── Sudoku generator: any size, unique solution guaranteed ──
+     Fills a grid by randomised backtracking, then digs holes one cell at a
+     time and keeps a hole only while the puzzle still has exactly one
+     solution. Returns { solution, puzzle } as arrays of rows. */
+  MG.sudoku = function (size, boxH, boxW, givens, rng) {
+    var random = rng || Math.random;
+    var i, j;
+
+    function blank() {
+      var g = [];
+      for (i = 0; i < size; i++) g.push(new Array(size).fill(0));
+      return g;
+    }
+
+    function allowed(g, r, c, v) {
+      for (i = 0; i < size; i++) {
+        if (g[r][i] === v || g[i][c] === v) return false;
+      }
+      var r0 = Math.floor(r / boxH) * boxH;
+      var c0 = Math.floor(c / boxW) * boxW;
+      for (i = 0; i < boxH; i++) {
+        for (j = 0; j < boxW; j++) {
+          if (g[r0 + i][c0 + j] === v) return false;
+        }
+      }
+      return true;
+    }
+
+    var digits = [];
+    for (i = 1; i <= size; i++) digits.push(i);
+
+    function fill(g) {
+      for (var r = 0; r < size; r++) {
+        for (var c = 0; c < size; c++) {
+          if (g[r][c] !== 0) continue;
+          var order = MG.shuffle(digits);
+          for (var k = 0; k < order.length; k++) {
+            if (!allowed(g, r, c, order[k])) continue;
+            g[r][c] = order[k];
+            if (fill(g)) return true;
+            g[r][c] = 0;
+          }
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function countSolutions(g, limit) {
+      var found = 0;
+      function search() {
+        var bestR = -1, bestC = -1, bestOpen = 99;
+        for (var r = 0; r < size; r++) {
+          for (var c = 0; c < size; c++) {
+            if (g[r][c] !== 0) continue;
+            var open = 0;
+            for (var v = 1; v <= size; v++) {
+              if (allowed(g, r, c, v)) open++;
+            }
+            if (open < bestOpen) { bestOpen = open; bestR = r; bestC = c; }
+            if (open === 0) { bestR = r; bestC = c; bestOpen = -1; break; }
+          }
+          if (bestOpen === -1) break;
+        }
+        if (bestR === -1) { found++; return found >= limit; }
+        for (var val = 1; val <= size; val++) {
+          if (!allowed(g, bestR, bestC, val)) continue;
+          g[bestR][bestC] = val;
+          if (search()) { g[bestR][bestC] = 0; return true; }
+          g[bestR][bestC] = 0;
+        }
+        return false;
+      }
+      search();
+      return found;
+    }
+
+    var solution = blank();
+    fill(solution);
+
+    var puzzle = solution.map(function (row) { return row.slice(); });
+    var cells = [];
+    for (i = 0; i < size * size; i++) cells.push(i);
+    cells = MG.shuffle(cells);
+
+    var target = Math.max(size, Math.min(size * size, givens));
+    var filled = size * size;
+    for (var n = 0; n < cells.length && filled > target; n++) {
+      var idx = cells[n];
+      var r = Math.floor(idx / size);
+      var c = idx % size;
+      if (puzzle[r][c] === 0) continue;
+      var keep = puzzle[r][c];
+      puzzle[r][c] = 0;
+      var probe = puzzle.map(function (row) { return row.slice(); });
+      if (countSolutions(probe, 2) !== 1) {
+        puzzle[r][c] = keep;
+      } else {
+        filled--;
+      }
+    }
+
+    return { solution: solution, puzzle: puzzle };
+  };
+
   /* Hub category filtering. Runs only where [data-filter] chips exist. */
   function initFilters() {
     var chips = Array.prototype.slice.call(document.querySelectorAll("[data-filter]"));

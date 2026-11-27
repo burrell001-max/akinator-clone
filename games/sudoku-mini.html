@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sudoku Mini: A Free Four-by-Four Sudoku</title>
+<meta name="description" content="A four-by-four Sudoku for a coffee break: digits 1 to 4, four two-by-two boxes, a unique solution every time and a running best time.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/sudoku-mini.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Sudoku Mini: A Free Four-by-Four Sudoku">
+<meta property="og:description" content="Sixteen cells, four digits, one solution. A Sudoku in under a minute.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/sudoku-mini.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sudoku Mini: Four-by-Four">
+<meta name="twitter:description" content="Sixteen cells, four digits, one solution.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Sudoku Mini",
+  "url": "https://mindgenieai.xyz/games/sudoku-mini.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A four-by-four Sudoku with two-by-two boxes, generated fresh with a unique solution.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: min(100%, 260px);
+    margin: 0 auto;
+    border: 2px solid rgba(255, 209, 102, .5);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #0c1426;
+  }
+  .cell {
+    aspect-ratio: 1 / 1;
+    display: grid; place-items: center;
+    border: 0;
+    border-right: 1px solid rgba(255, 255, 255, .09);
+    border-bottom: 1px solid rgba(255, 255, 255, .09);
+    background: transparent;
+    color: var(--text);
+    font: inherit; font-size: clamp(1.2rem, 7vw, 1.6rem); font-weight: 800;
+    cursor: pointer; padding: 0;
+  }
+  .cell.is-fixed { color: var(--gold); background: rgba(255, 209, 102, .06); cursor: default; }
+  .cell.is-selected { background: rgba(255, 209, 102, .22); color: #fff; }
+  .cell.is-peer { background: rgba(255, 255, 255, .06); }
+  .cell.is-bad { color: var(--bad); background: rgba(255, 138, 138, .14); }
+  .cell.is-boxright { border-right: 2px solid rgba(255, 209, 102, .35); }
+  .cell.is-boxbottom { border-bottom: 2px solid rgba(255, 209, 102, .35); }
+  .numpad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: min(100%, 260px); margin: 14px auto 0; }
+  .numpad button {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px;
+    color: var(--text); font: inherit; font-weight: 800; font-size: 1.15rem; padding: 13px 0; cursor: pointer;
+  }
+  .numpad button:hover { border-color: rgba(255, 209, 102, .55); color: var(--gold); }
+  .numpad button.erase { grid-column: span 4; font-size: .85rem; padding: 9px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/sudoku-six.html">Sudoku Six</a>
+      <a href="/games/sudoku.html">Sudoku</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Sudoku Mini</h1>
+    <p class="updated">A four-by-four grid with two-by-two boxes. Digits 1 to 4, no repeats.</p>
+
+    <div class="toolbar">
+      <button class="btn" type="button" id="newPuzzle">New puzzle</button>
+      <button class="btn ghost" type="button" id="check">Check</button>
+      <span class="hint">A generated grid, never a hand-written one.</span>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Time <b id="time">0:00</b></span>
+        <span>Solved <b id="wins">0</b></span>
+        <span>Best <b id="best">—</b></span>
+      </div>
+
+      <div id="grid" role="grid" aria-label="Four by four Sudoku grid" tabindex="0"></div>
+
+      <div class="numpad" id="numpad" role="group" aria-label="Number pad"></div>
+
+      <p class="status" id="status" role="status" aria-live="polite">Pick a cell, then a digit.</p>
+      <p class="hint">Arrow keys move. 1 to 4 fills. Backspace clears.</p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>Each row, each column and each two-by-two box must contain 1, 2, 3 and 4 exactly once. Gold digits are givens. Click a cell and press a number on the pad, or arrow around the board and type. Backspace clears the selected cell.</p>
+    <p>A four-by-four grid is small enough to finish in under a minute, and every puzzle here is generated rather than copied from a book, so replaying gives you new boards instead of the same sixteen cells in a new order.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Four rows, four columns and four boxes; each holds 1 to 4 once.</li>
+      <li>Duplicates are shown in red as soon as they appear.</li>
+      <li>Check marks entries that disagree with the solution.</li>
+      <li>Solved grids and your fastest time are kept in this browser under <code>mg-sudoku-mini-wins</code> and <code>mg-sudoku-mini-best</code>.</li>
+      <li>Each puzzle is tested for a unique solution before it is dealt.</li>
+    </ul>
+
+    <h2>The smallest useful Sudoku</h2>
+    <p>With only four digits, most cells can be found by counting: if a row already has 1, 3 and 4, the empty cell is 2. That is not a simplification for beginners, it is the same logic used on a nine-by-nine grid, just with less to hold in your head. The habit worth taking away is scanning the digit rather than the cell &mdash; pick the digit you have seen most often and see where it must go.</p>
+    <p>Mini grids are also a good place to practise notation. When a cell has two candidates, note them instead of guessing. If two cells in the same row hold the same two candidates, those candidates cannot appear anywhere else in that row, which is the pair rule in its simplest form. Finish a few of these in under a minute and the rule becomes automatic, which is exactly what makes the larger grids manageable.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/sudoku-six.html">Sudoku Six</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var SIZE = 4, BOX_H = 2, BOX_W = 2, GIVENS = 8;
+  var gridEl = document.getElementById("grid");
+  var numpadEl = document.getElementById("numpad");
+  var statusEl = document.getElementById("status");
+  var timeEl = document.getElementById("time");
+  var winsEl = document.getElementById("wins");
+  var bestEl = document.getElementById("best");
+
+  var solution = [], values = [], fixed = [];
+  var selected = { r: 0, c: 0 };
+  var started = 0, ticker = null, finished = false;
+
+  function build() {
+    var made = MG.sudoku(SIZE, BOX_H, BOX_W, GIVENS);
+    solution = made.solution;
+    values = made.puzzle.map(function (row) { return row.slice(); });
+    fixed = made.puzzle.map(function (row) { return row.map(function (v) { return v !== 0; }); });
+    selected = { r: 0, c: 0 };
+    finished = false;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    started = 0;
+    timeEl.textContent = "0:00";
+    var best = MG.getBest("mg-sudoku-mini-best", 0);
+    bestEl.textContent = best ? MG.formatTime(best) : "—";
+    winsEl.textContent = String(MG.getBest("mg-sudoku-mini-wins", 0));
+    statusEl.textContent = "Pick a cell, then a digit.";
+    render();
+  }
+
+  function peers(r, c, sr, sc) {
+    return r === sr || c === sc ||
+      (Math.floor(r / BOX_H) === Math.floor(sr / BOX_H) && Math.floor(c / BOX_W) === Math.floor(sc / BOX_W));
+  }
+
+  function render() {
+    gridEl.innerHTML = "";
+    for (var r = 0; r < SIZE; r++) {
+      for (var c = 0; c < SIZE; c++) {
+        var cell = document.createElement("button");
+        cell.type = "button";
+        cell.className = "cell";
+        if (fixed[r][c]) cell.classList.add("is-fixed");
+        if (selected && selected.r === r && selected.c === c) cell.classList.add("is-selected");
+        else if (selected && peers(r, c, selected.r, selected.c)) cell.classList.add("is-peer");
+        if ((c + 1) % BOX_W === 0 && c < SIZE - 1) cell.classList.add("is-boxright");
+        if ((r + 1) % BOX_H === 0 && r < SIZE - 1) cell.classList.add("is-boxbottom");
+        cell.textContent = values[r][c] ? String(values[r][c]) : "";
+        cell.dataset.r = String(r);
+        cell.dataset.c = String(c);
+        cell.setAttribute("role", "gridcell");
+        cell.setAttribute("aria-label", "Row " + (r + 1) + ", column " + (c + 1) +
+          (values[r][c] ? ", " + values[r][c] : ", empty") + (fixed[r][c] ? ", given" : ""));
+        cell.addEventListener("click", function (event) {
+          selected = { r: Number(event.currentTarget.dataset.r), c: Number(event.currentTarget.dataset.c) };
+          render();
+        });
+        gridEl.appendChild(cell);
+      }
+    }
+    markConflicts();
+  }
+
+  function markConflicts() {
+    for (var r = 0; r < SIZE; r++) {
+      for (var c = 0; c < SIZE; c++) {
+        var v = values[r][c];
+        if (!v) continue;
+        var bad = false;
+        for (var i = 0; i < SIZE; i++) {
+          if (i !== c && values[r][i] === v) bad = true;
+          if (i !== r && values[i][c] === v) bad = true;
+        }
+        var r0 = Math.floor(r / BOX_H) * BOX_H, c0 = Math.floor(c / BOX_W) * BOX_W;
+        for (var br = r0; br < r0 + BOX_H; br++) {
+          for (var bc = c0; bc < c0 + BOX_W; bc++) {
+            if ((br !== r || bc !== c) && values[br][bc] === v) bad = true;
+          }
+        }
+        if (bad) gridEl.children[r * SIZE + c].classList.add("is-bad");
+      }
+    }
+  }
+
+  function startClock() {
+    if (started) return;
+    started = Date.now();
+    ticker = window.setInterval(function () {
+      timeEl.textContent = MG.formatTime(Math.floor((Date.now() - started) / 1000));
+    }, 500);
+  }
+
+  function place(digit) {
+    if (finished || !selected) return;
+    if (fixed[selected.r][selected.c]) {
+      statusEl.textContent = "That is a given. Choose an empty cell.";
+      return;
+    }
+    values[selected.r][selected.c] = digit;
+    startClock();
+    render();
+    maybeFinish();
+  }
+
+  function clearCell() {
+    if (finished || !selected || fixed[selected.r][selected.c]) return;
+    values[selected.r][selected.c] = 0;
+    render();
+  }
+
+  function maybeFinish() {
+    for (var r = 0; r < SIZE; r++) for (var c = 0; c < SIZE; c++) if (values[r][c] !== solution[r][c]) return;
+    finished = true;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    var seconds = started ? Math.floor((Date.now() - started) / 1000) : 0;
+    var improved = MG.saveBest("mg-sudoku-mini-best", seconds, false);
+    if (improved) bestEl.textContent = MG.formatTime(seconds);
+    var wins = MG.getBest("mg-sudoku-mini-wins", 0) + 1;
+    MG.store.set("mg-sudoku-mini-wins", wins);
+    winsEl.textContent = String(wins);
+    statusEl.textContent = "Solved in " + MG.formatTime(seconds) + ". Grids solved here: " + wins + ".";
+  }
+
+  function buildNumpad() {
+    numpadEl.innerHTML = "";
+    for (var d = 1; d <= SIZE; d++) {
+      (function (digit) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = String(digit);
+        btn.setAttribute("aria-label", "Enter " + digit);
+        btn.addEventListener("click", function () { place(digit); });
+        numpadEl.appendChild(btn);
+      })(d);
+    }
+    var erase = document.createElement("button");
+    erase.type = "button";
+    erase.className = "erase";
+    erase.textContent = "Erase";
+    erase.addEventListener("click", clearCell);
+    numpadEl.appendChild(erase);
+  }
+
+  gridEl.addEventListener("keydown", function (event) {
+    var r = selected.r, c = selected.c;
+    if (event.key === "ArrowUp") { selected = { r: Math.max(0, r - 1), c: c }; render(); event.preventDefault(); }
+    else if (event.key === "ArrowDown") { selected = { r: Math.min(SIZE - 1, r + 1), c: c }; render(); event.preventDefault(); }
+    else if (event.key === "ArrowLeft") { selected = { r: r, c: Math.max(0, c - 1) }; render(); event.preventDefault(); }
+    else if (event.key === "ArrowRight") { selected = { r: r, c: Math.min(SIZE - 1, c + 1) }; render(); event.preventDefault(); }
+    else if (/^[1-4]$/.test(event.key)) { place(Number(event.key)); event.preventDefault(); }
+    else if (event.key === "Backspace" || event.key === "Delete") { clearCell(); event.preventDefault(); }
+  });
+
+  document.getElementById("newPuzzle").addEventListener("click", build);
+  document.getElementById("check").addEventListener("click", function () {
+    var wrong = 0;
+    for (var r = 0; r < SIZE; r++) {
+      for (var c = 0; c < SIZE; c++) {
+        if (values[r][c] && values[r][c] !== solution[r][c]) {
+          wrong++;
+          gridEl.children[r * SIZE + c].classList.add("is-bad");
+        }
+      }
+    }
+    statusEl.textContent = wrong ? wrong + " wrong so far, marked red." : "Nothing wrong so far.";
+  });
+
+  buildNumpad();
+  build();
+})();
+</script>
+</body>
+</html>

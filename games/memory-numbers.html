@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digit Echo: A Free Number Memory Game</title>
+<meta name="description" content="A string of digits appears for a moment, then disappears. Type it back exactly and the next string is one digit longer. How far can your number memory stretch?">
+<link rel="canonical" href="https://mindgenieai.xyz/games/memory-numbers.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Digit Echo: A Free Number Memory Game">
+<meta property="og:description" content="Read the digits, type them back, and watch the string grow.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/memory-numbers.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Digit Echo: Number Memory">
+<meta name="twitter:description" content="Read the digits, type them back, and watch the string grow.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Digit Echo",
+  "url": "https://mindgenieai.xyz/games/memory-numbers.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A number memory game: recall digits of increasing length.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .digits {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    min-height: 78px; align-items: center; margin: 6px 0 16px;
+  }
+  .digit {
+    min-width: 44px; padding: 12px 6px; border-radius: 10px;
+    background: #0c1426; border: 1px solid var(--line);
+    color: var(--gold); font-size: 1.6rem; font-weight: 800; text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .digit.is-hidden { color: var(--muted); letter-spacing: 2px; }
+  .answer-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: center; }
+  .answer-row input {
+    width: min(100%, 320px); padding: 12px 14px; font-size: 1.2rem; font-weight: 700;
+    color: var(--text); background: #0c1426; border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 10px; font-family: inherit; text-align: center; letter-spacing: .18em;
+  }
+  .answer-row input:focus { border-color: var(--gold); outline: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/memory.html">Memory Match</a>
+      <a href="/games/memory-order.html">Order Recall</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Digit Echo</h1>
+    <p class="updated">A string of digits flashes up. Type it back, exactly.</p>
+
+    <div class="toolbar">
+      <button class="btn" type="button" id="start">Start</button>
+      <span class="hint" id="phaseLabel">Three digits to begin with.</span>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Length <b id="length">3</b></span>
+        <span>Round <b id="round">0</b></span>
+        <span>Best length <b id="best">0</b></span>
+        <span>Best run <b id="streak">0</b></span>
+      </div>
+
+      <div class="digits" id="digits" aria-live="polite">Press Start</div>
+
+      <div class="answer-row">
+        <label class="sr-only" for="answer">The digits, in order</label>
+        <input id="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="type the digits" disabled>
+        <button class="btn" type="button" id="submit" disabled>Check</button>
+      </div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <p class="hint">Spaces and dashes are ignored. Enter submits.</p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>A string of digits appears in gold for a moment, then turns into dots. Type the digits back in the same order and press Enter. Get it right and the next string is one digit longer; get it wrong and the round ends, with the correct sequence shown next to what you typed.</p>
+    <p>The display time grows with the string, but never as fast as the string does, so the game gets harder in two ways at once. Three digits to begin with is easy; eight or nine is where most people stop.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Correct rounds increase the length by one digit; a mistake ends the session.</li>
+      <li>Only digits are compared, so spaces, commas and dashes in what you type are stripped first.</li>
+      <li>Your longest successful string is kept in this browser under <code>mg-digitecho-best</code>.</li>
+      <li>Your longest run of correct rounds in one session is kept under <code>mg-digitecho-streak</code>.</li>
+      <li>Nothing is timed and nothing is uploaded.</li>
+    </ul>
+
+    <h2>Holding a number in mind</h2>
+    <p>Digit span is one of the oldest measurements in psychology, and the average adult holds about seven digits without help &mdash; which is why phone numbers were once seven long. The trick to doing better is not a bigger short-term store, it is recoding: eight digits become four pairs, or a date, or a rhythm. <strong>4 9 1 5 2 3 6 0</strong> is eight items one way and four two-digit numbers the other.</p>
+    <p>Say the digits in a rhythm as they appear. Grouping by three has a natural cadence in English, the same one used for reading long numbers aloud, and the cadence survives the blank screen. Long strings also reward the oldest trick of all: repeat them immediately, silently, while the dots are still on screen. Rehearsal buys a couple of seconds, and a couple of seconds is often one whole level.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/memory-order.html">Order Recall</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var digitsEl = document.getElementById("digits");
+  var statusEl = document.getElementById("status");
+  var phaseLabel = document.getElementById("phaseLabel");
+  var lengthEl = document.getElementById("length");
+  var roundEl = document.getElementById("round");
+  var bestEl = document.getElementById("best");
+  var streakEl = document.getElementById("streak");
+  var input = document.getElementById("answer");
+  var submitBtn = document.getElementById("submit");
+  var startBtn = document.getElementById("start");
+
+  var sequence = "";
+  var length = 3;
+  var round = 0;
+  var run = 0;
+  var showing = false;
+
+  function renderDigits(shown) {
+    digitsEl.innerHTML = "";
+    for (var i = 0; i < sequence.length; i++) {
+      var span = document.createElement("span");
+      span.className = "digit" + (shown ? "" : " is-hidden");
+      span.textContent = shown ? sequence[i] : "•";
+      digitsEl.appendChild(span);
+    }
+  }
+
+  function startSession() {
+    length = 3;
+    round = 0;
+    run = 0;
+    bestEl.textContent = String(MG.getBest("mg-digitecho-best", 0));
+    streakEl.textContent = String(MG.getBest("mg-digitecho-streak", 0));
+    startBtn.textContent = "Restart";
+    nextRound();
+  }
+
+  function nextRound() {
+    round++;
+    roundEl.textContent = String(round);
+    lengthEl.textContent = String(length);
+    sequence = "";
+    for (var i = 0; i < length; i++) sequence += String(Math.floor(Math.random() * 10));
+    showing = true;
+    input.value = "";
+    input.disabled = true;
+    submitBtn.disabled = true;
+    renderDigits(true);
+    phaseLabel.textContent = "Memorise…";
+    statusEl.textContent = "";
+    var showFor = 700 + length * 350;
+    window.setTimeout(function () {
+      if (!showing) return;
+      showing = false;
+      renderDigits(false);
+      input.disabled = false;
+      submitBtn.disabled = false;
+      input.focus();
+      phaseLabel.textContent = "Type it back.";
+    }, showFor);
+  }
+
+  function submit() {
+    if (showing || input.disabled) return;
+    var typed = input.value.replace(/[^0-9]/g, "");
+    if (!typed) {
+      statusEl.textContent = "Type the digits you saw.";
+      input.focus();
+      return;
+    }
+    if (typed === sequence) {
+      run++;
+      MG.saveBest("mg-digitecho-streak", run);
+      streakEl.textContent = String(MG.getBest("mg-digitecho-streak", 0));
+      MG.saveBest("mg-digitecho-best", length);
+      bestEl.textContent = String(MG.getBest("mg-digitecho-best", 0));
+      statusEl.textContent = "Correct: " + sequence.split("").join(" ") + ". One digit longer next.";
+      length++;
+      window.setTimeout(nextRound, 800);
+    } else {
+      end(typed);
+    }
+  }
+
+  function end(typed) {
+    showing = false;
+    input.disabled = true;
+    submitBtn.disabled = true;
+    renderDigits(true);
+    phaseLabel.textContent = "Session over.";
+    var best = MG.getBest("mg-digitecho-best", 0);
+    statusEl.textContent = "You typed " + typed.split("").join(" ") + ", and the string was " +
+      sequence.split("").join(" ") + ". Record: " + best + " digits. Press Start to try again.";
+    bestEl.textContent = String(best);
+    startBtn.textContent = "Play again";
+  }
+
+  startBtn.addEventListener("click", startSession);
+  submitBtn.addEventListener("click", submit);
+  input.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") { submit(); event.preventDefault(); }
+  });
+
+  bestEl.textContent = String(MG.getBest("mg-digitecho-best", 0));
+  streakEl.textContent = String(MG.getBest("mg-digitecho-streak", 0));
+})();
+</script>
+</body>
+</html>

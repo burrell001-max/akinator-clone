@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equation Forge: A Free Build-the-Sum Maths Puzzle</title>
+<meta name="description" content="Four numbers, three empty operator slots and one target. Choose the operators that turn the row into the answer, with no cheating by reordering the numbers.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/math-target.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Equation Forge: A Free Build-the-Sum Maths Puzzle">
+<meta property="og:description" content="Pick the three operators that hit the target. Numbers stay where they are.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/math-target.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Equation Forge: Build the Sum">
+<meta name="twitter:description" content="Four numbers, three operators, one target.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Equation Forge",
+  "url": "https://mindgenieai.xyz/games/math-target.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A maths puzzle: choose three operators to turn four numbers into a target value.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .equation {
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+    gap: 8px; padding: 16px 6px; background: #0c1426;
+    border: 1px solid var(--line); border-radius: 14px; margin-bottom: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .eq-num {
+    font-size: clamp(1.4rem, 6vw, 2rem); font-weight: 800; color: var(--gold);
+    min-width: 2.2ch; text-align: center;
+  }
+  .eq-slot {
+    width: 2.3ch; min-width: 40px; height: 44px;
+    display: grid; place-items: center;
+    border: 2px dashed rgba(255, 255, 255, .25); border-radius: 10px;
+    background: transparent; color: var(--text);
+    font: inherit; font-size: 1.3rem; font-weight: 800; cursor: pointer;
+  }
+  .eq-slot.is-filled { border-style: solid; border-color: rgba(255, 209, 102, .6); color: var(--gold); }
+  .eq-slot.is-active { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(255, 209, 102, .18); }
+  .eq-total { font-size: clamp(1.4rem, 6vw, 2rem); font-weight: 800; color: #bff0d1; }
+  .ops { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
+  .op-btn {
+    width: 54px; height: 48px; border-radius: 10px;
+    background: var(--panel-2); border: 1px solid var(--line);
+    color: var(--text); font: inherit; font-size: 1.3rem; font-weight: 800; cursor: pointer;
+  }
+  .op-btn:hover { border-color: rgba(255, 209, 102, .55); color: var(--gold); }
+  .ops-note { text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/math-speed.html">Quick Sums</a>
+      <a href="/games/math-missing.html">Missing Number</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Equation Forge</h1>
+    <p class="updated">Four numbers, three empty slots, one target. Pick the operators.</p>
+
+    <div class="toolbar">
+      <button class="btn ghost" type="button" id="newPuzzle">New puzzle</button>
+      <label for="level" class="hint">Difficulty</label>
+      <select id="level">
+        <option value="easy">Easy — add, subtract, multiply</option>
+        <option value="medium" selected>Medium — division allowed</option>
+        <option value="hard">Hard — larger numbers</option>
+      </select>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Solved <b id="solved">0</b></span>
+        <span>Attempts <b id="attempts">0</b></span>
+        <span>Streak <b id="streak">0</b></span>
+        <span>Best streak <b id="best">0</b></span>
+      </div>
+
+      <div class="equation" id="equation" aria-live="polite"></div>
+      <div class="ops" id="ops" role="group" aria-label="Operators"></div>
+      <p class="hint ops-note">Click a slot, then an operator. Keys 1 to 4 also work.</p>
+
+      <p class="status" id="status" role="status" aria-live="polite">Fill all three slots to check the equation.</p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>The row shows four numbers with three gaps between them, followed by an equals sign and a target. Click a gap to select it, then choose an operator from the buttons underneath: plus, minus, times or divide. When all three gaps are filled the equation is checked automatically. If the result matches the target, the puzzle is solved and a new one is dealt; if not, the slots clear and you try again.</p>
+    <p>The numbers never move. Their order is fixed, and the expression is evaluated strictly left to right &mdash; the same way a calculator without brackets works. That rule matters: in <strong>6 + 2 × 3</strong> the answer here is 24, not 12, because the addition happens first. Every puzzle is generated from an expression that does reach the target under those rules, so a solution always exists.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Four numbers and three operator slots per puzzle; the numbers stay in place.</li>
+      <li>Division is only legal when it comes out exactly; a gap filled with ÷ that would leave a fraction is rejected with a message rather than scored as wrong.</li>
+      <li>Subtraction may take the running total below zero in this game &mdash; the target is always a whole number, and negative intermediates are allowed.</li>
+      <li>Your best run of consecutive solves is kept in this browser under <code>mg-forge-best</code>.</li>
+      <li>Changing the difficulty deals a fresh puzzle and keeps the record.</li>
+    </ul>
+
+    <h2>Working out an operator row</h2>
+    <p>Do not test operators from left to right. Work backwards from the target instead: ask what the last operation must have been. If the target is larger than the numbers suggest, multiplication is doing the work; if the target is small, division is. With <strong>3 8 4 2 = 10</strong> the target is only slightly above the largest single number, which usually means a sum or a subtraction near the end rather than a product.</p>
+    <p>The second habit is to compute the possible running totals as you go rather than the finished expression. After the first operator you have one number instead of two, and after the second you have another; a puzzle with four numbers has only twenty-four distinct operator rows, so writing down the running total at each stage quickly narrows the search to a handful. When two rows both look plausible, prefer the one that keeps every intermediate value a whole number &mdash; that is a strong signal that you are on the intended route, since the generator builds puzzles that way.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/math-speed.html">Quick Sums</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var OPS = ["+", "−", "×", "÷"];
+  var equationEl = document.getElementById("equation");
+  var opsEl = document.getElementById("ops");
+  var statusEl = document.getElementById("status");
+  var levelEl = document.getElementById("level");
+  var solvedEl = document.getElementById("solved");
+  var attemptsEl = document.getElementById("attempts");
+  var streakEl = document.getElementById("streak");
+  var bestEl = document.getElementById("best");
+
+  var numbers = [];
+  var targets = [];
+  var chosen = ["", "", ""];
+  var activeSlot = 0;
+  var solved = 0;
+  var attempts = 0;
+  var streak = 0;
+
+  function apply(a, op, b) {
+    if (op === "+") return a + b;
+    if (op === "−") return a - b;
+    if (op === "×") return a * b;
+    if (op === "÷") return (b !== 0 && a % b === 0) ? a / b : null;
+    return null;
+  }
+
+  function evaluate(list, ops) {
+    var total = list[0];
+    for (var i = 0; i < ops.length; i++) {
+      total = apply(total, ops[i], list[i + 1]);
+      if (total === null) return null;
+    }
+    return total;
+  }
+
+  function generate() {
+    var level = levelEl.value;
+    var max = level === "hard" ? 24 : 12;
+    var allowDivide = level !== "easy";
+    for (var guard = 0; guard < 200; guard++) {
+      var list = [];
+      for (var i = 0; i < 4; i++) list.push(2 + Math.floor(Math.random() * max));
+      var ops = [];
+      var total = list[0];
+      var ok = true;
+      for (var s = 0; s < 3; s++) {
+        var choices = ["+", "−", "×"];
+        if (allowDivide) choices.push("÷");
+        var pool = MG.shuffle(choices);
+        var placed = false;
+        for (var k = 0; k < pool.length; k++) {
+          var candidate = apply(total, pool[k], list[s + 1]);
+          if (candidate === null) continue;
+          if (pool[k] === "÷" && candidate === 0) continue;
+          var next = candidate;
+          total = next;
+          ops.push(pool[k]);
+          placed = true;
+          break;
+        }
+        if (!placed) { ok = false; break; }
+      }
+      if (!ok) continue;
+      if (total < 0 || total > 9999) continue;
+      numbers = list;
+      targets = ops;
+      chosen = ["", "", ""];
+      activeSlot = 0;
+      return;
+    }
+    numbers = [3, 7, 2, 4];
+    targets = ["+", "×", "−"];
+  }
+
+  function renderEquation() {
+    var html = "";
+    for (var i = 0; i < numbers.length; i++) {
+      html += '<span class="eq-num">' + numbers[i] + "</span>";
+      if (i < 3) {
+        var value = chosen[i];
+        html += '<button type="button" class="eq-slot' + (value ? " is-filled" : "") +
+          (i === activeSlot ? " is-active" : "") + '" data-slot="' + i +
+          '" aria-label="Operator slot ' + (i + 1) + (value ? ", " + value : ", empty") + '">' +
+          (value || "?") + "</button>";
+      }
+    }
+    html += '<span class="eq-total">= ' + evaluate(numbers, targets) + "</span>";
+    equationEl.innerHTML = html;
+    Array.prototype.forEach.call(equationEl.querySelectorAll(".eq-slot"), function (btn) {
+      btn.addEventListener("click", function () {
+        activeSlot = Number(btn.dataset.slot);
+        renderEquation();
+      });
+    });
+  }
+
+  function renderOps() {
+    opsEl.innerHTML = "";
+    OPS.forEach(function (op, index) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "op-btn";
+      btn.textContent = op;
+      btn.dataset.op = op;
+      btn.setAttribute("aria-label", "Operator " + op + ", key " + (index + 1));
+      btn.addEventListener("click", function () { chooseOp(op); });
+      opsEl.appendChild(btn);
+    });
+  }
+
+  function chooseOp(op) {
+    chosen[activeSlot] = op;
+    var nextEmpty = chosen.indexOf("");
+    activeSlot = nextEmpty === -1 ? activeSlot : nextEmpty;
+    renderEquation();
+    if (chosen.indexOf("") === -1) check();
+    else statusEl.textContent = "Slots filled: " + chosen.filter(Boolean).length + " of 3.";
+  }
+
+  function check() {
+    attempts++;
+    attemptsEl.textContent = String(attempts);
+    var goal = evaluate(numbers, targets);
+    var result = evaluate(numbers, chosen);
+    if (result === null) {
+      statusEl.textContent = "That division does not come out even. Try again.";
+      chosen = ["", "", ""];
+      activeSlot = 0;
+      renderEquation();
+      return;
+    }
+    /* Any operator row that reaches the target counts, not only the one the
+       puzzle was generated from. */
+    if (result === goal) {
+      solved++;
+      streak++;
+      solvedEl.textContent = String(solved);
+      streakEl.textContent = String(streak);
+      if (MG.saveBest("mg-forge-best", streak)) bestEl.textContent = String(streak);
+      statusEl.textContent = "Solved: " + numbers[0] + " " + chosen[0] + " " + numbers[1] + " " +
+        chosen[1] + " " + numbers[2] + " " + chosen[2] + " " + numbers[3] + " = " + result + ". New puzzle dealt.";
+      generate();
+      renderEquation();
+      return;
+    }
+    streak = 0;
+    streakEl.textContent = "0";
+    statusEl.textContent = "That row makes " + result + ", not " + goal + ".";
+    chosen = ["", "", ""];
+    activeSlot = 0;
+    renderEquation();
+  }
+
+  document.addEventListener("keydown", function (event) {
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    var tag = (event.target.tagName || "").toLowerCase();
+    if (tag === "select" || tag === "button") {
+      if (event.key === "1" || event.key === "2" || event.key === "3" || event.key === "4") {
+        chooseOp(OPS[Number(event.key) - 1]);
+        event.preventDefault();
+      }
+      return;
+    }
+    if (event.key >= "1" && event.key <= "4") {
+      chooseOp(OPS[Number(event.key) - 1]);
+      event.preventDefault();
+    }
+  });
+
+  document.getElementById("newPuzzle").addEventListener("click", function () {
+    generate();
+    renderEquation();
+    statusEl.textContent = "New puzzle. Fill all three slots.";
+  });
+  levelEl.addEventListener("change", function () {
+    generate();
+    renderEquation();
+    statusEl.textContent = "New difficulty. Fill all three slots.";
+  });
+
+  renderOps();
+  generate();
+  renderEquation();
+  bestEl.textContent = String(MG.getBest("mg-forge-best", 0));
+})();
+</script>
+</body>
+</html>

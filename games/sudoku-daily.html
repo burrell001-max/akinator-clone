@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Sudoku: A Fresh Nine-by-Nine Grid Every Day</title>
+<meta name="description" content="One date-seeded Sudoku a day, with forty givens, conflict checking, keyboard play and a daily streak. The same grid for everyone, with a unique solution every time.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/sudoku-daily.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Daily Sudoku: A Fresh Nine-by-Nine Grid Every Day">
+<meta property="og:description" content="One grid a day, guaranteed to have a single solution.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/sudoku-daily.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Daily Sudoku: One Grid a Day">
+<meta name="twitter:description" content="One grid a day, guaranteed to have a single solution.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Daily Sudoku",
+  "url": "https://mindgenieai.xyz/games/sudoku-daily.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A date-seeded nine-by-nine Sudoku with exactly one solution and a daily streak.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 0;
+    width: min(100%, 430px);
+    margin: 0 auto;
+    border: 2px solid rgba(255, 209, 102, .5);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #0c1426;
+  }
+  .cell {
+    aspect-ratio: 1 / 1;
+    display: grid; place-items: center;
+    border: 0;
+    border-right: 1px solid rgba(255, 255, 255, .09);
+    border-bottom: 1px solid rgba(255, 255, 255, .09);
+    background: transparent;
+    color: var(--text);
+    font: inherit; font-size: clamp(.9rem, 4vw, 1.15rem); font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    padding: 0;
+  }
+  .cell.is-fixed { color: var(--gold); background: rgba(255, 209, 102, .06); cursor: default; }
+  .cell.is-selected { background: rgba(255, 209, 102, .22); color: #fff; }
+  .cell.is-peer { background: rgba(255, 255, 255, .06); }
+  .cell.is-bad { color: var(--bad); background: rgba(255, 138, 138, .14); }
+  .cell.is-boxright { border-right: 2px solid rgba(255, 209, 102, .35); }
+  .cell.is-boxbottom { border-bottom: 2px solid rgba(255, 209, 102, .35); }
+  .numpad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; width: min(100%, 430px); margin: 14px auto 0; }
+  .numpad button {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px;
+    color: var(--text); font: inherit; font-weight: 700; padding: 11px 0; cursor: pointer;
+  }
+  .numpad button:hover { border-color: rgba(255, 209, 102, .55); color: var(--gold); }
+  .numpad button.erase { grid-column: span 3; font-size: .85rem; }
+  @media (max-width: 420px) { .cell { font-size: .85rem; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/sudoku.html">Sudoku</a>
+      <a href="/games/pocket-sudoku.html">Pocket Sudoku</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Daily Sudoku</h1>
+    <p class="updated">One grid a day, built from today&rsquo;s date. Forty givens, one solution.</p>
+
+    <div class="toolbar">
+      <button class="btn ghost" type="button" id="restart">Clear my entries</button>
+      <button class="btn ghost" type="button" id="check">Check grid</button>
+      <span class="hint" id="dateLabel">&nbsp;</span>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Time <b id="time">0:00</b></span>
+        <span>Filled <b id="filled">0/41</b></span>
+        <span>Mistakes <b id="mistakes">0</b></span>
+        <span>Daily streak <b id="streak">0</b></span>
+        <span>Best time <b id="best">—</b></span>
+      </div>
+
+      <div id="grid" role="grid" aria-label="Sudoku grid" tabindex="0"></div>
+
+      <div class="numpad" id="numpad" role="group" aria-label="Number pad"></div>
+
+      <p class="status" id="status" role="status" aria-live="polite">Click a cell, then use the number pad or your keyboard.</p>
+      <p class="hint">Arrow keys move. 1 to 9 fills. Backspace or Delete clears.</p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>Fill the grid so that every row, every column and each of the nine three-by-three boxes contains the digits 1 to 9 exactly once. The gold digits are givens and cannot be changed. Click a cell and use the number pad underneath, or use the arrow keys to move around the grid and 1 to 9 to fill the selected cell. Backspace clears an entry.</p>
+    <p>The grid is generated from today&rsquo;s date, so everybody who plays today gets the same puzzle, and the generator only removes a digit when the puzzle still has exactly one solution. That means guessing is never necessary: there is always a logical step available.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Every grid has a unique solution; the Check button never has to report more than one possible answer.</li>
+      <li>Duplicate digits in a row, column or box are marked in red as soon as they appear.</li>
+      <li>Check counts the digits that are wrong and adds them to your mistake count; it never reveals correct answers.</li>
+      <li>Completing today&rsquo;s grid before midnight keeps your daily streak, stored under <code>mg-sudoku-daily-streak</code>.</li>
+      <li>Your fastest solve is kept under <code>mg-sudoku-daily-best</code>.</li>
+    </ul>
+
+    <h2>Where to look first</h2>
+    <p>Start with the digit that appears most often among the givens. If there are already five sevens on the board, the boxes that still lack a seven usually have only one or two free cells, and one of those cells is often ruled out by a seven elsewhere in its row. Working digit by digit is faster than scanning box by box, because each pass teaches you something about the whole grid.</p>
+    <p>When singles run out, switch to pairs. Two cells in a box that can only hold the same two digits form a pair: one of them must be the first digit and the other must be the second, so nothing else in that box can use either digit. The same reasoning applies along rows and columns. Most of the middle of a daily grid is solved with pairs and with &ldquo;this digit can only go here&rdquo; placements, and both are easier to spot if you note candidates lightly rather than committing early.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/sudoku.html">Sudoku</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var SIZE = 9, BOX_H = 3, BOX_W = 3, GIVENS = 40;
+  var gridEl = document.getElementById("grid");
+  var numpadEl = document.getElementById("numpad");
+  var statusEl = document.getElementById("status");
+  var timeEl = document.getElementById("time");
+  var filledEl = document.getElementById("filled");
+  var mistakesEl = document.getElementById("mistakes");
+  var streakEl = document.getElementById("streak");
+  var bestEl = document.getElementById("best");
+  var dateLabel = document.getElementById("dateLabel");
+
+  var solution = [];
+  var values = [];
+  var fixed = [];
+  var selected = { r: 0, c: 0 };
+  var mistakes = 0;
+  var started = 0;
+  var ticker = null;
+  var finished = false;
+
+  function build() {
+    var made = MG.sudoku(SIZE, BOX_H, BOX_W, GIVENS, MG.seeded("sudoku-daily-" + MG.today()));
+    solution = made.solution;
+    values = made.puzzle.map(function (row) { return row.slice(); });
+    fixed = made.puzzle.map(function (row) { return row.map(function (v) { return v !== 0; }); });
+    selected = { r: 0, c: 0 };
+    mistakes = 0;
+    finished = false;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    started = 0;
+    timeEl.textContent = "0:00";
+    mistakesEl.textContent = "0";
+    var best = MG.getBest("mg-sudoku-daily-best", 0);
+    bestEl.textContent = best ? MG.formatTime(best) : "—";
+    streakEl.textContent = String(MG.getStreak("mg-sudoku-daily-streak").count);
+    var parts = MG.today().split("-");
+    dateLabel.textContent = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]))
+      .toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
+    statusEl.textContent = "Click a cell, then use the number pad or your keyboard.";
+    render();
+    paintFilled();
+  }
+
+  function peers(r, c, sr, sc) {
+    return r === sr || c === sc ||
+      (Math.floor(r / BOX_H) === Math.floor(sr / BOX_H) && Math.floor(c / BOX_W) === Math.floor(sc / BOX_W));
+  }
+
+  function render() {
+    gridEl.innerHTML = "";
+    for (var r = 0; r < SIZE; r++) {
+      for (var c = 0; c < SIZE; c++) {
+        var cell = document.createElement("button");
+        cell.type = "button";
+        cell.className = "cell";
+        if (fixed[r][c]) cell.classList.add("is-fixed");
+        if (selected && selected.r === r && selected.c === c) cell.classList.add("is-selected");
+        else if (selected && peers(r, c, selected.r, selected.c)) cell.classList.add("is-peer");
+        if ((c + 1) % BOX_W === 0 && c < SIZE - 1) cell.classList.add("is-boxright");
+        if ((r + 1) % BOX_H === 0 && r < SIZE - 1) cell.classList.add("is-boxbottom");
+        var value = values[r][c];
+        cell.textContent = value ? String(value) : "";
+        cell.setAttribute("role", "gridcell");
+        cell.setAttribute("aria-label", "Row " + (r + 1) + ", column " + (c + 1) +
+          (value ? ", " + value : ", empty") + (fixed[r][c] ? ", given" : ""));
+        cell.dataset.r = String(r);
+        cell.dataset.c = String(c);
+        cell.addEventListener("click", function (event) {
+          var rr = Number(event.currentTarget.dataset.r);
+          var cc = Number(event.currentTarget.dataset.c);
+          selected = { r: rr, c: cc };
+          render();
+          if (!fixed[rr][cc]) gridEl.focus();
+        });
+        gridEl.appendChild(cell);
+      }
+    }
+    markConflicts();
+  }
+
+  function markConflicts() {
+    var seen = {};
+    for (var r = 0; r < SIZE; r++) {
+      for (var c = 0; c < SIZE; c++) {
+        var v = values[r][c];
+        if (!v) continue;
+        var bad = false;
+        for (var i = 0; i < SIZE; i++) {
+          if (i !== c && values[r][i] === v) bad = true;
+          if (i !== r && values[i][c] === v) bad = true;
+        }
+        var r0 = Math.floor(r / BOX_H) * BOX_H, c0 = Math.floor(c / BOX_W) * BOX_W;
+        for (var br = r0; br < r0 + BOX_H; br++) {
+          for (var bc = c0; bc < c0 + BOX_W; bc++) {
+            if ((br !== r || bc !== c) && values[br][bc] === v) bad = true;
+          }
+        }
+        if (bad) {
+          var cell = gridEl.children[r * SIZE + c];
+          if (cell) cell.classList.add("is-bad");
+        }
+      }
+    }
+  }
+
+  function paintFilled() {
+    var filled = 0, blanks = 0;
+    for (var r = 0; r < SIZE; r++) {
+      for (var c = 0; c < SIZE; c++) {
+        if (values[r][c]) filled++; else blanks++;
+      }
+    }
+    filledEl.textContent = filled + "/" + SIZE * SIZE;
+    return blanks;
+  }
+
+  function startClock() {
+    if (started) return;
+    started = Date.now();
+    ticker = window.setInterval(function () {
+      timeEl.textContent = MG.formatTime(Math.floor((Date.now() - started) / 1000));
+    }, 500);
+  }
+
+  function place(digit) {
+    if (finished) return;
+    var r = selected.r, c = selected.c;
+    if (r === null || fixed[r][c]) {
+      statusEl.textContent = "That digit is a given. Pick an empty cell first.";
+      return;
+    }
+    values[r][c] = digit;
+    startClock();
+    render();
+    paintFilled();
+    maybeFinish();
+  }
+
+  function clearCell() {
+    if (finished) return;
+    var r = selected.r, c = selected.c;
+    if (r === null || fixed[r][c]) return;
+    values[r][c] = 0;
+    render();
+    paintFilled();
+  }
+
+  function maybeFinish() {
+    for (var r = 0; r < SIZE; r++) {
+      for (var c = 0; c < SIZE; c++) {
+        if (values[r][c] !== solution[r][c]) return;
+      }
+    }
+    finished = true;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    var seconds = started ? Math.floor((Date.now() - started) / 1000) : 0;
+    var improved = MG.saveBest("mg-sudoku-daily-best", seconds, false);
+    if (improved) bestEl.textContent = MG.formatTime(seconds);
+    var streak = MG.bumpStreak("mg-sudoku-daily-streak");
+    streakEl.textContent = String(streak);
+    statusEl.textContent = "Solved in " + MG.formatTime(seconds) + " with " + mistakes +
+      (mistakes === 1 ? " mistake" : " mistakes") + (improved ? " — your fastest yet." : ".") +
+      " Daily streak: " + streak + ".";
+  }
+
+  function buildNumpad() {
+    numpadEl.innerHTML = "";
+    for (var d = 1; d <= 9; d++) {
+      (function (digit) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = String(digit);
+        btn.setAttribute("aria-label", "Enter " + digit);
+        btn.addEventListener("click", function () { place(digit); });
+        numpadEl.appendChild(btn);
+      })(d);
+    }
+    var erase = document.createElement("button");
+    erase.type = "button";
+    erase.className = "erase";
+    erase.textContent = "Erase";
+    erase.addEventListener("click", clearCell);
+    numpadEl.appendChild(erase);
+  }
+
+  gridEl.addEventListener("keydown", function (event) {
+    if (!selected) return;
+    var r = selected.r, c = selected.c;
+    if (event.key === "ArrowUp") { selected = { r: Math.max(0, r - 1), c: c }; render(); event.preventDefault(); }
+    else if (event.key === "ArrowDown") { selected = { r: Math.min(SIZE - 1, r + 1), c: c }; render(); event.preventDefault(); }
+    else if (event.key === "ArrowLeft") { selected = { r: r, c: Math.max(0, c - 1) }; render(); event.preventDefault(); }
+    else if (event.key === "ArrowRight") { selected = { r: r, c: Math.min(SIZE - 1, c + 1) }; render(); event.preventDefault(); }
+    else if (/^[1-9]$/.test(event.key)) { place(Number(event.key)); event.preventDefault(); }
+    else if (event.key === "Backspace" || event.key === "Delete") { clearCell(); event.preventDefault(); }
+  });
+
+  document.getElementById("restart").addEventListener("click", function () {
+    for (var r = 0; r < SIZE; r++) {
+      for (var c = 0; c < SIZE; c++) {
+        if (!fixed[r][c]) values[r][c] = 0;
+      }
+    }
+    finished = false;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    started = 0;
+    timeEl.textContent = "0:00";
+    render();
+    paintFilled();
+    statusEl.textContent = "Your entries are cleared. The givens stay.";
+  });
+
+  document.getElementById("check").addEventListener("click", function () {
+    var wrong = 0;
+    for (var r = 0; r < SIZE; r++) {
+      for (var c = 0; c < SIZE; c++) {
+        if (values[r][c] && values[r][c] !== solution[r][c]) wrong++;
+      }
+    }
+    if (!wrong) {
+      statusEl.textContent = "Nothing wrong so far. Keep going.";
+      return;
+    }
+    mistakes += wrong;
+    mistakesEl.textContent = String(mistakes);
+    statusEl.textContent = wrong + (wrong === 1 ? " digit is" : " digits are") + " in the wrong place (marked red).";
+    for (var rr = 0; rr < SIZE; rr++) {
+      for (var cc = 0; cc < SIZE; cc++) {
+        if (values[rr][cc] && values[rr][cc] !== solution[rr][cc]) {
+          var cell = gridEl.children[rr * SIZE + cc];
+          if (cell) cell.classList.add("is-bad");
+        }
+      }
+    }
+  });
+
+  buildNumpad();
+  build();
+})();
+</script>
+</body>
+</html>

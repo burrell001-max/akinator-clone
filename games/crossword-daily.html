@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Clues: Five Crossword Clues a Day</title>
+<meta name="description" content="Five crossword-style clues chosen from today's date, with enumerations and a daily streak. Everyone plays the same five clues, and each answer is explained.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/crossword-daily.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Daily Clues: Five Crossword Clues a Day">
+<meta property="og:description" content="Five clues a day, the same for everybody, with a streak to keep.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/crossword-daily.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Daily Clues: Five Clues a Day">
+<meta name="twitter:description" content="Five clues a day, the same for everybody, with a streak to keep.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Daily Clues",
+  "url": "https://mindgenieai.xyz/games/crossword-daily.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A date-seeded crossword clue puzzle: five clues a day with a daily streak.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .clue-card {
+    background: #0c1426; border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px; margin-bottom: 14px;
+  }
+  .clue-meta { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: .78rem; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+  .clue-text { margin: 10px 0 4px; font-size: 1.16rem; color: var(--text); line-height: 1.45; }
+  .enum { color: var(--gold); font-weight: 700; }
+  .answer-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .answer-row input {
+    flex: 1 1 180px; min-width: 0; padding: 12px 14px; font-size: 1.1rem; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--text); background: #0c1426; border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 10px; font-family: inherit;
+  }
+  .answer-row input:focus { border-color: var(--gold); outline: none; }
+  .tally { display: flex; gap: 6px; margin: 12px 0 0; }
+  .tally span { width: 12px; height: 12px; border-radius: 50%; background: rgba(255, 255, 255, .16); }
+  .tally span.is-right { background: var(--ok); }
+  .tally span.is-wrong { background: var(--bad); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/crossword-mini.html">Mini Crossword</a>
+      <a href="/games/daily-nonogram.html">Daily Nonogram</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Daily Clues</h1>
+    <p class="updated">Five crossword clues, chosen from today&rsquo;s date. One attempt each.</p>
+
+    <div class="toolbar">
+      <button class="btn ghost" type="button" id="restart">Restart today&rsquo;s five</button>
+      <span class="hint" id="dateLabel">&nbsp;</span>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Clue <b id="progressText">1 of 5</b></span>
+        <span>Correct <b id="correct">0</b></span>
+        <span>Daily streak <b id="streak">0</b></span>
+        <span>Best day <b id="best">0/5</b></span>
+      </div>
+
+      <div class="clue-card">
+        <div class="clue-meta"><span id="clueNumber">Clue 1</span><span id="clueEnum" class="enum">(0)</span></div>
+        <p class="clue-text" id="clueText">Loading today&rsquo;s clues…</p>
+      </div>
+
+      <div class="answer-row">
+        <label class="sr-only" for="answer">Your answer</label>
+        <input id="answer" type="text" autocomplete="off" autocapitalize="characters" placeholder="answer">
+        <button class="btn" type="button" id="submit">Submit</button>
+      </div>
+
+      <div class="tally" id="tally" aria-hidden="true"></div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>Five clues make up each day&rsquo;s set, all of them written in the style of a quick crossword, each with its enumeration in brackets. Type the answer and press Enter. You get one attempt per clue: the game tells you whether you were right, gives the answer, and moves on. At the end your tally is recorded and your daily streak moves up if you finished the set.</p>
+    <p>The set is generated from the date, so it is the same for everybody playing that day. Restarting replays those same five clues rather than generating new ones, which makes a second attempt a memory test rather than a puzzle.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Five clues a day, one attempt each, all straight definitions rather than cryptics.</li>
+      <li>Answers are compared in capitals with spaces and punctuation removed.</li>
+      <li>Your best day &mdash; the highest number correct out of five &mdash; is kept under <code>mg-crossword-daily-best</code>.</li>
+      <li>The daily streak counts consecutive days you finished the set, stored under <code>mg-crossword-daily-streak</code>.</li>
+      <li>Clues span general knowledge, language and science; none of them requires a dictionary.</li>
+    </ul>
+
+    <h2>Getting better at quick clues</h2>
+    <p>Quick crossword clues are almost always definitions with a grammatical nudge. If the clue says &ldquo;a&rdquo; or &ldquo;the&rdquo;, the answer is a noun; if it says &ldquo;to&rdquo;, the answer is a verb; if it says &ldquo;describing&rdquo;, an adjective. The enumeration then decides which noun, verb or adjective fits, and that is usually enough to finish a straight clue without any wordplay at all.</p>
+    <p>The second skill is recognising the register. A clue that sounds like a dictionary definition wants a plain word, while one that sounds slightly odd is often pointing at a common word used in an unusual sense. &ldquo;A sound reflected back&rdquo; is not asking for anything technical; it wants ECHO, and the four-letter enumeration confirms it before you have finished the sentence. Reading the length first and the definition second is the habit that separates a fast solver from a slow one.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/crossword-clues.html">Clue Cards</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var CLUES = [
+    { clue: "Frozen water", answer: "ICE" },
+    { clue: "A group of ships sailing together", answer: "FLEET" },
+    { clue: "The capital of France", answer: "PARIS" },
+    { clue: "The opposite of north", answer: "SOUTH" },
+    { clue: "A grid of values in computing or maths", answer: "ARRAY" },
+    { clue: "A flightless bird of the Antarctic", answer: "PENGUIN" },
+    { clue: "Bread browned by heat", answer: "TOAST" },
+    { clue: "A word meaning the same as another", answer: "SYNONYM" },
+    { clue: "Twelve of these make a foot", answer: "INCHES" },
+    { clue: "A long work of fiction", answer: "NOVEL" },
+    { clue: "A person who writes music", answer: "COMPOSER" },
+    { clue: "The colour made by mixing red and blue", answer: "PURPLE" },
+    { clue: "The largest land animal, with a trunk", answer: "ELEPHANT" },
+    { clue: "A shape with eight straight sides", answer: "OCTAGON" },
+    { clue: "The opposite of multiply", answer: "DIVIDE" },
+    { clue: "A frozen treat on a wooden stick", answer: "POPSICLE" },
+    { clue: "A place where books are kept for borrowing", answer: "LIBRARY" },
+    { clue: "The planet we live on", answer: "EARTH" },
+    { clue: "A scientist who studies the stars", answer: "ASTRONOMER" },
+    { clue: "A short afternoon sleep, especially in Spain", answer: "SIESTA" },
+    { clue: "A reddish metal used in electrical wiring", answer: "COPPER" },
+    { clue: "A long journey by sea", answer: "VOYAGE" },
+    { clue: "A sound reflected back from a surface", answer: "ECHO" },
+    { clue: "The first month of the year", answer: "JANUARY" },
+    { clue: "The number of players in a football team", answer: "ELEVEN" },
+    { clue: "A written request to a higher court", answer: "APPEAL" }
+  ];
+
+  var clueText = document.getElementById("clueText");
+  var clueEnum = document.getElementById("clueEnum");
+  var clueNumber = document.getElementById("clueNumber");
+  var progressText = document.getElementById("progressText");
+  var correctEl = document.getElementById("correct");
+  var streakEl = document.getElementById("streak");
+  var bestEl = document.getElementById("best");
+  var tallyEl = document.getElementById("tally");
+  var statusEl = document.getElementById("status");
+  var input = document.getElementById("answer");
+  var submitBtn = document.getElementById("submit");
+  var dateLabel = document.getElementById("dateLabel");
+
+  var queue = [];
+  var index = 0;
+  var correct = 0;
+  var results = [];
+  var finished = false;
+
+  function build() {
+    var rnd = MG.seeded("clues-" + MG.today());
+    var pool = CLUES.slice();
+    for (var i = pool.length - 1; i > 0; i--) {
+      var j = Math.floor(rnd() * (i + 1));
+      var t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+    }
+    queue = pool.slice(0, 5);
+    index = 0;
+    correct = 0;
+    results = [];
+    finished = false;
+    correctEl.textContent = "0";
+    streakEl.textContent = String(MG.getStreak("mg-crossword-daily-streak").count);
+    bestEl.textContent = MG.getBest("mg-crossword-daily-best", 0) + "/5";
+    var parts = MG.today().split("-");
+    dateLabel.textContent = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]))
+      .toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
+    input.disabled = false;
+    submitBtn.disabled = false;
+    statusEl.textContent = "One attempt per clue.";
+    render();
+    show();
+  }
+
+  function render() {
+    progressText.textContent = Math.min(index + 1, 5) + " of 5";
+    tallyEl.innerHTML = "";
+    for (var i = 0; i < 5; i++) {
+      var dot = document.createElement("span");
+      if (results[i] === true) dot.className = "is-right";
+      if (results[i] === false) dot.className = "is-wrong";
+      tallyEl.appendChild(dot);
+    }
+  }
+
+  function show() {
+    if (index >= queue.length) { finish(); return; }
+    var clue = queue[index];
+    clueNumber.textContent = "Clue " + (index + 1);
+    clueEnum.textContent = "(" + clue.answer.length + ")";
+    clueText.textContent = clue.clue;
+    input.value = "";
+    input.focus();
+  }
+
+  function submit() {
+    if (finished) return;
+    var clue = queue[index];
+    var guess = input.value.toUpperCase().replace(/[^A-Z]/g, "");
+    if (!guess) {
+      statusEl.textContent = "Type an answer first.";
+      input.focus();
+      return;
+    }
+    var right = guess === clue.answer;
+    results[index] = right;
+    if (right) correct++;
+    correctEl.textContent = String(correct);
+    statusEl.textContent = (right ? "Correct. " : "Not quite — the answer was " + clue.answer + ".") +
+      " " + clue.clue.charAt(0).toUpperCase() + clue.clue.slice(1) + " (" + clue.answer.length + ") = " + clue.answer + ".";
+    index++;
+    render();
+    show();
+  }
+
+  function finish() {
+    finished = true;
+    input.disabled = true;
+    submitBtn.disabled = true;
+    clueNumber.textContent = "Set complete";
+    clueText.textContent = "You answered " + correct + " of 5 correctly.";
+    clueEnum.textContent = "";
+    var improved = MG.saveBest("mg-crossword-daily-best", correct);
+    if (improved) bestEl.textContent = correct + "/5";
+    var streak = MG.bumpStreak("mg-crossword-daily-streak");
+    streakEl.textContent = String(streak);
+    statusEl.textContent = "Today's set finished: " + correct + " of 5" +
+      (improved ? " — a new best day." : ".") + " Daily streak: " + streak + ".";
+  }
+
+  submitBtn.addEventListener("click", submit);
+  input.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") { submit(); event.preventDefault(); }
+  });
+  document.getElementById("restart").addEventListener("click", build);
+
+  build();
+})();
+</script>
+</body>
+</html>

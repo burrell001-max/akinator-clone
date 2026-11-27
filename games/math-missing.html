@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missing Number: A Free 60-Second Maths Game</title>
+<meta name="description" content="An equation with one value hidden. Work out what belongs in the box, type it, and keep the run going for sixty seconds. Addition, subtraction, multiplication and division.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/math-missing.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Missing Number: A Free 60-Second Maths Game">
+<meta property="og:description" content="One value is hidden in every equation. Find it before the clock runs out.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/math-missing.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Missing Number: Find the Hidden Value">
+<meta name="twitter:description" content="One value is hidden in every equation. Find it before the clock runs out.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Missing Number",
+  "url": "https://mindgenieai.xyz/games/math-missing.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A sixty-second arithmetic game where one value in each equation must be worked out.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .eq {
+    font-size: clamp(1.6rem, 8vw, 2.4rem);
+    font-weight: 800;
+    color: var(--gold);
+    letter-spacing: .02em;
+    margin: 8px 0 16px;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+  .eq .blank { color: #bff0d1; border-bottom: 4px solid rgba(95, 214, 138, .55); padding: 0 .18em; }
+  .answer-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: center; }
+  .answer-row input {
+    width: 130px; padding: 12px 14px; font-size: 1.3rem; font-weight: 700;
+    color: var(--text); background: #0c1426; border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 10px; font-family: inherit; text-align: center;
+  }
+  .answer-row input:focus { border-color: var(--gold); outline: none; }
+  .bar { height: 8px; border-radius: 999px; background: rgba(255, 255, 255, .1); overflow: hidden; margin: 0 0 14px; }
+  .bar span { display: block; height: 100%; width: 100%; background: var(--gold); transition: width .25s linear; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/math-speed.html">Quick Sums</a>
+      <a href="/games/math-target.html">Equation Forge</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Missing Number</h1>
+    <p class="updated">Sixty seconds of equations with one value hidden.</p>
+
+    <div class="toolbar">
+      <label for="level" class="hint">Difficulty</label>
+      <select id="level">
+        <option value="easy">Easy — numbers to 12</option>
+        <option value="medium" selected>Medium — numbers to 20</option>
+        <option value="hard">Hard — numbers to 50</option>
+      </select>
+      <button class="btn" type="button" id="start">Start</button>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Time <b id="left">60s</b></span>
+        <span>Score <b id="score">0</b></span>
+        <span>Streak <b id="streak">0</b></span>
+        <span>Best <b id="best">0</b></span>
+      </div>
+
+      <div class="bar"><span id="barFill"></span></div>
+
+      <div class="eq" id="eq" aria-live="polite">Press Start</div>
+
+      <div class="answer-row">
+        <label class="sr-only" for="answer">Your answer</label>
+        <input id="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="?" disabled>
+        <button class="btn" type="button" id="submit" disabled>Answer</button>
+      </div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>Each equation has one value replaced by a box. Work out what belongs there, type it and press Enter. A correct answer scores a point and a new equation appears at once; a wrong one breaks your streak and shows the missing value for a moment before moving on. The round lasts sixty seconds from the moment you press Start.</p>
+    <p>The box is not always at the end. Sometimes it holds the sum, sometimes one of the numbers being added, sometimes the divisor, and sometimes the starting value. The operation symbols tell you which inverse to reach for: undo an addition with a subtraction, undo a multiplication with a division.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Answers are always whole numbers; nothing here produces a fraction or a negative.</li>
+      <li>Easy uses numbers up to 12, medium up to 20 with times tables to 12, hard up to 50 with multiplication to 15.</li>
+      <li>One point per correct answer, and the round ends when the timer hits zero.</li>
+      <li>Your best score for each difficulty is kept in this browser under <code>mg-missing-best</code>.</li>
+      <li><kbd>Enter</kbd> submits; the input is refocused automatically after every question.</li>
+    </ul>
+
+    <h2>Solving the box quickly</h2>
+    <p>Read the symbol before you read the numbers. If the equation is a sum with the box in the middle &mdash; <strong>8 + ? = 21</strong> &mdash; the answer is the difference, 13. If the box holds the total &mdash; <strong>8 + 13 = ?</strong> &mdash; it is the sum. That distinction sounds obvious written down, but under a clock the eye tends to reach for the operation it sees, and adding when you should subtract is the single most common mistake in this game.</p>
+    <p>Multiplication and division follow the same rule with bigger gaps between the numbers. <strong>7 × ? = 56</strong> is a division question in disguise: eight sevens. <strong>? ÷ 6 = 9</strong> is a multiplication question in disguise: nine sixes. Since every division here is exact, the answer is always a whole number, and knowing that lets you rule out anything that would leave a remainder before you commit to typing it.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/math-speed.html">Quick Sums</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var eqEl = document.getElementById("eq");
+  var statusEl = document.getElementById("status");
+  var leftEl = document.getElementById("left");
+  var scoreEl = document.getElementById("score");
+  var streakEl = document.getElementById("streak");
+  var bestEl = document.getElementById("best");
+  var barFill = document.getElementById("barFill");
+  var input = document.getElementById("answer");
+  var submitBtn = document.getElementById("submit");
+  var startBtn = document.getElementById("start");
+  var levelEl = document.getElementById("level");
+
+  var answer = 0;
+  var score = 0;
+  var streak = 0;
+  var seconds = 60;
+  var timer = null;
+  var running = false;
+
+  function randInt(lo, hi) {
+    return lo + Math.floor(Math.random() * (hi - lo + 1));
+  }
+
+  function make() {
+    var level = levelEl.value;
+    var top = level === "easy" ? 12 : level === "medium" ? 20 : 50;
+    var times = level === "easy" ? 6 : level === "medium" ? 12 : 15;
+    var kind = randInt(0, 7);
+    var a, b, c, text;
+
+    if (kind === 0) {
+      a = randInt(2, top); b = randInt(2, top);
+      answer = a + b; text = a + " + " + b + " = <span class=\"blank\">?</span>";
+    } else if (kind === 1) {
+      a = randInt(2, top); answer = randInt(2, top); c = a + answer;
+      text = a + " + <span class=\"blank\">?</span> = " + c;
+    } else if (kind === 2) {
+      b = randInt(2, top); answer = randInt(2, top); c = answer + b;
+      text = "<span class=\"blank\">?</span> + " + b + " = " + c;
+    } else if (kind === 3) {
+      a = randInt(6, top + 10); b = randInt(2, top);
+      answer = a - b; text = a + " − " + b + " = <span class=\"blank\">?</span>";
+    } else if (kind === 4) {
+      a = randInt(6, top + 10); b = randInt(2, a - 1);
+      answer = a - b; text = a + " − <span class=\"blank\">?</span> = " + b;
+    } else if (kind === 5) {
+      a = randInt(2, times); b = randInt(2, times);
+      answer = a * b; text = a + " × " + b + " = <span class=\"blank\">?</span>";
+    } else if (kind === 6) {
+      a = randInt(2, times); b = randInt(2, times);
+      answer = b; text = a + " × <span class=\"blank\">?</span> = " + (a * b);
+    } else {
+      b = randInt(2, times); c = randInt(2, times);
+      answer = b * c; text = "<span class=\"blank\">?</span> ÷ " + b + " = " + c;
+    }
+    eqEl.innerHTML = text;
+  }
+
+  function start() {
+    score = 0;
+    streak = 0;
+    seconds = 60;
+    running = true;
+    scoreEl.textContent = "0";
+    streakEl.textContent = "0";
+    leftEl.textContent = "60s";
+    barFill.style.width = "100%";
+    statusEl.textContent = "";
+    bestEl.textContent = String(MG.getBest("mg-missing-best", 0));
+    input.disabled = false;
+    submitBtn.disabled = false;
+    input.value = "";
+    input.focus();
+    make();
+    if (timer) window.clearInterval(timer);
+    timer = window.setInterval(function () {
+      seconds--;
+      leftEl.textContent = seconds + "s";
+      barFill.style.width = Math.max(0, (seconds / 60) * 100) + "%";
+      if (seconds <= 0) end();
+    }, 1000);
+  }
+
+  function submit() {
+    if (!running) return;
+    var value = input.value.trim();
+    if (!/^-?\d+$/.test(value)) {
+      statusEl.textContent = "Type a whole number.";
+      input.focus();
+      return;
+    }
+    if (Number(value) === answer) {
+      score++;
+      streak++;
+      scoreEl.textContent = String(score);
+      streakEl.textContent = String(streak);
+      statusEl.textContent = "";
+    } else {
+      streak = 0;
+      streakEl.textContent = "0";
+      statusEl.textContent = "Not quite — the missing number was " + answer + ".";
+    }
+    input.value = "";
+    input.focus();
+    make();
+  }
+
+  function end() {
+    running = false;
+    if (timer) { window.clearInterval(timer); timer = null; }
+    leftEl.textContent = "0s";
+    barFill.style.width = "0%";
+    input.disabled = true;
+    submitBtn.disabled = true;
+    eqEl.textContent = "Time up";
+    var improved = MG.saveBest("mg-missing-best", score);
+    if (improved) bestEl.textContent = String(score);
+    statusEl.textContent = "Round over: " + score + (score === 1 ? " correct answer" : " correct answers") +
+      (improved ? " — a new best." : ". Best: " + MG.getBest("mg-missing-best", 0) + ".");
+  }
+
+  startBtn.addEventListener("click", start);
+  submitBtn.addEventListener("click", submit);
+  input.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") { submit(); event.preventDefault(); }
+  });
+  levelEl.addEventListener("change", function () {
+    if (!running) bestEl.textContent = String(MG.getBest("mg-missing-best", 0));
+  });
+
+  bestEl.textContent = String(MG.getBest("mg-missing-best", 0));
+})();
+</script>
+</body>
+</html>

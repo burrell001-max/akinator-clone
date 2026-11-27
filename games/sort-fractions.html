@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fraction Ladder: A Free Sort-and-Order Maths Game</title>
+<meta name="description" content="Order eight fractions, decimals, percentages and mixed numbers from smallest to largest. A fresh date-seeded ladder every day, with a timer, mistake count and streak.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/sort-fractions.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Fraction Ladder: A Free Sort-and-Order Maths Game">
+<meta property="og:description" content="Eight values in four different notations. Click them into ascending order.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/sort-fractions.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fraction Ladder: Sort Fractions, Decimals and Percentages">
+<meta name="twitter:description" content="Eight values, four notations, one correct order.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Fraction Ladder",
+  "url": "https://mindgenieai.xyz/games/sort-fractions.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A daily ordering game: arrange eight fractions, decimals, percentages and mixed numbers from smallest to largest.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .ladder { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); margin: 6px 0 14px; }
+  .value-card {
+    position: relative;
+    min-height: 76px;
+    display: grid;
+    place-items: center;
+    gap: 2px;
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    color: var(--text);
+    font-size: 1.35rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 10px 8px;
+    transition: transform .14s ease, border-color .14s ease, background-color .14s ease;
+  }
+  .value-card:hover:not(:disabled) { transform: translateY(-2px); border-color: rgba(255, 209, 102, .55); }
+  .value-card small { font-size: .66rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .value-card .rank {
+    position: absolute; top: 6px; left: 8px;
+    font-size: .68rem; font-weight: 700; color: var(--gold);
+  }
+  .value-card.is-placed {
+    background: rgba(95, 214, 138, .12);
+    border-color: rgba(95, 214, 138, .5);
+    cursor: default;
+  }
+  .value-card.is-wrong { animation: nudge .3s ease; border-color: var(--bad); }
+  @keyframes nudge { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+  .timer { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/sort-sequence.html">Sort Sprint</a>
+      <a href="/games/math-speed.html">Quick Sums</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Fraction Ladder</h1>
+    <p class="updated">Eight values written four different ways. Click them from smallest to largest.</p>
+
+    <div class="toolbar">
+      <button class="btn" type="button" id="restart">Restart today&rsquo;s ladder</button>
+      <button class="btn ghost" type="button" id="practice">Practice set</button>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Time <b class="timer" id="timer">0:00</b></span>
+        <span>Placed <b id="placed">0/8</b></span>
+        <span>Mistakes <b id="mistakes">0</b></span>
+        <span>Best today <b id="best">—</b></span>
+        <span>Daily streak <b id="streak">0</b></span>
+      </div>
+
+      <div class="ladder" id="ladder" role="group" aria-label="Value cards to order"></div>
+
+      <p class="status" id="status" role="status" aria-live="polite">Click the smallest value first.</p>
+      <p class="hint" id="mode">Today&rsquo;s ladder. Everyone gets the same eight values.</p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>Every card holds a number between zero and two, but they are not all written as fractions: some are decimals, some percentages, some mixed numbers like <strong>1&nbsp;1/4</strong>. Work out what each card is worth, then click the cards one at a time in ascending order of value.</p>
+    <p>A click is accepted only if the card is larger than the last one you placed. Get it wrong and the card shakes, your mistake count rises, and nothing moves. When all eight cards are placed the ladder is finished and your time is recorded.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Eight cards per ladder, each with a different value.</li>
+      <li>Order is strict: equal values are never generated, so there is always exactly one correct sequence.</li>
+      <li>Your best time for today&rsquo;s ladder is kept in this browser under <code>mg-ladder-best</code>.</li>
+      <li>Finishing today&rsquo;s ladder once a day keeps your streak alive; the streak is stored under <code>mg-ladder-streak</code>.</li>
+      <li>Practice sets are freshly generated and do not affect the streak.</li>
+      <li>The timer starts on your first click, so you can read the cards before the clock moves.</li>
+    </ul>
+
+    <h2>Comparing values quickly</h2>
+    <p>The safest method is to convert everything to the same form, and the easiest common form here is a decimal. Half is 0.5, a fifth is 0.2, and an eighth is 0.125 &mdash; three conversions that cover most of the pool. A percentage is simply that decimal multiplied by a hundred, so 35% is 0.35 and 12.5% is 0.125. A mixed number is its whole part plus the decimal of the fraction: 1&nbsp;3/8 is 1.375.</p>
+    <p>Two shortcuts save the arithmetic. First, group by whole part: everything below 1 comes before everything above it, so a single card above 1 is instantly last among small values. Second, compare fractions that share a denominator by looking only at the top number &mdash; 5/8 is bigger than 3/8 without any conversion at all. Where denominators differ but the fractions are close, cross-multiply: 3/5 against 5/8 becomes 24 against 25, so 5/8 wins.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/sort-sequence.html">Sort Sprint</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var POOL = [
+    [1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5],
+    [1, 8], [3, 8], [5, 8], [7, 8], [1, 10], [3, 10], [7, 10], [9, 10],
+    [1, 6], [5, 6], [5, 4], [3, 2], [7, 4], [9, 8], [11, 8]
+  ];
+
+  var ladder = document.getElementById("ladder");
+  var statusEl = document.getElementById("status");
+  var timerEl = document.getElementById("timer");
+  var placedEl = document.getElementById("placed");
+  var mistakesEl = document.getElementById("mistakes");
+  var bestEl = document.getElementById("best");
+  var streakEl = document.getElementById("streak");
+  var modeEl = document.getElementById("mode");
+
+  var cards = [];
+  var placedCount = 0;
+  var mistakes = 0;
+  var started = 0;
+  var ticker = null;
+  var finished = false;
+  var daily = true;
+
+  function shuffleWith(list, rnd) {
+    var a = list.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rnd() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function decimalString(n, d) {
+    for (var places = 1; places <= 3; places++) {
+      if ((n * Math.pow(10, places)) % d === 0) return (n / d).toFixed(places);
+    }
+    return null;
+  }
+
+  function labelFor(n, d, form) {
+    var dec = decimalString(n, d);
+    var mixed = n > d ? (Math.floor(n / d) + (n % d ? " " + (n % d) + "/" + d : "")) : null;
+    if (form === 1 && dec) return { text: dec, note: "decimal" };
+    if (form === 2 && dec) return { text: (n / d * 100) + "%", note: "percentage" };
+    if (form === 3 && mixed) return { text: mixed, note: "mixed number" };
+    return { text: n + "/" + d, note: "fraction" };
+  }
+
+  function build(dailyMode) {
+    daily = dailyMode;
+    var rnd = dailyMode ? MG.seeded("ladder-" + MG.today()) : Math.random;
+    var pool = shuffleWith(POOL, rnd);
+    var items = [];
+    var seen = [];
+    for (var i = 0; i < pool.length && items.length < 8; i++) {
+      var n = pool[i][0], d = pool[i][1];
+      var value = n / d;
+      if (seen.some(function (v) { return Math.abs(v - value) < 1e-9; })) continue;
+      seen.push(value);
+      var forms = [0];
+      if (decimalString(n, d)) { forms.push(1); forms.push(2); }
+      if (n > d) forms.push(3);
+      var form = forms[Math.floor(rnd() * forms.length)];
+      var label = labelFor(n, d, form);
+      items.push({ value: value, text: label.text, note: label.note });
+    }
+
+    cards = items.sort(function (a, b) { return a.value - b.value; });
+    placedCount = 0;
+    mistakes = 0;
+    started = 0;
+    finished = false;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    timerEl.textContent = "0:00";
+    mistakesEl.textContent = "0";
+    placedEl.textContent = "0/8";
+    var best = MG.getBest("mg-ladder-best", 0);
+    bestEl.textContent = best ? MG.formatTime(best) : "—";
+    streakEl.textContent = String(MG.getStreak("mg-ladder-streak").count);
+    modeEl.textContent = dailyMode
+      ? "Today's ladder. Everyone gets the same eight values."
+      : "Practice set. A fresh random ladder each time.";
+    statusEl.textContent = "Click the smallest value first.";
+    render();
+  }
+
+  function render() {
+    ladder.innerHTML = "";
+    var order = shuffleWith(cards.map(function (card, index) { return index; }), Math.random);
+    order.forEach(function (index) {
+      var card = cards[index];
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "value-card" + (card.placed ? " is-placed" : "");
+      btn.disabled = !!card.placed;
+      btn.dataset.index = String(index);
+      btn.setAttribute("aria-label", card.text + ", " + card.note + (card.placed ? ", placed at " + card.rank : ""));
+      btn.innerHTML = (card.placed ? '<span class="rank">' + card.rank + "</span>" : "") +
+        "<span>" + card.text + "</span><small>" + card.note + "</small>";
+      btn.addEventListener("click", function () { choose(index); });
+      ladder.appendChild(btn);
+    });
+  }
+
+  function choose(index) {
+    if (finished) return;
+    var card = cards[index];
+    if (!card || card.placed) return;
+
+    var last = null;
+    cards.forEach(function (c) { if (c.placed && (!last || c.rank > last.rank)) last = c; });
+
+    /* cards[] is sorted ascending, so cards[0] is the smallest value. The first
+       placement has to be that card: accepting a larger one first would leave
+       nothing that can legally follow it and strand the ladder. */
+    var wrongFirst = !last && card.value !== cards[0].value;
+
+    if (wrongFirst || (last && card.value < last.value)) {
+      mistakes++;
+      mistakesEl.textContent = String(mistakes);
+      statusEl.textContent = wrongFirst
+        ? "Start at the bottom — " + card.text + " is not the smallest value on the board."
+        : "Not yet — " + card.text + " is smaller than the last card you placed.";
+      var el = ladder.querySelector('[data-index="' + index + '"]');
+      if (el) {
+        el.classList.add("is-wrong");
+        window.setTimeout(function () { el.classList.remove("is-wrong"); }, 320);
+      }
+      return;
+    }
+
+    if (!started) {
+      started = Date.now();
+      ticker = window.setInterval(paintTime, 200);
+    }
+
+    card.placed = true;
+    card.rank = placedCount + 1;
+    placedCount++;
+    placedEl.textContent = placedCount + "/8";
+    statusEl.textContent = placedCount === 8
+      ? ""
+      : "Placed " + placedCount + ": " + card.text + ". Next smallest.";
+    render();
+    if (placedCount === 8) finish();
+  }
+
+  function paintTime() {
+    var seconds = Math.floor((Date.now() - started) / 1000);
+    timerEl.textContent = MG.formatTime(seconds);
+  }
+
+  function finish() {
+    finished = true;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    var seconds = started ? Math.floor((Date.now() - started) / 1000) : 0;
+    timerEl.textContent = MG.formatTime(seconds);
+    var improved = MG.saveBest("mg-ladder-best", seconds, false);
+    if (improved) bestEl.textContent = MG.formatTime(seconds);
+    var streak = MG.getStreak("mg-ladder-streak").count;
+    if (daily) {
+      streak = MG.bumpStreak("mg-ladder-streak");
+      streakEl.textContent = String(streak);
+    }
+    statusEl.textContent = "Ladder complete in " + MG.formatTime(seconds) + " with " +
+      (mistakes === 1 ? "1 mistake" : mistakes + " mistakes") +
+      (improved ? " — a new best time." : ".") +
+      (daily ? " Daily streak: " + streak + "." : "");
+  }
+
+  document.getElementById("restart").addEventListener("click", function () { build(true); });
+  document.getElementById("practice").addEventListener("click", function () { build(false); });
+
+  build(true);
+})();
+</script>
+</body>
+</html>

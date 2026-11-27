@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sort Bins: A Free 45-Second Number Sorting Game</title>
+<meta name="description" content="Sort numbers into three bins against the clock. Every round uses a different rule set — even and odd, multiples, primes and squares — and rewards quick classification.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/sort-bins.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Sort Bins: A Free 45-Second Number Sorting Game">
+<meta property="og:description" content="Three bins, one number at a time, forty-five seconds.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/sort-bins.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sort Bins: Sort Numbers Against the Clock">
+<meta name="twitter:description" content="Three bins, one number at a time, forty-five seconds.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Sort Bins",
+  "url": "https://mindgenieai.xyz/games/sort-bins.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A timed number classification game: send each number to the correct bin under one of four rule sets.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .bin-card { display: grid; gap: 14px; }
+  .current {
+    display: grid; place-items: center;
+    background: #0c1426; border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px 10px;
+  }
+  .current span {
+    font-size: clamp(2.6rem, 14vw, 4rem); font-weight: 800; color: var(--gold);
+    line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .current small { color: var(--muted); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+  .bins { display: grid; gap: 10px; grid-template-columns: repeat(3, 1fr); }
+  .bin {
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line); border-radius: 12px;
+    color: var(--text); font: inherit; font-weight: 700; font-size: .9rem;
+    padding: 14px 8px; cursor: pointer; text-align: center;
+    display: grid; gap: 4px; justify-items: center;
+    transition: border-color .14s ease, transform .14s ease, background-color .14s ease;
+  }
+  .bin:hover:not(:disabled) { border-color: rgba(255, 209, 102, .55); transform: translateY(-2px); }
+  .bin b { font-size: 1.3rem; color: var(--gold); }
+  .bin small { font-weight: 500; color: var(--muted); font-size: .72rem; text-transform: none; }
+  .bin:disabled { opacity: .55; cursor: not-allowed; }
+  .bin.is-right { background: rgba(95, 214, 138, .16); border-color: var(--ok); }
+  .bin.is-wrong { background: rgba(255, 138, 138, .16); border-color: var(--bad); }
+  .timebar { height: 8px; border-radius: 999px; background: rgba(255, 255, 255, .1); overflow: hidden; margin: 0 0 14px; }
+  .timebar span { display: block; height: 100%; width: 100%; background: var(--gold); transition: width .2s linear; }
+  @media (max-width: 520px) { .bin { font-size: .8rem; padding: 12px 6px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/sort-sequence.html">Sort Sprint</a>
+      <a href="/games/sort-fractions.html">Fraction Ladder</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Sort Bins</h1>
+    <p class="updated">One number at a time. Send it to the bin whose rule it obeys.</p>
+
+    <div class="toolbar">
+      <button class="btn" type="button" id="start">Start 45-second round</button>
+      <span class="hint" id="ruleName">Rules change every round.</span>
+    </div>
+
+    <div class="game-panel bin-card">
+      <div class="stat-row">
+        <span>Time <b id="left">45s</b></span>
+        <span>Score <b id="score">0</b></span>
+        <span>Streak <b id="streak">0</b></span>
+        <span>Best <b id="best">0</b></span>
+      </div>
+
+      <div class="timebar"><span id="barFill"></span></div>
+
+      <div class="current">
+        <span id="number" aria-live="polite">—</span>
+        <small id="instruction">Press Start to begin</small>
+      </div>
+
+      <div class="bins" id="bins" role="group" aria-label="Bins"></div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <p class="hint">Keys 1, 2 and 3 work too.</p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>A number appears in the middle of the board and three bins sit underneath it. Each bin is labelled with a rule. Decide which rule the number obeys, then click that bin &mdash; or press <strong>1</strong>, <strong>2</strong> or <strong>3</strong>. A correct sort scores a point and a new number appears immediately. A wrong sort costs a point, resets your streak, and highlights the bin the number actually belonged to before moving on.</p>
+    <p>You have forty-five seconds. The rules come in four sets and one is chosen at random each round: even and odd with the odd numbers split by divisibility, multiples of five and three, primes and squares, and divisibility by four and three. The bin labels always tell you exactly which rule is in force, so read them before your first click.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Numbers run from 10 to 99, and every number belongs to exactly one bin.</li>
+      <li>One point per correct sort; one point lost per mistake, never below zero.</li>
+      <li>Your longest correct run is shown as the streak; your best score is kept in this browser under <code>mg-bins-best</code>.</li>
+      <li>The round ends when the timer reaches zero, and the bins lock until you start again.</li>
+      <li>Nothing is fetched and no round is uploaded; the score lives in <code>localStorage</code> only.</li>
+    </ul>
+
+    <h2>Reading the rules quickly</h2>
+    <p>The hard part is not the arithmetic, it is holding the current rule set in mind while the numbers change. Say the rules out loud in order &mdash; "five, three, neither" &mdash; and test them in that order. A number like 45 fails the first test but passes the second, while 47 fails both and goes straight to the third bin. Because the bins are exclusive and ordered, you never need to check a rule after one has already matched.</p>
+    <p>Two specific traps are worth learning. In the primes-and-squares round, 49 and 64 are squares but not primes, and 1 is not generated at all; in the divisibility round, 12 is divisible by both four and three, and the four bin takes precedence because it is checked first. The labels in this game spell that precedence out, which is why reading them costs less time than guessing.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/sort-sequence.html">Sort Sprint</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var RULESETS = [
+    {
+      name: "Rule set: even versus odd, with the odd numbers split by divisibility by 3.",
+      bins: [
+        { label: "Even", note: "divides by 2" },
+        { label: "Odd, ÷ 3", note: "odd and divisible by 3" },
+        { label: "Odd, not ÷ 3", note: "everything else" }
+      ],
+      classify: function (n) { return n % 2 === 0 ? 0 : (n % 3 === 0 ? 1 : 2); }
+    },
+    {
+      name: "Rule set: multiples of 5, multiples of 3, and neither.",
+      bins: [
+        { label: "Multiple of 5", note: "ends in 0 or 5" },
+        { label: "Multiple of 3", note: "digit sum divides by 3" },
+        { label: "Neither", note: "fails both tests" }
+      ],
+      classify: function (n) { return n % 5 === 0 ? 0 : (n % 3 === 0 ? 1 : 2); }
+    },
+    {
+      name: "Rule set: primes, squares, and neither.",
+      bins: [
+        { label: "Prime", note: "two divisors only" },
+        { label: "Square", note: "a whole number squared" },
+        { label: "Neither", note: "fails both tests" }
+      ],
+      classify: function (n) {
+        var prime = n > 1;
+        for (var d = 2; d * d <= n; d++) { if (n % d === 0) { prime = false; break; } }
+        if (prime) return 0;
+        var root = Math.round(Math.sqrt(n));
+        return root * root === n ? 1 : 2;
+      }
+    },
+    {
+      name: "Rule set: divisible by 4, divisible by 3, and neither. Four is checked first.",
+      bins: [
+        { label: "Divisible by 4", note: "checked first" },
+        { label: "Divisible by 3", note: "and not by 4" },
+        { label: "Neither", note: "fails both tests" }
+      ],
+      classify: function (n) { return n % 4 === 0 ? 0 : (n % 3 === 0 ? 1 : 2); }
+    }
+  ];
+
+  var binWrap = document.getElementById("bins");
+  var numberEl = document.getElementById("number");
+  var instructionEl = document.getElementById("instruction");
+  var statusEl = document.getElementById("status");
+  var leftEl = document.getElementById("left");
+  var scoreEl = document.getElementById("score");
+  var streakEl = document.getElementById("streak");
+  var bestEl = document.getElementById("best");
+  var barFill = document.getElementById("barFill");
+  var ruleName = document.getElementById("ruleName");
+  var startBtn = document.getElementById("start");
+
+  var rules = null;
+  var current = 0;
+  var score = 0;
+  var streak = 0;
+  var seconds = 45;
+  var timer = null;
+  var running = false;
+
+  function paintBins() {
+    binWrap.innerHTML = "";
+    rules.bins.forEach(function (bin, index) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "bin";
+      btn.disabled = !running;
+      btn.dataset.bin = String(index);
+      btn.setAttribute("aria-label", "Bin " + (index + 1) + ": " + bin.label + ", " + bin.note);
+      btn.innerHTML = "<b>" + (index + 1) + "</b><span>" + bin.label + "</span><small>" + bin.note + "</small>";
+      btn.addEventListener("click", function () { place(index); });
+      binWrap.appendChild(btn);
+    });
+  }
+
+  function nextNumber() {
+    current = 10 + Math.floor(Math.random() * 90);
+    numberEl.textContent = String(current);
+    instructionEl.textContent = "Which bin?";
+  }
+
+  function start() {
+    rules = RULESETS[Math.floor(Math.random() * RULESETS.length)];
+    ruleName.textContent = rules.name;
+    score = 0;
+    streak = 0;
+    seconds = 45;
+    running = true;
+    scoreEl.textContent = "0";
+    streakEl.textContent = "0";
+    leftEl.textContent = "45s";
+    barFill.style.width = "100%";
+    statusEl.textContent = "";
+    startBtn.textContent = "Restart round";
+    bestEl.textContent = String(MG.getBest("mg-bins-best", 0));
+    paintBins();
+    nextNumber();
+    if (timer) window.clearInterval(timer);
+    timer = window.setInterval(function () {
+      seconds--;
+      leftEl.textContent = seconds + "s";
+      barFill.style.width = Math.max(0, (seconds / 45) * 100) + "%";
+      if (seconds <= 0) end();
+    }, 1000);
+    numberEl.focus && numberEl.focus();
+  }
+
+  function place(binIndex) {
+    if (!running) return;
+    var correct = rules.classify(current);
+    var btn = binWrap.querySelector('[data-bin="' + binIndex + '"]');
+    if (binIndex === correct) {
+      score++;
+      streak++;
+      scoreEl.textContent = String(score);
+      streakEl.textContent = String(streak);
+      statusEl.textContent = current + " sorted correctly.";
+      flash(btn, "is-right");
+      nextNumber();
+    } else {
+      score = Math.max(0, score - 1);
+      streak = 0;
+      scoreEl.textContent = String(score);
+      streakEl.textContent = "0";
+      statusEl.textContent = current + " belongs in the “" + rules.bins[correct].label + "” bin.";
+      flash(btn, "is-wrong");
+      var right = binWrap.querySelector('[data-bin="' + correct + '"]');
+      flash(right, "is-right");
+      nextNumber();
+    }
+  }
+
+  function flash(el, cls) {
+    if (!el) return;
+    el.classList.add(cls);
+    window.setTimeout(function () { el.classList.remove(cls); }, 320);
+  }
+
+  function end() {
+    running = false;
+    if (timer) { window.clearInterval(timer); timer = null; }
+    leftEl.textContent = "0s";
+    barFill.style.width = "0%";
+    instructionEl.textContent = "Round over";
+    Array.prototype.forEach.call(binWrap.children, function (b) { b.disabled = true; });
+    var improved = MG.saveBest("mg-bins-best", score);
+    if (improved) bestEl.textContent = String(score);
+    statusEl.textContent = "Round over: " + score + (score === 1 ? " point" : " points") +
+      (improved ? " — a new best." : ". Best: " + MG.getBest("mg-bins-best", 0) + ".");
+  }
+
+  document.addEventListener("keydown", function (event) {
+    if (!running || event.ctrlKey || event.metaKey || event.altKey) return;
+    if (event.key === "1" || event.key === "2" || event.key === "3") {
+      place(Number(event.key) - 1);
+      event.preventDefault();
+    }
+  });
+
+  startBtn.addEventListener("click", start);
+  bestEl.textContent = String(MG.getBest("mg-bins-best", 0));
+  rules = RULESETS[0];
+  paintBins();
+})();
+</script>
+</body>
+</html>

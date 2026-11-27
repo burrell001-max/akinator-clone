@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timeline: A Free Sort-the-Events History Game</title>
+<meta name="description" content="Six historical events per round, one correct chronological order. Click from earliest to latest across three rounds and prove your sense of when things happened.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/sort-timeline.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Timeline: A Free Sort-the-Events History Game">
+<meta property="og:description" content="Six events per round. Click them from earliest to latest.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/sort-timeline.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Timeline: Sort the Events">
+<meta name="twitter:description" content="Six events per round. Click them from earliest to latest.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Timeline",
+  "url": "https://mindgenieai.xyz/games/sort-timeline.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A chronological sorting game: place six historical events in the order they happened.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .events { display: grid; gap: 10px; margin: 8px 0 14px; }
+  .event {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    color: var(--text);
+    font: inherit; font-size: .95rem; text-align: left;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color .14s ease, transform .14s ease, background-color .14s ease;
+  }
+  .event:hover:not(:disabled) { border-color: rgba(255, 209, 102, .5); transform: translateX(2px); }
+  .event .num {
+    display: grid; place-items: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(255, 209, 102, .12);
+    border: 1px solid rgba(255, 209, 102, .35);
+    color: var(--gold); font-weight: 800; font-size: .9rem;
+  }
+  .event .body { display: grid; gap: 2px; }
+  .event .body small { color: var(--muted); font-size: .76rem; }
+  .event.is-placed {
+    background: rgba(95, 214, 138, .1);
+    border-color: rgba(95, 214, 138, .45);
+    cursor: default;
+  }
+  .event.is-placed .num { background: rgba(95, 214, 138, .16); border-color: rgba(95, 214, 138, .5); color: #bff0d1; }
+  .event.is-wrong { animation: nudgeX .3s ease; border-color: var(--bad); }
+  @keyframes nudgeX { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/sort-sequence.html">Sort Sprint</a>
+      <a href="/games/sort-shifter.html">Shift Sort</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Timeline</h1>
+    <p class="updated">Three rounds of six events. Click them in the order they happened.</p>
+
+    <div class="toolbar">
+      <button class="btn" type="button" id="restart">Start over</button>
+      <span class="hint" id="roundLabel">Round 1 of 3</span>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Round <b id="round">1/3</b></span>
+        <span>Placed <b id="placed">0/6</b></span>
+        <span>Mistakes <b id="mistakes">0</b></span>
+        <span>Time <b id="time">0:00</b></span>
+        <span>Fewest mistakes <b id="best">—</b></span>
+      </div>
+
+      <div class="events" id="events" role="group" aria-label="Events to order"></div>
+
+      <p class="status" id="status" role="status" aria-live="polite">Click the earliest event first.</p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>Each round deals six events from history, technology and exploration. Click them one at a time starting with the earliest. A click is accepted only if the event happened after the last one you placed, so the choices narrow as the list shrinks. When all six are placed, the next round deals a fresh set.</p>
+    <p>Years are deliberately hidden until an event has been placed &mdash; that is where the game is. After the third round the year of every event you saw is listed in order, so a round you guessed through still teaches you the dates.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Three rounds, six events each, and no event repeats within a session.</li>
+      <li>A wrong click costs nothing but a mistake and a shake; the event stays on the board.</li>
+      <li>Your fewest total mistakes across a completed session is kept in this browser under <code>mg-timeline-best</code>.</li>
+      <li>The timer runs from your first click to the last placement of round three.</li>
+      <li>Start over deals new events and clears the clock, but keeps your record.</li>
+    </ul>
+
+    <h2>Ways to think about a date</h2>
+    <p>Most of these events belong to a cluster you already know, even if the exact year does not come to mind. The first thing to place is the century: the Magna Carta is medieval, the Declaration of Independence is late eighteenth century, the Moon landing is mid twentieth. Sorting by century alone usually resolves the first two or three clicks, because the deal mixes distant eras far more often than it mixes neighbours.</p>
+    <p>When two events sit close together, look for a causal link rather than a number. The First World War ends before the Second begins and both bracket the Great Depression; Sputnik flies before the first Moon landing; the Berlin Wall falls two years before the web goes public. A chain of consequences is easier to hold in memory than a list of years, and the wrong clicks in this game are almost always two events from the same decade rather than two from different centuries.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="https://mindgenieai.xyz/history-of-20-questions-games.html">History of guessing games</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var EVENTS = [
+    { name: "The Magna Carta is sealed at Runnymede", year: 1215, theme: "Law" },
+    { name: "Constantinople falls to the Ottomans", year: 1453, theme: "Empires" },
+    { name: "Columbus reaches the Caribbean", year: 1492, theme: "Exploration" },
+    { name: "Shakespeare's First Folio is printed", year: 1623, theme: "Books" },
+    { name: "Newton publishes the Principia", year: 1687, theme: "Science" },
+    { name: "The American Declaration of Independence is signed", year: 1776, theme: "Politics" },
+    { name: "The French Revolution begins", year: 1789, theme: "Politics" },
+    { name: "The first public steam railway opens", year: 1825, theme: "Transport" },
+    { name: "On the Origin of Species is published", year: 1859, theme: "Science" },
+    { name: "The American Civil War ends", year: 1865, theme: "War" },
+    { name: "The Wright brothers make the first powered flight", year: 1903, theme: "Flight" },
+    { name: "Titanic sinks on her maiden voyage", year: 1912, theme: "Disaster" },
+    { name: "The First World War ends", year: 1918, theme: "War" },
+    { name: "Fleming notices penicillin mould", year: 1928, theme: "Medicine" },
+    { name: "The Second World War ends", year: 1945, theme: "War" },
+    { name: "Elizabeth II is crowned", year: 1953, theme: "Monarchy" },
+    { name: "The Suez Crisis begins", year: 1956, theme: "Politics" },
+    { name: "Sputnik 1 becomes the first artificial satellite", year: 1957, theme: "Space" },
+    { name: "The Cuban Missile Crisis", year: 1962, theme: "Politics" },
+    { name: "Apollo 11 lands on the Moon", year: 1969, theme: "Space" },
+    { name: "Chernobyl reactor 4 explodes", year: 1986, theme: "Disaster" },
+    { name: "The Berlin Wall falls", year: 1989, theme: "Politics" },
+    { name: "The first web page goes live at CERN", year: 1991, theme: "Technology" },
+    { name: "Mandela is elected president of South Africa", year: 1994, theme: "Politics" },
+    { name: "The first draft of the human genome is published", year: 2000, theme: "Science" },
+    { name: "The first iPhone is released", year: 2007, theme: "Technology" },
+    { name: "The Paris climate agreement is adopted", year: 2015, theme: "Climate" },
+    { name: "The James Webb telescope returns its first images", year: 2022, theme: "Space" }
+  ];
+
+  var eventsEl = document.getElementById("events");
+  var statusEl = document.getElementById("status");
+  var roundEl = document.getElementById("round");
+  var placedEl = document.getElementById("placed");
+  var mistakesEl = document.getElementById("mistakes");
+  var timeEl = document.getElementById("time");
+  var bestEl = document.getElementById("best");
+  var roundLabel = document.getElementById("roundLabel");
+
+  var round = 1;
+  var placed = 0;
+  var mistakes = 0;
+  var started = 0;
+  var ticker = null;
+  var items = [];
+  var history = [];
+
+  function deal() {
+    var pool = MG.shuffle(EVENTS.slice());
+    var picked = [];
+    var years = [];
+    for (var i = 0; i < pool.length && picked.length < 6; i++) {
+      if (years.indexOf(pool[i].year) !== -1) continue;
+      if (history.indexOf(pool[i].name) !== -1) continue;
+      years.push(pool[i].year);
+      picked.push({ name: pool[i].name, year: pool[i].year, theme: pool[i].theme, placed: false, rank: 0 });
+    }
+    return picked;
+  }
+
+  function newSession() {
+    round = 1;
+    mistakes = 0;
+    placed = 0;
+    history = [];
+    started = 0;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    timeEl.textContent = "0:00";
+    mistakesEl.textContent = "0";
+    bestEl.textContent = MG.getBest("mg-timeline-best", -1) >= 0 ? String(MG.getBest("mg-timeline-best", 0)) : "—";
+    items = deal();
+    roundLabel = document.getElementById("roundLabel");
+    roundLabel.textContent = "Round 1 of 3";
+    statusEl.textContent = "Click the earliest event first.";
+    render();
+  }
+
+  function render() {
+    roundEl.textContent = round + "/3";
+    placedEl.textContent = placed + "/6";
+    eventsEl.innerHTML = "";
+    var order = MG.shuffle(items.map(function (_, index) { return index; }));
+    order.forEach(function (index) {
+      var item = items[index];
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "event" + (item.placed ? " is-placed" : "");
+      btn.disabled = !!item.placed;
+      btn.dataset.index = String(index);
+      btn.setAttribute("aria-label", item.name + (item.placed ? ", placed " + item.rank + ", " + item.year : ", not yet placed"));
+      btn.innerHTML = '<span class="num">' + (item.placed ? item.rank : "?") + "</span>" +
+        '<span class="body"><span>' + item.name + "</span><small>" +
+        (item.placed ? item.year + " · " + item.theme : "Year hidden · " + item.theme) + "</small></span>";
+      btn.addEventListener("click", function () { choose(index); });
+      eventsEl.appendChild(btn);
+    });
+  }
+
+  function choose(index) {
+    var item = items[index];
+    if (!item || item.placed) return;
+
+    var last = null;
+    items.forEach(function (other) {
+      if (other.placed && (!last || other.rank > last.rank)) last = other;
+    });
+
+    if (last && item.year < last.year) {
+      mistakes++;
+      mistakesEl.textContent = String(mistakes);
+      statusEl.textContent = "Not yet — that happened before " + last.year + ".";
+      var el = eventsEl.querySelector('[data-index="' + index + '"]');
+      if (el) {
+        el.classList.add("is-wrong");
+        window.setTimeout(function () { el.classList.remove("is-wrong"); }, 320);
+      }
+      return;
+    }
+
+    if (!started) {
+      started = Date.now();
+      ticker = window.setInterval(function () {
+        timeEl.textContent = MG.formatTime(Math.floor((Date.now() - started) / 1000));
+      }, 250);
+    }
+
+    item.placed = true;
+    placed++;
+    item.rank = placed;
+    history.push(item.name);
+    statusEl.textContent = placed === 6 ? "" : "Placed " + item.name + " (" + item.year + ").";
+    render();
+
+    if (placed === 6) nextRound();
+  }
+
+  function nextRound() {
+    if (round < 3) {
+      round++;
+      placed = 0;
+      items = deal();
+      roundLabel.textContent = "Round " + round + " of 3";
+      statusEl.textContent = "Round " + round + ". Click the earliest event first.";
+      render();
+      return;
+    }
+    finish();
+  }
+
+  function finish() {
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    var seconds = started ? Math.floor((Date.now() - started) / 1000) : 0;
+    timeEl.textContent = MG.formatTime(seconds);
+    var previous = MG.getBest("mg-timeline-best", -1);
+    var improved = previous < 0 || mistakes < previous;
+    if (improved) {
+      MG.store.set("mg-timeline-best", mistakes);
+      bestEl.textContent = String(mistakes);
+    }
+    var list = items.slice().sort(function (a, b) { return a.year - b.year; })
+      .map(function (item) { return item.year + " " + item.name; }).join("; ");
+    statusEl.textContent = "Session complete: " + mistakes + (mistakes === 1 ? " mistake" : " mistakes") +
+      " in " + MG.formatTime(seconds) + (improved ? " — a new record." : ".") +
+      " Last round, in order: " + list + ".";
+  }
+
+  document.getElementById("restart").addEventListener("click", newSession);
+  newSession();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Recall: A Free Sequence Memory Game</title>
+<meta name="description" content="A short sequence of shapes appears in order, then scatters. Click them back in the order you saw them. Each cleared round adds one more shape to remember.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/memory-order.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Order Recall: A Free Sequence Memory Game">
+<meta property="og:description" content="Remember the order, not just the shapes.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/memory-order.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Order Recall: Sequence Memory">
+<meta name="twitter:description" content="Remember the order, not just the shapes.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Order Recall",
+  "url": "https://mindgenieai.xyz/games/memory-order.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A sequence memory game: reproduce a memorised order of shapes.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .lane { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 8px 0 16px; min-height: 76px; }
+  .item {
+    position: relative;
+    width: 62px; height: 62px; border-radius: 12px;
+    display: grid; place-items: center;
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line);
+    color: var(--gold); font-size: 1.9rem; line-height: 1;
+    cursor: default; padding: 0;
+    transition: transform .14s ease, border-color .14s ease, background-color .14s ease;
+  }
+  .item.is-clickable { cursor: pointer; }
+  .item.is-clickable:hover { border-color: rgba(255, 209, 102, .55); transform: translateY(-2px); }
+  .item .pos {
+    position: absolute; transform: translate(20px, -22px);
+    font-size: .68rem; font-weight: 700; color: var(--muted);
+  }
+  .item.is-done { background: rgba(95, 214, 138, .16); border-color: rgba(95, 214, 138, .5); color: #bff0d1; }
+  .item.is-wrong { background: rgba(255, 138, 138, .18); border-color: var(--bad); }
+  .progress-track { height: 6px; border-radius: 999px; background: rgba(255, 255, 255, .1); overflow: hidden; margin: 0 0 12px; }
+  .progress-track span { display: block; height: 100%; width: 0; background: var(--gold); transition: width .2s ease; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/memory-numbers.html">Digit Echo</a>
+      <a href="/games/memory-grid.html">Grid Flash</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Order Recall</h1>
+    <p class="updated">Shapes appear in a set order, then scatter. Click them back in that order.</p>
+
+    <div class="toolbar">
+      <button class="btn" type="button" id="start">Start</button>
+      <span class="hint" id="phaseLabel">Four shapes to begin with.</span>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Shapes <b id="count">4</b></span>
+        <span>Round <b id="round">0</b></span>
+        <span>Best <b id="best">0</b></span>
+        <span>Rounds won <b id="streak">0</b></span>
+      </div>
+
+      <div class="progress-track"><span id="barFill"></span></div>
+      <div class="lane" id="lane" aria-live="polite">Press Start</div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <p class="hint">The numbers show the order. They disappear when the shapes scatter.</p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>A group of shapes is shown in a numbered row: left to right is the order you must remember. After a few seconds the numbers vanish and the shapes are shuffled into new positions. Click them in the original order. Each correct click moves the progress bar along; a wrong one ends the round and reveals the order you were meant to reproduce.</p>
+    <p>Every cleared round adds one more shape, from four up to all eight in the set. The reading time grows with the count, but not by much, because the point of the game is to build a sequence rather than to stare at a picture.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Four shapes to start; one more per cleared round, up to eight.</li>
+      <li>Only the order matters. Positions on screen are deliberately scrambled after the reveal.</li>
+      <li>Rounds cleared and your longest run are kept in this browser under <code>mg-orderrecall-best</code> and <code>mg-orderrecall-streak</code>.</li>
+      <li>Shapes are also named in their accessible labels, so screen readers can take part.</li>
+      <li>Nothing is timed beyond the reveal itself, and nothing leaves the browser.</li>
+    </ul>
+
+    <h2>Order is a different kind of memory</h2>
+    <p>Recognising which shapes were present is the easy half; the difficulty is that order carries no shape of its own. A useful trick is to turn the sequence into a sentence or a movement: the star comes before the cross, the cross before the circle. Narrating the chain gives your memory a structure to hold on to, which is exactly what the scattered layout takes away.</p>
+    <p>If a sequence is being awkward, chunk it into two or three groups instead of one long line. Five shapes remembered as "a pair and a triple" are easier than five remembered as five, and the same recoding that helps with digits works here. It also helps to say the names out loud as you click them: hearing the order is a second copy of the information, and two copies survive the shuffle better than one.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/memory.html">Memory Match</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var SHAPES = [
+    { glyph: "★", name: "star" },
+    { glyph: "●", name: "circle" },
+    { glyph: "■", name: "square" },
+    { glyph: "▲", name: "triangle" },
+    { glyph: "◆", name: "diamond" },
+    { glyph: "✚", name: "cross" },
+    { glyph: "◗", name: "half circle" },
+    { glyph: "⬟", name: "pentagon" }
+  ];
+
+  var laneEl = document.getElementById("lane");
+  var statusEl = document.getElementById("status");
+  var phaseLabel = document.getElementById("phaseLabel");
+  var countEl = document.getElementById("count");
+  var roundEl = document.getElementById("round");
+  var bestEl = document.getElementById("best");
+  var streakEl = document.getElementById("streak");
+  var barFill = document.getElementById("barFill");
+  var startBtn = document.getElementById("start");
+
+  var count = 4;
+  var round = 0;
+  var run = 0;
+  var target = [];
+  var progress = 0;
+  var accepting = false;
+
+  function paintProgress() {
+    barFill.style.width = (target.length ? (progress / target.length) * 100 : 0) + "%";
+  }
+
+  function startSession() {
+    count = 4;
+    round = 0;
+    run = 0;
+    startBtn.textContent = "Restart";
+    bestEl.textContent = String(MG.getBest("mg-orderrecall-best", 0));
+    streakEl.textContent = String(MG.getBest("mg-orderrecall-streak", 0));
+    nextRound();
+  }
+
+  function nextRound() {
+    round++;
+    roundEl.textContent = String(round);
+    countEl.textContent = String(count);
+    progress = 0;
+    accepting = false;
+    paintProgress();
+    target = MG.shuffle(SHAPES.map(function (_, index) { return index; })).slice(0, count);
+    laneEl.innerHTML = "";
+    target.forEach(function (shapeIndex, position) {
+      var tile = document.createElement("div");
+      tile.className = "item";
+      tile.innerHTML = '<span class="pos">' + (position + 1) + "</span>" + SHAPES[shapeIndex].glyph;
+      tile.setAttribute("role", "img");
+      tile.setAttribute("aria-label", SHAPES[shapeIndex].name + ", position " + (position + 1));
+      laneEl.appendChild(tile);
+    });
+    phaseLabel.textContent = "Reading the order…";
+    statusEl.textContent = "Memorise the order of the " + count + " shapes.";
+    var wait = 700 + count * 650;
+    window.setTimeout(function () { scatter(); }, wait);
+  }
+
+  function scatter() {
+    laneEl.innerHTML = "";
+    accepting = true;
+    var order = MG.shuffle(target.map(function (_, index) { return index; }));
+    order.forEach(function (targetIndex) {
+      var shapeIndex = target[targetIndex];
+      var tile = document.createElement("button");
+      tile.type = "button";
+      tile.className = "item is-clickable";
+      tile.dataset.shape = String(shapeIndex);
+      tile.textContent = SHAPES[shapeIndex].glyph;
+      tile.setAttribute("aria-label", SHAPES[shapeIndex].name);
+      tile.addEventListener("click", function () { pick(tile, shapeIndex); });
+      laneEl.appendChild(tile);
+    });
+    phaseLabel.textContent = "Click them in order.";
+    statusEl.textContent = "Which shape was first? " + progress + " of " + target.length + " placed.";
+  }
+
+  function pick(tile, shapeIndex) {
+    if (!accepting || tile.disabled) return;
+    if (target[progress] === shapeIndex) {
+      progress++;
+      tile.classList.add("is-done");
+      tile.disabled = true;
+      paintProgress();
+      if (progress === target.length) {
+        accepting = false;
+        MG.saveBest("mg-orderrecall-best", count);
+        bestEl.textContent = String(MG.getBest("mg-orderrecall-best", 0));
+        var streak = MG.getBest("mg-orderrecall-streak", 0) + 1;
+        MG.store.set("mg-orderrecall-streak", streak);
+        streakEl.textContent = String(streak);
+        phaseLabel.textContent = "Round cleared.";
+        statusEl.textContent = "Correct order. Next round uses " + Math.min(count + 1, SHAPES.length) + " shapes.";
+        if (count < SHAPES.length) count++;
+        window.setTimeout(nextRound, 900);
+      } else {
+        statusEl.textContent = (progress) + " of " + target.length + " placed. Next one?";
+      }
+      return;
+    }
+    accepting = false;
+    tile.classList.add("is-wrong");
+    var correctOrder = target.map(function (shapeIndex) { return SHAPES[shapeIndex].glyph; }).join(" ");
+    laneEl.innerHTML = "";
+    target.forEach(function (shapeIndex) {
+      var tile2 = document.createElement("div");
+      tile2.className = "item";
+      tile2.textContent = SHAPES[shapeIndex].glyph;
+      tile2.setAttribute("role", "img");
+      tile2.setAttribute("aria-label", SHAPES[shapeIndex].name);
+      laneEl.appendChild(tile2);
+    });
+    phaseLabel.textContent = "Round over.";
+    statusEl.textContent = "The order was " + correctOrder + ". You placed " + progress + " of " +
+      target.length + " correctly. Best: " + MG.getBest("mg-orderrecall-best", 0) + " shapes.";
+    startBtn.textContent = "Play again";
+  }
+
+  startBtn.addEventListener("click", startSession);
+  bestEl.textContent = String(MG.getBest("mg-orderrecall-best", 0));
+  streakEl.textContent = String(MG.getBest("mg-orderrecall-streak", 0));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clue Anagrams: A Free Crossword Anagram Game</title>
+<meta name="description" content="A crossword clue and its letters, shuffled. Rearrange them into the answer before the clock runs out. Sixty seconds, eight clues, no downloads.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/crossword-anagrams.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Clue Anagrams: A Free Crossword Anagram Game">
+<meta property="og:description" content="The clue tells you what it means; the letters tell you how it is spelled.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/crossword-anagrams.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Clue Anagrams: Unscramble the Answer">
+<meta name="twitter:description" content="A clue and its letters, shuffled.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Clue Anagrams",
+  "url": "https://mindgenieai.xyz/games/crossword-anagrams.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A timed anagram game built from crossword clues.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .clue-card {
+    background: #0c1426; border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px; margin-bottom: 14px;
+  }
+  .clue-meta { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: .78rem; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+  .clue-text { margin: 10px 0 8px; font-size: 1.15rem; color: var(--text); line-height: 1.45; }
+  .letters { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 0; }
+  .letters span {
+    min-width: 34px; padding: 6px 4px; border-radius: 8px; text-align: center;
+    background: rgba(255, 209, 102, .1); border: 1px solid rgba(255, 209, 102, .35);
+    color: var(--gold); font-weight: 800; letter-spacing: .04em;
+  }
+  .answer-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .answer-row input {
+    flex: 1 1 180px; min-width: 0; padding: 12px 14px; font-size: 1.1rem; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--text); background: #0c1426; border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 10px; font-family: inherit;
+  }
+  .answer-row input:focus { border-color: var(--gold); outline: none; }
+  .bar { height: 8px; border-radius: 999px; background: rgba(255, 255, 255, .1); overflow: hidden; margin: 0 0 14px; }
+  .bar span { display: block; height: 100%; width: 100%; background: var(--gold); transition: width .25s linear; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/crossword-clues.html">Clue Cards</a>
+      <a href="/games/word-anagram.html">Anagram Hunt</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Clue Anagrams</h1>
+    <p class="updated">Eight clues, each with its answer&rsquo;s letters shuffled.</p>
+
+    <div class="toolbar">
+      <button class="btn" type="button" id="start">Start 60-second run</button>
+      <span class="hint">The letters are always all of the answer, never a subset.</span>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Time <b id="left">60s</b></span>
+        <span>Score <b id="score">0</b></span>
+        <span>Solved <b id="solved">0</b></span>
+        <span>Best <b id="best">0</b></span>
+      </div>
+
+      <div class="bar"><span id="barFill"></span></div>
+
+      <div class="clue-card">
+        <div class="clue-meta"><span id="clueNumber">Clue 1 of 8</span><span id="clueEnum">(0)</span></div>
+        <p class="clue-text" id="clueText">Press Start for the first clue.</p>
+        <div class="letters" id="letters" aria-label="Shuffled letters"></div>
+      </div>
+
+      <div class="answer-row">
+        <label class="sr-only" for="answer">Your answer</label>
+        <input id="answer" type="text" autocomplete="off" autocapitalize="characters" placeholder="answer" disabled>
+        <button class="btn" type="button" id="submit" disabled>Submit</button>
+        <button class="btn ghost" type="button" id="skip" disabled>Skip</button>
+      </div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>Each round shows a crossword-style clue, its enumeration in brackets, and the answer&rsquo;s letters in a random order. Read the clue, rearrange the letters, type the answer and press Enter. A correct answer scores a point and deals the next clue. A skip moves on with no score.</p>
+    <p>The letters are exactly the answer &mdash; no extra letters, no missing ones &mdash; so a wrong answer is almost always a wrong reading of the clue rather than a miscount. You have sixty seconds for eight clues.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Eight clues per run, drawn at random from a bank of twenty-one.</li>
+      <li>One point per correct answer; skips score nothing and do not cost points.</li>
+      <li>Answers are compared in capitals with punctuation removed, so spacing does not matter.</li>
+      <li>Your best score is stored in this browser under <code>mg-clueanagram-best</code>.</li>
+      <li>The run ends when the timer reaches zero or the eight clues are used up.</li>
+    </ul>
+
+    <h2>Unscrambling by structure</h2>
+    <p>Do not read the letters in the order they are printed. Count them first: the enumeration tells you the length, and the letter mix tells you where the answer probably starts. Long answers usually open with a consonant cluster you can recognise &mdash; ST, TR, PL &mdash; and endings are easier still, because -ING, -TION, -LY and -ER account for a large share of English words of five letters or more.</p>
+    <p>The clue is doing more work than the letters are. If the clue is &ldquo;a person who writes music&rdquo;, the answer has to be a noun for a person, and English nouns for people very often end in -ER, -IST or -OR. Once you have a candidate ending, the remaining letters either fit the front or they do not, and that check takes a second rather than a minute. Working from the ending inwards is faster than building left to right, which is why crossword solvers read enumerations from the last letter forward when they are stuck.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/word-anagram.html">Anagram Hunt</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var CLUES = [
+    { clue: "Frozen water", answer: "ICE" },
+    { clue: "A group of ships sailing together", answer: "FLEET" },
+    { clue: "The capital of France", answer: "PARIS" },
+    { clue: "A grid of values in computing or maths", answer: "ARRAY" },
+    { clue: "A flightless bird of the Antarctic", answer: "PENGUIN" },
+    { clue: "Bread browned by heat", answer: "TOAST" },
+    { clue: "A word meaning the same as another", answer: "SYNONYM" },
+    { clue: "A long work of fiction", answer: "NOVEL" },
+    { clue: "A person who writes music", answer: "COMPOSER" },
+    { clue: "The colour made by mixing red and blue", answer: "PURPLE" },
+    { clue: "The largest land animal, with a trunk", answer: "ELEPHANT" },
+    { clue: "A shape with eight straight sides", answer: "OCTAGON" },
+    { clue: "The opposite of multiply", answer: "DIVIDE" },
+    { clue: "A frozen treat on a wooden stick", answer: "POPSICLE" },
+    { clue: "A place where books are kept for borrowing", answer: "LIBRARY" },
+    { clue: "The planet we live on", answer: "EARTH" },
+    { clue: "A scientist who studies the stars", answer: "ASTRONOMER" },
+    { clue: "A short afternoon sleep, especially in Spain", answer: "SIESTA" },
+    { clue: "A reddish metal used in electrical wiring", answer: "COPPER" },
+    { clue: "A long journey by sea", answer: "VOYAGE" },
+    { clue: "The number of players in a football team", answer: "ELEVEN" }
+  ];
+
+  var clueText = document.getElementById("clueText");
+  var clueEnum = document.getElementById("clueEnum");
+  var clueNumber = document.getElementById("clueNumber");
+  var lettersEl = document.getElementById("letters");
+  var statusEl = document.getElementById("status");
+  var leftEl = document.getElementById("left");
+  var scoreEl = document.getElementById("score");
+  var solvedEl = document.getElementById("solved");
+  var bestEl = document.getElementById("best");
+  var barFill = document.getElementById("barFill");
+  var input = document.getElementById("answer");
+  var submitBtn = document.getElementById("submit");
+  var skipBtn = document.getElementById("skip");
+  var startBtn = document.getElementById("start");
+
+  var queue = [];
+  var current = null;
+  var index = 0;
+  var score = 0;
+  var solved = 0;
+  var seconds = 60;
+  var timer = null;
+  var running = false;
+
+  function scramble(word) {
+    var letters = word.split("");
+    var mixed = MG.shuffle(letters);
+    for (var guard = 0; guard < 20 && mixed.join("") === word; guard++) mixed = MG.shuffle(letters);
+    return mixed;
+  }
+
+  function start() {
+    queue = MG.shuffle(CLUES.slice()).slice(0, 8);
+    index = 0;
+    score = 0;
+    solved = 0;
+    seconds = 60;
+    running = true;
+    scoreEl.textContent = "0";
+    solvedEl.textContent = "0";
+    leftEl.textContent = "60s";
+    barFill.style.width = "100%";
+    bestEl.textContent = String(MG.getBest("mg-clueanagram-best", 0));
+    statusEl.textContent = "";
+    input.disabled = false;
+    submitBtn.disabled = false;
+    skipBtn.disabled = false;
+    startBtn.textContent = "Restart";
+    if (timer) window.clearInterval(timer);
+    timer = window.setInterval(function () {
+      seconds--;
+      leftEl.textContent = seconds + "s";
+      barFill.style.width = Math.max(0, (seconds / 60) * 100) + "%";
+      if (seconds <= 0) end();
+    }, 1000);
+    show();
+  }
+
+  function show() {
+    if (index >= queue.length) { end(); return; }
+    current = queue[index];
+    clueNumber.textContent = "Clue " + (index + 1) + " of " + queue.length;
+    clueEnum.textContent = "(" + current.answer.length + ")";
+    clueText.textContent = current.clue;
+    lettersEl.innerHTML = "";
+    scramble(current.answer).forEach(function (letter) {
+      var span = document.createElement("span");
+      span.textContent = letter;
+      lettersEl.appendChild(span);
+    });
+    input.value = "";
+    input.focus();
+  }
+
+  function submit() {
+    if (!running || !current) return;
+    var guess = input.value.toUpperCase().replace(/[^A-Z]/g, "");
+    if (!guess) {
+      statusEl.textContent = "Type the answer, or skip.";
+      input.focus();
+      return;
+    }
+    if (guess === current.answer) {
+      score++;
+      solved++;
+      scoreEl.textContent = String(score);
+      solvedEl.textContent = String(solved);
+      statusEl.textContent = "Correct: " + current.answer + ".";
+      index++;
+      show();
+    } else {
+      statusEl.textContent = "Not " + guess + ". The letters are all there — try the clue again.";
+      input.select();
+    }
+  }
+
+  function skip() {
+    if (!running || !current) return;
+    statusEl.textContent = "Skipped. The answer was " + current.answer + ".";
+    input.value = "";
+    index++;
+    show();
+  }
+
+  function end() {
+    running = false;
+    if (timer) { window.clearInterval(timer); timer = null; }
+    leftEl.textContent = "0s";
+    barFill.style.width = "0%";
+    input.disabled = true;
+    submitBtn.disabled = true;
+    skipBtn.disabled = true;
+    clueNumber.textContent = "Run over";
+    clueText.textContent = "You solved " + solved + " of " + queue.length + " clues.";
+    clueEnum.textContent = "";
+    lettersEl.innerHTML = "";
+    var improved = MG.saveBest("mg-clueanagram-best", score);
+    if (improved) bestEl.textContent = String(score);
+    statusEl.textContent = "Final score: " + score + (improved ? " — a new best." : ". Best: " + MG.getBest("mg-clueanagram-best", 0) + ".");
+    startBtn.textContent = "Play again";
+  }
+
+  startBtn.addEventListener("click", start);
+  submitBtn.addEventListener("click", submit);
+  skipBtn.addEventListener("click", skip);
+  input.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") { submit(); event.preventDefault(); }
+  });
+
+  bestEl.textContent = String(MG.getBest("mg-clueanagram-best", 0));
+})();
+</script>
+</body>
+</html>

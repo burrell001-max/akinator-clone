@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grid Flash: A Free Visual Memory Game</title>
+<meta name="description" content="Watch a few squares light up on a four-by-four grid, then click them back. Every round adds a square, so the pattern gets harder until your memory gives out.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/memory-grid.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Grid Flash: A Free Visual Memory Game">
+<meta property="og:description" content="Watch the squares light up, then repeat the pattern from memory.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/memory-grid.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Grid Flash: Visual Memory">
+<meta name="twitter:description" content="Watch the squares light up, then repeat the pattern from memory.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Grid Flash",
+  "url": "https://mindgenieai.xyz/games/memory-grid.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A visual memory game: memorise lit squares on a grid and reproduce the pattern.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    width: min(100%, 320px);
+    margin: 6px auto 12px;
+  }
+  .tile {
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: #101a31;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color .12s ease, transform .12s ease, border-color .12s ease;
+  }
+  .tile:hover:not(:disabled) { border-color: rgba(255, 209, 102, .55); }
+  .tile.is-lit { background: var(--gold); border-color: var(--gold); transform: scale(.96); }
+  .tile.is-right { background: rgba(95, 214, 138, .55); border-color: var(--ok); }
+  .tile.is-wrong { background: rgba(255, 138, 138, .6); border-color: var(--bad); }
+  .tile:disabled { cursor: default; }
+  .tile.is-missed { background: rgba(255, 209, 102, .28); border-color: rgba(255, 209, 102, .7); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/memory.html">Memory Match</a>
+      <a href="/games/memory-echo.html">Pattern Echo</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Grid Flash</h1>
+    <p class="updated">Count the lit squares, then click them back.</p>
+
+    <div class="toolbar">
+      <button class="btn" type="button" id="start">Start</button>
+      <span class="hint" id="phaseLabel">Ready when you are.</span>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Level <b id="level">0</b></span>
+        <span>Squares this round <b id="count">3</b></span>
+        <span>Best level <b id="best">0</b></span>
+        <span>Streak <b id="streak">0</b></span>
+      </div>
+
+      <div id="grid" role="group" aria-label="Memory grid"></div>
+
+      <p class="status" id="status" role="status" aria-live="polite">Press Start to see the first pattern.</p>
+      <p class="hint">Squares are lit for about a second. Clicking a square that was dark ends the round.</p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>Some squares on the sixteen-cell grid light up in gold for roughly a second. When they go dark again, click each square that was lit. Get them all and the next round lights one more square. Click a square that was dark and the round ends, with the pattern shown in a paler gold so you can see where you went wrong.</p>
+    <p>Your score is the number of levels cleared, and your best ever is kept in this browser. Starting again begins at three squares: the difficulty curve is the same every time, so the only variable is how well you hold a pattern in mind.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Level one lights three squares; each cleared level adds one more.</li>
+      <li>Each square can only be clicked once per round, and a wrong click ends the round immediately.</li>
+      <li>Order does not matter &mdash; only the set of squares that were lit.</li>
+      <li>Levels cleared and your record are stored under <code>mg-gridflash-best</code>.</li>
+      <li>Nothing is timed, so take as long as you like between clicks.</li>
+    </ul>
+
+    <h2>Remembering a pattern</h2>
+    <p>The fastest way to hold a scattered set of squares is to give it a shape rather than a list. Two squares in the top-left corner and one in the bottom-right is a triangle; three in a diagonal is a line. People who reach double-figure levels almost always describe the pattern to themselves in words like that, because a phrase survives the second of silence better than a set of coordinates.</p>
+    <p>Chunking works the same way. Instead of counting squares, group them by row or by quadrant: "two in the top row, one in the middle" is one chunk rather than three items. The grid is four by four, which means a row number and a column number is enough to name any cell, and naming cells aloud as they light is a reliable trick for the first six or seven levels. Beyond that, the limit is less about memory span and more about how quickly you can turn an image into a description.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/memory-echo.html">Pattern Echo</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var SIZE = 16;
+  var gridEl = document.getElementById("grid");
+  var statusEl = document.getElementById("status");
+  var phaseLabel = document.getElementById("phaseLabel");
+  var levelEl = document.getElementById("level");
+  var countEl = document.getElementById("count");
+  var bestEl = document.getElementById("best");
+  var streakEl = document.getElementById("streak");
+  var startBtn = document.getElementById("start");
+
+  var target = [];
+  var found = 0;
+  var level = 0;
+  var cells = [];
+  var accepting = false;
+
+  function buildGrid() {
+    gridEl.innerHTML = "";
+    cells = [];
+    for (var i = 0; i < SIZE; i++) {
+      (function (index) {
+        var tile = document.createElement("button");
+        tile.type = "button";
+        tile.className = "tile";
+        tile.dataset.index = String(index);
+        tile.setAttribute("aria-label", "Square " + (index + 1) + ", row " + (Math.floor(index / 4) + 1) +
+          ", column " + (index % 4 + 1));
+        tile.addEventListener("click", function () { tap(index); });
+        gridEl.appendChild(tile);
+        cells.push(tile);
+      })(i);
+    }
+  }
+
+  function resetTiles() {
+    cells.forEach(function (tile) {
+      tile.className = "tile";
+      tile.disabled = true;
+    });
+  }
+
+  function startGame() {
+    level = 0;
+    found = 0;
+    levelEl.textContent = "0";
+    bestEl.textContent = String(MG.getBest("mg-gridflash-best", 0));
+    streakEl.textContent = String(MG.getStreak("mg-gridflash-streak").count);
+    nextLevel();
+  }
+
+  function nextLevel() {
+    resetTiles();
+    accepting = false;
+    level++;
+    var count = 2 + level;
+    levelEl.textContent = String(level);
+    countEl.textContent = String(count);
+    var pool = [];
+    for (var i = 0; i < SIZE; i++) pool.push(i);
+    target = MG.shuffle(pool).slice(0, count);
+    found = 0;
+    phaseLabel.textContent = "Watch closely…";
+    statusEl.textContent = "Memorise the " + count + " gold squares.";
+    target.forEach(function (index) { cells[index].classList.add("is-lit"); });
+    window.setTimeout(function () {
+      target.forEach(function (index) { cells[index].classList.remove("is-lit"); });
+      accepting = true;
+      cells.forEach(function (tile) { tile.disabled = false; });
+      phaseLabel.textContent = "Now click them.";
+      statusEl.textContent = "Click the " + count + " squares that were lit. " + found + " of " + count + " so far.";
+    }, 1100);
+  }
+
+  function tap(index) {
+    if (!accepting) return;
+    var tile = cells[index];
+    if (tile.disabled && !tile.classList.contains("is-right")) return;
+    if (target.indexOf(index) === -1) {
+      accepting = false;
+      cells.forEach(function (t) { t.disabled = true; });
+      tile.classList.add("is-wrong");
+      target.forEach(function (i) { if (i !== index) cells[i].classList.add("is-missed"); });
+      endRound();
+      return;
+    }
+    if (tile.classList.contains("is-right")) return;
+    tile.classList.add("is-right");
+    tile.disabled = true;
+    found++;
+    statusEl.textContent = "Click the squares that were lit. " + found + " of " + target.length + " so far.";
+    if (found === target.length) {
+      accepting = false;
+      cells.forEach(function (t) { t.disabled = true; });
+      phaseLabel.textContent = "Level cleared.";
+      statusEl.textContent = "Level " + level + " cleared. Next round lights " + (target.length + 1) + " squares.";
+      MG.saveBest("mg-gridflash-best", level);
+      bestEl.textContent = String(MG.getBest("mg-gridflash-best", 0));
+      window.setTimeout(nextLevel, 900);
+    }
+  }
+
+  function endRound() {
+    phaseLabel.textContent = "Round over.";
+    var cleared = level - 1;
+    var streak = MG.bumpStreak("mg-gridflash-streak");
+    streakEl.textContent = String(streak);
+    statusEl.textContent = "You cleared " + cleared + (cleared === 1 ? " level" : " levels") +
+      " and reached " + target.length + " squares. Press Start to try again.";
+    MG.saveBest("mg-gridflash-best", cleared);
+    bestEl.textContent = String(MG.getBest("mg-gridflash-best", 0));
+    startBtn.textContent = "Play again";
+  }
+
+  startBtn.addEventListener("click", function () {
+    startBtn.textContent = "Restart";
+    startGame();
+  });
+
+  buildGrid();
+  resetTiles();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crossword Detective: A Free Find-the-Errors Word Grid</title>
+<meta name="description" content="A five-by-five crossword grid is filled in, but a few letters are wrong. Use the clues to work out which cells lie and correct them. Every row and column is a word.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/crossword-detective.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Crossword Detective: A Free Find-the-Errors Word Grid">
+<meta property="og:description" content="Every row and column is a real word — except the letters that have been tampered with.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/crossword-detective.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Crossword Detective: Fix the Grid">
+<meta name="twitter:description" content="Every row and column is a real word — except the letters that have been tampered with.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Crossword Detective",
+  "url": "https://mindgenieai.xyz/games/crossword-detective.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A crossword word-square puzzle: find the corrupted letters using the clues.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    width: min(100%, 300px);
+    margin: 8px auto 16px;
+  }
+  .cell {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    background: #0c1426;
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 8px;
+    color: var(--text);
+    font: inherit; font-size: clamp(1rem, 5vw, 1.3rem); font-weight: 800;
+    padding: 0;
+  }
+  .cell:focus { border-color: var(--gold); outline: none; }
+  .cell.is-wrong { border-color: var(--bad); color: var(--bad); background: rgba(255, 138, 138, .1); }
+  .cell.is-right { border-color: rgba(95, 214, 138, .45); }
+  .clue-list { margin: 6px 0 0; padding-left: 22px; }
+  .clue-list li { margin-bottom: 6px; color: var(--muted); }
+  .clue-list b { color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/crossword-mini.html">Mini Crossword</a>
+      <a href="/games/crossword-daily.html">Daily Clues</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Crossword Detective</h1>
+    <p class="updated">A finished five-by-five grid, with a few letters tampered with.</p>
+
+    <div class="toolbar">
+      <button class="btn" type="button" id="check">Check grid</button>
+      <button class="btn ghost" type="button" id="newCase">New case</button>
+      <span class="hint">Every row and column is one of the five answers.</span>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Time <b id="time">0:00</b></span>
+        <span>Checks <b id="checks">0</b></span>
+        <span>Wrong cells <b id="wrong">?</b></span>
+        <span>Best time <b id="best">—</b></span>
+      </div>
+
+      <div id="grid" role="group" aria-label="Five by five word grid"></div>
+
+      <ol class="clue-list" id="clues"></ol>
+
+      <p class="status" id="status" role="status" aria-live="polite">Fix the letters that do not belong.</p>
+      <p class="hint">Type into any cell. Check marks the cells that disagree with the clues.</p>
+    </div>
+
+    <h2>How to Play</h2>
+    <p>This grid is a word square: each of its five rows reads as one of the five answers, and each of its five columns reads as the same five answers, because the square is symmetrical. A handful of letters have been changed to something else. Type over a cell to correct it; when every row and every column matches a clue, the case is closed.</p>
+    <p>Use Check whenever you like. It marks every cell that disagrees with the solution in red and adds one to your check count, but it never tells you which clue is at fault &mdash; that is the detective work.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul>
+      <li>Five-letter answers, five rows, five columns, one valid square.</li>
+      <li>Between three and five cells are corrupted each case; the count is hidden on purpose.</li>
+      <li>Checks are counted so a solved grid has a record of how much help it took.</li>
+      <li>Your fastest solve is kept in this browser under <code>mg-detective-best</code>.</li>
+      <li>New case re-corrupts the same square, so the answers stay learnable while the puzzle stays fresh.</li>
+    </ul>
+
+    <h2>Working the clues against each other</h2>
+    <p>The useful thing about a symmetrical square is that every letter does two jobs: it belongs to a row and to a column, and both of those are answers you can check. Start with the row whose clue you are surest of, read it left to right, and then read the same letters down and see which column stops making sense. The corrupt cell is almost always at the point where the two readings disagree.</p>
+    <p>Because the square reuses the same five words, a corrupted letter usually breaks two clues at once, and the pattern of damage is a signature. One wrong letter in the middle of a row will leave both its row and its column reading as nonsense, while a wrong letter at a corner damages exactly two entries as well but is easier to miss, because the words at the edges are shorter to scan. Check the middle of the grid first, then the edges, and only then the four corners.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="/games/crossword-mini.html">Mini Crossword</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* A five-by-five symmetric word square: the same five answers read across
+     and down, which is what makes this puzzle solvable from either direction. */
+  var WORDS = [
+    { answer: "HEART", clue: "The organ that pumps blood" },
+    { answer: "EMBER", clue: "A glowing piece of coal in a dying fire" },
+    { answer: "ABUSE", clue: "To treat badly, or to misuse something" },
+    { answer: "RESIN", clue: "A sticky substance taken from a tree" },
+    { answer: "TREND", clue: "A general direction in which something changes" }
+  ];
+
+  var gridEl = document.getElementById("grid");
+  var cluesEl = document.getElementById("clues");
+  var statusEl = document.getElementById("status");
+  var timeEl = document.getElementById("time");
+  var checksEl = document.getElementById("checks");
+  var wrongEl = document.getElementById("wrong");
+  var bestEl = document.getElementById("best");
+
+  var values = [];
+  var cells = [];
+  var checks = 0;
+  var started = 0;
+  var ticker = null;
+  var solved = false;
+
+  function solutionAt(r, c) {
+    return WORDS[r].answer[c];
+  }
+
+  function newCase() {
+    values = WORDS.map(function (word) { return word.answer.split(""); });
+    var all = [];
+    for (var i = 0; i < 25; i++) all.push(i);
+    var damaged = MG.shuffle(all).slice(0, 4);
+    damaged.forEach(function (index) {
+      var r = Math.floor(index / 5), c = index % 5;
+      var letter = values[r][c];
+      var replacement = letter;
+      while (replacement === letter) {
+        replacement = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+      }
+      values[r][c] = replacement;
+    });
+    checks = 0;
+    solved = false;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    started = 0;
+    timeEl.textContent = "0:00";
+    checksEl.textContent = "0";
+    wrongEl.textContent = "?";
+    var best = MG.getBest("mg-detective-best", 0);
+    bestEl.textContent = best ? MG.formatTime(best) : "—";
+    statusEl.textContent = "Four letters are wrong. Read the rows against the clues.";
+    render();
+  }
+
+  function render() {
+    gridEl.innerHTML = "";
+    cells = [];
+    for (var r = 0; r < 5; r++) {
+      for (var c = 0; c < 5; c++) {
+        (function (row, col) {
+          var input = document.createElement("input");
+          input.className = "cell";
+          input.type = "text";
+          input.maxLength = 1;
+          input.value = values[row][col];
+          input.setAttribute("autocapitalize", "characters");
+          input.setAttribute("aria-label", "Row " + (row + 1) + ", column " + (col + 1));
+          input.addEventListener("input", function () {
+            var letter = input.value.replace(/[^a-zA-Z]/g, "").slice(-1).toUpperCase();
+            input.value = letter;
+            values[row][col] = letter || "";
+            startClock();
+            input.classList.remove("is-wrong");
+            if (letter) {
+              var next = row * 5 + col + 1;
+              if (cells[next]) cells[next].focus();
+            }
+            if (isSolved()) finish();
+          });
+          input.addEventListener("keydown", function (event) {
+            if (event.key === "Backspace" && !input.value && cells[row * 5 + col - 1]) {
+              cells[row * 5 + col - 1].focus();
+            }
+          });
+          gridEl.appendChild(input);
+          cells.push(input);
+        })(r, c);
+      }
+    }
+  }
+
+  function paintClues() {
+    cluesEl.innerHTML = "";
+    WORDS.forEach(function (word, index) {
+      var li = document.createElement("li");
+      li.innerHTML = "<b>" + (index + 1) + "</b> " + word.clue + " <span class=\"hint\">(" + word.answer.length + ")</span>";
+      cluesEl.appendChild(li);
+    });
+  }
+
+  function startClock() {
+    if (started) return;
+    started = Date.now();
+    ticker = window.setInterval(function () {
+      timeEl.textContent = MG.formatTime(Math.floor((Date.now() - started) / 1000));
+    }, 500);
+  }
+
+  function isSolved() {
+    for (var r = 0; r < 5; r++) {
+      for (var c = 0; c < 5; c++) {
+        if (values[r][c] !== solutionAt(r, c)) return false;
+      }
+    }
+    return true;
+  }
+
+  function check() {
+    if (solved) return;
+    checks++;
+    checksEl.textContent = String(checks);
+    var wrong = 0;
+    for (var r = 0; r < 5; r++) {
+      for (var c = 0; c < 5; c++) {
+        var cell = cells[r * 5 + c];
+        if (values[r][c] !== solutionAt(r, c)) {
+          wrong++;
+          cell.classList.add("is-wrong");
+          cell.classList.remove("is-right");
+        } else {
+          cell.classList.remove("is-wrong");
+          cell.classList.add("is-right");
+        }
+      }
+    }
+    wrongEl.textContent = String(wrong);
+    if (!wrong) { finish(); return; }
+    statusEl.textContent = wrong + (wrong === 1 ? " cell disagrees" : " cells disagree") + " with the clues (marked red).";
+  }
+
+  function finish() {
+    if (solved) return;
+    solved = true;
+    if (ticker) { window.clearInterval(ticker); ticker = null; }
+    var seconds = started ? Math.floor((Date.now() - started) / 1000) : 0;
+    timeEl.textContent = MG.formatTime(seconds);
+    wrongEl.textContent = "0";
+    cells.forEach(function (cell) { cell.classList.remove("is-wrong"); cell.classList.add("is-right"); });
+    var improved = MG.saveBest("mg-detective-best", seconds, false);
+    if (improved) bestEl.textContent = MG.formatTime(seconds);
+    statusEl.textContent = "Case closed in " + MG.formatTime(seconds) + " after " + checks +
+      (checks === 1 ? " check" : " checks") + (improved ? " — your fastest yet." : ".") +
+      " The five answers: " + WORDS.map(function (w) { return w.answer; }).join(", ") + ".";
+  }
+
+  document.getElementById("check").addEventListener("click", check);
+  document.getElementById("newCase").addEventListener("click", newCase);
+  paintClues();
+  newCase();
+})();
+</script>
+</body>
+</html>
