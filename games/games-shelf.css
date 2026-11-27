@@ -21,23 +21,23 @@
   font-family: 'Fredoka', 'Inter', system-ui, sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
-  /* The homepage sits on a dark starfield, so the heading is light-on-dark
-     here; the cards and the carousel tray stay light as designed. */
-  color: #f3efff;
+  /* The homepage runs the light sky theme (body ink #17384c), so the heading
+     and links use the dark purple ink of the shelf palette. */
+  color: #2b134c;
   text-shadow: none;
 }
 .fb-shelf-subtitle {
   margin: 0.25rem 0 0;
   font-size: 0.95rem;
-  color: #c8c2dd;
+  color: #4a4360;
 }
 .fb-all-games-link {
   font-weight: 700;
   font-size: 0.92rem;
-  color: #c4b5fd;
+  color: #5b21b6;
   text-decoration: none;
 }
-.fb-all-games-link:hover { color: #ede9fe; text-decoration: underline; }
+.fb-all-games-link:hover { color: #3b0764; text-decoration: underline; }
 
 .fb-category-bar {
   display: flex;
