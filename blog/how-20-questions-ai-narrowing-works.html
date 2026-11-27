@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK and Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5783852883880667">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How 20-Questions AI Narrowing Algorithms Work</title>
+<meta name="description" content="Decision trees, information gain and trait weighting explained through the actual maths MindGenie AI runs: distances, weighted variance and the stopping margin.">
+<link rel="canonical" href="https://mindgenieai.xyz/blog/how-20-questions-ai-narrowing-works.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="How 20-Questions AI Narrowing Algorithms Work">
+<meta property="og:description" content="Decision trees, information gain and trait weighting explained through the actual maths MindGenie AI runs: distances, weighted variance and the stopping margin.">
+<meta property="og:url" content="https://mindgenieai.xyz/blog/how-20-questions-ai-narrowing-works.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How 20-Questions AI Narrowing Algorithms Work">
+<meta name="twitter:description" content="Decision trees, information gain and trait weighting explained through the actual maths MindGenie AI runs: distances, weighted variance and the stopping margin.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+
+<meta name="theme-color" content="#101b38">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&amp;family=Inter:wght@400;500;600;700&amp;family=Fredoka:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/guide.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "How 20-Questions AI Narrowing Algorithms Work: Decision Trees, Information Gain and Trait Weighting",
+ "description": "Decision trees, information gain and trait weighting explained through the actual maths MindGenie AI runs: distances, weighted variance and the stopping margin.",
+ "datePublished": "2026-11-27",
+ "dateModified": "2026-11-27",
+ "author": {
+  "@type": "Person",
+  "name": "Kent B Williams",
+  "url": "https://mindgenieai.xyz/about.html"
+ },
+ "publisher": {
+  "@type": "Organization",
+  "name": "MindGenie AI"
+ },
+ "mainEntityOfPage": "https://mindgenieai.xyz/blog/how-20-questions-ai-narrowing-works.html"
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://mindgenieai.xyz/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "Blog",
+   "item": "https://mindgenieai.xyz/blog.html"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "How narrowing algorithms work",
+   "item": "https://mindgenieai.xyz/blog/how-20-questions-ai-narrowing-works.html"
+  }
+ ]
+}
+</script>
+<style>
+  /* Readability: dark copy for the light theme */
+  p, li, dd, dt, .lede, .intro, .tier-note { color: #18212a; }
+  strong, b { color: #0a1116; }
+  .updated, .byline, .meta, .last-updated { color: #263440; }
+  h2, h3, h4 { color: #0a1116; }
+  p a, li a, dd a, .related-posts a, .related a, main a { color: #1a5da6; }
+  .top-bar a, .top-bar, .breadcrumb, .breadcrumbs, .breadcrumbs a { color: #1b2a34; }
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: .95rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #cfe0f7; color: #18212a; }
+  th { color: #0a1116; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+  <div class="top-bar">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav class="top-nav">
+      <a href="https://mindgenieai.xyz/#play" class="nav-play">🔮 Play</a>
+      <a href="https://mindgenieai.xyz/movies.html">Movies</a>
+      <a href="https://mindgenieai.xyz/tv-shows.html">TV</a>
+      <a href="https://mindgenieai.xyz/anime.html">Anime</a>
+      <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+    </nav>
+  </div>
+
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="https://mindgenieai.xyz/">Home</a> › <a href="https://mindgenieai.xyz/blog.html">Blog</a> › How narrowing algorithms work
+  </nav>
+
+  <article>
+    <h1>How 20-Questions AI Narrowing Algorithms Work: Decision Trees, Information Gain and Trait Weighting</h1>
+    <p class="byline">By Kent B Williams &middot; Published November 27, 2026 &middot; 9 min read</p>
+
+    <p class="lede">Every guessing game is a search problem wearing a party hat. Something has to narrow a large set of candidates down to one, using only the answers it can ask for. This article walks through the two standard ways to do that — a fixed decision tree and an adaptive scoring loop — and then through the arithmetic this site actually runs, with the numbers taken from the engine as it is deployed.</p>
+
+    <h2>Start with the counting argument</h2>
+    <p>A yes-or-no question carries at most one bit. Twenty of them can distinguish 2<sup>20</sup> possibilities, about 1,048,576. That is the classic "20 questions" result and it is why the game feels like it should be easy: with perfectly balanced questions you can find a needle in a million in twenty steps.</p>
+    <p>The catch is in the word "balanced". A real question is rarely a clean halving. "Is your character fictional?" removes a small group from a large one. "Is your character human?" removes a large group from a small one. The information a question carries depends entirely on how the current candidate set answers it, which is why the choice of the <em>next</em> question matters more than the total number of questions.</p>
+
+    <h2>Method one: the fixed decision tree</h2>
+    <p>The textbook approach is a decision tree built offline from labelled examples. Each internal node asks a question, each branch is an answer, and each leaf is a character. To build one you pick the split that maximises information gain at every level: the reduction in entropy, the average surprise of the class distribution.</p>
+    <p>For a node containing a set of characters with frequencies <em>p<sub>i</sub></em>, entropy is −Σ <em>p<sub>i</sub></em> log₂ <em>p<sub>i</sub></em>. Information gain for a split into children <em>c</em> is the parent entropy minus the weighted sum of the children's entropies. A perfect split on fifty equally likely characters takes you from 5.64 bits to zero; a useless split leaves it unchanged.</p>
+    <p>Decision trees are excellent when the labels are fixed and the answers are reliable. Neither is true here. In a party game the player answers for a character, sometimes imprecisely, sometimes wrongly, and a single wrong branch sends a fixed tree down a path that cannot recover. A tree also has to be rebuilt whenever a character is added or a trait changes, and its shape is dictated by the loudest splits rather than by what remains ambiguous.</p>
+
+    <h2>Method two: score every candidate, then choose the split</h2>
+    <p>This site uses the second approach. There is no tree. Fifty characters each carry a vector of twenty-eight trait values, and a round is a loop with three steps: score the characters against the answers so far, choose the question that best separates the current leaders, repeat until a stopping rule fires.</p>
+    <p>Trait values are coarse on purpose: 1.0 for yes, 0.0 for no, and 0.5 for the characters whose story genuinely sits in the middle. That coarseness is what makes the next step simple enough to run in a browser-sized budget.</p>
+
+    <h2>Scoring: mean absolute distance</h2>
+    <p>For each character, the engine takes every question answered so far, measures the absolute difference between the stored trait and the player's answer, and averages. Lower is more plausible:</p>
+    <p><strong>distance(character) = Σ |trait − answer| ÷ questions answered</strong></p>
+    <p>Because the sum is divided by the number answered, a character is not penalised for questions that have not been asked yet, and every character is compared on exactly the same evidence. The <a href="https://mindgenieai.xyz/blog/probably-vs-dont-know.html">piece on the middle answers</a> covers what the fractional values do to this sum.</p>
+
+    <h2>Weighting: why the leader gets a louder vote</h2>
+    <p>Before choosing the next question, each character is converted into a weight of <strong>1 ÷ (distance + 0.15)</strong>. A character sitting at distance 0.10 gets a weight of 4.0; one at 0.40 gets 1.8; one the answers have already ruled out, at 0.90, gets under 1.0. The 0.15 is an epsilon: without it a perfect-so-far match would have infinite weight and the engine would stop exploring the close contenders it needs to separate.</p>
+    <p>This is the "trait weighting" half of the title. The engine does not weight traits; it weights characters, and then asks the question whose answers differ most among the characters still plausible.</p>
+
+    <h2>Question choice: weighted variance, not information gain</h2>
+    <p>For each unasked question the engine collects the trait values of all fifty characters, weighted by how plausible each character still is, and computes the weighted variance of those values. The question with the highest variance wins. Variance is high when some plausible characters answer yes and others answer no, and it collapses to zero when everyone still in contention gives the same answer — a question that cannot help.</p>
+    <p>Weighted variance is a cheap proxy for information gain. It does not compute class entropy, and it does not need to: it only has to rank questions by how sharply they cut the current field. The cost of that choice is myopia, and it is worth being honest about it below.</p>
+
+    <h2>A real round, question by question</h2>
+    <p>Here is what the engine asks when the player is thinking of Shrek and answering perfectly — the same answers the character's own vector holds. Distances are for the top two candidates after each answer.</p>
+    <table>
+      <thead><tr><th>#</th><th>Question</th><th>Answer</th><th>Leader</th><th>Runner-up</th><th>Gap</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Major transformation?</td><td>No</td><td>tie at 0.000</td><td>tie at 0.000</td><td>0.000</td></tr>
+        <tr><td>2</td><td>Signature weapon?</td><td>No</td><td>tie at 0.000</td><td>tie at 0.000</td><td>0.000</td></tr>
+        <tr><td>3</td><td>Royalty or ruling?</td><td>No</td><td>tie at 0.000</td><td>tie at 0.000</td><td>0.000</td></tr>
+        <tr><td>4</td><td>Sole protagonist?</td><td>Yes</td><td>tie at 0.000</td><td>tie at 0.000</td><td>0.000</td></tr>
+        <tr><td>10</td><td>Regular paying job?</td><td>No</td><td>Shrek 0.000</td><td>SpongeBob 0.100</td><td>0.100</td></tr>
+        <tr><td>14</td><td>Widely considered a hero?</td><td>Yes</td><td>Shrek 0.000</td><td>SpongeBob 0.143</td><td>0.143</td></tr>
+      </tbody>
+    </table>
+    <p>Two things stand out. First, the first four questions leave dozens of characters tied at distance zero: with four answers in three-valued traits, plenty of vectors are still indistinguishable from the player's. Second, the gap at the end is 0.143, not the 0.35 the stopping rule wants. The round runs to the fourteen-question cap and guesses correctly, but it never becomes "confident" in the sense the rule defines.</p>
+    <p>That is not a bug in this round; it is the shape of the whole roster. Simulating all fifty characters with perfect answers produces the same result every time: fourteen questions, fifty correct guesses. The margin, not the average, is what ends a round.</p>
+
+    <h2>The stopping rule, and what it means for length</h2>
+    <p>Three conditions end a round: at least six questions asked, the leader at least 0.35 ahead of the runner-up, or fourteen questions used. The floor stops the engine guessing on two answers; the cap stops it interrogating a player forever; the margin is the real exit, and for a roster of fifty characters spread across twenty-eight coarse traits it is a demanding one.</p>
+    <p>For anyone tuning a game like this, the lesson is that the margin is the whole personality of the experience. Lower it and rounds end early but guess wrong more often; raise it and the engine looks thorough and feels endless. The 0.35 used here is conservative, which is why the counter almost always reaches fourteen.</p>
+
+    <h2>What greedy selection cannot do</h2>
+    <ul>
+      <li><strong>It cannot look ahead.</strong> The highest-variance question is the best single cut, not the best first step in a two-question plan. A question that splits 60/40 now may set up a cleaner split later, and the engine will never notice.</li>
+      <li><strong>It cannot recover from a confident lie.</strong> A wrong "yes" is worth a full 1.0 of error. The weighting softens the damage, but a player who answers inconsistently can strand the correct character below several wrong ones.</li>
+      <li><strong>It cannot ask about personality.</strong> The trait sheet is deliberately broad — fictional, human, powered, masked — and the questions that would separate two close characters most sharply are often the ones no coarse trait covers.</li>
+      <li><strong>It cannot tell ties apart.</strong> When several characters sit at distance zero, order decides the display, not merit. That is why the early ranking can look arbitrary.</li>
+    </ul>
+
+    <h2>Why this design suits a guessing game</h2>
+    <p>An adaptive scorer degrades gracefully. A wrong answer does not send the round into a dead branch; it raises one character's distance and lowers another's, and the game continues with the candidates that still fit. Adding a character means adding a vector, not rebuilding a tree. Changing a single trait value takes effect on the next round rather than on the next deployment of a model.</p>
+    <p>The price is explainability at the edges: a player who loses can always ask why, and the honest answer is "your ninth answer made the wrong character marginally closer", which is unsatisfying but accurate. The <a href="https://mindgenieai.xyz/blog/why-characters-are-hard-to-guess.html">companion piece on archetype overlap</a> works through the cases where that happens most often.</p>
+
+    <h2>What this means when you play</h2>
+    <ol>
+      <li>Answer early questions carefully. They carry the most weight because they remove the most candidates.</li>
+      <li>Prefer "probably" over "not sure" when you know the direction. Fractional answers are evidence; "not sure" is a vote for the middle.</li>
+      <li>Do not read the question count as a signal. Fourteen questions is normal for every character.</li>
+      <li>When the guess is wrong, look for the answer that was technically true and practically misleading — usually a partial trait answered with a firm yes.</li>
+    </ol>
+
+    <div class="cta-box">
+      <h2>Try the algorithm on a character you know</h2>
+      <p>The fastest way to understand a narrowing engine is to watch it narrow. Pick someone obvious, then someone close to them.</p>
+      <a class="btn-play" href="https://mindgenieai.xyz/#play">🔮 Play MindGenie AI</a>
+    </div>
+
+    <h2>Related reading</h2>
+    <div class="related">
+      <a href="https://mindgenieai.xyz/blog/why-characters-are-hard-to-guess.html">Why characters are hard to guess<span>Archetype overlap and distance</span></a>
+      <a href="https://mindgenieai.xyz/blog/probably-vs-dont-know.html">Probably vs. not sure<span>What the middle answers do</span></a>
+      <a href="https://mindgenieai.xyz/guide-inside-a-round.html">Inside a round<span>The same loop, described in plain English</span></a>
+      <a href="https://mindgenieai.xyz/hardest-characters-to-guess.html">Characters that stump the Genie<span>The 22 closest pairs in practice</span></a>
+    </div>
+  </article>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="https://mindgenieai.xyz/about.html">About</a>
+    <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie Policy</a>
+    <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+    <a href="https://mindgenieai.xyz/legal.html">Legal</a>
+    <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+  </div>
+  <div class="footer-copy">© 2026 MindGenie AI — All rights reserved &middot; <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a> · Written by <a href="about.html">Kent B Williams</a></div>
+</footer>
+</body>
+</html>

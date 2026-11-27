@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK and Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5783852883880667">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5783852883880667" crossorigin="anonymous"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probably vs. Not Sure: How an AI Game Handles Ambiguity</title>
+<meta name="description" content="What the five answer buttons cost in the scoring maths, why 'not sure' is not an abstention, and which characters carry the half-values that reward it.">
+<link rel="canonical" href="https://mindgenieai.xyz/blog/probably-vs-dont-know.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Probably vs. Not Sure: How an AI Game Handles Ambiguity">
+<meta property="og:description" content="What the five answer buttons cost in the scoring maths, why 'not sure' is not an abstention, and which characters carry the half-values that reward it.">
+<meta property="og:url" content="https://mindgenieai.xyz/blog/probably-vs-dont-know.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Probably vs. Not Sure: How an AI Game Handles Ambiguity">
+<meta name="twitter:description" content="What the five answer buttons cost in the scoring maths, why 'not sure' is not an abstention, and which characters carry the half-values that reward it.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+
+<meta name="theme-color" content="#101b38">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&amp;family=Inter:wght@400;500;600;700&amp;family=Fredoka:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/guide.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "How MindGenie AI Handles Ambiguous Answers Without Losing the Trail",
+ "description": "What the five answer buttons cost in the scoring maths, why 'not sure' is not an abstention, and which characters carry the half-values that reward it.",
+ "datePublished": "2026-11-27",
+ "dateModified": "2026-11-27",
+ "author": {
+  "@type": "Person",
+  "name": "Kent B Williams",
+  "url": "https://mindgenieai.xyz/about.html"
+ },
+ "publisher": {
+  "@type": "Organization",
+  "name": "MindGenie AI"
+ },
+ "mainEntityOfPage": "https://mindgenieai.xyz/blog/probably-vs-dont-know.html"
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://mindgenieai.xyz/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "Blog",
+   "item": "https://mindgenieai.xyz/blog.html"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "Probably vs. not sure",
+   "item": "https://mindgenieai.xyz/blog/probably-vs-dont-know.html"
+  }
+ ]
+}
+</script>
+<style>
+  /* Readability: dark copy for the light theme */
+  p, li, dd, dt, .lede, .intro, .tier-note { color: #18212a; }
+  strong, b { color: #0a1116; }
+  .updated, .byline, .meta, .last-updated { color: #263440; }
+  h2, h3, h4 { color: #0a1116; }
+  p a, li a, dd a, .related-posts a, .related a, main a { color: #1a5da6; }
+  .top-bar a, .top-bar, .breadcrumb, .breadcrumbs, .breadcrumbs a { color: #1b2a34; }
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: .95rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #cfe0f7; color: #18212a; }
+  th { color: #0a1116; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+  <div class="top-bar">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav class="top-nav">
+      <a href="https://mindgenieai.xyz/#play" class="nav-play">🔮 Play</a>
+      <a href="https://mindgenieai.xyz/movies.html">Movies</a>
+      <a href="https://mindgenieai.xyz/tv-shows.html">TV</a>
+      <a href="https://mindgenieai.xyz/anime.html">Anime</a>
+      <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+    </nav>
+  </div>
+
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="https://mindgenieai.xyz/">Home</a> › <a href="https://mindgenieai.xyz/blog.html">Blog</a> › Probably vs. not sure
+  </nav>
+
+  <article>
+    <h1>How MindGenie AI Handles Ambiguous Answers Without Losing the Trail</h1>
+    <p class="byline">By Kent B Williams &middot; Published November 27, 2026 &middot; 8 min read</p>
+
+    <p class="lede">A yes-or-no guessing game that only accepts yes and no is a game that punishes honest players. Most characters are not cleanly describable by twenty-eight questions: the answer is usually "mostly", "in the films yes but not the books", or "that question does not really apply". MindGenie AI accepts five answers for exactly that reason — and the way it scores them is the difference between a game that stays on the trail and one that falls off it.</p>
+
+    <h2>The five answers, and what each one is worth</h2>
+    <table>
+      <thead><tr><th>Button</th><th>Value sent to the engine</th><th>Reads as</th></tr></thead>
+      <tbody>
+        <tr><td>Yes</td><td>1.0</td><td>A firm positive</td></tr>
+        <tr><td>Probably</td><td>0.75</td><td>True for most versions of the character</td></tr>
+        <tr><td>Not sure</td><td>0.5</td><td>Genuinely split, or the question does not apply</td></tr>
+        <tr><td>Probably not</td><td>0.25</td><td>Mostly false, with exceptions</td></tr>
+        <tr><td>No</td><td>0.0</td><td>A firm negative</td></tr>
+      </tbody>
+    </table>
+    <p>Those five values are not labels. They are numbers that go into the same distance sum as everything else, which is why a "probably" is genuinely useful information rather than a polite way of saying nothing.</p>
+
+    <h2>What a fractional answer costs</h2>
+    <p>For each character and each answered question the engine adds the absolute difference between the stored trait and the answer, then averages across the questions asked. So the cost of an answer depends on what the character's sheet says:</p>
+    <table>
+      <thead><tr><th>Stored trait</th><th>Your answer</th><th>Distance added</th></tr></thead>
+      <tbody>
+        <tr><td>1.0</td><td>Yes</td><td>0.00</td></tr>
+        <tr><td>1.0</td><td>Probably</td><td>0.25</td></tr>
+        <tr><td>1.0</td><td>Not sure</td><td>0.50</td></tr>
+        <tr><td>1.0</td><td>Probably not</td><td>0.75</td></tr>
+        <tr><td>1.0</td><td>No</td><td>1.00</td></tr>
+      </tbody>
+    </table>
+    <p>A partial answer never rules a character out. It nudges. Answer "probably" to a question where the true character's sheet says yes and you have added 0.25 to their distance — enough to let a rival who says yes outright slip ahead, but not enough to bury them. That is the point: partial answers keep several candidates alive instead of collapsing the field on a technicality.</p>
+
+    <h2>"Not sure" is not an abstention</h2>
+    <p>This is the part that surprises people. Choosing "not sure" does not tell the engine to skip the question. It tells the engine that the answer is 0.5, which is a position — the exact midpoint between yes and no.</p>
+    <p>The consequences run in both directions. Against a character whose sheet says 1.0, "not sure" costs a full 0.50, which is half the distance of a flat contradiction. Against a character whose sheet says 0.5, it costs nothing at all: it is a perfect match. So "not sure" does not neutralise a question; it rewards the characters who were already sitting in the middle and penalises the ones who were decisive.</p>
+    <p>Every character in the roster carries at least one half-value, which means every round has some character waiting to be helped by a shrug. The distribution is uneven, though, and that is where it gets interesting.</p>
+
+    <h2>Who the half-values belong to</h2>
+    <p>Four characters carry seven half-values each: Trinity, Levi Ackerman, Joan of Arc and Captain Jack Sparrow. Six characters carry six: Wonder Woman, Solid Snake, Mulan and Eleven among them. At the other end, GLaDOS, Harry Potter and Albus Dumbledore carry one apiece, and Hermione Granger and Gandalf carry two.</p>
+    <p>The pattern is not random. Characters built out of contradictions — a pirate who is a hero and a nuisance, a soldier who is a weapon and a person, a historical figure whose story has been mythologised past recognition — are the ones the sheet refuses to describe in black and white. A player who answers "not sure" repeatedly is describing exactly that kind of character, and the engine responds by pulling Trinity and Levi upward.</p>
+
+    <h2>How a middle answer changes the next question</h2>
+    <p>Because answers feed the distance, and distances feed the weights, and weights feed the choice of question, a single partial answer can change the order of everything that follows. Each character's weight is 1 ÷ (distance + 0.15); the next question is the one with the highest weighted variance of trait values across the characters still in contention.</p>
+    <p>Answer "yes" to something and the field narrows sharply, so the next question is chosen for a small, similar group. Answer "not sure" and the field stays broad, so the next question is chosen to cut a wide field — which is usually a blunter, more archetypal question. That is why rounds full of "not sure" feel like they are circling: the engine keeps asking broad questions because the broad answers have not given it anything sharper to work with.</p>
+
+    <h2>The trail is not lost, but it does bend</h2>
+    <p>The reassuring part is that a partial answer cannot strand the correct character the way a confident wrong answer can. A single "yes" that is false adds a full 1.0 to the distance of the character you are thinking of; a "probably not" that should have been "no" adds 0.25. The engine will keep the right character in contention and, in most rounds, still finish with the right guess.</p>
+    <p>What it will not do is recover from a run of firm, wrong answers. Three contradictions at 1.0 each is an average distance of 1.0 for the true character, which no amount of later evidence can repair inside fourteen questions. The <a href="https://mindgenieai.xyz/blog/how-20-questions-ai-narrowing-works.html">article on the scoring loop</a> shows the arithmetic in full.</p>
+
+    <h2>Three rules for choosing a button</h2>
+    <ol>
+      <li><strong>Use "probably" when the answer is true of the version most people know.</strong> "Does your character have magical powers?" for Gandalf is a yes; for a wizard who mostly talks, probably. The direction is what matters.</li>
+      <li><strong>Use "probably not" for a mostly-false answer with an exception.</strong> "Does your character wield a signature weapon?" for Batman is probably not — the gadgets are tools, and the sheet does not treat them as a weapon in the same sense as a lightsaber.</li>
+      <li><strong>Reserve "not sure" for questions that genuinely do not apply.</strong> "Does your character attend a school?" for a non-human with no schooling is a not sure, not a no; the trait is not false, it is inapplicable.</li>
+    </ol>
+
+    <h2>What the engine cannot infer</h2>
+    <p>It cannot tell the difference between "I do not know" and "the answer is genuinely in the middle". Both arrive as 0.5, and only the second is useful. A player who reaches for "not sure" whenever they are uncertain is effectively telling the engine that every uncertain trait is a half — which is how a round drifts toward the characters who live in the middle of the sheet.</p>
+    <p>If you take one thing from this article, take the ordering: a directional guess is almost always better than a shrug. The <a href="https://mindgenieai.xyz/guide-answering-when-unsure.html">shorter guide on the middle answers</a> says the same thing in three paragraphs, and the character guides name the specific questions where the choice decides the round.</p>
+
+    <div class="cta-box">
+      <h2>Try the algorithm on a character you know</h2>
+      <p>The fastest way to understand a narrowing engine is to watch it narrow. Pick someone obvious, then someone close to them.</p>
+      <a class="btn-play" href="https://mindgenieai.xyz/#play">🔮 Play MindGenie AI</a>
+    </div>
+
+    <h2>Related reading</h2>
+    <div class="related">
+      <a href="https://mindgenieai.xyz/blog/how-20-questions-ai-narrowing-works.html">How narrowing algorithms work<span>The full scoring loop</span></a>
+      <a href="https://mindgenieai.xyz/blog/why-characters-are-hard-to-guess.html">Why characters are hard to guess<span>Half-values and archetype overlap</span></a>
+      <a href="https://mindgenieai.xyz/guide-answering-when-unsure.html">Answering when you are unsure<span>The short version</span></a>
+      <a href="https://mindgenieai.xyz/trinity-the-matrix.html">Trinity character guide<span>A character with seven half-values</span></a>
+    </div>
+  </article>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="https://mindgenieai.xyz/about.html">About</a>
+    <a href="https://mindgenieai.xyz/contact.html">Contact</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mindgenieai.xyz/cookie-policy.html">Cookie Policy</a>
+    <a href="https://mindgenieai.xyz/terms.html">Terms of Service</a>
+    <a href="https://mindgenieai.xyz/legal.html">Legal</a>
+    <a href="https://mindgenieai.xyz/blog.html">Blog</a>
+  </div>
+  <div class="footer-copy">© 2026 MindGenie AI — All rights reserved &middot; <a href="mailto:hello@mindgenieai.xyz">hello@mindgenieai.xyz</a> · Written by <a href="about.html">Kent B Williams</a></div>
+</footer>
+</body>
+</html>
