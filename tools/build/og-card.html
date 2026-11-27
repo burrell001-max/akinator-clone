@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Open Graph card</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    color: #fff;
+    background: #0a101f;
+  }
+  .card {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    padding: 64px 76px 58px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--grad);
+    overflow: hidden;
+  }
+  /* Soft light and a faint grid: the card reads as a game board, not a slide. */
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: -40% -10% auto auto;
+    width: 780px;
+    height: 780px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,.22), rgba(255,255,255,0) 62%);
+  }
+  .card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(160deg, rgba(0,0,0,.9), rgba(0,0,0,0) 70%);
+  }
+  .top, .mid, .bottom { position: relative; z-index: 1; }
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .brand {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    opacity: .92;
+  }
+  .pill {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 9px 20px;
+    border-radius: 999px;
+    background: rgba(0,0,0,.26);
+    border: 1px solid rgba(255,255,255,.3);
+  }
+  .mid { display: flex; align-items: center; gap: 44px; }
+  .glyph {
+    font-size: 132px;
+    line-height: 1;
+    filter: drop-shadow(0 12px 26px rgba(0,0,0,.35));
+  }
+  h1 {
+    font-size: var(--size, 84px);
+    line-height: 1.02;
+    letter-spacing: -.015em;
+    font-weight: 800;
+    text-shadow: 0 6px 30px rgba(0,0,0,.28);
+    max-width: 880px;
+  }
+  .sub {
+    margin-top: 18px;
+    font-size: 25px;
+    line-height: 1.35;
+    max-width: 760px;
+    opacity: .94;
+  }
+  .bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 21px;
+    opacity: .92;
+  }
+  .tags { display: flex; gap: 12px; }
+  .tag {
+    font-size: 18px;
+    padding: 7px 15px;
+    border-radius: 10px;
+    background: rgba(0,0,0,.24);
+    border: 1px solid rgba(255,255,255,.22);
+  }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="top">
+    <span class="brand">MindGenie AI</span>
+    <span class="pill" id="label"></span>
+  </div>
+  <div class="mid">
+    <span class="glyph" id="glyph"></span>
+    <div>
+      <h1 id="title"></h1>
+      <p class="sub" id="sub"></p>
+    </div>
+  </div>
+  <div class="bottom">
+    <span id="foot">free browser game</span>
+    <span class="tags" id="tags"></span>
+  </div>
+</div>
+<script>
+  (function () {
+    var data = {};
+    try {
+      data = JSON.parse(decodeURIComponent(location.hash.slice(1)));
+    } catch (error) { data = {}; }
+    var gradient = data.gradient || "#4338ca,#be185d";
+    document.getElementById("card").style.setProperty("--grad", "linear-gradient(135deg, " + gradient + ")");
+    document.getElementById("label").textContent = data.label || "Games";
+    document.getElementById("glyph").textContent = data.glyph || "🎮";
+    document.getElementById("sub").textContent = data.sub || "";
+    document.getElementById("foot").textContent = data.foot || "free browser game";
+    var title = data.title || "MindGenieAI";
+    document.getElementById("title").textContent = title;
+    var size = title.length > 26 ? 62 : title.length > 18 ? 74 : 88;
+    document.getElementById("title").style.setProperty("--size", size + "px");
+    var tags = document.getElementById("tags");
+    (data.tags || []).forEach(function (text) {
+      var span = document.createElement("span");
+      span.className = "tag";
+      span.textContent = text;
+      tags.appendChild(span);
+    });
+    // Signal readiness for the screenshotter rather than relying on timers.
+    Promise.all(Array.from(document.images).map(function (img) {
+      return img.decode ? img.decode().catch(function () {}) : Promise.resolve();
+    })).then(function () {
+      requestAnimationFrame(function () { document.documentElement.dataset.ready = "1"; });
+    });
+  })();
+</script>
+</body>
+</html>

@@ -6,8 +6,10 @@ a dependency to the site: the pages stay plain HTML/CSS/JS with no build step.
 
 | Command | What it checks |
 | --- | --- |
-| `node tools/qa/check-site.mjs` | Static: duplicate ids, missing local links/assets, unbalanced inline scripts, hub cards and category keys, ribbon presence and targets, sitemap entries and arcade coverage, `localStorage` key naming |
+| `node tools/qa/check-site.mjs` | Static: duplicate ids, missing local links/assets, unbalanced inline scripts, hub cards and category keys, ribbon presence and targets, sitemap entries and arcade coverage, category pages and their game lists, generated related-game blocks, unique `og:image` files that exist on disk, `localStorage` key naming |
 | `node tools/qa/win-paths.mjs` | Browser: every arcade game played from its initial state to a win, then the stored record and the reset path; plus the hub's category links |
+| `node tools/build/build-pages.mjs` | Regenerates `/games/<category>/` pages, the "more in this category" blocks and every game's social tags from `tools/content/games-data.mjs` |
+| `node tools/build/make-og.mjs` | Renders the 41 `og:image` cards into `games/og/` with headless Chrome |
 
 ## Requirements
 
@@ -22,6 +24,10 @@ a dependency to the site: the pages stay plain HTML/CSS/JS with no build step.
 node tools/qa/check-site.mjs          # exits 1 on any problem
 node tools/qa/win-paths.mjs           # exits 1 if any scenario fails
 node tools/qa/win-paths.mjs --only=memory,memory-echo,sudoku
+
+# Only after editing tools/content/games-data.mjs: rebuild what it generates.
+node tools/build/build-pages.mjs      # category pages, related blocks, social tags
+node tools/build/make-og.mjs          # re-render games/og/*.jpg (needs Chrome)
 ```
 
 `win-paths.mjs` starts its own static server on a loopback port (localStorage
@@ -50,6 +56,27 @@ the tests follow the games when their content changes.
 
 Timed games (Quick Sums, Missing Number, Sort Bins) run with `setInterval`
 accelerated by 12× for the scenario only — the game code is untouched.
+
+## CI
+
+`.github/workflows/qa.yml` runs both halves on every push to `main` and every
+pull request, in two jobs:
+
+- **static** — `check-site.mjs`, then `build-pages.mjs` with
+  `git diff --exit-code`, so a hand edit that drifts from `games-data.mjs` fails
+  the build instead of shipping. It also asserts the OG cards are present.
+- **browser** — `win-paths.mjs` against the Chrome already installed on the
+  `ubuntu-latest` image (`CHROME_PATH=/usr/bin/google-chrome`).
+
+No dependencies are installed, no browser is downloaded and no service is
+called, so the workflow costs nothing beyond the runner minutes.
+
+## Generated content
+
+The ten category pages (`/games/memory-games/` and friends), the related-game
+block on every game page, and each page's `og:image` come from
+`tools/content/games-data.mjs`. Edit that file, not the generated HTML, then run
+`build-pages.mjs`; `check-site.mjs` compares the output back to the data.
 
 ## Known gaps
 

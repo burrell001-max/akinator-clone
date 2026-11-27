@@ -13,6 +13,7 @@ import { readFile, readdir, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 import { ROOT } from "./lib.mjs";
+import { CATEGORIES, CATEGORY_ORDER, GAMES } from "../content/games-data.mjs";
 
 const problems = [];
 const notes = [];
@@ -125,6 +126,111 @@ for (const file of ribbonPages) {
 }
 notes.push(`${ribbonCount} pages carry the category ribbon`);
 
+/* ── Category pages, related blocks and social cards ─────────────────────── */
+/* The category pages, the related-game blocks and every og:image are produced
+   by tools/build/build-pages.mjs from tools/content/games-data.mjs. These
+   checks compare the output back against that data, so a hand edit that drifts
+   from the source of truth fails here instead of shipping. */
+
+const hubCardCats = new Map();
+for (const card of cards) {
+  const slug = attr(card, "href").replace("/games/", "").replace(".html", "");
+  hubCardCats.set(slug, attr(card, "data-cats").split(/\s+/).filter(Boolean));
+}
+for (const game of GAMES) {
+  const cats = hubCardCats.get(game.slug);
+  if (!cats) fail("games/index.html", `no hub card for ${game.slug}`);
+  else if (cats.join(" ") !== game.cats.join(" ")) {
+    fail("games/index.html", `card ${game.slug} says "${cats.join(" ")}", games-data.mjs says "${game.cats.join(" ")}"`);
+  }
+}
+
+const ogTitles = new Map();
+const ogImages = new Map();
+const listedOn = new Map();
+const localFile = (url) => join(ROOT, url.replace("https://mindgenieai.xyz/", ""));
+
+function social(rel, html) {
+  const title = (html.match(/<meta property="og:title" content="([^"]*)"/) || [])[1];
+  const image = (html.match(/<meta property="og:image" content="([^"]*)"/) || [])[1];
+  const twitter = (html.match(/<meta name="twitter:image" content="([^"]*)"/) || [])[1];
+  if (!title) fail(rel, "no og:title");
+  else {
+    if (ogTitles.has(title)) fail(rel, `og:title duplicates ${ogTitles.get(title)}`);
+    else ogTitles.set(title, rel);
+  }
+  if (!image) fail(rel, "no og:image");
+  else {
+    if (!image.startsWith("https://mindgenieai.xyz/")) fail(rel, `og:image is not absolute: ${image}`);
+    else {
+      const file = localFile(image);
+      if (!existsSync(file)) fail(rel, `og:image points at a missing file: ${image}`);
+      if (ogImages.has(image)) fail(rel, `og:image duplicates ${ogImages.get(image)}`);
+      else ogImages.set(image, rel);
+    }
+    if (twitter !== image) fail(rel, "twitter:image differs from og:image");
+  }
+}
+
+for (const key of CATEGORY_ORDER) {
+  const cat = CATEGORIES[key];
+  const rel = `games/${cat.slug}/index.html`;
+  const file = join(ROOT, rel);
+  if (!existsSync(file)) {
+    fail(rel, "category page missing (run node tools/build/build-pages.mjs)");
+    continue;
+  }
+  const html = await readFile(file, "utf8");
+  const expected = GAMES.filter((game) => game.cats.includes(key));
+
+  if (!html.includes(`<h1>${cat.name}</h1>`)) fail(rel, `h1 is not "${cat.name}"`);
+  if (!html.includes('href="/games/games.css"')) fail(rel, "does not load games.css");
+  if (!html.includes('href="/games/ribbon.css"')) fail(rel, "does not load ribbon.css");
+  if (!html.includes('href="/games/"')) fail(rel, "does not link back to the hub");
+  if (!html.includes(`<link rel="canonical" href="https://mindgenieai.xyz/games/${cat.slug}/">`)) {
+    fail(rel, "canonical is not the clean category URL");
+  }
+  for (const other of CATEGORY_ORDER) {
+    if (other === key) continue;
+    if (!html.includes(`href="/games/${CATEGORIES[other].slug}/"`)) fail(rel, `does not cross-link /games/${CATEGORIES[other].slug}/`);
+  }
+  for (const game of expected) {
+    if (!html.includes(`href="/games/${game.slug}.html"`)) fail(rel, `is missing ${game.slug}`);
+    listedOn.set(game.slug, (listedOn.get(game.slug) || 0) + 1);
+  }
+  social(rel, html);
+}
+
+for (const game of GAMES) {
+  const rel = `games/${game.slug}.html`;
+  const html = await readFile(join(ROOT, rel), "utf8");
+
+  const starts = (html.match(/mg-related:start/g) || []).length;
+  if (starts !== 1) fail(rel, `expected exactly one generated related block, found ${starts}`);
+  const from = html.indexOf("mg-related:start");
+  const to = html.indexOf("mg-related:end");
+  if (from !== -1 && to > from) {
+    const block = html.slice(from, to);
+    const links = [...block.matchAll(/href="\/games\/([a-z0-9-]+)\.html"/g)].map((match) => match[1]);
+    if (links.length < 3) fail(rel, `related block links ${links.length} games, expected at least 3`);
+    if (links.includes(game.slug)) fail(rel, "related block links to the page itself");
+    if (!block.includes(`/games/${CATEGORIES[game.cats[0]].slug}/`)) fail(rel, "related block does not link its category page");
+  }
+  if (!listedOn.has(game.slug)) fail(rel, "appears on no category page (orphan)");
+  social(rel, html);
+}
+
+const hubHtml = await readFile(hubPath, "utf8");
+const hubRows = (hubHtml.match(/hub-catlinks:start/g) || []).length;
+if (hubRows !== 1) fail("games/index.html", `expected exactly one category link row, found ${hubRows}`);
+for (const key of CATEGORY_ORDER) {
+  if (!hubHtml.includes(`href="/games/${CATEGORIES[key].slug}/"`)) {
+    fail("games/index.html", `hub does not link the ${CATEGORIES[key].name} category page`);
+  }
+}
+social("games/index.html", hubHtml);
+notes.push(`${ogImages.size} social images referenced`);
+
 /* ── Storage keys ────────────────────────────────────────────────────────── */
 const storageKeys = new Map();
 for (const file of htmlFiles) {
@@ -163,14 +269,16 @@ for (const file of htmlFiles) {
     if (!sitemapUrls.has("https://mindgenieai.xyz/games/")) fail("sitemap.xml", "missing the hub: /games/");
     continue;
   }
-  const url = `https://mindgenieai.xyz/${rel}`;
+  /* Directory pages are published at the clean URL, without index.html. */
+  const url = `https://mindgenieai.xyz/${rel.endsWith("/index.html") ? rel.slice(0, -"index.html".length) : rel}`;
   if (!sitemapUrls.has(url)) fail("sitemap.xml", `missing game page ${url}`);
 }
 
 const unlisted = htmlFiles.filter((file) => {
   const rel = relative(ROOT, file).replace(/\\/g, "/");
   if (rel.startsWith("tools/")) return false;
-  return !sitemapUrls.has(`https://mindgenieai.xyz/${rel === "index.html" ? "" : rel}`);
+  const clean = rel === "index.html" ? "" : rel.endsWith("/index.html") ? rel.slice(0, -"index.html".length) : rel;
+  return !sitemapUrls.has(`https://mindgenieai.xyz/${clean}`);
 });
 if (unlisted.length) notes.push(`${unlisted.length} pages are intentionally absent from the sitemap (aliases, 404, verification files)`);
 
@@ -180,7 +288,8 @@ const summary = [
   `${files.length} files`,
   `${sitemapUrls.size} sitemap URLs`,
   `${cards.length} hub cards`,
-  `${pills.length} filter pills`
+  `${pills.length} filter pills`,
+  `${CATEGORY_ORDER.length} category pages`
 ].join(" · ");
 
 for (const note of notes) console.log(`note: ${note}`);

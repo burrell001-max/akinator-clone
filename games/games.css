@@ -271,3 +271,39 @@ footer a:hover { color: var(--text); }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+/* ── Category landing pages and "more in this category" rows ─────────────── */
+/* Both reuse .grid/.card/.tag, so a category page looks like the arcade rather
+   than like a second design system bolted on. */
+.cat-grid { grid-template-columns: repeat(auto-fit, minmax(205px, 1fr)); }
+.cat-card { position: relative; padding-right: 56px; }
+.cat-card-glyph {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 1.45rem;
+  line-height: 1;
+  opacity: .85;
+}
+.cat-card .tag + .tag { margin-left: 6px; }
+.cat-card h3 { margin-bottom: 6px; }
+
+.mg-related { margin-top: 44px; }
+.mg-related .section-head { margin-bottom: 12px; }
+.mg-related h2 { margin: 0; font-size: 1.15rem; }
+.mg-related-all {
+  font-size: .86rem;
+  color: var(--gold-dim);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.mg-related-all:hover { color: var(--gold); }
+.mg-related-grid { margin: 0 0 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.mg-related-grid .card { position: relative; padding: 16px; }
+.mg-related-grid .card h3 { font-size: .98rem; padding-right: 34px; }
+.mg-related-grid .card p { font-size: .86rem; }
+.mg-related-grid .cat-card-glyph { top: 12px; right: 13px; font-size: 1.2rem; }
+.mg-related-alt { font-size: .88rem; margin: 0; }
+.mg-related-alt a { color: var(--gold-dim); }
+.mg-related-alt a:hover { color: var(--gold); }
+.mg-dot { color: var(--muted); margin: 0 4px; }

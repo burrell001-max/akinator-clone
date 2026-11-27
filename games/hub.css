@@ -215,3 +215,26 @@ a { color: #5b21b6; }
 @media (prefers-reduced-motion: reduce) {
   .game-card, .cat-pill { transition: none; }
 }
+
+/* Category landing page links, kept below the grid so the hub still reads as
+   one shelf rather than ten. */
+.hub-catlinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 1rem;
+  margin: 2.25rem 0 0;
+  padding-top: 1.15rem;
+  border-top: 1px solid #e4def2;
+  font-size: 0.82rem;
+}
+.hub-catlinks-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6d6585;
+  margin-right: 0.25rem;
+}
+.hub-catlinks a { color: #5b21b6; text-decoration: none; font-weight: 600; }
+.hub-catlinks a:hover { text-decoration: underline; text-underline-offset: 3px; }

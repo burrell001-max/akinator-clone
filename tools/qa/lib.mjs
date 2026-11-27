@@ -265,6 +265,15 @@ export class Page {
     ]);
   }
 
+  /* Used by tools/build/make-og.mjs to render the social cards. */
+  async screenshot({ clip, format = "png", quality = 90 } = {}) {
+    const params = { format, captureBeyondViewport: false };
+    if (format === "jpeg") params.quality = quality;
+    if (clip) params.clip = { ...clip, scale: 1 };
+    const { data } = await this.send("Page.captureScreenshot", params);
+    return Buffer.from(data, "base64");
+  }
+
   async close() {
     await this.chrome.send("Target.closeTarget", { targetId: this.targetId }).catch(() => {});
   }
