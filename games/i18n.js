@@ -66,11 +66,13 @@
   /* Rules and scoring bullets live in their own table and are appended to the
      lead paragraphs of the same family. The table is large, so it is fetched
      only once a non-English language is in use. */
+  var mergedGuideCodes = {};
   function mergeGuidePoints() {
     var points = window.MGI18N_GUIDE_POINTS || {};
     Object.keys(points).forEach(function (code) {
       var table = DATA.guides[code];
-      if (!table) return;
+      if (!table || mergedGuideCodes[code]) return;
+      mergedGuideCodes[code] = true;
       Object.keys(points[code]).forEach(function (family) {
         if (Array.isArray(table[family])) table[family] = table[family].concat(points[code][family]);
         else table[family] = points[code][family].slice();
@@ -78,16 +80,26 @@
     });
   }
 
-  var guidePointsPending = false;
-  function loadGuidePoints() {
-    if (window.MGI18N_GUIDE_POINTS || guidePointsPending) return;
+  /* One small file per language, so the guide can be rendered complete in a
+     single pass instead of growing a list after it is on screen. */
+  var guideFileState = {};
+  function guidePointsReady(code) {
+    return guideFileState[code] === "ready" || !!(window.MGI18N_GUIDE_POINTS && window.MGI18N_GUIDE_POINTS[code]);
+  }
+  function loadGuidePoints(code) {
+    if (!code || code === "en" || guideFileState[code]) return;
     if (!document.querySelector("[data-mg-guide]")) return;
-    guidePointsPending = true;
+    guideFileState[code] = "loading";
     var script = document.createElement("script");
-    script.src = "/games/i18n-guides.js?v=6";
+    script.src = "/games/i18n-guides-" + code + ".js?v=1";
     script.async = true;
     script.onload = function () {
+      guideFileState[code] = "ready";
       mergeGuidePoints();
+      apply(document);
+    };
+    script.onerror = function () {
+      guideFileState[code] = "failed";
       apply(document);
     };
     document.head.appendChild(script);
@@ -417,6 +429,13 @@
 
     /* The translated guide replaces the English essays outside English. */
     each(scope, "[data-mg-guide]", function (el) {
+      if (current !== "en" && !guidePointsReady(current)) {
+        /* Hold the guide back until its rules list has arrived. */
+        el.hidden = true;
+        el.textContent = "";
+        loadGuidePoints(current);
+        return;
+      }
       var paragraphs = guide(el.getAttribute("data-mg-guide"));
       if (current === "en" || !paragraphs.length) {
         el.hidden = true;
@@ -451,7 +470,6 @@
     });
 
     each(document, STATUS_SELECTOR, function (el) { renderStatusEl(el, true); });
-    if (current !== "en") loadGuidePoints();
     paintSwitcher();
 
     var event;

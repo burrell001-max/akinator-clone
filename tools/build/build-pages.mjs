@@ -208,7 +208,7 @@ ${others.map((other) => `        <a class="chip" href="/games/${CATEGORIES[other
 <script src="/games/i18n-data-g.js"></script>
 <script src="/games/i18n-data-h.js"></script>
 <script src="/games/i18n-data-i.js?v=5"></script>
-<script src="/games/i18n.js?v=6"></script>
+<script src="/games/i18n.js?v=7"></script>
 </body>
 </html>
 `;

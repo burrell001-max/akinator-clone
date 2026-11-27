@@ -22,11 +22,19 @@ await load(
   "langs.js", "games/i18n-slugs.js",
   "games/i18n-data-a.js", "games/i18n-data-b.js", "games/i18n-data-c.js",
   "games/i18n-data-d.js", "games/i18n-data-e.js", "games/i18n-data-f.js",
-  "games/i18n-data-g.js", "games/i18n-data-h.js", "games/i18n-data-i.js",
-  "games/i18n-guides.js"
+  "games/i18n-data-g.js", "games/i18n-data-h.js", "games/i18n-data-i.js"
 );
-
 const LANGS = sandbox.LANGS;
+/* One rules file per language, loaded on demand by the browser. */
+for (const { code } of LANGS) {
+  const file = `games/i18n-guides-${code}.js`;
+  try {
+    await load(file);
+  } catch {
+    problems.push(`missing ${file}`);
+  }
+}
+
 const SLUGS = sandbox.MGI18N_SLUGS;
 const CATS = sandbox.MGI18N_CAT_ORDER;
 const A = sandbox.MGI18N_DATA_A;
@@ -69,7 +77,11 @@ for (const { code } of LANGS) {
 const guideParts = [E, F].map((part) => part.guides);
 const guidePoints = sandbox.MGI18N_GUIDE_POINTS || {};
 const bulletCount = (code, family) => (guidePoints[code] && guidePoints[code][family] ? guidePoints[code][family].length : 0);
-const expectedBullets = 4;
+/* Languages that do not use Latin script must not leak English words. */
+const NON_LATIN = ["ru", "ar", "he", "fa", "zh", "ja", "ko"];
+const ENGLISH_MARKERS = /\b(the|your|with|and|that|this|from|when|never|only|kept|stored)\b/i;
+/* Storage-key prefixes and the API name are technical, not leaked English. */
+const latinLeft = (line) => line.replace(/mg-[a-z0-9-]*/gi, "").replace(/localStorage/gi, "");
 for (const { code } of LANGS) {
   const table = guideParts.reduce((merged, part) => Object.assign(merged, part[code] || {}), {});
   for (const family of FAMILIES) {
@@ -78,12 +90,24 @@ for (const { code } of LANGS) {
     else if (paragraphs.some((para) => !para || para.length < 25)) warn(`${code}: thin guide paragraph in ${family}`);
 
     const bullets = (guidePoints[code] && guidePoints[code][family]) || [];
-    if (bullets.length < expectedBullets) warn(`${code}: ${family} has ${bullets.length} of ${expectedBullets} rules bullets`);
+    const expected = bulletCount("en", family);
+    if (bullets.length !== expected) warn(`${code}: ${family} has ${bullets.length} of ${expected} rules bullets`);
     else if (bullets.some((line) => typeof line !== "string" || line.slice(0, 2) !== "- " || line.length < 15)) {
       warn(`${code}: malformed rules bullet in ${family}`);
     }
-    if (code !== "en" && bulletCount(code, family) !== bulletCount("en", family)) {
-      warn(`${code}: ${family} rules bullets do not match the English count`);
+    if (code !== "en") {
+      const english = (guidePoints.en[family] || []).map((line) => line.slice(2));
+      bullets.forEach((line, index) => {
+        const text = typeof line === "string" ? line.slice(2) : "";
+        if (!text) return;
+        if (text === english[index]) warn(`${code}: ${family} bullet ${index + 1} is still English`);
+        if (NON_LATIN.includes(code)) {
+          const leaked = latinLeft(text).match(/[A-Za-z]{2,}/g);
+          if (leaked) warn(`${code}: ${family} bullet ${index + 1} leaks English (${leaked[0]})`);
+        } else if (ENGLISH_MARKERS.test(text)) {
+          warn(`${code}: ${family} bullet ${index + 1} reads like English`);
+        }
+      });
     }
   }
 }
