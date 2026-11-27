@@ -33,7 +33,7 @@ window.MGI18N_GUIDE_POINTS.de = {
   ],
   crossword: [
     "- Zehn Hinweise pro Runde, alle zufällig aus einem Vorrat von sechsundzwanzig.",
-    "- Zehn Punkte pro richtiger Antwort, drei ab pro verwendetem Hinweis auf diese Frage, nichts fürs Überspringen.",
+    "- Zehn Punkte pro richtiger Antwort, drei ab je Hinweis zu dieser Frage, nichts fürs Überspringen.",
     "- Die Schreibweise zählt, Groß- und Kleinschreibung nicht: Antworten werden in Großbuchstaben ohne Leerzeichen verglichen.",
     "- Dein Bestwert liegt in diesem Browser unter mg-clueclues-best und verlässt das Gerät nie.",
     "- Die Runde endet bei null auf der Uhr, und das Antwortfeld bleibt gesperrt, bis du neu startest."
@@ -54,7 +54,7 @@ window.MGI18N_GUIDE_POINTS.de = {
   sort: [
     "- Zahlen laufen von 10 bis 99, und jede Zahl gehört in genau einen Behälter.",
     "- Ein Punkt pro richtigem Sortieren, ein Punkt ab pro Fehler, nie unter null.",
-    "- Deine längste richtige Serie wird als Streak angezeigt; dein Bestwert liegt in diesem Browser unter mg-bins-best.",
+    "- Deine längste Serie richtiger Sortierungen wird hervorgehoben; dein Bestwert liegt in diesem Browser unter mg-bins-best.",
     "- Die Runde endet bei null auf der Uhr, und die Behälter bleiben gesperrt, bis du neu startest.",
     "- Nichts wird geladen und keine Runde hochgeladen: die Punktzahl lebt nur in localStorage."
   ],

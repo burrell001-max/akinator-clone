@@ -11,6 +11,8 @@
      MGi18n.cat(key)             category name for brain/daily/number/...
      MGi18n.hub(i)               hub heading strings (see i18n-data-c.js)
      MGi18n.setLang(code)        switch, persist, re-render, update ?lang=
+     MGi18n.setText(el, key)     write a label now and remember it for switches
+     MGi18n.setCount(el, key, n, m)  write a counter now and remember it
      MGi18n.onChange(fn)         subscribe; returns an unsubscribe function
      MGi18n.apply(root)          re-render a subtree (default: document)
 
@@ -24,6 +26,9 @@
      data-mg-howto="slug"        the translated one-line instruction
      data-mg-cat="brain"         translated category name
      data-mg-hub="0".."7"        hub / shelf heading strings
+     data-mg-text="key"          a label a page script rewrites later
+     data-mg-count="key"         a counter; data-mg-n, optional data-mg-m
+     data-mg-skip                English the QA scan should leave alone
      data-mg-lang                where to mount the switcher (default .top)
 
    Page scripts can call MGi18n.t() themselves and re-render on the "mg:lang"
@@ -95,11 +100,15 @@
     script.async = true;
     script.onload = function () {
       guideFileState[code] = "ready";
+      document.documentElement.removeAttribute("data-guide-fallback");
       mergeGuidePoints();
       apply(document);
     };
     script.onerror = function () {
+      /* No guide file for this language: show the English essay rather than an
+         empty section, and say so through the data-guide-fallback hook. */
       guideFileState[code] = "failed";
+      document.documentElement.setAttribute("data-guide-fallback", code);
       apply(document);
     };
     document.head.appendChild(script);
@@ -171,6 +180,35 @@
     return String(template).replace(/\{(\d+)\}/g, function (match, index) {
       return values[Number(index)] === undefined ? match : values[Number(index)];
     });
+  }
+
+  /* ── Dynamic labels and counters ──
+     Game scripts used to write English into their stat rows, so a language
+     switch left "Guess 3 of 10" and "Restart" behind. They now call these
+     helpers: the key (and the numbers) are stored on the element, so apply()
+     can re-render the same text after every switch. */
+  function setText(el, key) {
+    if (!el) return;
+    el.removeAttribute("data-mg-count");
+    el.setAttribute("data-mg-text", key);
+    el.textContent = t(key);
+  }
+
+  function paintCount(el) {
+    var vars = { n: Number(el.getAttribute("data-mg-n")) };
+    var max = el.getAttribute("data-mg-m");
+    if (max !== null) vars.m = Number(max);
+    el.textContent = t(el.getAttribute("data-mg-count"), vars);
+  }
+
+  function setCount(el, key, n, max) {
+    if (!el) return;
+    el.removeAttribute("data-mg-text");
+    el.setAttribute("data-mg-count", key);
+    el.setAttribute("data-mg-n", String(n));
+    if (max === undefined || max === null) el.removeAttribute("data-mg-m");
+    else el.setAttribute("data-mg-m", String(max));
+    paintCount(el);
   }
 
   /* One line at a time: undefined when the dictionary does not know it. */
@@ -411,6 +449,10 @@
         : hub(Number(el.getAttribute("data-mg-hub")));
       if (text) el.textContent = text;
     });
+    each(scope, "[data-mg-text]", function (el) {
+      el.textContent = t(el.getAttribute("data-mg-text"));
+    });
+    each(scope, "[data-mg-count]", paintCount);
 
     /* The page title follows the translated game or category heading. */
     var h1 = document.querySelector("h1[data-mg-title]");
@@ -434,6 +476,11 @@
         el.hidden = true;
         el.textContent = "";
         loadGuidePoints(current);
+        return;
+      }
+      if (current !== "en" && guideFileState[current] === "failed") {
+        el.hidden = true;
+        el.textContent = "";
         return;
       }
       var paragraphs = guide(el.getAttribute("data-mg-guide"));
@@ -533,6 +580,8 @@
     hub: hub,
     status: status,
     guide: guide,
+    setText: setText,
+    setCount: setCount,
     setLang: setLang,
     onChange: onChange,
     apply: apply

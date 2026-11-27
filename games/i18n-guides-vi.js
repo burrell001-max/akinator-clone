@@ -54,7 +54,7 @@ window.MGI18N_GUIDE_POINTS.vi = {
   sort: [
     "- Số chạy từ 10 đến 99, và mỗi số chỉ thuộc đúng một hộp.",
     "- Mỗi lần phân loại đúng được một điểm, mỗi lỗi trừ một điểm và không bao giờ xuống dưới không.",
-    "- Chuỗi đúng dài nhất hiện thành streak; điểm cao nhất của bạn được lưu trong trình duyệt này dưới khoá mg-bins-best.",
+    "- Chuỗi đúng dài nhất được đánh dấu riêng; điểm cao nhất của bạn được lưu trong trình duyệt này dưới khoá mg-bins-best.",
     "- Ván kết thúc khi đồng hồ về không, và các hộp bị khoá cho đến khi bạn bắt đầu lại.",
     "- Không có gì được tải xuống và không ván nào được tải lên: điểm chỉ sống trong bộ nhớ cục bộ."
   ],

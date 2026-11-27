@@ -109,20 +109,20 @@
 
     <div class="toolbar">
       <button class="btn ghost" type="button" id="newPuzzle" data-i18n="new_puzzle">New puzzle</button>
-      <label for="level" class="hint">Difficulty</label>
+      <label for="level" class="hint" data-i18n="difficulty">Difficulty</label>
       <select id="level">
-        <option value="easy">Easy — add, subtract, multiply</option>
-        <option value="medium" selected>Medium — division allowed</option>
-        <option value="hard">Hard — larger numbers</option>
+        <option value="easy" data-i18n="easy">Easy</option>
+        <option value="medium" selected data-i18n="medium">Medium</option>
+        <option value="hard" data-i18n="hard">Hard</option>
       </select>
     </div>
 
     <div class="game-panel">
       <div class="stat-row">
-        <span>Solved <b id="solved">0</b></span>
-        <span>Attempts <b id="attempts">0</b></span>
+        <span><span data-i18n="solved">Solved</span> <b id="solved">0</b></span>
+        <span><span data-i18n="attempts">Attempts</span> <b id="attempts">0</b></span>
         <span><span data-i18n="streak">Streak</span> <b id="streak">0</b></span>
-        <span>Best streak <b id="best">0</b></span>
+        <span><span data-i18n="best_streak">Best streak</span> <b id="best">0</b></span>
       </div>
 
       <div class="equation" id="equation" aria-live="polite"></div>

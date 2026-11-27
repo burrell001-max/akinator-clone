@@ -99,18 +99,18 @@
     <p class="updated">Sixty seconds of equations with one value hidden.</p>
 
     <div class="toolbar">
-      <label for="level" class="hint">Difficulty</label>
+      <label for="level" class="hint" data-i18n="difficulty">Difficulty</label>
       <select id="level">
-        <option value="easy">Easy — numbers to 12</option>
-        <option value="medium" selected>Medium — numbers to 20</option>
-        <option value="hard">Hard — numbers to 50</option>
+        <option value="easy" data-i18n="easy">Easy</option>
+        <option value="medium" selected data-i18n="medium">Medium</option>
+        <option value="hard" data-i18n="hard">Hard</option>
       </select>
       <button class="btn" type="button" id="start" data-i18n="start">Start</button>
     </div>
 
     <div class="game-panel">
       <div class="stat-row">
-        <span>Time <b id="left">60s</b></span>
+        <span><span data-i18n="time">Time</span> <b id="left">60s</b></span>
         <span><span data-i18n="score">Score</span> <b id="score">0</b></span>
         <span><span data-i18n="streak">Streak</span> <b id="streak">0</b></span>
         <span><span data-i18n="best">Best</span> <b id="best">0</b></span>
@@ -118,7 +118,7 @@
 
       <div class="bar"><span id="barFill"></span></div>
 
-      <div class="eq" id="eq" aria-live="polite">Press Start</div>
+      <div class="eq" id="eq" aria-live="polite"></div>
 
       <div class="answer-row">
         <label class="sr-only" for="answer">Your answer</label>

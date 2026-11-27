@@ -100,19 +100,19 @@
     <p class="updated">A deduction game: find the hidden code from feedback alone.</p>
 
     <div class="toolbar">
-      <label for="level" class="hint">Difficulty</label>
+      <label for="level" class="hint" data-i18n="difficulty">Difficulty</label>
       <select id="level">
-        <option value="easy">Easy — 3 digits, 1–5, no repeats</option>
-        <option value="medium" selected>Medium — 4 digits, 1–6</option>
-        <option value="hard">Hard — 5 digits, 1–8</option>
+        <option value="easy" data-i18n="easy">Easy</option>
+        <option value="medium" selected data-i18n="medium">Medium</option>
+        <option value="hard" data-i18n="hard">Hard</option>
       </select>
       <button class="btn" type="button" id="restart" data-i18n="new_puzzle">New code</button>
     </div>
 
     <div class="game-panel">
       <div class="stat-row">
-        <span>Guess <b id="guessNo">1</b> of <b id="guessMax">10</b></span>
-        <span>Best: <b id="best">—</b></span>
+        <span id="guessProgress" data-mg-count="guess_of" data-mg-n="1" data-mg-m="10">Guess 1 of 10</span>
+        <span><span data-i18n="best">Best</span>: <b id="best">—</b></span>
       </div>
 
       <div class="board" id="board" aria-label="Your guesses"></div>
@@ -224,8 +224,7 @@
   var entryEl = document.getElementById("entry");
   var padEl = document.getElementById("pad");
   var statusEl = document.getElementById("status");
-  var guessNoEl = document.getElementById("guessNo");
-  var guessMaxEl = document.getElementById("guessMax");
+  var guessProgress = document.getElementById("guessProgress");
   var bestEl = document.getElementById("best");
 
   var cfg = LEVELS.medium;
@@ -293,10 +292,18 @@
       });
       var fb = document.createElement("div");
       fb.className = "feedback";
-      fb.innerHTML = '<span class="exact">' + row.exact + ' exact</span><span class="near">' + row.near + " near</span>";
+      fb.innerHTML = "";
+      var exactTag = document.createElement("span");
+      exactTag.className = "exact";
+      var nearTag = document.createElement("span");
+      nearTag.className = "near";
+      MGi18n.setCount(exactTag, "exact_n", row.exact);
+      MGi18n.setCount(nearTag, "near_n", row.near);
+      fb.appendChild(exactTag);
+      fb.appendChild(nearTag);
       var label = document.createElement("span");
       label.className = "sr-only";
-      label.textContent = "Guess " + (index + 1) + ": " + row.guess.split("").join(" ") + ", " + row.exact + " exact, " + row.near + " near";
+      label.textContent = MGi18n.t("guess_of", { n: index + 1, m: cfg.guesses }) + ": " + row.guess.split("").join(" ") + " — " + MGi18n.t("exact_n", { n: row.exact }) + ", " + MGi18n.t("near_n", { n: row.near });
       wrap.appendChild(slots);
       wrap.appendChild(fb);
       wrap.appendChild(label);
@@ -320,14 +327,14 @@
     del.type = "button";
     del.className = "wide";
     del.dataset.action = "del";
-    del.textContent = "Delete";
+    MGi18n.setText(del, "delete");
     padEl.appendChild(del);
 
     var enter = document.createElement("button");
     enter.type = "button";
     enter.className = "wide";
     enter.dataset.action = "enter";
-    enter.textContent = "Submit";
+    MGi18n.setText(enter, "submit");
     padEl.appendChild(enter);
   }
 
@@ -346,7 +353,7 @@
     renderHistory();
     entry = "";
     renderEntry();
-    guessNoEl.textContent = String(Math.min(history.length + 1, cfg.guesses));
+    MGi18n.setCount(guessProgress, "guess_of", Math.min(history.length + 1, cfg.guesses), cfg.guesses);
 
     if (s.exact === cfg.length) {
       over = true;
@@ -387,8 +394,7 @@
     entry = "";
     history = [];
     over = false;
-    guessMaxEl.textContent = String(cfg.guesses);
-    guessNoEl.textContent = "1";
+    MGi18n.setCount(guessProgress, "guess_of", 1, cfg.guesses);
     statusEl.textContent = "";
     makeCode();
     buildPad();

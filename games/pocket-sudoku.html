@@ -96,13 +96,13 @@
     <h1 data-mg-title="pocket-sudoku" data-title-en="Pocket Sudoku (Sudoku) | MindGenieAI">Pocket Sudoku</h1>
     <div class="controls">
       <select id="diffSelect" aria-label="Difficulty">
-        <option value="32">Easy</option>
-        <option value="44" selected>Medium</option>
-        <option value="52">Hard</option>
+        <option value="32" data-i18n="easy">Easy</option>
+        <option value="44" selected data-i18n="medium">Medium</option>
+        <option value="52" data-i18n="hard">Hard</option>
       </select>
       <button type="button" id="newGameBtn" data-i18n="new_puzzle">New Board</button>
       <button type="button" class="sec" id="checkBtn" data-i18n="check">Check</button>
-      <span class="solved-line">Solved: <strong id="solvedEl">0</strong></span>
+      <span class="solved-line"><span data-i18n="solved">Solved</span>: <strong id="solvedEl">0</strong></span>
     </div>
 
     <div id="grid" class="sudoku-grid" role="group" aria-label="Sudoku board"></div>

@@ -108,17 +108,17 @@
 
     <div class="game-panel">
       <div class="stat-row">
-        <span>Time <b id="left">60s</b></span>
+        <span><span data-i18n="time">Time</span> <b id="left">60s</b></span>
         <span><span data-i18n="score">Score</span> <b id="score">0</b></span>
-        <span>Solved <b id="solved">0</b></span>
+        <span><span data-i18n="solved">Solved</span> <b id="solved">0</b></span>
         <span><span data-i18n="best">Best</span> <b id="best">0</b></span>
       </div>
 
       <div class="bar"><span id="barFill"></span></div>
 
       <div class="clue-card">
-        <div class="clue-meta"><span id="clueNumber">Clue 1 of 8</span><span id="clueEnum">(0)</span></div>
-        <p class="clue-text" id="clueText">Press Start for the first clue.</p>
+        <div class="clue-meta"><span id="clueNumber" data-mg-count="clue_of" data-mg-n="1" data-mg-m="8">Clue 1 of 8</span><span id="clueEnum">(0)</span></div>
+        <p class="clue-text" id="clueText"></p>
         <div class="letters" id="letters" aria-label="Shuffled letters"></div>
       </div>
 
@@ -290,7 +290,7 @@
     input.disabled = false;
     submitBtn.disabled = false;
     skipBtn.disabled = false;
-    startBtn.textContent = "Restart";
+    MGi18n.setText(startBtn, "restart");
     if (timer) window.clearInterval(timer);
     timer = window.setInterval(function () {
       seconds--;
@@ -304,7 +304,7 @@
   function show() {
     if (index >= queue.length) { end(); return; }
     current = queue[index];
-    clueNumber.textContent = "Clue " + (index + 1) + " of " + queue.length;
+    MGi18n.setCount(clueNumber, "clue_of", index + 1, queue.length);
     clueEnum.textContent = "(" + current.answer.length + ")";
     clueText.textContent = current.clue;
     lettersEl.innerHTML = "";
@@ -355,14 +355,14 @@
     input.disabled = true;
     submitBtn.disabled = true;
     skipBtn.disabled = true;
-    clueNumber.textContent = "Run over";
-    clueText.textContent = "You solved " + solved + " of " + queue.length + " clues.";
+    MGi18n.setText(clueNumber, "run_over");
+    MGi18n.setCount(clueText, "solved_clues", solved, queue.length);
     clueEnum.textContent = "";
     lettersEl.innerHTML = "";
     var improved = MG.saveBest("mg-clueanagram-best", score);
     if (improved) bestEl.textContent = String(score);
     statusEl.textContent = "Final score: " + score + (improved ? " — a new best." : ". Best: " + MG.getBest("mg-clueanagram-best", 0) + ".");
-    startBtn.textContent = "Play again";
+    MGi18n.setText(startBtn, "play_again");
   }
 
   startBtn.addEventListener("click", start);

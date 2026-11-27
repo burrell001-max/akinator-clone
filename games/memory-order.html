@@ -107,14 +107,14 @@
 
     <div class="game-panel">
       <div class="stat-row">
-        <span>Shapes <b id="count">4</b></span>
+        <span><span data-i18n="shapes">Shapes</span> <b id="count">4</b></span>
         <span><span data-i18n="round">Round</span> <b id="round">0</b></span>
         <span><span data-i18n="best">Best</span> <b id="best">0</b></span>
-        <span>Rounds won <b id="streak">0</b></span>
+        <span><span data-i18n="rounds_won">Rounds won</span> <b id="streak">0</b></span>
       </div>
 
       <div class="progress-track"><span id="barFill"></span></div>
-      <div class="lane" id="lane" aria-live="polite">Press Start</div>
+      <div class="lane" id="lane" aria-live="polite"></div>
 
       <p class="status" id="status" role="status" aria-live="polite"></p>
       <p class="hint">The numbers show the order. They disappear when the shapes scatter.</p>
@@ -247,7 +247,7 @@
     count = 4;
     round = 0;
     run = 0;
-    startBtn.textContent = "Restart";
+    MGi18n.setText(startBtn, "restart");
     bestEl.textContent = String(MG.getBest("mg-orderrecall-best", 0));
     streakEl.textContent = String(MG.getBest("mg-orderrecall-streak", 0));
     nextRound();
@@ -332,7 +332,7 @@
     phaseLabel.textContent = "Round over.";
     statusEl.textContent = "The order was " + correctOrder + ". You placed " + progress + " of " +
       target.length + " correctly. Best: " + MG.getBest("mg-orderrecall-best", 0) + " shapes.";
-    startBtn.textContent = "Play again";
+    MGi18n.setText(startBtn, "play_again");
   }
 
   startBtn.addEventListener("click", startSession);

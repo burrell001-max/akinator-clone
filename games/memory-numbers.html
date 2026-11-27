@@ -104,13 +104,13 @@
 
     <div class="game-panel">
       <div class="stat-row">
-        <span>Length <b id="length">3</b></span>
+        <span><span data-i18n="length">Length</span> <b id="length">3</b></span>
         <span><span data-i18n="round">Round</span> <b id="round">0</b></span>
-        <span>Best length <b id="best">0</b></span>
-        <span>Best run <b id="streak">0</b></span>
+        <span><span data-i18n="best_length">Best length</span> <b id="best">0</b></span>
+        <span><span data-i18n="best_run">Best run</span> <b id="streak">0</b></span>
       </div>
 
-      <div class="digits" id="digits" aria-live="polite">Press Start</div>
+      <div class="digits" id="digits" aria-live="polite"></div>
 
       <div class="answer-row">
         <label class="sr-only" for="answer">The digits, in order</label>
@@ -247,7 +247,7 @@
     run = 0;
     bestEl.textContent = String(MG.getBest("mg-digitecho-best", 0));
     streakEl.textContent = String(MG.getBest("mg-digitecho-streak", 0));
-    startBtn.textContent = "Restart";
+    MGi18n.setText(startBtn, "restart");
     nextRound();
   }
 
@@ -308,7 +308,7 @@
     statusEl.textContent = "You typed " + typed.split("").join(" ") + ", and the string was " +
       sequence.split("").join(" ") + ". Record: " + best + " digits. Press Start to try again.";
     bestEl.textContent = String(best);
-    startBtn.textContent = "Play again";
+    MGi18n.setText(startBtn, "play_again");
   }
 
   startBtn.addEventListener("click", startSession);

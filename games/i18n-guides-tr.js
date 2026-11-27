@@ -14,7 +14,7 @@ window.MGI18N_GUIDE_POINTS.tr = {
   ],
   merge: [
     "- Bir hamle ancak en az bir taş yer değiştirirse ya da iki taş birleşirse sayılır.",
-    "- İki taş bir hamlede en fazla bir kez birleşir, yani dört eşit taş iki çift oluşturur, tek dev taş değil.",
+    "- İki taş bir hamlede en fazla bir kez birleşir, yani dört eşit taş iki çift oluşturur, tek bir dev taş değil.",
     "- Puan, birleşmelerle oluşan tüm değerlerin toplamıdır: 64 çiftini birleştirmek 128 ekler.",
     "- En iyi puanın bu tarayıcıda mg-merge-best anahtarında saklanır ve cihazdan hiç ayrılmaz.",
     "- Tur, tahta dolduğunda ve komşu iki taş eşit olmadığında biter; Yeni tahta puanı sıfırlar."
@@ -33,7 +33,7 @@ window.MGI18N_GUIDE_POINTS.tr = {
   ],
   crossword: [
     "- Tur başına on ipucu, hepsi yirmi altılık bir havuzdan rastgele seçilir.",
-    "- Doğru cevap on puan, o ipucunda kullanılan her ipucu üç puan düşürür, atlamak puan vermez.",
+    "- Doğru cevap on puan, o soruda kullanılan her ipucu üç puan düşürür, atlamak puan vermez.",
     "- Yazım önemlidir ama büyük-küçük harf değil: cevaplar büyük harflerle ve boşluksuz karşılaştırılır.",
     "- En iyi puanın bu tarayıcıda mg-clueclues-best anahtarında saklanır ve cihazdan hiç ayrılmaz.",
     "- Tur, süre sıfıra geldiğinde biter ve cevap kutusu yeniden başlayana kadar kilitli kalır."
@@ -54,7 +54,7 @@ window.MGI18N_GUIDE_POINTS.tr = {
   sort: [
     "- Sayılar 10 ile 99 arasındadır ve her sayı yalnızca bir kutuya aittir.",
     "- Doğru her sıralama bir puan, her hata bir puan eksiltir ve puan sıfırın altına inmez.",
-    "- En uzun doğru serin seri olarak gösterilir; en iyi puanın bu tarayıcıda mg-bins-best anahtarında saklanır.",
+    "- Üst üste en çok doğru sayın seri olarak gösterilir; en iyi puanın bu tarayıcıda mg-bins-best anahtarında saklanır.",
     "- Tur, süre sıfıra geldiğinde biter ve kutular yeniden başlayana kadar kilitli kalır.",
     "- Hiçbir şey indirilmez ve hiçbir tur yüklenmez: puan yalnızca localStorage içinde yaşar."
   ],
@@ -82,8 +82,8 @@ window.MGI18N_GUIDE_POINTS.tr = {
   ],
   codebreak: [
     "- Kolay: 1 ile 5 arası üç rakam, tekrarsız, sekiz tahmin.",
-    "- Orta: 1 ile 6 arası dört rakam, tekrar serbest, on tahmin.",
-    "- Zor: 1 ile 8 arası beş rakam, tekrar serbest, on iki tahmin.",
+    "- Orta: 1 ile 6 arası dört rakam, tekrara izin var, on tahmin.",
+    "- Zor: 1 ile 8 arası beş rakam, tekrara izin var, on iki tahmin.",
     "- Kodu tam tutturunca kazanırsın; puanın kullandığın tahmin sayısıdır ve her zorluktaki en iyi puan tarayıcında saklanır.",
     "- Tahminler bitince kod açıklanır, tur kayıp sayılır ve en iyi puanın değişmez."
   ]

@@ -2,7 +2,7 @@ window.MGI18N_GUIDE_POINTS = window.MGI18N_GUIDE_POINTS || {};
 window.MGI18N_GUIDE_POINTS.pl = {
   sudoku: [
     "- Każdy wiersz, każda kolumna i każdy blok muszą zawierać każdą cyfrę dokładnie raz.",
-    "- Złote cyfry są danymi i nie zmieniają się; Sprawdź zaznacza błędy, nie zdradzając rozwiązania.",
+    "- Złote cyfry są podane z góry i nie zmieniają się; Sprawdź zaznacza błędy, nie zdradzając rozwiązania.",
     "- Stoper rusza przy pierwszym wpisie i zatrzymuje się w chwili rozwiązania siatki.",
     "- Twój najlepszy czas dla każdego poziomu zostaje w tej przeglądarce i nigdy nie opuszcza urządzenia."
   ],
@@ -54,7 +54,7 @@ window.MGI18N_GUIDE_POINTS.pl = {
   sort: [
     "- Liczby idą od 10 do 99, a każda należy do dokładnie jednego pojemnika.",
     "- Punkt za każde poprawne posortowanie i punkt mniej za każdy błąd, nigdy poniżej zera.",
-    "- Twoja najdłuższa poprawna seria jest pokazywana jako streak; najlepszy wynik jest w tej przeglądarce pod mg-bins-best.",
+    "- Twoja najdłuższa seria poprawnych posortowań jest podświetlana; najlepszy wynik jest w tej przeglądarce pod mg-bins-best.",
     "- Runda kończy się, gdy zegar dojdzie do zera, a pojemniki blokują się do następnego startu.",
     "- Nic nie jest pobierane i żadna runda nie jest wysyłana: wynik żyje wyłącznie w localStorage."
   ],

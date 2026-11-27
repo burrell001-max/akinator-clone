@@ -106,26 +106,26 @@
     <p class="updated">An ordering game: click a shuffled set into the right sequence, fastest wins.</p>
 
     <div class="toolbar">
-      <label for="mode" class="hint">Set</label>
+      <label for="mode" class="hint" data-i18n="set">Set</label>
       <select id="mode">
-        <option value="numbers" selected>Numbers — low to high</option>
-        <option value="words">Words — alphabetical</option>
+        <option value="numbers" selected data-i18n="mode_numbers">Numbers</option>
+        <option value="words" data-i18n="mode_words">Words</option>
       </select>
-      <label for="size" class="hint">Length</label>
+      <label for="size" class="hint" data-i18n="length">Length</label>
       <select id="size">
-        <option value="6">6 items</option>
-        <option value="8" selected>8 items</option>
-        <option value="10">10 items</option>
+        <option value="6">6</option>
+        <option value="8" selected>8</option>
+        <option value="10">10</option>
       </select>
       <button class="btn" type="button" id="restart" data-i18n="new_puzzle">New set</button>
     </div>
 
     <div class="game-panel">
       <div class="stat-row">
-        <span>Time <b id="clock">00:00</b></span>
+        <span><span data-i18n="time">Time</span> <b id="clock">00:00</b></span>
         <span><span data-i18n="best">Best</span> <b id="best">—</b></span>
-        <span>Mistakes <b id="errors">0</b></span>
-        <span>Placed <b id="progress">0/8</b></span>
+        <span><span data-i18n="mistakes">Mistakes</span> <b id="errors">0</b></span>
+        <span><span data-i18n="placed">Placed</span> <b id="progress">0/8</b></span>
       </div>
 
       <p class="hint" id="instruction">Click the lowest number first, then the next lowest, and so on.</p>

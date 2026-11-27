@@ -109,10 +109,10 @@
 
     <div class="game-panel">
       <div class="stat-row">
-        <span>Puzzle <b id="progressText">1 of 5</b></span>
-        <span>Correct <b id="correct">0</b></span>
-        <span>Daily streak <b id="streak">0</b></span>
-        <span>Best day <b id="best">0/5</b></span>
+        <span id="progressText" data-mg-count="puzzle_of" data-mg-n="1" data-mg-m="5">Puzzle 1 of 5</span>
+        <span><span data-i18n="correct">Correct</span> <b id="correct">0</b></span>
+        <span><span data-i18n="daily_streak">Daily streak</span> <b id="streak">0</b></span>
+        <span><span data-i18n="best_day">Best day</span> <b id="best">0/5</b></span>
       </div>
 
       <div class="progress" id="dots" aria-hidden="true"></div>
@@ -306,7 +306,7 @@
   }
 
   function render() {
-    progressText.textContent = Math.min(index + 1, 5) + " of 5";
+    MGi18n.setCount(progressText, "puzzle_of", Math.min(index + 1, 5), 5);
     dotsEl.innerHTML = "";
     for (var i = 0; i < 5; i++) {
       var dot = document.createElement("span");

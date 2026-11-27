@@ -109,14 +109,14 @@
     <div class="game-panel">
       <div class="stat-row">
         <span><span data-i18n="level">Level</span> <b id="level">0</b></span>
-        <span>Squares this round <b id="count">3</b></span>
-        <span>Best level <b id="best">0</b></span>
+        <span><span data-i18n="squares">Squares</span> <b id="count">3</b></span>
+        <span><span data-i18n="best_level">Best level</span> <b id="best">0</b></span>
         <span><span data-i18n="streak">Streak</span> <b id="streak">0</b></span>
       </div>
 
       <div id="grid" role="group" aria-label="Memory grid"></div>
 
-      <p class="status" id="status" role="status" aria-live="polite">Press Start to see the first pattern.</p>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
       <p class="hint">Squares are lit for about a second. Clicking a square that was dark ends the round.</p>
     </div>
 
@@ -323,11 +323,11 @@
       " and reached " + target.length + " squares. Press Start to try again.";
     MGMemory.commitBest("mg-gridflash-best", cleared);
     bestEl.textContent = String(MG.getBest("mg-gridflash-best", 0));
-    startBtn.textContent = "Play again";
+    MGi18n.setText(startBtn, "play_again");
   }
 
   startBtn.addEventListener("click", function () {
-    startBtn.textContent = "Restart";
+    MGi18n.setText(startBtn, "restart");
     startGame();
   });
 

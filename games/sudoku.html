@@ -70,19 +70,19 @@
     <p class="updated">Every puzzle here is generated in your browser, one solution only.</p>
 
     <div class="toolbar">
-      <label for="diff" class="hint">Difficulty</label>
+      <label for="diff" class="hint" data-i18n="difficulty">Difficulty</label>
       <select id="diff">
-        <option value="easy">Easy</option>
-        <option value="medium" selected>Medium</option>
-        <option value="hard">Hard</option>
-        <option value="expert">Expert</option>
+        <option value="easy" data-i18n="easy">Easy</option>
+        <option value="medium" selected data-i18n="medium">Medium</option>
+        <option value="hard" data-i18n="hard">Hard</option>
+        <option value="expert" data-i18n="expert">Expert</option>
       </select>
       <button class="btn" id="newGame" type="button" data-i18n="new_puzzle">New puzzle</button>
       <button class="btn ghost" id="check" type="button" data-i18n="check">Check answers</button>
     </div>
 
     <div class="board-wrap">
-      <div class="meta"><span id="timer">0:00</span><span id="progress">0 of 81 filled</span></div>
+      <div class="meta"><span id="timer">0:00</span><span id="progress" data-mg-count="filled_of" data-mg-n="0" data-mg-m="81">0 of 81 filled</span></div>
       <div id="board" role="grid" aria-label="Sudoku grid"></div>
       <div id="pad" role="group" aria-label="Number pad"></div>
     </div>
@@ -179,7 +179,13 @@
     status: document.getElementById("status"),
     time: document.getElementById("timer"),
     filled: document.getElementById("progress"),
-    filledFormat: function (filled, total) { return filled + " of " + total + " filled"; },
+    filledFormat: function (filled, total) {
+      var el = document.getElementById("progress");
+      el.setAttribute("data-mg-count", "filled_of");
+      el.setAttribute("data-mg-n", String(filled));
+      el.setAttribute("data-mg-m", String(total));
+      return MGi18n.t("filled_of", { n: filled, m: total });
+    },
     givens: GIVENS[diffEl.value] || 35,
     padCols: 9,
     messages: { start: "Click a cell, then type a number." }

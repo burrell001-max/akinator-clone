@@ -22,26 +22,26 @@ window.MGI18N_GUIDE_POINTS.it = {
   anagram: [
     "- 100 punti per una parola risolta senza aiuto, 75 quando l'indizio è stato rivelato.",
     "- Un tentativo sbagliato costa solo tempo: continua finché non la trovi o salta alla successiva.",
-    "- Il totale migliore su dieci round resta nel tuo browser, e le risposte hanno da cinque a nove lettere senza nomi propri.",
+    "- Il totale migliore su dieci partite resta nel tuo browser, e le risposte hanno da cinque a nove lettere senza nomi propri.",
     "- Niente viene caricato online: il record vive solo in localStorage su questo dispositivo."
   ],
   wordguess: [
-    "- Sei tentativi per una parola di cinque lettere; verde è la lettera giusta al posto giusto, ambra la lettera giusta altrove.",
+    "- Sei tentativi per una parola di cinque lettere; verde è la lettera giusta al posto giusto, giallo la lettera giusta altrove.",
     "- Ogni tentativo deve essere una parola che il gioco conosce, così la tastiera ti avvisa quando una voce non è in elenco.",
     "- Ogni nuova partita sceglie una parola nuova, e la tua serie di vittorie resta in questo browser.",
     "- Esauriti i tentativi la parola viene rivelata e la partita finisce; la serie riparte da zero."
   ],
   crossword: [
-    "- Dieci indizi per round, tutti estratti a caso da una riserva di ventisei.",
-    "- Dieci punti per risposta corretta, tre in meno per ogni indizio usato su quella domanda, niente per un salto.",
+    "- Dieci indizi per partita, tutti estratti a caso da una riserva di ventisei.",
+    "- Dieci punti per risposta corretta, tre in meno per ogni indizio usato su quella domanda, niente se la salti.",
     "- L'ortografia conta, le maiuscole no: le risposte sono confrontate in maiuscolo e senza spazi.",
     "- Il tuo record resta sotto mg-clueclues-best in questo browser e non lascia mai il dispositivo.",
-    "- Il round finisce quando il cronometro arriva a zero, e la casella della risposta si blocca fino al prossimo avvio."
+    "- La partita finisce quando il cronometro arriva a zero, e la casella della risposta si blocca fino al prossimo avvio."
   ],
   pairs: [
     "- Gira due carte alla volta e lascia la coppia scoperta quando le due coincidono.",
     "- Se non coincidono tornano coperte dopo un istante, quindi ricordare ciò che hai visto è tutto il gioco.",
-    "- Il round finisce quando sono trovate tutte e sei le coppie; si contano mosse e tempo.",
+    "- La partita finisce quando sono trovate tutte e sei le coppie; si contano mosse e tempo.",
     "- Il tuo miglior risultato resta in questo browser sotto una chiave mg- e non viene mai caricato online."
   ],
   sequence: [
@@ -49,22 +49,22 @@ window.MGI18N_GUIDE_POINTS.it = {
     "- Le parole sono parole comuni, tutte diverse, da ordinare alfabeticamente senza badare alle maiuscole.",
     "- Un clic che non è l'elemento successivo conta come errore e l'elemento resta disponibile.",
     "- Il punteggio è il tempo impiegato; il tempo migliore per ogni insieme e lunghezza resta in questo browser sotto mg-sort-best.",
-    "- Cambiare insieme o lunghezza avvia subito un nuovo round."
+    "- Cambiare insieme o lunghezza avvia subito una nuova partita."
   ],
   sort: [
     "- I numeri vanno da 10 a 99, e ogni numero appartiene a un solo contenitore.",
     "- Un punto per ogni smistamento corretto, un punto perso per ogni errore, mai sotto zero.",
-    "- La tua serie corretta più lunga è mostrata come streak; il record resta in questo browser sotto mg-bins-best.",
-    "- Il round finisce quando il cronometro arriva a zero, e i contenitori si bloccano fino al prossimo avvio.",
-    "- Niente viene scaricato e nessun round viene caricato: il punteggio vive solo in localStorage."
+    "- La tua serie di smistamenti corretti più lunga viene evidenziata; il record resta in questo browser sotto mg-bins-best.",
+    "- La partita finisce quando il cronometro arriva a zero, e i contenitori si bloccano fino al prossimo avvio.",
+    "- Niente viene scaricato e nessuna partita viene caricata: il punteggio vive solo in localStorage."
   ],
   math: [
     "- Facile: addizioni e sottrazioni con numeri fino a 20.",
     "- Medio: moltiplicazioni da 2 a 12, divisioni esatte e piccole addizioni o sottrazioni fino a 30.",
     "- Difficile: moltiplicazioni fino a 20, divisioni esatte e addizioni o sottrazioni con numeri fino a 100.",
-    "- Un punto per risposta corretta, nessun bonus per la rapidità dentro il round: la pressione è il cronometro.",
+    "- Un punto per risposta corretta, nessun bonus per la rapidità dentro la partita: la pressione è il cronometro.",
     "- Il record per ogni difficoltà resta in questo browser sotto mg-math-best.",
-    "- Quando il cronometro arriva a zero il round finisce e l'input si blocca fino al prossimo avvio."
+    "- Quando il cronometro arriva a zero la partita finisce e l'input si blocca fino al prossimo avvio."
   ],
   slide: [
     "- Si muove solo la tessera che condivide un lato con lo spazio vuoto; le vicine in diagonale no.",
@@ -85,6 +85,6 @@ window.MGI18N_GUIDE_POINTS.it = {
     "- Medio: quattro cifre da 1 a 6, ripetizioni ammesse, dieci tentativi.",
     "- Difficile: cinque cifre da 1 a 8, ripetizioni ammesse, dodici tentativi.",
     "- Vinci se indovini il codice esatto; il punteggio è il numero di tentativi usati, e il record per ogni difficoltà resta nel tuo browser.",
-    "- Esauriti i tentativi il codice viene rivelato, il round conta come sconfitta e il record non viene toccato."
+    "- Esauriti i tentativi il codice viene rivelato, la partita conta come sconfitta e il record non viene toccato."
   ]
 };

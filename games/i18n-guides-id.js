@@ -54,7 +54,7 @@ window.MGI18N_GUIDE_POINTS.id = {
   sort: [
     "- Angka berkisar 10 sampai 99, dan setiap angka hanya cocok untuk satu kotak.",
     "- Satu poin untuk setiap sortir benar, satu poin hilang untuk setiap kesalahan, tidak pernah di bawah nol.",
-    "- Rentetan benar terpanjang ditampilkan sebagai streak; skor terbaikmu disimpan di browser ini dengan kunci mg-bins-best.",
+    "- Rentetan jawaban benar terpanjang ditampilkan terpisah; skor terbaikmu disimpan di browser ini dengan kunci mg-bins-best.",
     "- Ronde berakhir saat timer mencapai nol, dan kotak terkunci sampai kamu mulai lagi.",
     "- Tidak ada yang diunduh dan tidak ada ronde yang diunggah: skor hanya hidup di penyimpanan lokal."
   ],

@@ -98,18 +98,18 @@
     <p class="updated">A maths sprint: sixty seconds, as many right answers as you can manage.</p>
 
     <div class="toolbar">
-      <label for="level" class="hint">Difficulty</label>
+      <label for="level" class="hint" data-i18n="difficulty">Difficulty</label>
       <select id="level">
-        <option value="easy">Easy — add and subtract to 20</option>
-        <option value="medium" selected>Medium — times tables and small division</option>
-        <option value="hard">Hard — mixed, larger numbers</option>
+        <option value="easy" data-i18n="easy">Easy</option>
+        <option value="medium" selected data-i18n="medium">Medium</option>
+        <option value="hard" data-i18n="hard">Hard</option>
       </select>
       <button class="btn" type="button" id="restart" data-i18n="start">Start</button>
     </div>
 
     <div class="game-panel">
       <div class="stat-row">
-        <span><span data-i18n="time">Time left</span> <b id="left">60s</b></span>
+        <span><span data-i18n="time_left">Time left</span> <b id="left">60s</b></span>
         <span><span data-i18n="score">Score</span> <b id="score">0</b></span>
         <span><span data-i18n="streak">Streak</span> <b id="streak">0</b></span>
         <span><span data-i18n="best">Best</span> <b id="best">0</b></span>
@@ -117,7 +117,7 @@
 
       <div class="bar"><span id="barFill"></span></div>
 
-      <div class="question" id="question" aria-live="polite">Press Start</div>
+      <div class="question" id="question" aria-live="polite"></div>
 
       <div class="answer-row">
         <label class="sr-only" for="answer">Your answer</label>

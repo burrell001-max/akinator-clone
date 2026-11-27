@@ -111,9 +111,9 @@
 
     <div class="game-panel">
       <div class="stat-row">
-        <span>Time <b id="clock">00:00</b></span>
+        <span><span data-i18n="time">Time</span> <b id="clock">00:00</b></span>
         <span><span data-i18n="best">Best</span> <b id="best">—</b></span>
-        <span>Filled <b id="filled">0/36</b></span>
+        <span><span data-i18n="filled">Filled</span> <b id="filled">0/36</b></span>
       </div>
 
       <div class="xgrid" id="grid" aria-label="Six by six crossword grid"></div>
@@ -126,7 +126,7 @@
 
       <p class="status" id="status" role="status" aria-live="polite"></p>
 
-      <h2 style="margin-top:22px">Clues</h2>
+      <h2 style="margin-top:22px" data-i18n="clues">Clues</h2>
       <ol class="clues" id="clueList"></ol>
       <p class="hint">Each numbered clue answers a row and, with the same word, its column — that is what makes the grid a word square.</p>
     </div>
@@ -320,7 +320,7 @@
     cells.forEach(function (cell) { cell.classList.add("ok"); cell.disabled = true; });
     // Hinting and checking are meaningless now; Clear grid becomes a replay.
     document.getElementById("hint").disabled = true;
-    document.getElementById("clear").textContent = "Play again";
+    MGi18n.setText(document.getElementById("clear"), "play_again");
   }
 
   function showBest() {
@@ -404,7 +404,7 @@
     // Works after a solve too, so the grid can be replayed instead of freezing.
     solved = false;
     document.getElementById("hint").disabled = false;
-    document.getElementById("clear").textContent = "Clear grid";
+    MGi18n.setText(document.getElementById("clear"), "reset");
     cells.forEach(function (cell) {
       cell.disabled = false;
       cell.value = "";

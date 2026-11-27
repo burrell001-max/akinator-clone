@@ -109,3 +109,24 @@ html[data-lang="en"] .mg-guide { display: none; }
 .mg-guide-list { margin: 0 0 18px; padding-left: 1.25em; max-width: 68ch; color: var(--text, #e9edf8); }
 .mg-guide-list li { margin: 0 0 7px; line-height: 1.5; }
 [dir="rtl"] .mg-guide-list { padding-left: 0; padding-right: 1.25em; }
+
+/* Arrow pads, keypads and tile slots are spatial: keep their internal order
+   left-to-right under RTL so the arrow that points left is still on the left. */
+html[dir="rtl"] .pad,
+html[dir="rtl"] .numpad,
+html[dir="rtl"] .slot-row,
+html[dir="rtl"] .keyrow,
+html[dir="rtl"] .guess-row,
+html[dir="rtl"] .row-of-tiles { direction: ltr; }
+
+/* Times, scores and codes read left-to-right in every language, so a colon or
+   a slash cannot flip position between the label and its value. */
+html[dir="rtl"] .stat-row b,
+html[dir="rtl"] .clue-meta,
+html[dir="rtl"] .digits,
+html[dir="rtl"] .timer,
+html[dir="rtl"] .guess-row { unicode-bidi: isolate; }
+
+/* A missing guide file falls back to the English essay instead of an empty
+   section (set by i18n.js on script error). */
+html[data-guide-fallback] .mg-guide-en { display: block; }

@@ -26,14 +26,14 @@ window.MGI18N_GUIDE_POINTS.fr = {
     "- Rien n'est envoyé : le meilleur score reste dans localStorage, sur cet appareil uniquement."
   ],
   wordguess: [
-    "- Six essais pour un mot de cinq lettres ; vert signifie la bonne lettre à la bonne place, ambre la bonne lettre ailleurs.",
+    "- Six essais pour un mot de cinq lettres ; vert signifie la bonne lettre à la bonne place, orange la bonne lettre ailleurs.",
     "- Chaque essai doit être un mot que le jeu connaît, et le clavier vous prévient quand une saisie n'est pas dans la liste.",
     "- Chaque nouvelle partie choisit un nouveau mot, et votre série de victoires est conservée dans ce navigateur.",
     "- Épuiser les essais révèle le mot et termine la partie ; la série repart à zéro."
   ],
   crossword: [
     "- Dix indices par manche, tous tirés au hasard dans une réserve de vingt-six.",
-    "- Dix points par bonne réponse, trois en moins par indice utilisé sur cette question, rien pour un passage.",
+    "- Dix points par bonne réponse, trois en moins par indice utilisé sur cette question, rien si tu passes.",
     "- L'orthographe compte mais pas la casse : les réponses sont comparées en majuscules, sans espaces.",
     "- Votre meilleur score est conservé sous mg-clueclues-best dans ce navigateur et ne quitte jamais l'appareil.",
     "- La manche se termine quand le chrono atteint zéro, et la case de réponse se verrouille jusqu'au prochain départ."
@@ -54,7 +54,7 @@ window.MGI18N_GUIDE_POINTS.fr = {
   sort: [
     "- Les nombres vont de 10 à 99, et chaque nombre appartient à une seule corbeille.",
     "- Un point par tri correct, un point perdu par erreur, jamais en dessous de zéro.",
-    "- Votre plus longue série correcte est affichée comme série ; votre meilleur score est conservé dans ce navigateur sous mg-bins-best.",
+    "- Votre plus longue série de tris corrects est mise en avant ; votre meilleur score est conservé dans ce navigateur sous mg-bins-best.",
     "- La manche se termine quand le chrono atteint zéro, et les corbeilles se verrouillent jusqu'au prochain départ.",
     "- Rien n'est téléchargé et aucune manche n'est envoyée : le score vit uniquement dans localStorage."
   ],

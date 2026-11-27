@@ -100,9 +100,9 @@
 
     <div class="game-panel">
       <div class="stat-row">
-        <span><span data-i18n="round">Round</span> <b id="roundNo">1</b> of <b>10</b></span>
-        <span>Score: <b id="score">0</b></span>
-        <span>Best: <b id="best">—</b></span>
+        <span id="roundNo" data-mg-count="round_of" data-mg-n="1" data-mg-m="10">Round 1 of 10</span>
+        <span><span data-i18n="score">Score</span>: <b id="score">0</b></span>
+        <span><span data-i18n="best">Best</span>: <b id="best">—</b></span>
       </div>
       <div class="round-bar"><i id="progress"></i></div>
 
@@ -307,7 +307,7 @@
   function render() {
     current = queue[roundIndex];
     usedHint = false;
-    roundEl.textContent = String(roundIndex + 1);
+    MGi18n.setCount(roundEl, "round_of", roundIndex + 1, 10);
     progressEl.style.width = Math.round((roundIndex / ROUNDS) * 100) + "%";
     lettersEl.innerHTML = "";
     scramble(current.w).split("").forEach(function (ch) {

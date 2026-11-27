@@ -1034,9 +1034,13 @@ add({
     if (!remaining.length) throw new Error("no candidate codes left");
   }
   const best = q.ls("mg-codebreaker-best-easy");
+  /* The guess counter is localized, so read its stored value rather than the
+     rendered text: data-mg-n survives a language switch. */
+  const counter = q.qa("#guessProgress")[0];
   return {
-    ok: status.indexOf("Cracked in") === 0 && best === String(attempts) && q.txt("#guessNo") === String(Math.min(attempts + 1, 8)),
-    attempts, status, best
+    ok: status.indexOf("Cracked in") === 0 && best === String(attempts) &&
+      counter.getAttribute("data-mg-n") === String(Math.min(attempts + 1, 8)),
+    attempts, status, best, counter: counter.textContent
   };
 `
 });

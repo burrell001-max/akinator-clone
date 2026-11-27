@@ -99,8 +99,8 @@
     </div>
 
     <div class="stat-row" style="justify-content:center">
-      <span>Step: <b id="level">0</b></span>
-      <span>Your best: <b id="best">—</b></span>
+      <span><span data-i18n="step">Step</span>: <b id="level">0</b></span>
+      <span><span data-i18n="your_best">Your best</span>: <b id="best">—</b></span>
     </div>
 
     <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -246,7 +246,7 @@
     setEnabled: setPadEnabled,
     onStart: function () {
       levelEl.textContent = "0";
-      startBtn.textContent = "Restart";
+      MGi18n.setText(startBtn, "restart");
       statusEl.textContent = "";
       showBest();
     },
@@ -278,7 +278,7 @@
         message += " Best: " + (MGMemory.bestValue(BEST_KEY) || 0) + ".";
       }
       statusEl.textContent = message;
-      startBtn.textContent = "Play again";
+      MGi18n.setText(startBtn, "play_again");
     }
   });
 

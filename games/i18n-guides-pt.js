@@ -54,7 +54,7 @@ window.MGI18N_GUIDE_POINTS.pt = {
   sort: [
     "- Os números vão de 10 a 99, e cada número pertence a um único caixote.",
     "- Um ponto por cada separação certa e um ponto a menos por cada erro, nunca abaixo de zero.",
-    "- A tua sequência certa mais longa aparece como streak; a melhor pontuação fica neste navegador com a chave mg-bins-best.",
+    "- A tua maior série de separações certas aparece destacada; a melhor pontuação fica neste navegador com a chave mg-bins-best.",
     "- A ronda termina quando o relógio chega a zero, e os caixotes ficam bloqueados até recomeçares.",
     "- Nada é descarregado e nenhuma ronda é enviada: a pontuação vive só no localStorage."
   ],

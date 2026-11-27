@@ -2,7 +2,7 @@ window.MGI18N_GUIDE_POINTS = window.MGI18N_GUIDE_POINTS || {};
 window.MGI18N_GUIDE_POINTS.nl = {
   sudoku: [
     "- Elke rij, elke kolom en elk blok moeten elk cijfer precies één keer bevatten.",
-    "- Gouden cijfers zijn gegevens en veranderen niet; Controleren markeert fouten zonder de oplossing te verklappen.",
+    "- Gouden cijfers staan vast en veranderen niet; Controleren markeert fouten zonder de oplossing te verklappen.",
     "- De timer start bij je eerste invoer en stopt op het moment dat het rooster is opgelost.",
     "- Je beste tijd per moeilijkheid blijft in deze browser en verlaat het apparaat nooit."
   ],
@@ -33,7 +33,7 @@ window.MGI18N_GUIDE_POINTS.nl = {
   ],
   crossword: [
     "- Tien aanwijzingen per ronde, allemaal willekeurig uit een voorraad van zesentwintig.",
-    "- Tien punten per goed antwoord, drie eraf per gebruikte hint op die aanwijzing, niets voor overslaan.",
+    "- Tien punten per goed antwoord, drie eraf voor elke hint bij die aanwijzing, niets voor overslaan.",
     "- Spelling telt, hoofdletters niet: antwoorden worden vergeleken in hoofdletters en zonder spaties.",
     "- Je beste score staat onder mg-clueclues-best in deze browser en verlaat het apparaat nooit.",
     "- De ronde eindigt bij nul op de klok, en het antwoordvak blijft op slot tot je opnieuw start."
@@ -54,7 +54,7 @@ window.MGI18N_GUIDE_POINTS.nl = {
   sort: [
     "- Getallen lopen van 10 tot 99, en elk getal hoort in precies één bak.",
     "- Eén punt per goede sortering, één punt eraf per fout, nooit onder nul.",
-    "- Je langste goede reeks verschijnt als streak; je beste score staat in deze browser onder mg-bins-best.",
+    "- Je langste reeks goede sorteringen wordt bijgehouden; je beste score staat in deze browser onder mg-bins-best.",
     "- De ronde eindigt bij nul op de klok, en de bakken blijven op slot tot je opnieuw start.",
     "- Er wordt niets opgehaald en geen ronde geüpload: de score leeft alleen in localStorage."
   ],
@@ -69,7 +69,7 @@ window.MGI18N_GUIDE_POINTS.nl = {
   slide: [
     "- Alleen een tegel die een rand met het gat deelt kan bewegen; diagonale buren niet.",
     "- Elke schudbeurt komt uit een paar honderd toegestane zetten vanaf het opgeloste bord, dus er is altijd een oplossing.",
-    "- Je score is het aantal zetten, met tijd als tiebreaker voor je eigen records.",
+    "- Je score is het aantal zetten; bij gelijkstand in je eigen records beslist de tijd.",
     "- Het beste aantal zetten per bordgrootte staat in deze browser onder mg-slide-best.",
     "- Schudden start een nieuw bord, zet de tellers op nul en houdt de beste score."
   ],

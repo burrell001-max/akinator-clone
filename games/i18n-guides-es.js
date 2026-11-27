@@ -2,13 +2,13 @@ window.MGI18N_GUIDE_POINTS = window.MGI18N_GUIDE_POINTS || {};
 window.MGI18N_GUIDE_POINTS.es = {
   sudoku: [
     "- Cada fila, cada columna y cada caja deben contener cada dígito exactamente una vez.",
-    "- Las cifras doradas son datos fijos y no cambian; Comprobar marca los errores sin revelar la solución.",
+    "- Las cifras doradas vienen dadas y no cambian; Comprobar marca los errores sin revelar la solución.",
     "- El cronómetro empieza con tu primera entrada y se detiene en el momento en que se resuelve la cuadrícula.",
     "- Tu mejor tiempo para cada dificultad se guarda en este navegador y nunca sale del dispositivo."
   ],
   nonogram: [
     "- Los números junto a una fila o sobre una columna indican, en orden, las series de casillas llenas, con al menos un hueco entre ellas.",
-    "- Marca con la cruz las casillas que hayas deducido vacías; una casilla marcada nunca cuenta como llena ni impide ganar.",
+    "- Marca con una cruz las casillas que hayas deducido vacías; una casilla marcada nunca cuenta como llena ni impide ganar.",
     "- Cualquier disposición que cumpla todas las pistas de filas y columnas vale como resuelta, porque la comprobación es sobre las pistas.",
     "- La cuadrícula diaria se genera a partir de la fecha, así que hoy es la misma para todos, y la racha cuenta los días consecutivos resueltos."
   ],
@@ -21,12 +21,12 @@ window.MGI18N_GUIDE_POINTS.es = {
   ],
   anagram: [
     "- 100 puntos por una palabra resuelta sin ayuda, 75 si se ha revelado la pista.",
-    "- Un intento fallido no cuesta nada más que tiempo; sigue probando hasta acertar o saltar.",
+    "- Un intento fallido no cuesta nada más que tiempo; sigue probando hasta acertar o pasar a la siguiente.",
     "- El mejor total de diez rondas se guarda en tu navegador, y las respuestas tienen de cinco a nueve letras y ningún nombre propio.",
     "- No se sube nada: la mejor puntuación vive solo en localStorage, en este dispositivo."
   ],
   wordguess: [
-    "- Seis intentos para una palabra de cinco letras; verde es la letra correcta en el lugar correcto y ámbar la correcta en otro lugar.",
+    "- Seis intentos para una palabra de cinco letras; verde es la letra correcta en el lugar correcto y amarillo la correcta en otro lugar.",
     "- Cada intento debe ser una palabra que el juego conozca, así que el teclado avisa cuando una entrada no está en la lista.",
     "- Cada partida nueva elige otra palabra, y tu racha de victorias se guarda en este navegador.",
     "- Quedarse sin intentos revela la palabra y termina la partida; la racha vuelve a cero."
@@ -52,9 +52,9 @@ window.MGI18N_GUIDE_POINTS.es = {
     "- Cambiar el conjunto o la longitud empieza una ronda nueva al instante."
   ],
   sort: [
-    "- Los números van del 10 al 99, y cada número pertenece a una sola caja.",
+    "- Los números van del 10 al 99, y cada número pertenece a una única caja.",
     "- Un punto por cada clasificación correcta y un punto menos por cada error, nunca por debajo de cero.",
-    "- Tu racha correcta más larga aparece como racha; tu mejor puntuación se guarda en este navegador con la clave mg-bins-best.",
+    "- Tu racha de clasificaciones correctas más larga aparece destacada; tu mejor puntuación se guarda en este navegador con la clave mg-bins-best.",
     "- La ronda termina cuando el reloj llega a cero, y las cajas se bloquean hasta que vuelvas a empezar.",
     "- No se descarga nada y no se sube ninguna ronda: la puntuación vive solo en localStorage."
   ],
@@ -76,7 +76,7 @@ window.MGI18N_GUIDE_POINTS.es = {
   pattern: [
     "- Cinco secuencias al día, un intento para cada una y siempre con respuestas enteras.",
     "- Las respuestas solo pueden ser negativas en el conjunto de restas, y aun ahí la secuencia se mantiene por encima de cero.",
-    "- Tu mejor día es el mayor número de aciertos sobre cinco, guardado con la clave mg-pattern-best.",
+    "- Tu mejor día es el mayor número de aciertos de cinco, guardado con la clave mg-pattern-best.",
     "- La racha diaria se guarda con la clave mg-pattern-streak y cuenta los días consecutivos en que completaste el conjunto.",
     "- Reiniciar vuelve a jugar los cinco puzles de hoy; no genera otros nuevos."
   ],
