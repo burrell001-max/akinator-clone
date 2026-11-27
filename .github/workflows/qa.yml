@@ -29,6 +29,12 @@ jobs:
           node-version: 22
       - name: Internal links, ids, scripts, category pages, sitemap, social cards
         run: node tools/qa/check-site.mjs
+      - name: Translation audit (keys, placeholders, numerals, branding, hooks)
+        # Same command developers run locally: node tools/qa/check-i18n.mjs
+        # Fails on a missing key, an English leak, an altered number or an
+        # unresolved data-i18n / data-mg-count hook. Coverage notes list what
+        # is still English but do not fail unless --strict-ui is passed.
+        run: node tools/qa/check-i18n.mjs
       - name: Generated pages match tools/content/games-data.mjs
         run: |
           node tools/build/build-pages.mjs
