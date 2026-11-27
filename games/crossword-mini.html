@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Crossword: A Free 6x6 Word Square Puzzle</title>
+<meta name="description" content="A six-by-six crossword word square with six clues. Type your answers, check letters, take a hint, and race your own best time. No account needed.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/crossword-mini.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Mini Crossword: A Free 6x6 Word Square Puzzle">
+<meta property="og:description" content="Six clues, six answers, and every answer reads the same across and down.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/crossword-mini.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mini Crossword: A Free 6x6 Word Square Puzzle">
+<meta name="twitter:description" content="A six-by-six crossword word square with six clues and a timer.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Mini Crossword",
+  "url": "https://mindgenieai.xyz/games/crossword-mini.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A six-by-six crossword word square: six clues, six answers, each reading the same across and down.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .xgrid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    max-width: 330px;
+    margin: 4px 0 6px;
+  }
+  .xcell {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: clamp(1rem, 4.6vw, 1.25rem);
+    font-weight: 700;
+    color: var(--text);
+    background: #0c1426;
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 6px;
+    padding: 0;
+    font-family: inherit;
+  }
+  .xcell:focus { border-color: var(--gold); outline: none; }
+  .xcell.ok { border-color: var(--ok); color: var(--ok); }
+  .xcell.bad { border-color: var(--bad); color: var(--bad); }
+  .xcell.hinted { color: var(--gold); }
+  .clues { margin: 14px 0 0; padding-left: 22px; }
+  .clues li { margin-bottom: 8px; }
+  .clues .num { color: var(--gold); font-weight: 700; }
+  .keyrow { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 0; }
+  .rules-list li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/word-anagram.html">Anagram Hunt</a>
+      <a href="/games/word-guess.html">Word Guess</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Mini Crossword</h1>
+    <p class="updated">A six-by-six word square: six clues, six answers, each reading across and down.</p>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Time <b id="clock">00:00</b></span>
+        <span>Best <b id="best">—</b></span>
+        <span>Filled <b id="filled">0/36</b></span>
+      </div>
+
+      <div class="xgrid" id="grid" aria-label="Six by six crossword grid"></div>
+
+      <div class="keyrow">
+        <button class="btn" type="button" id="check">Check letters</button>
+        <button class="btn ghost" type="button" id="hint">Show a letter</button>
+        <button class="btn ghost" type="button" id="clear">Clear grid</button>
+      </div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+
+      <h2 style="margin-top:22px">Clues</h2>
+      <ol class="clues" id="clueList"></ol>
+      <p class="hint">Each numbered clue answers a row and, with the same word, its column — that is what makes the grid a word square.</p>
+    </div>
+
+    <h2>How to play</h2>
+    <p>Pick any square and type one letter. The cursor moves on by itself; arrow keys move around the grid and Backspace steps back a square. Because every square is checked in both directions, a wrong letter breaks two answers at once, which is exactly the feedback you want: fill the squares you are confident about and let the crossings carry you through the rest.</p>
+    <p><strong>Check letters</strong> colours what you have typed — green for a correct letter, red for a wrong one — without revealing the answers. <strong>Show a letter</strong> fills one empty square with the right letter and counts as a hint, so try the crossing letters first.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul class="rules-list">
+      <li>The grid is six squares by six, with no black squares — every letter belongs to one row and one column.</li>
+      <li>Each of the six clues has one six-letter answer. The same six words are the rows and the columns, in the same order.</li>
+      <li>You finish when all thirty-six squares hold the correct letters. The timer stops at that moment.</li>
+      <li>Your fastest completion is kept in this browser under <code>mg-word-square-best</code>. Using hints does not block a best time, but the status line tells you how many hints you used.</li>
+      <li>There is no penalty for a wrong letter — check as often as you like.</li>
+    </ul>
+
+    <h2>Strategy for a word square</h2>
+    <p>Start with the clue whose answer you are most sure of and type it across its row. In an ordinary crossword that gives you six letters; here it also fills the first letter of six columns, so the whole board immediately narrows. Then read the columns: if a column already begins with a letter you know, the remaining five letters have to make one of the other five answers, and the clue list tells you which ones are still available.</p>
+    <p>The useful trick is to count letters. If the word you want for a column is not one of the answers you have left, then the row you typed it from is wrong, even if it looked plausible. Word squares punish guesses that fit the clue but clash with the crossings, which is why they are a better test of spelling than of inspiration.</p>
+
+    <h2>Why a word square</h2>
+    <p>A six-by-six grid with no black squares only works as a crossword when the rows and the columns are all words — that is the definition of a word square, and it is the oldest crossword form there is: examples scratched into walls in Pompeii have the same shape. The constraint is brutal for a puzzle setter and generous for a solver: every letter you place is checked twice.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var SOLUTION = ["spears", "planet", "easily", "animal", "relate", "styles"];
+  var CLUES = [
+    "Weapons with long shafts and pointed heads",
+    "A world that orbits a star",
+    "Without any difficulty at all",
+    "A living creature, as opposed to a plant",
+    "To connect two things, or to tell a story",
+    "Fashions, modes or manners, in the plural"
+  ];
+  var BEST_KEY = "mg-word-square-best";
+  var N = 6;
+
+  var gridEl = document.getElementById("grid");
+  var clockEl = document.getElementById("clock");
+  var bestEl = document.getElementById("best");
+  var filledEl = document.getElementById("filled");
+  var statusEl = document.getElementById("status");
+
+  var cells = [];
+  var seconds = 0;
+  var timer = null;
+  var running = false;
+  var solved = false;
+  var hints = 0;
+
+  function buildClues() {
+    var list = document.getElementById("clueList");
+    CLUES.forEach(function (text, i) {
+      var li = document.createElement("li");
+      li.innerHTML = '<span class="num">' + (i + 1) + "</span> " + text + " <span class=\"hint\">(6)</span>";
+      list.appendChild(li);
+    });
+  }
+
+  function buildGrid() {
+    for (var r = 0; r < N; r++) {
+      for (var c = 0; c < N; c++) {
+        var input = document.createElement("input");
+        input.className = "xcell";
+        input.type = "text";
+        input.maxLength = 1;
+        input.autocomplete = "off";
+        input.spellcheck = false;
+        input.setAttribute("inputmode", "text");
+        input.setAttribute("aria-label", "Row " + (r + 1) + " column " + (c + 1));
+        input.dataset.r = String(r);
+        input.dataset.c = String(c);
+        gridEl.appendChild(input);
+        cells.push(input);
+      }
+    }
+  }
+
+  function at(r, c) {
+    if (r < 0 || c < 0 || r >= N || c >= N) return null;
+    return cells[r * N + c];
+  }
+
+  function startTimer() {
+    if (running || solved) return;
+    running = true;
+    timer = window.setInterval(function () {
+      seconds++;
+      clockEl.textContent = MG.formatTime(seconds);
+    }, 1000);
+  }
+
+  function stopTimer() {
+    running = false;
+    if (timer) window.clearInterval(timer);
+    timer = null;
+  }
+
+  function countFilled() {
+    var n = 0;
+    cells.forEach(function (cell) { if (cell.value.trim()) n++; });
+    filledEl.textContent = n + "/36";
+    return n;
+  }
+
+  function isSolved() {
+    for (var i = 0; i < cells.length; i++) {
+      if (cells[i].value.trim().toLowerCase() !== SOLUTION[Math.floor(i / N)][i % N]) return false;
+    }
+    return true;
+  }
+
+  function finish() {
+    solved = true;
+    stopTimer();
+    statusEl.textContent = "Solved in " + MG.formatTime(seconds) +
+      (hints ? " with " + hints + (hints === 1 ? " hint" : " hints") : " with no hints") + ".";
+    var best = MG.store.get(BEST_KEY, null);
+    if (best === null || seconds < best) {
+      MG.store.set(BEST_KEY, seconds);
+      statusEl.textContent += " That is a new best time.";
+      showBest();
+    }
+    cells.forEach(function (cell) { cell.classList.add("ok"); cell.disabled = true; });
+  }
+
+  function showBest() {
+    var best = MG.store.get(BEST_KEY, null);
+    bestEl.textContent = best === null ? "—" : MG.formatTime(best);
+  }
+
+  function afterEntry() {
+    countFilled();
+    if (!solved && isSolved()) finish();
+  }
+
+  gridEl.addEventListener("input", function (e) {
+    var input = e.target;
+    if (!input.classList.contains("xcell")) return;
+    startTimer();
+    var v = input.value.replace(/[^a-zA-Z]/g, "").slice(0, 1).toLowerCase();
+    input.value = v ? v.toUpperCase() : "";
+    input.classList.remove("ok", "bad", "hinted");
+    if (v) {
+      var r = Number(input.dataset.r), c = Number(input.dataset.c);
+      var next = at(r, c + 1) || at(r + 1, 0) || at(r, c);
+      if (next) next.focus();
+    }
+    afterEntry();
+  });
+
+  gridEl.addEventListener("keydown", function (e) {
+    var input = e.target;
+    if (!input.classList.contains("xcell")) return;
+    var r = Number(input.dataset.r), c = Number(input.dataset.c);
+    var target = null;
+    if (e.key === "ArrowRight") target = at(r, c + 1);
+    else if (e.key === "ArrowLeft") target = at(r, c - 1);
+    else if (e.key === "ArrowUp") target = at(r - 1, c);
+    else if (e.key === "ArrowDown") target = at(r + 1, c);
+    else if (e.key === "Backspace" && !input.value) target = at(r, c - 1) || at(r - 1, N - 1);
+    if (target) {
+      e.preventDefault();
+      target.focus();
+    }
+  });
+
+  document.getElementById("check").addEventListener("click", function () {
+    if (solved) return;
+    var wrong = 0;
+    cells.forEach(function (cell, i) {
+      var v = cell.value.trim().toLowerCase();
+      cell.classList.remove("ok", "bad", "hinted");
+      if (!v) return;
+      var right = SOLUTION[Math.floor(i / N)][i % N];
+      if (v === right) cell.classList.add("ok");
+      else { cell.classList.add("bad"); wrong++; }
+    });
+    var empty = 36 - countFilled();
+    if (wrong === 0 && empty === 0) { finish(); return; }
+    statusEl.textContent = wrong === 0
+      ? "Everything you have typed is right. " + empty + (empty === 1 ? " square" : " squares") + " still empty."
+      : wrong + (wrong === 1 ? " letter is" : " letters are") + " wrong.";
+  });
+
+  document.getElementById("hint").addEventListener("click", function () {
+    if (solved) return;
+    startTimer();
+    for (var i = 0; i < cells.length; i++) {
+      var right = SOLUTION[Math.floor(i / N)][i % N];
+      if (cells[i].value.trim().toLowerCase() !== right) {
+        cells[i].value = right.toUpperCase();
+        cells[i].classList.remove("bad", "ok");
+        cells[i].classList.add("hinted");
+        hints++;
+        statusEl.textContent = "One letter revealed. " + hints + (hints === 1 ? " hint" : " hints") + " used.";
+        afterEntry();
+        return;
+      }
+    }
+    statusEl.textContent = "The grid is already complete.";
+  });
+
+  document.getElementById("clear").addEventListener("click", function () {
+    if (solved) return;
+    cells.forEach(function (cell) {
+      cell.value = "";
+      cell.classList.remove("ok", "bad", "hinted");
+    });
+    stopTimer();
+    seconds = 0;
+    hints = 0;
+    clockEl.textContent = "00:00";
+    statusEl.textContent = "";
+    countFilled();
+    cells[0].focus();
+  });
+
+  buildClues();
+  buildGrid();
+  showBest();
+  countFilled();
+})();
+</script>
+</body>
+</html>

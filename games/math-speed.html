@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Sums: A Free 60-Second Speed Maths Game</title>
+<meta name="description" content="Sixty seconds of addition, subtraction, multiplication and division. Answer as many as you can, keep a streak going, and beat your best score.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/math-speed.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Quick Sums: A Free 60-Second Speed Maths Game">
+<meta property="og:description" content="One minute, as many correct answers as you can manage. Three difficulty levels.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/math-speed.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Quick Sums: A Free 60-Second Speed Maths Game">
+<meta name="twitter:description" content="Beat the clock with sixty seconds of mental arithmetic.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Quick Sums",
+  "url": "https://mindgenieai.xyz/games/math-speed.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A sixty-second mental arithmetic game with three difficulty levels and a locally stored best score.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .question {
+    font-size: clamp(1.9rem, 9vw, 2.6rem);
+    font-weight: 800;
+    color: var(--gold);
+    letter-spacing: .02em;
+    margin: 6px 0 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .answer-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .answer-row input {
+    width: 130px; padding: 12px 14px; font-size: 1.3rem; font-weight: 700;
+    color: var(--text); background: #0c1426; border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 10px; font-family: inherit;
+  }
+  .answer-row input:focus { border-color: var(--gold); outline: none; }
+  .bar { height: 8px; border-radius: 999px; background: rgba(255, 255, 255, .1); overflow: hidden; margin: 0 0 14px; }
+  .bar span { display: block; height: 100%; width: 100%; background: var(--gold); transition: width .25s linear; }
+  .rules-list li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/number-merge.html">Merge Up</a>
+      <a href="/games/sort-sequence.html">Sort Sprint</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Quick Sums</h1>
+    <p class="updated">A maths sprint: sixty seconds, as many right answers as you can manage.</p>
+
+    <div class="toolbar">
+      <label for="level" class="hint">Difficulty</label>
+      <select id="level">
+        <option value="easy">Easy — add and subtract to 20</option>
+        <option value="medium" selected>Medium — times tables and small division</option>
+        <option value="hard">Hard — mixed, larger numbers</option>
+      </select>
+      <button class="btn" type="button" id="restart">Start</button>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Time left <b id="left">60s</b></span>
+        <span>Score <b id="score">0</b></span>
+        <span>Streak <b id="streak">0</b></span>
+        <span>Best <b id="best">0</b></span>
+      </div>
+
+      <div class="bar"><span id="barFill"></span></div>
+
+      <div class="question" id="question" aria-live="polite">Press Start</div>
+
+      <div class="answer-row">
+        <label class="sr-only" for="answer">Your answer</label>
+        <input id="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="?" disabled>
+        <button class="btn" type="button" id="submit" disabled>Answer</button>
+      </div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <h2>How to play</h2>
+    <p>Choose a difficulty and the round starts: sixty seconds on the clock, one question at a time. Type the answer and press Enter, or tap <strong>Answer</strong>. A correct answer scores a point and moves on instantly; a wrong one is counted, breaks your streak and shows you the right value for a moment before the next question.</p>
+    <p>Only whole numbers are ever the answer. Division questions are built from an exact product, so nothing lands on a fraction, and subtraction never goes below zero.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul class="rules-list">
+      <li><strong>Easy:</strong> addition and subtraction with numbers up to 20.</li>
+      <li><strong>Medium:</strong> multiplication from 2 to 12, exact division, and small addition or subtraction to 30.</li>
+      <li><strong>Hard:</strong> multiplication to 20, exact division, and addition or subtraction with numbers up to 100.</li>
+      <li>One point per correct answer, no bonus for speed within the round — the clock is the pressure.</li>
+      <li>Your best score for each difficulty is kept in this browser under <code>mg-math-best</code>.</li>
+      <li>When the timer reaches zero the round ends and the input locks until you start again.</li>
+    </ul>
+
+    <h2>Scoring more in a minute</h2>
+    <p>Most people lose time in the same three places. The first is reading: a question like <code>7 × 8</code> is instant, but <code>13 × 12</code> invites you to reach for a written method. Learn the two-digit products up to 20 × 20 as facts rather than sums and the hard level stops being a change of gear.</p>
+    <p>The second is subtraction. <code>63 − 28</code> is faster as <code>63 − 30 + 2</code> than as a borrow: round the number you are taking away and put back the difference. The third is division. Every division question here is the reverse of a multiplication, so read <code>84 ÷ 7</code> as "seven times what makes eighty-four" and let the times table do the work.</p>
+    <p>Finally, do not slow down to protect a streak — a wrong answer costs you about half a second and one point, while hesitation costs a second on every question after it. Steady beats careful in a sixty-second round.</p>
+
+    <h2>Why speed arithmetic is worth practising</h2>
+    <p>Mental arithmetic is not really about numbers; it is about holding a small amount of state in working memory while doing something else. That is the same load a crossword clue or a codebreaking guess puts on you, which is why the games here share a shelf. A minute a day is enough to keep the facts sharp without turning it into homework.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var BEST_KEY = "mg-math-best";
+  var ROUND = 60;
+
+  var levelEl = document.getElementById("level");
+  var questionEl = document.getElementById("question");
+  var answerEl = document.getElementById("answer");
+  var submitEl = document.getElementById("submit");
+  var leftEl = document.getElementById("left");
+  var scoreEl = document.getElementById("score");
+  var streakEl = document.getElementById("streak");
+  var bestEl = document.getElementById("best");
+  var barEl = document.getElementById("barFill");
+  var statusEl = document.getElementById("status");
+
+  var score = 0;
+  var streak = 0;
+  var bestStreak = 0;
+  var left = ROUND;
+  var ticker = null;
+  var current = null;
+  var playing = false;
+
+  function rnd(min, max) {
+    return min + Math.floor(Math.random() * (max - min + 1));
+  }
+
+  function makeQuestion() {
+    var level = levelEl.value;
+    var a, b, op, answer;
+    if (level === "easy") {
+      if (Math.random() < 0.5) {
+        a = rnd(1, 10); b = rnd(1, 10);
+        op = "+"; answer = a + b;
+      } else {
+        a = rnd(2, 20); b = rnd(1, a);
+        op = "−"; answer = a - b;
+      }
+    } else if (level === "medium") {
+      var roll = Math.random();
+      if (roll < 0.45) {
+        a = rnd(2, 12); b = rnd(2, 12);
+        op = "×"; answer = a * b;
+      } else if (roll < 0.8) {
+        b = rnd(2, 12); answer = rnd(2, 12);
+        a = b * answer;
+        op = "÷";
+      } else {
+        a = rnd(10, 30); b = rnd(1, a);
+        op = Math.random() < 0.5 ? "+" : "−";
+        answer = op === "+" ? a + b : a - b;
+      }
+    } else {
+      var r2 = Math.random();
+      if (r2 < 0.4) {
+        a = rnd(3, 20); b = rnd(3, 20);
+        op = "×"; answer = a * b;
+      } else if (r2 < 0.7) {
+        b = rnd(3, 15); answer = rnd(3, 15);
+        a = b * answer;
+        op = "÷";
+      } else if (r2 < 0.85) {
+        a = rnd(20, 100); b = rnd(1, 60);
+        op = "+"; answer = a + b;
+      } else {
+        a = rnd(30, 100); b = rnd(1, a);
+        op = "−"; answer = a - b;
+      }
+    }
+    return { text: a + " " + op + " " + b, answer: answer };
+  }
+
+  function bestKey() {
+    return BEST_KEY + "-" + levelEl.value;
+  }
+
+  function showBest() {
+    var best = MG.store.get(bestKey(), 0) || 0;
+    bestEl.textContent = String(best);
+  }
+
+  function nextQuestion() {
+    current = makeQuestion();
+    questionEl.textContent = current.text + " =";
+    answerEl.value = "";
+    answerEl.focus();
+  }
+
+  function startRound() {
+    score = 0;
+    streak = 0;
+    bestStreak = 0;
+    left = ROUND;
+    playing = true;
+    scoreEl.textContent = "0";
+    streakEl.textContent = "0";
+    statusEl.textContent = "";
+    leftEl.textContent = ROUND + "s";
+    barEl.style.width = "100%";
+    answerEl.disabled = false;
+    submitEl.disabled = false;
+    showBest();
+    document.getElementById("restart").textContent = "Start again";
+    nextQuestion();
+    if (ticker) window.clearInterval(ticker);
+    ticker = window.setInterval(function () {
+      left--;
+      leftEl.textContent = Math.max(0, left) + "s";
+      barEl.style.width = Math.max(0, (left / ROUND) * 100) + "%";
+      if (left <= 0) endRound();
+    }, 1000);
+  }
+
+  function endRound() {
+    playing = false;
+    if (ticker) window.clearInterval(ticker);
+    ticker = null;
+    answerEl.disabled = true;
+    submitEl.disabled = true;
+    questionEl.textContent = "Time";
+    var msg = "Round over: " + score + (score === 1 ? " correct answer" : " correct answers") +
+      ", best streak " + bestStreak + ".";
+    var best = MG.store.get(bestKey(), 0) || 0;
+    if (score > best) {
+      MG.store.set(bestKey(), score);
+      msg += " A new best for this difficulty.";
+      showBest();
+    }
+    statusEl.textContent = msg;
+  }
+
+  function submitAnswer() {
+    if (!playing || !current) return;
+    var raw = answerEl.value.trim();
+    if (!raw) return;
+    var value = Number(raw);
+    if (!isFinite(value)) {
+      statusEl.textContent = "Type a whole number.";
+      return;
+    }
+    if (value === current.answer) {
+      score++;
+      streak++;
+      if (streak > bestStreak) bestStreak = streak;
+      scoreEl.textContent = String(score);
+      streakEl.textContent = String(streak);
+      statusEl.textContent = "";
+      nextQuestion();
+    } else {
+      streak = 0;
+      streakEl.textContent = "0";
+      statusEl.textContent = "Not quite — " + current.text + " = " + current.answer + ".";
+      nextQuestion();
+    }
+  }
+
+  submitEl.addEventListener("click", submitAnswer);
+  answerEl.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitAnswer();
+    }
+  });
+  document.getElementById("restart").addEventListener("click", startRound);
+  levelEl.addEventListener("change", function () {
+    showBest();
+    if (playing) startRound();
+  });
+
+  showBest();
+})();
+</script>
+</body>
+</html>

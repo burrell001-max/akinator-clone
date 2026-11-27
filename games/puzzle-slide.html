@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide Fifteen: A Free Sliding Tile Puzzle</title>
+<meta name="description" content="The classic sliding tile puzzle on a three-by-three or four-by-four board. Every shuffle is solvable, and your best move count is kept on your device.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/puzzle-slide.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Slide Fifteen: A Free Sliding Tile Puzzle">
+<meta property="og:description" content="Slide the numbered tiles back into order. Always solvable, no downloads.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/puzzle-slide.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Slide Fifteen: A Free Sliding Tile Puzzle">
+<meta name="twitter:description" content="The classic sliding tile puzzle on a three-by-three or four-by-four board.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Slide Fifteen",
+  "url": "https://mindgenieai.xyz/games/puzzle-slide.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A sliding tile puzzle on three-by-three and four-by-four boards, with a locally stored best move count.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .board {
+    display: grid;
+    gap: 8px;
+    background: #0c1426;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 12px;
+    padding: 8px;
+    max-width: 360px;
+  }
+  .spot { aspect-ratio: 1 / 1; border-radius: 9px; }
+  .spot.blank { background: rgba(255, 255, 255, .04); border: 1px dashed rgba(255, 255, 255, .12); }
+  .tile {
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    font-weight: 800;
+    font-size: clamp(1.1rem, 6vw, 1.6rem);
+    color: var(--text);
+    background: linear-gradient(180deg, #2b3d66, #22304f);
+    border: 1px solid rgba(255, 255, 255, .12);
+    cursor: pointer;
+    font-family: inherit;
+    padding: 0;
+  }
+  .tile:hover { border-color: rgba(255, 209, 102, .55); }
+  .tile.placed { background: linear-gradient(180deg, #2f5c46, #24463a); border-color: rgba(95, 214, 138, .45); color: #d9ffe7; }
+  .rules-list li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/number-merge.html">Merge Up</a>
+      <a href="/games/sudoku.html">Sudoku</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Slide Fifteen</h1>
+    <p class="updated">A sliding tile puzzle: put the numbers back in order using the one empty square.</p>
+
+    <div class="toolbar">
+      <label for="size" class="hint">Board</label>
+      <select id="size">
+        <option value="3" selected>3 × 3 — eight tiles</option>
+        <option value="4">4 × 4 — fifteen tiles</option>
+      </select>
+      <button class="btn" type="button" id="restart">Shuffle</button>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Moves <b id="moves">0</b></span>
+        <span>Time <b id="clock">00:00</b></span>
+        <span>Best <b id="best">—</b></span>
+        <span>Tiles home <b id="home">0</b></span>
+      </div>
+
+      <div class="board" id="board" style="grid-template-columns: repeat(3, 1fr)" aria-label="Sliding tile board"></div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <p class="hint">Click a tile beside the gap, or use the arrow keys. Arrows move a tile into the gap.</p>
+    </div>
+
+    <h2>How to play</h2>
+    <p>A square is empty. Click any tile that shares an edge with it and the tile slides across. Your job is to slide the numbered tiles until they run 1, 2, 3 upwards from the top-left, with the gap in the bottom-right corner. On the four-by-four board that means 1 to 15 in reading order, with the gap last.</p>
+    <p>The arrow keys work too: left and right move the tile that sits beside the gap on that side, up and down likewise. Moves are counted only when a tile actually slides.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul class="rules-list">
+      <li>Only tiles sharing an edge with the gap can move; diagonal neighbours cannot.</li>
+      <li>Every shuffle is produced by making a few hundred legal moves from the solved board, so a solution always exists — no unsolvable boards.</li>
+      <li>Your score is the number of moves, with time as a tiebreaker for your own records.</li>
+      <li>The best move count for each board size is kept in this browser under <code>mg-slide-best</code>.</li>
+      <li>Shuffling starts a fresh board, resets the counters and keeps the best score.</li>
+    </ul>
+
+    <h2>Solving it without guessing</h2>
+    <p>Do not try to place all sixteen tiles at once. Solve the top row first and then never touch it again: park 1 and 2 in the top-left, and slot 3 into the corner by using the second row as a workspace. Once the top row is locked, do the same for the left column, then for the remaining three-by-three block, then the two-by-two one. Each stage is smaller than the last, which is why a fifteen puzzle falls apart into five easy puzzles instead of one hard one.</p>
+    <p>The last two-by-two block is the one that catches people. If the final three tiles are in a cycle that will not resolve, you have almost certainly broken an earlier row by sliding into it — go back and check that the top row and left column are still clean. A board that has been shuffled legally always has a solution; a stuck final block usually means a move you thought was free moved a settled tile.</p>
+
+    <h2>Why this puzzle still works</h2>
+    <p>The fifteen puzzle was a Victorian craze, and the reason it lasted is that the constraint is perfect: exactly one gap, so every move costs something and every position is reachable in one of two parity classes. Because the shuffle here is always legal, you never meet the famously impossible half — and because the goal is ordered, you can always see how far you have come.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var BEST_KEY = "mg-slide-best";
+  var boardEl = document.getElementById("board");
+  var sizeEl = document.getElementById("size");
+  var movesEl = document.getElementById("moves");
+  var clockEl = document.getElementById("clock");
+  var bestEl = document.getElementById("best");
+  var homeEl = document.getElementById("home");
+  var statusEl = document.getElementById("status");
+
+  var n = 3;
+  var tiles = [];
+  var blank = 0;
+  var moves = 0;
+  var seconds = 0;
+  var ticker = null;
+  var running = false;
+  var solved = false;
+  var started = false;
+
+  function bestKey() { return BEST_KEY + "-" + sizeEl.value; }
+
+  function showBest() {
+    var best = MG.store.get(bestKey(), null);
+    bestEl.textContent = best === null ? "—" : best + (best === 1 ? " move" : " moves");
+  }
+
+  function goal(i) { return i === n * n - 1 ? 0 : i + 1; }
+
+  function isSolved() {
+    for (var i = 0; i < tiles.length; i++) if (tiles[i] !== goal(i)) return false;
+    return true;
+  }
+
+  function neighbours(index) {
+    var r = Math.floor(index / n), c = index % n, out = [];
+    if (r > 0) out.push(index - n);
+    if (r < n - 1) out.push(index + n);
+    if (c > 0) out.push(index - 1);
+    if (c < n - 1) out.push(index + 1);
+    return out;
+  }
+
+  function shuffleBoard() {
+    tiles = [];
+    for (var i = 0; i < n * n; i++) tiles.push(goal(i));
+    blank = n * n - 1;
+    var steps = n === 3 ? 220 : 420;
+    var last = -1;
+    for (var s = 0; s < steps; s++) {
+      var opts = neighbours(blank).filter(function (x) { return x !== last; });
+      var pick = opts[Math.floor(Math.random() * opts.length)];
+      tiles[blank] = tiles[pick];
+      tiles[pick] = 0;
+      last = blank;
+      blank = pick;
+    }
+    if (isSolved()) shuffleBoard();
+  }
+
+  function startTimer() {
+    if (running) return;
+    running = true;
+    ticker = window.setInterval(function () {
+      seconds++;
+      clockEl.textContent = MG.formatTime(seconds);
+    }, 1000);
+  }
+
+  function stopTimer() {
+    running = false;
+    if (ticker) window.clearInterval(ticker);
+    ticker = null;
+  }
+
+  function render() {
+    boardEl.style.gridTemplateColumns = "repeat(" + n + ", 1fr)";
+    boardEl.innerHTML = "";
+    var home = 0;
+    for (var i = 0; i < tiles.length; i++) {
+      if (tiles[i] === 0) {
+        var gap = document.createElement("div");
+        gap.className = "spot blank";
+        boardEl.appendChild(gap);
+        continue;
+      }
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "tile";
+      b.textContent = String(tiles[i]);
+      b.dataset.index = String(i);
+      b.setAttribute("aria-label", "Tile " + tiles[i]);
+      if (tiles[i] === goal(i)) {
+        b.classList.add("placed");
+        home++;
+      }
+      boardEl.appendChild(b);
+    }
+    movesEl.textContent = String(moves);
+    homeEl.textContent = home + "/" + (n * n - 1);
+  }
+
+  function moveTile(index) {
+    if (solved) return;
+    if (neighbours(blank).indexOf(index) === -1) return;
+    tiles[blank] = tiles[index];
+    tiles[index] = 0;
+    blank = index;
+    moves++;
+    if (!started) {
+      started = true;
+      startTimer();
+    }
+    render();
+    checkWin();
+  }
+
+  function checkWin() {
+    if (!isSolved()) return;
+    solved = true;
+    stopTimer();
+    var best = MG.store.get(bestKey(), null);
+    var msg = "Solved in " + moves + (moves === 1 ? " move" : " moves") + " and " + MG.formatTime(seconds) + ".";
+    if (best === null || moves < best) {
+      MG.store.set(bestKey(), moves);
+      msg += " That is a new best for this board.";
+      showBest();
+    }
+    statusEl.textContent = msg;
+  }
+
+  function newBoard() {
+    n = Number(sizeEl.value);
+    stopTimer();
+    moves = 0;
+    seconds = 0;
+    solved = false;
+    started = false;
+    clockEl.textContent = "00:00";
+    statusEl.textContent = "";
+    shuffleBoard();
+    render();
+    showBest();
+  }
+
+  boardEl.addEventListener("click", function (e) {
+    var btn = e.target.closest("button.tile");
+    if (!btn) return;
+    moveTile(Number(btn.dataset.index));
+  });
+
+  document.addEventListener("keydown", function (e) {
+    var br = Math.floor(blank / n), bc = blank % n, target = -1;
+    if (e.key === "ArrowLeft" && bc < n - 1) target = blank + 1;
+    else if (e.key === "ArrowRight" && bc > 0) target = blank - 1;
+    else if (e.key === "ArrowUp" && br < n - 1) target = blank + n;
+    else if (e.key === "ArrowDown" && br > 0) target = blank - n;
+    if (target === -1) return;
+    e.preventDefault();
+    moveTile(target);
+  });
+
+  document.getElementById("restart").addEventListener("click", newBoard);
+  sizeEl.addEventListener("change", newBoard);
+
+  newBoard();
+})();
+</script>
+</body>
+</html>

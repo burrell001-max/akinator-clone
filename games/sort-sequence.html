@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sort Sprint: A Free Number and Word Ordering Game</title>
+<meta name="description" content="Put a shuffled set into order against the clock — numbers from low to high, or words from A to Z. Six, eight or ten items, with a best time kept on your device.">
+<link rel="canonical" href="https://mindgenieai.xyz/games/sort-sequence.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MindGenie AI">
+<meta property="og:title" content="Sort Sprint: A Free Number and Word Ordering Game">
+<meta property="og:description" content="Click a shuffled set into order before the clock beats you.">
+<meta property="og:url" content="https://mindgenieai.xyz/games/sort-sequence.html">
+<meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sort Sprint: A Free Number and Word Ordering Game">
+<meta name="twitter:description" content="Order numbers or words fastest, with six, eight or ten items.">
+<meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a101f">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/games/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Sort Sprint",
+  "url": "https://mindgenieai.xyz/games/sort-sequence.html",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "description": "A timed ordering game: click shuffled numbers or words into ascending order, with a locally stored best time.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+  "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
+}
+</script>
+<style>
+  .pool { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 16px; min-height: 48px; }
+  .item {
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 14px; font-size: 1.02rem; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+  }
+  .item:hover { border-color: rgba(255, 209, 102, .55); }
+  .item.wrong {
+    border-color: var(--bad); color: var(--bad);
+    animation: nudge .18s ease 2;
+  }
+  @keyframes nudge { 50% { transform: translateX(4px); } }
+  .strip {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    min-height: 52px; padding: 10px; border-radius: 10px;
+    background: #0c1426; border: 1px dashed rgba(255, 209, 102, .3);
+  }
+  .strip .placed {
+    background: rgba(95, 214, 138, .14); border: 1px solid rgba(95, 214, 138, .45);
+    color: var(--ok); border-radius: 10px; padding: 9px 13px; font-weight: 700;
+  }
+  .strip .slot {
+    width: 34px; height: 38px; border-radius: 8px;
+    border: 1px dashed rgba(255, 255, 255, .18);
+  }
+  .rules-list li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <nav aria-label="Primary">
+      <a href="https://mindgenieai.xyz/">Play the Genie</a>
+      <a href="/games/" aria-current="page">Games</a>
+      <a href="/games/math-speed.html">Quick Sums</a>
+      <a href="/games/number-merge.html">Merge Up</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>Sort Sprint</h1>
+    <p class="updated">An ordering game: click a shuffled set into the right sequence, fastest wins.</p>
+
+    <div class="toolbar">
+      <label for="mode" class="hint">Set</label>
+      <select id="mode">
+        <option value="numbers" selected>Numbers — low to high</option>
+        <option value="words">Words — alphabetical</option>
+      </select>
+      <label for="size" class="hint">Length</label>
+      <select id="size">
+        <option value="6">6 items</option>
+        <option value="8" selected>8 items</option>
+        <option value="10">10 items</option>
+      </select>
+      <button class="btn" type="button" id="restart">New set</button>
+    </div>
+
+    <div class="game-panel">
+      <div class="stat-row">
+        <span>Time <b id="clock">00:00</b></span>
+        <span>Best <b id="best">—</b></span>
+        <span>Mistakes <b id="errors">0</b></span>
+        <span>Placed <b id="progress">0/8</b></span>
+      </div>
+
+      <p class="hint" id="instruction">Click the lowest number first, then the next lowest, and so on.</p>
+      <div class="pool" id="pool" aria-label="Items to sort"></div>
+
+      <div class="strip" id="strip" aria-label="Your sorted order"></div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <h2>How to play</h2>
+    <p>The set on the page is shuffled. You do not drag anything around: you click the item that belongs next in the order. In the numbers set that means the smallest value remaining, then the next smallest; in the words set it means the word that comes first alphabetically. Correct picks move into the strip along the bottom, and the round ends when the strip is full.</p>
+    <p>The clock starts on your first click and stops when the last item lands, so thinking time before you begin is free. Mistakes are counted but never end the round — click the right item and carry on.</p>
+
+    <h2>Rules and scoring</h2>
+    <ul class="rules-list">
+      <li>Numbers are whole numbers between 1 and 99, all different. Sort ascending.</li>
+      <li>Words are ordinary English words, all different. Sort alphabetically, ignoring case.</li>
+      <li>A click that is not the next item in the order counts as a mistake and stays in the pool.</li>
+      <li>Your score is the time to finish. The best time for each set and length is kept in this browser under <code>mg-sort-best</code>.</li>
+      <li>Changing the set or the length starts a new round immediately.</li>
+    </ul>
+
+    <h2>Getting faster</h2>
+    <p>Sorting a handful of items by hand is really a scanning problem: you are looking for the minimum, again and again. The slow way is to re-read the whole row for every pick. The fast way is to sweep once, note the smallest item, click it, then sweep again from where you left off — your eye keeps the running order instead of restarting.</p>
+    <p>With numbers, chunking helps more than anything else. Read 34, 7, 61, 19 as "thirties, single digit, sixties, teens" and the order almost announces itself; comparing two-digit numbers digit by digit is slower than classifying them by decade first. With words, compare the first letters only until you have to go deeper, and remember that long words are usually decided by their opening two letters.</p>
+
+    <h2>Why sorting is a game</h2>
+    <p>Ordering is the most practised operation in all of computing — comparison sorts are the first algorithm most people meet — and yet doing it in your head under time pressure uses a different faculty from writing it in code. There is no trick to memorise and no lucky shuffle: the only thing that improves is how quickly you can hold a partial order in mind.</p>
+  </main>
+
+  <footer>
+    <a href="/games/">All games</a>
+    <a href="https://mindgenieai.xyz/">MindGenie AI</a>
+    <a href="https://mindgenieai.xyz/privacy-policy.html">Privacy Policy</a>
+  </footer>
+</div>
+<script src="/games/games.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var BEST_KEY = "mg-sort-best";
+  var WORDS = [
+    "amber", "basin", "candle", "cobalt", "copper", "desert", "dragon", "ember",
+    "fabric", "falcon", "garden", "granite", "harbour", "hollow", "indigo", "island",
+    "jacket", "jungle", "kettle", "lantern", "lemon", "magnet", "meadow", "mirror",
+    "napkin", "nectar", "ocean", "onyx", "pepper", "pillar", "quartz", "quiet",
+    "rabbit", "ripple", "saddle", "silver", "sparrow", "summit", "timber", "tunnel",
+    "velvet", "violet", "walnut", "willow", "yarrow", "zephyr", "anchor", "bramble"
+  ];
+
+  var modeEl = document.getElementById("mode");
+  var sizeEl = document.getElementById("size");
+  var poolEl = document.getElementById("pool");
+  var stripEl = document.getElementById("strip");
+  var clockEl = document.getElementById("clock");
+  var bestEl = document.getElementById("best");
+  var errorsEl = document.getElementById("errors");
+  var progressEl = document.getElementById("progress");
+  var statusEl = document.getElementById("status");
+  var instructionEl = document.getElementById("instruction");
+
+  var remaining = [];
+  var placed = [];
+  var errors = 0;
+  var seconds = 0;
+  var timer = null;
+  var running = false;
+  var done = false;
+  var total = 8;
+
+  function bestKey() {
+    return BEST_KEY + "-" + modeEl.value + "-" + sizeEl.value;
+  }
+
+  function showBest() {
+    var best = MG.store.get(bestKey(), null);
+    bestEl.textContent = best === null ? "—" : MG.formatTime(best);
+  }
+
+  function makeItems() {
+    var n = Number(sizeEl.value);
+    var items = [], i;
+    if (modeEl.value === "numbers") {
+      var used = {};
+      while (items.length < n) {
+        var v = 1 + Math.floor(Math.random() * 99);
+        if (used[v]) continue;
+        used[v] = true;
+        items.push({ label: String(v), key: v });
+      }
+    } else {
+      var words = MG.shuffle(WORDS).slice(0, n);
+      items = words.map(function (w) { return { label: w, key: w.toLowerCase() }; });
+    }
+    return items;
+  }
+
+  function isNext(item) {
+    for (var i = 0; i < remaining.length; i++) {
+      var other = remaining[i];
+      if (typeof other.key === "number") {
+        if (other.key < item.key) return false;
+      } else if (other.key < item.key) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function startTimer() {
+    if (running || done) return;
+    running = true;
+    timer = window.setInterval(function () {
+      seconds++;
+      clockEl.textContent = MG.formatTime(seconds);
+    }, 1000);
+  }
+
+  function stopTimer() {
+    running = false;
+    if (timer) window.clearInterval(timer);
+    timer = null;
+  }
+
+  function renderPool() {
+    poolEl.innerHTML = "";
+    remaining.forEach(function (item) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "item";
+      b.textContent = item.label;
+      b.addEventListener("click", function () { choose(item, b); });
+      poolEl.appendChild(b);
+    });
+  }
+
+  function renderStrip() {
+    stripEl.innerHTML = "";
+    placed.forEach(function (item) {
+      var span = document.createElement("span");
+      span.className = "placed";
+      span.textContent = item.label;
+      stripEl.appendChild(span);
+    });
+    for (var i = placed.length; i < total; i++) {
+      var slot = document.createElement("span");
+      slot.className = "slot";
+      stripEl.appendChild(slot);
+    }
+    progressEl.textContent = placed.length + "/" + total;
+    errorsEl.textContent = String(errors);
+  }
+
+  function choose(item, button) {
+    if (done) return;
+    startTimer();
+    if (!isNext(item)) {
+      errors++;
+      errorsEl.textContent = String(errors);
+      button.classList.add("wrong");
+      window.setTimeout(function () { button.classList.remove("wrong"); }, 500);
+      statusEl.textContent = "Not yet — something smaller is still in the set.";
+      return;
+    }
+    remaining = remaining.filter(function (x) { return x !== item; });
+    placed.push(item);
+    statusEl.textContent = "";
+    renderPool();
+    renderStrip();
+    if (!remaining.length) finish();
+  }
+
+  function finish() {
+    done = true;
+    stopTimer();
+    var msg = "Sorted in " + MG.formatTime(seconds) + " with " +
+      (errors === 0 ? "no mistakes" : errors + (errors === 1 ? " mistake" : " mistakes")) + ".";
+    var best = MG.store.get(bestKey(), null);
+    if (best === null || seconds < best) {
+      MG.store.set(bestKey(), seconds);
+      msg += " That is a new best time for this set.";
+      showBest();
+    }
+    statusEl.textContent = msg;
+  }
+
+  function newRound() {
+    stopTimer();
+    total = Number(sizeEl.value);
+    remaining = MG.shuffle(makeItems());
+    placed = [];
+    errors = 0;
+    seconds = 0;
+    done = false;
+    clockEl.textContent = "00:00";
+    statusEl.textContent = "";
+    instructionEl.textContent = modeEl.value === "numbers"
+      ? "Click the lowest number first, then the next lowest, and so on."
+      : "Click the word that comes first alphabetically, then the next one, and so on.";
+    renderPool();
+    renderStrip();
+    showBest();
+  }
+
+  document.getElementById("restart").addEventListener("click", newRound);
+  modeEl.addEventListener("change", newRound);
+  sizeEl.addEventListener("change", newRound);
+
+  newRound();
+})();
+</script>
+</body>
+</html>

@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Free Browser Games: Brain, Daily, Word and Memory</title>
-<meta name="description" content="Seven free browser games with no accounts and no downloads: codebreaking, a daily picture logic grid, anagrams, word guessing, Sudoku and two memory games.">
+<title>Free Browser Games: Brain, Word, Number and Puzzle</title>
+<meta name="description" content="Twelve free browser games with no accounts and no downloads: codebreaking, a daily logic grid, anagrams, a mini crossword, Sudoku, tile merging, sorting, speed maths and sliding tiles.">
 <link rel="canonical" href="https://mindgenieai.xyz/games/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MindGenie AI">
 <meta property="og:title" content="Free Browser Games from MindGenie AI">
-<meta property="og:description" content="Brain, daily, word, memory and number puzzles. No accounts, no downloads, everything runs in the page.">
+<meta property="og:description" content="Brain, word, number, crossword, sort, maths and sliding-tile games. No accounts, no downloads, everything runs in the page.">
 <meta property="og:url" content="https://mindgenieai.xyz/games/">
 <meta property="og:image" content="https://mindgenieai.xyz/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Free Browser Games from MindGenie AI">
-<meta name="twitter:description" content="Brain, daily, word, memory and number puzzles that run entirely in the page.">
+<meta name="twitter:description" content="Brain, word, number, maths and puzzle games that run entirely in the page.">
 <meta name="twitter:image" content="https://mindgenieai.xyz/og-image.jpg">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#0a101f">
@@ -25,7 +25,7 @@
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "name": "Free browser games",
-  "description": "A small library of original browser games: codebreaking, daily logic, anagrams, word guessing, Sudoku and memory.",
+  "description": "A small library of original browser games: codebreaking, daily logic, anagrams, word guessing, Sudoku, memory, tile merging, crosswords, sorting, maths and sliding tiles.",
   "url": "https://mindgenieai.xyz/games/",
   "isPartOf": { "@type": "WebSite", "name": "MindGenie AI", "url": "https://mindgenieai.xyz/" }
 }
@@ -44,10 +44,10 @@
   </div>
 
   <main>
-    <h1>Seven small games, one page</h1>
+    <h1>Twelve small games, one page</h1>
     <p class="updated">Updated 27 November 2026</p>
 
-    <p class="lede">MindGenie AI is a guessing game, and that is still the main event — there is a link back to it at the top of every page here. This corner of the site holds quieter games for the moments when you want to think rather than guess: breaking a code, solving the day's logic grid, unscrambling letters, or holding a pattern in your head.</p>
+    <p class="lede">MindGenie AI is a guessing game, and that is still the main event — there is a link back to it at the top of every page here. This corner of the site holds quieter games for the moments when you want to think rather than guess: breaking a code, solving the day's logic grid, unscrambling letters, merging numbers on a small board, or holding a pattern in your head.</p>
 
     <p>All of them run entirely in your browser. No accounts, no downloads, no countdown you did not ask for, and nothing sent anywhere. Each game is one page with its own logic, so it keeps working once loaded.</p>
 
@@ -65,7 +65,7 @@
       <button class="chip" type="button" data-filter="math" aria-pressed="false">Math Games</button>
       <button class="chip" type="button" data-filter="puzzle" aria-pressed="false">Puzzle Games</button>
     </div>
-    <p class="filter-note" id="filterCount" aria-live="polite">7 games</p>
+    <p class="filter-note" id="filterCount" aria-live="polite">12 games</p>
 
     <div class="grid" id="gameGrid">
       <a class="card" href="/games/brain-codebreaker.html" data-cats="brain">
@@ -103,10 +103,35 @@
         <p>Twelve cards, six pairs, one move counter. Your best run stays in your own browser.</p>
         <span class="tag">Memory Games</span>
       </a>
+      <a class="card" href="/games/number-merge.html" data-cats="number puzzle">
+        <h3>Merge Up</h3>
+        <p>Slide tiles on a four-by-four board and merge equal numbers to double them. Arrow keys or buttons, best score kept locally.</p>
+        <span class="tag">Number Games</span>
+      </a>
+      <a class="card" href="/games/crossword-mini.html" data-cats="crossword word">
+        <h3>Mini Crossword</h3>
+        <p>A six-by-six word square: six clues, six answers, and every answer reads the same across and down.</p>
+        <span class="tag">Crosswords</span>
+      </a>
+      <a class="card" href="/games/sort-sequence.html" data-cats="sort number">
+        <h3>Sort Sprint</h3>
+        <p>Click a shuffled set into order — numbers from low to high or words from A to Z — against the clock.</p>
+        <span class="tag">Sort Games</span>
+      </a>
+      <a class="card" href="/games/math-speed.html" data-cats="math number">
+        <h3>Quick Sums</h3>
+        <p>Sixty seconds of addition, subtraction, multiplication and division. Answer as many as you can before the clock runs out.</p>
+        <span class="tag">Math Games</span>
+      </a>
+      <a class="card" href="/games/puzzle-slide.html" data-cats="puzzle">
+        <h3>Slide Fifteen</h3>
+        <p>The classic sliding tile puzzle on a three-by-three or four-by-four board. Every shuffle is solvable.</p>
+        <span class="tag">Puzzle Games</span>
+      </a>
     </div>
 
     <div class="empty-state" id="filterEmpty" hidden>
-      <strong>Nothing here yet.</strong> Number Games, Crosswords, Sort Games, Math Games and Puzzle Games are planned for the next batch — the seven games above cover Brain, Daily, Word, Sudoku and Memory for now.
+      <strong>Nothing in this category yet.</strong> Every game in the library is listed under All — the chips filter the twelve cards above.
     </div>
 
     <h2>How the games are built</h2>
