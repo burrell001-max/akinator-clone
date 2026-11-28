@@ -22,6 +22,15 @@ const SITE = "https://mindgenieai.xyz";
 const OG_DIR = "games/og";
 const pagePath = (cat) => join(ROOT, "games", cat.slug, "index.html");
 
+/* Line endings are a checkout concern, not a content one: Windows checkouts are
+   CRLF (core.autocrlf=true) while CI is LF. Build every page with LF so the
+   block regexes can never leave a stray \r behind, then write the result back
+   in the file's own convention. Rebuilding is then byte-for-byte idempotent and
+   leaves no git diff on either platform. */
+const toLF = (text) => text.replace(/\r\n/g, "\n");
+const eolOf = (text) => (text.includes("\r\n") ? "\r\n" : "\n");
+const withEol = (text, eol) => (eol === "\n" ? text : text.replace(/\n/g, eol));
+
 /* The English one-line instructions are the source for the card copy; the
    translations already live in the arcade dictionaries, index-aligned to the
    slug list. Reading them here keeps generated pages in step with the games. */
@@ -377,27 +386,40 @@ ${CATEGORY_ORDER.map((key) => `    <a href="/games/${CATEGORIES[key].slug}/">${e
 
 /* ── Run ─────────────────────────────────────────────────────────────────── */
 
+const hubFile = join(ROOT, "games", "index.html");
+const hubRaw = await readFile(hubFile, "utf8");
+const hubEol = eolOf(hubRaw);
+
 let pages = 0;
 for (const key of CATEGORY_ORDER) {
   const cat = CATEGORIES[key];
+  const file = pagePath(cat);
   await mkdir(join(ROOT, "games", cat.slug), { recursive: true });
-  await writeFile(pagePath(cat), categoryPage(key), "utf8");
+  let existing = null;
+  try {
+    existing = await readFile(file, "utf8");
+  } catch {
+    /* First build: adopt the checkout's convention from an existing page. */
+  }
+  const eol = existing === null ? hubEol : eolOf(existing);
+  const next = withEol(categoryPage(key), eol);
+  if (next !== existing) await writeFile(file, next, "utf8");
   pages++;
 }
 
 let patched = 0;
 for (const game of GAMES) {
   const file = join(ROOT, "games", `${game.slug}.html`);
-  const before = await readFile(file, "utf8");
+  const raw = await readFile(file, "utf8");
+  const before = toLF(raw);
   const after = patchGamePage(before, game);
-  if (after !== before) await writeFile(file, after, "utf8");
+  if (after !== before) await writeFile(file, withEol(after, eolOf(raw)), "utf8");
   patched++;
 }
 
-const hubFile = join(ROOT, "games", "index.html");
-const hubBefore = await readFile(hubFile, "utf8");
+const hubBefore = toLF(hubRaw);
 const hubAfter = patchHub(hubBefore);
-if (hubAfter !== hubBefore) await writeFile(hubFile, hubAfter, "utf8");
+if (hubAfter !== hubBefore) await writeFile(hubFile, withEol(hubAfter, hubEol), "utf8");
 
 console.log(`category pages: ${pages}`);
 console.log(`game pages patched: ${patched}`);
