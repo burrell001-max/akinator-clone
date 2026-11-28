@@ -105,6 +105,11 @@
   table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: .95rem; }
   th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #cfe0f7; color: #18212a; }
   th { color: #0a1116; font-weight: 600; }
+  /* On a phone the six-column round table is wider than the screen. Scrolling it
+     inside its own box keeps the page at the device width instead of letting
+     Chrome zoom the whole document out. */
+  .table-scroll { overflow-x: auto; margin: 18px 0; }
+  .table-scroll table { margin: 0; }
 </style>
 </head>
 <body>
@@ -158,6 +163,7 @@
 
     <h2>A real round, question by question</h2>
     <p>Here is what the engine asks when the player is thinking of Shrek and answering perfectly — the same answers the character's own vector holds. Distances are for the top two candidates after each answer.</p>
+    <div class="table-scroll">
     <table>
       <thead><tr><th>#</th><th>Question</th><th>Answer</th><th>Leader</th><th>Runner-up</th><th>Gap</th></tr></thead>
       <tbody>
@@ -169,6 +175,7 @@
         <tr><td>14</td><td>Widely considered a hero?</td><td>Yes</td><td>Shrek 0.000</td><td>SpongeBob 0.143</td><td>0.143</td></tr>
       </tbody>
     </table>
+    </div>
     <p>Two things stand out. First, the first four questions leave dozens of characters tied at distance zero: with four answers in three-valued traits, plenty of vectors are still indistinguishable from the player's. Second, the gap at the end is 0.143, not the 0.35 the stopping rule wants. The round runs to the fourteen-question cap and guesses correctly, but it never becomes "confident" in the sense the rule defines.</p>
     <p>That is not a bug in this round; it is the shape of the whole roster. Simulating all fifty characters with perfect answers produces the same result every time: fourteen questions, fifty correct guesses. The margin, not the average, is what ends a round.</p>
 
