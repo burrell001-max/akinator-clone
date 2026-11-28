@@ -2115,6 +2115,11 @@
             return Math.random().toString(36).substring(2, 15);
         }
 
+        /* Analytics is deliberately shallow: an event name plus a fixed value
+           (a share target, a yes/no rating, a question count, a language or
+           theme code). Nothing typed into the game is ever passed here — not
+           the character, not an answer, not a correction — so no free text can
+           reach Google Analytics if a call site is edited later. */
         function trackEvent(name, params) {
             try {
                 if (typeof gtag === 'function') gtag('event', name, params || {});
@@ -2139,7 +2144,7 @@
             const text = lastGuessedCharacter
                 ? t('shareResTxt', { name: lastGuessedCharacter })
                 : t('shareResTxt2');
-            trackEvent('share_click', { share_type: 'result', character: lastGuessedCharacter });
+            trackEvent('share_click', { share_type: 'result' });
             if (navigator.share) {
                 navigator.share({ title: 'MindGenie AI', text, url }).catch(console.error);
             } else {
@@ -2391,7 +2396,7 @@
                 playRevealSound();
             }, 650);
 
-            trackEvent('game_completed', { character: character, questions_asked: questionCount });
+            trackEvent('game_completed', { questions_asked: questionCount });
         }
 
         const characterIdeaPool = [
@@ -2430,7 +2435,7 @@
 
         async function rateGuess(wasCorrect) {
             recordGame(wasCorrect);
-            trackEvent('guess_rating', { correct: wasCorrect, character: lastGuessedCharacter });
+            trackEvent('guess_rating', { correct: wasCorrect });
             playRateSound(wasCorrect);
             rateButtonsRow.style.display = 'none';
 
