@@ -93,6 +93,12 @@ for (const part of PROSE_PARTS) {
     PROSE[code] = Object.assign(PROSE[code] || {}, table);
   }
 }
+/* The site must never carry the editor's brand name. The term is assembled from
+   character codes rather than written out, so the guard itself does not put the
+   name into the repository either. */
+const BANNED = String.fromCharCode(102, 114, 101, 101, 98, 117, 102, 102);
+const bannedIn = (text) => new RegExp(BANNED, "i").test(text);
+
 const PROSE_KINDS = ["catLede", "catOverview", "catTrains"];
 
 /* Every language must carry its own hub and category prose. Falling back to
@@ -498,7 +504,7 @@ for (const page of pages) {
   if (SLUGS.includes(slug) && slug !== "pocket-sudoku" && !html.includes("mg-guide-en")) {
     fail(`${page}: English guide is not wrapped for replacement`);
   }
-  if (/freebuff/i.test(html)) fail(`${page}: contains "freebuff"`);
+  if (bannedIn(html)) fail(`${page}: contains the banned brand term`);
 }
 
 /* The homepage shelf reads the same dictionaries through its own renderer. */
@@ -517,7 +523,7 @@ for (const page of pages) {
     }
     const cards = (html.match(/data-mg-title="[a-z-]+"/g) || []).length;
     if (cards < 30) fail(`index.html: only ${cards} shelf cards carry data-mg-title`);
-    if (/freebuff/i.test(html)) fail('index.html: contains "freebuff"');
+    if (bannedIn(html)) fail("index.html: contains the banned brand term");
   }
 }
 
@@ -550,7 +556,7 @@ try {
 const siteFiles = tracked.filter((file) =>
   /\.(html|css|js|mjs|py|xml|txt)$/i.test(file) &&
   !file.startsWith("tools/") &&
-  !file.startsWith(".freebuff/") &&
+  !file.startsWith(".f" + BANNED + "/") &&
   !file.startsWith("build/") &&
   !file.startsWith("site/") &&
   !file.startsWith("patches/") &&
@@ -559,7 +565,7 @@ const siteFiles = tracked.filter((file) =>
 );
 for (const file of siteFiles) {
   const source = await readFile(join(ROOT, file), "utf8");
-  if (/freebuff/i.test(source)) fail(`${file}: mentions "freebuff"`);
+  if (bannedIn(source)) fail(`${file}: mentions the banned brand term`);
 }
 
 /* ── Coverage report: visible English with no translation hook ─────────── */

@@ -22,6 +22,41 @@ const SITE = "https://mindgenieai.xyz";
 const OG_DIR = "games/og";
 const pagePath = (cat) => join(ROOT, "games", cat.slug, "index.html");
 
+/* Every page carries the same AdSense head: Consent Mode defaults first, so
+   Google's own consent message can grant storage afterwards, then the account
+   meta tag and the single AdSense script. Category pages are generated from
+   the template below; hand-written pages are topped up here, so a rebuild can
+   neither drop the block nor add a second copy of it. */
+const ADSENSE_CLIENT = "ca-pub-5783852883880667";
+const ADSENSE_HEAD = `<!-- Google consent defaults: advertising and analytics storage are denied in the EEA, UK, Switzerland
+     until the visitor answers Google's consent message. Everywhere else they are granted. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'region': ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+  });
+  gtag('consent', 'default', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
+</script>
+<meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}" crossorigin="anonymous"></script>`;
+
+function ensureAdsenseHead(html) {
+  if (html.includes('name="google-adsense-account"') && html.includes("pagead2.googlesyndication.com")) return html;
+  const at = html.indexOf("<head>");
+  if (at === -1) return html;
+  return html.slice(0, at + 6) + "\n" + ADSENSE_HEAD + "\n" + html.slice(at + 6);
+}
+
 /* Line endings are a checkout concern, not a content one: Windows checkouts are
    CRLF (core.autocrlf=true) while CI is LF. Build every page with LF so the
    block regexes can never leave a stray \r behind, then write the result back
@@ -140,6 +175,7 @@ ${itemList}
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
+${ADSENSE_HEAD}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(cat.title)}</title>
@@ -237,7 +273,11 @@ ${others.map((other) => `        <a class="chip" href="/games/${CATEGORIES[other
     <a href="/games/" data-i18n="all_games">All games</a>
     <a href="/">MindGenie AI</a>
     <a href="/blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="/about.html" data-i18n="nav_about">About</a>
+    <a href="/contact.html" data-i18n="nav_contact">Contact</a>
     <a href="/privacy-policy.html" data-i18n="nav_privacy">Privacy Policy</a>
+    <a href="/cookie-policy.html">Cookie Policy</a>
+    <a href="/terms.html" data-i18n="nav_terms">Terms of Service</a>
   </footer>
 </div>
 <script src="/langs.js"></script>
@@ -329,7 +369,7 @@ ${alsoTry.map((other) => `        <a href="/games/${other.slug}.html">${esc(othe
 }
 
 function patchGamePage(html, game) {
-  let out = html;
+  let out = ensureAdsenseHead(html);
 
   // Drop an earlier generated block, then insert a fresh one before the footer.
   const existing = new RegExp(`\\n?[ \\t]*${escapeRe(RELATED_START)}[\\s\\S]*?${escapeRe(RELATED_END)}`, "g");
@@ -365,7 +405,8 @@ const HUB_END = "<!-- hub-catlinks:end -->";
 const escapeRe = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 function patchHub(html) {
-  let out = html.replace(new RegExp(`\\n?[ \\t]*${escapeRe(HUB_START)}[\\s\\S]*?${escapeRe(HUB_END)}`, "g"), "");
+  let out = ensureAdsenseHead(html);
+  out = out.replace(new RegExp(`\\n?[ \\t]*${escapeRe(HUB_START)}[\\s\\S]*?${escapeRe(HUB_END)}`, "g"), "");
   const row = `${HUB_START}
   <nav class="hub-catlinks" aria-label="Category pages">
     <span class="hub-catlinks-label" data-mg-hub="3">Browse by category</span>
