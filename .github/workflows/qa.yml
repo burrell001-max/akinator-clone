@@ -29,6 +29,12 @@ jobs:
           node-version: 22
       - name: Internal links, ids, scripts, category pages, sitemap, social cards
         run: node tools/qa/check-site.mjs
+      - name: Thin pages, duplicate content and sitemap lastmod
+        # Also folded into check-site.mjs; this step names the failure when the
+        # content rules break, so a 145-word page cannot ship again. The lastmod
+        # half compares the sitemap date with the date the page prints and with
+        # the commit that last touched it (skipped on a shallow checkout).
+        run: node tools/qa/check-content.mjs
       - name: Translation audit (keys, placeholders, numerals, branding, hooks)
         # Same command developers run locally: node tools/qa/check-i18n.mjs
         # Fails on a missing key, an English leak, an altered number or an
@@ -44,7 +50,7 @@ jobs:
           test "$(ls games/og/*.jpg | wc -l)" -ge 41
 
   browser:
-    name: Game win paths and language contract
+    name: Game win paths, language contract and 360px sweep
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -58,7 +64,11 @@ jobs:
         run: node tools/qa/win-paths.mjs
         env:
           CHROME_PATH: /usr/bin/google-chrome
-      - name: Language contract (?lang=, prose, hreflang)
+      - name: Language contract (?lang=, prose, hreflang, standfirsts)
         run: node tools/qa/check-lang.mjs
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+      - name: 360px sweep (overflow, clipped controls, broken images)
+        run: node tools/qa/check-mobile.mjs
         env:
           CHROME_PATH: /usr/bin/google-chrome
