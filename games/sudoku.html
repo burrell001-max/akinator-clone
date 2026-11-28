@@ -143,6 +143,10 @@
     <h2>About the puzzles</h2>
     <p>Each grid is built from scratch: a complete solution is filled in by backtracking with shuffled candidates, then numbers are removed one at a time, and a removal is kept only if a counting solver confirms the grid still has exactly one solution. Easy puzzles keep around forty of the eighty-one numbers, expert puzzles about twenty-five. Nothing is downloaded, and refreshing the page gives you a fresh grid rather than the same one again.</p>
     <p>The timer is there for information, not for pressure. It stops when the grid is solved and starts again with a new puzzle.</p>
+
+    <h2>Which difficulty to pick</h2>
+    <p>Easy boards fall out with singles alone: somewhere in a row, column or box there is a cell with only one possible digit, and filling it opens the next one. Medium boards run out of singles before the end, so they need you to compare two candidates in a cell and rule one out. Hard and Expert boards rarely move without pairs and box-line elimination, where a digit is confined to one line inside a box and can therefore be removed from the rest of that line.</p>
+    <p>If a board stalls, the useful habit is to stop scanning cells and scan digits instead: take the 4, ask where it can still go in each of the nine boxes, and write down the two-candidate cells you find. Most stalls break within a minute of doing that systematically rather than by staring at the emptiest row.</p>
       </div>
   </main>
 

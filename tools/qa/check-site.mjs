@@ -13,6 +13,7 @@ import { readFile, readdir, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 import { ROOT } from "./lib.mjs";
+import { contentChecks } from "./check-content.mjs";
 import { CATEGORIES, CATEGORY_ORDER, GAMES } from "../content/games-data.mjs";
 
 const problems = [];
@@ -419,6 +420,14 @@ const unlisted = htmlFiles.filter((file) => {
   return !sitemapUrls.has(`https://mindgenieai.xyz/${clean}`);
 });
 if (unlisted.length) notes.push(`${unlisted.length} pages are intentionally absent from the sitemap (aliases, 404, verification files)`);
+
+/* ── Content: thin pages, duplicates, sitemap integrity ──────────────────── */
+/* check-content.mjs owns these checks and also runs standalone
+   (node tools/qa/check-content.mjs --report). Folding them in here means the
+   committed CI step covers them, so a 145-word page cannot ship again. */
+const content = await contentChecks();
+for (const note of content.notes) notes.push(note);
+for (const problem of content.problems) problems.push(problem);
 
 /* ── Report ──────────────────────────────────────────────────────────────── */
 const summary = [

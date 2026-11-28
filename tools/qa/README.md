@@ -7,6 +7,7 @@ a dependency to the site: the pages stay plain HTML/CSS/JS with no build step.
 | Command | What it checks |
 | --- | --- |
 | `node tools/qa/check-site.mjs` | Static: duplicate ids, missing local links/assets, unbalanced inline scripts, hub cards and category keys, ribbon presence and targets, sitemap entries and arcade coverage, category pages and their game lists, generated related-game blocks, unique `og:image` files that exist on disk, `localStorage` key naming, and the five-game floor in every category |
+| `node tools/qa/check-content.mjs` | Content: a prose-word floor per page (with `404.html` the one allowed short page), duplicate pages (shared sentences after generated catalogue text is filtered out, shared `<title>` or `<h1>`), and sitemap integrity (no duplicates, no query strings, no alias or 404 entries, every `<lastmod>` well formed and not in the future, every real page listed and every listed file present) |
 | `node tools/qa/check-i18n.mjs` | Localization: key/title/instruction/category parity, status placeholders, rules-bullet numbers, difficulty labels and `mg-` keys, page `data-i18n`/`data-mg-*` bindings (including live counters and script-written labels), `<option>` text, the homepage dictionary in `/i18n.js`, English leaks into non-Latin translations, banned-brand leftovers, the hero subtitle's hook, dictionary text and width, and a coverage report of visible English with no translation hook (`--strict-ui` makes that report fail) |
 | `node tools/qa/win-paths.mjs` | Browser: every arcade game played from its initial state to a win, then the stored record and the reset path; plus the hub's category links |
 | `node tools/qa/check-lang.mjs` | Language contract: all 18 languages carry the 30 hub/category prose strings, `de`/`pt` cover every UI key, title, instruction, category and hub string without falling back to English, every key page has 18 hreflang alternates plus `x-default`, and `?lang=` on the homepage, hub, category and game pages sets `<html lang/dir>`, `localStorage`, the localized description and `og:locale`; unknown codes fall back, and both switchers write the query string back |
@@ -24,6 +25,8 @@ a dependency to the site: the pages stay plain HTML/CSS/JS with no build step.
 
 ```bash
 node tools/qa/check-site.mjs          # exits 1 on any problem
+node tools/qa/check-content.mjs       # exits 1 on a thin or duplicate page
+node tools/qa/check-content.mjs --report   # also prints the shortest pages
 node tools/qa/check-i18n.mjs          # exits 1 on a localization defect
 node tools/qa/check-i18n.mjs --strict-ui   # also fail on the coverage notes
 node tools/qa/win-paths.mjs           # exits 1 if any scenario fails
@@ -46,6 +49,25 @@ the English status template. It also validates every `data-i18n` and
 key that would otherwise render as a raw key on the page. The homepage has a
 separate dictionary in `/i18n.js` with its own key set and 28-question list;
 that is checked too.
+
+`check-content.mjs` is the page-quality guard. It counts the readable prose on
+each page after scripts, styles, navigation, footer and the generated "More in
+this category" block are removed, so a page cannot look substantial because of
+its chrome. Anything under 200 words (after a small allowance for `404.html`)
+fails, anything under 300 is listed for review, and a page needs at least two
+paragraphs. Two pages count as the same page when half of their own sentences
+match — sentences that appear on three or more pages are generated catalogue
+text and are ignored, which is what separates two shelves listing the same
+games from two copies of one article. A game page and the category page that
+lists it may share the game's name. The sitemap half is a strict contract: no
+duplicate `<loc>`, no query strings, no redirect alias and no `404.html`, a
+`<lastmod>` in `YYYY-MM-DD` that is not in the future, every real page listed,
+and every listed file present on disk. `check-site.mjs` imports the same
+`contentChecks()` function, so the CI step that already runs on every push
+covers these checks; run this file directly when you want the word-count
+report.
+
+
 
 `check-lang.mjs` is the repeatable language test. It reads the same
 dictionaries in a bare sandbox to prove every language has its own hub and
@@ -104,7 +126,9 @@ accelerated by 12× for the scenario only — the game code is untouched.
 `.github/workflows/qa.yml` runs both halves on every push to `main` and every
 pull request, in two jobs:
 
-- **static** — `check-site.mjs`, then `build-pages.mjs` with
+- **static** — `check-site.mjs` (which now includes the thin-page, duplicate
+  and sitemap checks from `check-content.mjs`), `check-i18n.mjs`, then
+  `build-pages.mjs` with
   `git diff --exit-code`, so a hand edit that drifts from `games-data.mjs` fails
   the build instead of shipping. It also asserts the OG cards are present.
 - **browser** — `win-paths.mjs` against the Chrome already installed on the
