@@ -20,6 +20,7 @@
 
 import { readFile, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { extname, join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
 import { ROOT } from "./lib.mjs";
@@ -86,6 +87,40 @@ function stripTags(text) {
     i = gt + 1;
   }
   return out.replace(/&[a-z]+;|&#\d+;/g, " ").replace(/\s+/g, " ").trim();
+}
+
+/* Git history is the only record of when a file actually changed. A shallow
+   clone (the CI default) has one commit, so asking it about a page would
+   return the wrong date for every page, and a wrong date is worse than no
+   date: the check reports that history is unavailable and leaves the
+   page-printed date and the format checks to do the work. */
+function gitProbe(root) {
+  const run = (args) => execFileSync("git", args, { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+  try {
+    run(["rev-parse", "--is-inside-work-tree"]);
+  } catch {
+    return { available: false, why: "no git repository in this checkout" };
+  }
+  try {
+    if (run(["rev-parse", "--is-shallow-repository"]) === "true") {
+      return { available: false, why: "shallow clone, so commit dates are not per-file" };
+    }
+  } catch {
+    /* older git without the flag: fall through and try */
+  }
+  return {
+    available: true,
+    lastCommit(rel) {
+      try {
+        const date = execFileSync("git", ["log", "-1", "--format=%cs", "--", rel], {
+          cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"]
+        }).trim();
+        return date || "";
+      } catch {
+        return "";
+      }
+    }
+  };
 }
 
 function proseOf(html) {
@@ -247,6 +282,17 @@ export async function contentChecks(root = ROOT) {
   const today = new Date().toISOString().slice(0, 10);
   const listed = new Set();
 
+  /* A <lastmod> is only worth having if it can be trusted, so it is checked
+     against three things: its own format, the date the page itself prints, and
+     the commit that last touched the file. The git half needs history: a
+     shallow CI checkout reports nothing, so it is skipped with one note
+     instead of failing every page. */
+  const git = gitProbe(root);
+  const visibleDate = (html) => {
+    const dates = [...html.matchAll(/<time[^>]*datetime="(\d{4}-\d{2}-\d{2})"/g)].map((match) => match[1]);
+    return dates.length ? dates.sort().at(-1) : "";
+  };
+
   for (const entry of entries) {
     if (!entry.loc) {
       fail("sitemap.xml", "an entry has no <loc>");
@@ -270,9 +316,31 @@ export async function contentChecks(root = ROOT) {
     const rel = relative(root, target).split("\\").join("/");
     if (aliases.has(rel)) fail("sitemap.xml", `${entry.loc} is a redirect alias, not a canonical page`);
     if (rel === "404.html") fail("sitemap.xml", "lists 404.html");
-    if (!entry.lastmod) notes.push(`${entry.loc} has no <lastmod>`);
-    else if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.lastmod)) fail("sitemap.xml", `${entry.loc} has a malformed <lastmod> "${entry.lastmod}"`);
-    else if (entry.lastmod > today) fail("sitemap.xml", `${entry.loc} has a <lastmod> in the future ("${entry.lastmod}")`);
+    if (!entry.lastmod) {
+      fail("sitemap.xml", `${entry.loc} has no <lastmod>`);
+    } else if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.lastmod)) {
+      fail("sitemap.xml", `${entry.loc} has a malformed <lastmod> "${entry.lastmod}"`);
+    } else {
+      const bad = new Date(entry.lastmod);
+      if (Number.isNaN(bad.getTime())) fail("sitemap.xml", `${entry.loc} has an impossible <lastmod> "${entry.lastmod}"`);
+      if (entry.lastmod > today) fail("sitemap.xml", `${entry.loc} has a <lastmod> in the future ("${entry.lastmod}")`);
+
+      const html = await readFile(target, "utf8");
+      const printed = visibleDate(html);
+      if (printed && printed !== entry.lastmod) {
+        fail("sitemap.xml", `${entry.loc} says ${entry.lastmod} but the page prints ${printed}`);
+      }
+      /* When a page prints its own date, that date is the authority: a house
+         style change (a footer link, an ad tag) is not a content change, and
+         pushing lastmod forward for one would claim the page had changed.
+         Pages with no printed date fall back to the commit that touched them. */
+      if (git.available && !printed) {
+        const changed = git.lastCommit(rel);
+        if (changed && entry.lastmod < changed) {
+          fail("sitemap.xml", `${entry.loc} is stale: lastmod ${entry.lastmod} is older than the last commit (${changed})`);
+        }
+      }
+    }
     listed.add(rel);
   }
 
@@ -284,6 +352,8 @@ export async function contentChecks(root = ROOT) {
   for (const alias of aliases) {
     if (listed.has(alias)) fail("sitemap.xml", `lists the alias ${alias}`);
   }
+
+  if (!git.available) notes.push(`sitemap lastmod vs git: ${git.why}`);
 
   const shortest = [...pages].sort((a, b) => a.words - b.words).slice(0, 8);
   return { problems, notes, pages, aliases, skipped, entries, shortest };

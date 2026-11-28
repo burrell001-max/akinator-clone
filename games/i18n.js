@@ -285,6 +285,16 @@
     return text;
   }
 
+  /* The one-line standfirst under a game's heading. English keeps the page's
+     own wording (stored on first paint in data-en); every other language reads
+     the short sentence from games/i18n-standfirsts.js, so a page never shows an
+     English summary inside a translated shell. */
+  var STANDFIRSTS = window.MGI18N_STANDFIRSTS || {};
+  function standfirst(slug) {
+    var table = STANDFIRSTS[current] || STANDFIRSTS.en || {};
+    return table[slug] || "";
+  }
+
   /* The translated guide for a game's mechanic, as an array of paragraphs. */
   function guide(slug) {
     var family = GUIDE_OF[slug];
@@ -543,6 +553,13 @@
     });
     each(scope, "[data-mg-blurb]", function (el) {
       el.textContent = game(el.getAttribute("data-mg-blurb"), "howto");
+    });
+    each(scope, "[data-mg-standfirst]", function (el) {
+      if (!el.hasAttribute("data-en")) el.setAttribute("data-en", el.textContent);
+      var translated = standfirst(el.getAttribute("data-mg-standfirst"));
+      el.textContent = current === "en" || !translated
+        ? el.getAttribute("data-en")
+        : translated;
     });
     each(scope, "[data-mg-prose]", function (el) {
       var pair = el.getAttribute("data-mg-prose").split(":");

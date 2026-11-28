@@ -194,6 +194,44 @@ for (const test of cases) {
   await page.close();
 }
 
+/* Standfirsts: the line under a game heading is filled from
+   games/i18n-standfirsts.js, so it must translate rather than fall back to the
+   English sentence, and the longer translations must still fit a 360px phone. */
+{
+  const before = problems.length;
+  for (const code of ["de", "pt", "ja", "ar", "ru"]) {
+    const page = await chrome.newPage({
+      url: base + `/games/sudoku-mini.html?lang=${code}`,
+      viewport: { width: 360, height: 780 }
+    });
+    const seen = await page.evaluate(`(() => {
+      const el = document.querySelector("[data-mg-standfirst]");
+      return {
+        lang: document.documentElement.lang,
+        dir: document.documentElement.dir,
+        text: el ? el.textContent.trim() : "",
+        english: el ? (el.getAttribute("data-en") || "").trim() : "",
+        overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+      };
+    })()`);
+    if (seen.lang !== code) fail(`standfirst: ?lang=${code} left html lang as ${seen.lang}`);
+    if (!seen.text) fail(`standfirst: empty in ${code}`);
+    else if (!seen.english || seen.text === seen.english) fail(`standfirst: still the English sentence in ${code}`);
+    if (seen.overflow) fail(`standfirst: ${code} overflows the 360px viewport`);
+    if (code === "ar" && seen.dir !== "rtl") fail("standfirst: Arabic did not set dir=rtl");
+    await page.close();
+  }
+  /* English must be untouched: the runtime restores the page's own wording
+     from data-en, so a rewrite here would ship silently to the default view. */
+  {
+    const page = await fresh("/games/sudoku-mini.html");
+    const text = await page.evaluate("((document.querySelector('[data-mg-standfirst]') || {}).textContent || '').trim()");
+    if (!/four-by-four|Four by four/i.test(text)) fail(`standfirst: English lost its own wording ("${text}")`);
+    await page.close();
+  }
+  if (problems.length === before) pass("standfirsts translate and fit a 360px phone");
+}
+
 /* Unknown code: saved preference wins; with nothing saved, English. */
 {
   const page = await fresh("/games/?lang=zz");

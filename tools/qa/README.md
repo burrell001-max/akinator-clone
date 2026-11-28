@@ -10,6 +10,7 @@ a dependency to the site: the pages stay plain HTML/CSS/JS with no build step.
 | `node tools/qa/check-content.mjs` | Content: a prose-word floor per page (with `404.html` the one allowed short page), duplicate pages (shared sentences after generated catalogue text is filtered out, shared `<title>` or `<h1>`), and sitemap integrity (no duplicates, no query strings, no alias or 404 entries, every `<lastmod>` well formed and not in the future, every real page listed and every listed file present) |
 | `node tools/qa/check-i18n.mjs` | Localization: key/title/instruction/category parity, status placeholders, rules-bullet numbers, difficulty labels and `mg-` keys, page `data-i18n`/`data-mg-*` bindings (including live counters and script-written labels), `<option>` text, the homepage dictionary in `/i18n.js`, English leaks into non-Latin translations, banned-brand leftovers, the hero subtitle's hook, dictionary text and width, and a coverage report of visible English with no translation hook (`--strict-ui` makes that report fail) |
 | `node tools/qa/win-paths.mjs` | Browser: every arcade game played from its initial state to a win, then the stored record and the reset path; plus the hub's category links |
+| `node tools/qa/check-mobile.mjs` | 360px sweep: 47 pages (home, hub, ten shelves, ten games, guides, blog, character pages, legal pages, five `?lang=` views) with no document wider than the viewport, no control clipped by its own box, no broken or collapsed image, and no console error; deliberate horizontal scrollers and the fixed, clipped starfield are exempt |
 | `node tools/qa/check-lang.mjs` | Language contract: all 18 languages carry the 30 hub/category prose strings, `de`/`pt` cover every UI key, title, instruction, category and hub string without falling back to English, every key page has 18 hreflang alternates plus `x-default`, and `?lang=` on the homepage, hub, category and game pages sets `<html lang/dir>`, `localStorage`, the localized description and `og:locale`; unknown codes fall back, and both switchers write the query string back |
 | `node tools/build/build-pages.mjs` | Regenerates `/games/<category>/` pages, the "more in this category" blocks and every game's social tags from `tools/content/games-data.mjs` |
 | `node tools/build/make-og.mjs` | Renders the 41 `og:image` cards into `games/og/` with headless Chrome |
@@ -31,7 +32,9 @@ node tools/qa/check-i18n.mjs          # exits 1 on a localization defect
 node tools/qa/check-i18n.mjs --strict-ui   # also fail on the coverage notes
 node tools/qa/win-paths.mjs           # exits 1 if any scenario fails
 node tools/qa/win-paths.mjs --only=memory,memory-echo,sudoku
-node tools/qa/check-lang.mjs          # language contract and ?lang= links
+node tools/qa/check-lang.mjs          # language contract, standfirsts and ?lang= links
+node tools/qa/check-mobile.mjs        # 360px overflow sweep over 47 pages
+node tools/qa/check-mobile.mjs --only=/games/,/faq.html
 
 # Only after editing tools/content/games-data.mjs: rebuild what it generates.
 node tools/build/build-pages.mjs      # category pages, related blocks, social tags
@@ -62,7 +65,13 @@ games from two copies of one article. A game page and the category page that
 lists it may share the game's name. The sitemap half is a strict contract: no
 duplicate `<loc>`, no query strings, no redirect alias and no `404.html`, a
 `<lastmod>` in `YYYY-MM-DD` that is not in the future, every real page listed,
-and every listed file present on disk. `check-site.mjs` imports the same
+and every listed file present on disk. The `<lastmod>` half is checked three
+ways: the format, the date the page itself prints (a page with a visible
+"last updated" date must carry that date in the sitemap), and — when a full
+clone is present — the commit that last touched the file, so a page edited
+without a lastmod bump fails. A shallow CI checkout has no per-file history,
+so that half is skipped with a note instead of failing every page.
+`check-site.mjs` imports the same
 `contentChecks()` function, so the CI step that already runs on every push
 covers these checks; run this file directly when you want the word-count
 report.
@@ -89,10 +98,18 @@ locally.
 The coverage notes at the end are a work queue, not failures: they list visible
 English content that has no hook yet. UI labels and live counters (stat rows,
 "Restart"/"Play again", clue and guess counters, keypad words) are localized, so
-the notes now cover the one-line `.updated` standfirsts, the generated "More in
-…" blocks, the hub's hand-written game blurbs, and the English tag chips
-(`class="tag"`). Run with `--strict-ui` when you want new untranslated UI to
-fail the build.
+the notes now cover the generated "More in …" blocks, the hub's hand-written
+game blurbs, and the English tag chips (`class="tag"`). Run with `--strict-ui`
+when you want new untranslated UI to fail the build.
+
+The one-line standfirst under a game heading is no longer English-only. Each
+page carries `<p class="updated" data-mg-standfirst="slug">`, and
+`games/i18n.js` paints it from `games/i18n-standfirsts.js`, which holds the 30
+sentences in all 18 languages. `check-i18n.mjs` fails on a missing or empty
+entry, on a non-English entry that is still the English sentence, and on Latin
+characters in a non-Latin script; `check-lang.mjs` opens the page in five
+languages at 360px and asserts the line translated, still fits, and that
+English kept its own wording.
 
 `win-paths.mjs` starts its own static server on a loopback port (localStorage
 is unavailable on `file://`), launches headless Chrome, clears `localStorage`
@@ -151,10 +168,12 @@ block on every game page, and each page's `og:image` come from
   inflected forms do not tokenise reliably across 17 languages. Bullets that
   spell a number out (`six tries`, `ten clues`) are still checked by hand; the
   digit, difficulty and `mg-`-key checks are automated.
-- **Remaining English content**: the `.updated` standfirsts, the generated
-  "More in …" blocks, the hub's game blurbs and the `class="tag"` chips are
-  English in every language. They are reported as coverage notes; labels,
-  counters and script-written button text are localized and checked.
+- **Remaining English content**: the generated "More in …" blocks, the hub's
+  game blurbs and the `class="tag"` chips are English in every language, as are
+  the guide and blog articles by design (the localized surface is the homepage,
+  the hub, the ten shelves and the 30 game pages). They are reported as
+  coverage notes; labels, counters, standfirsts and script-written button text
+  are localized and checked.
 - **Status lines**: games still write status messages in English and rely on the
   status dictionary. A new English status line with no matching key is logged
   as `[i18n] untranslated status:` in the console, but `check-i18n.mjs` only

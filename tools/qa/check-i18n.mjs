@@ -38,7 +38,7 @@ await load(
   "games/i18n-data-d.js", "games/i18n-data-e.js", "games/i18n-data-f.js",
   "games/i18n-data-g.js", "games/i18n-data-h.js", "games/i18n-data-i.js",
   "games/i18n-data-j.js", "games/i18n-prose.js", "games/i18n-prose-b.js",
-  "games/i18n-prose-c.js", "games/i18n-prose-d.js"
+  "games/i18n-prose-c.js", "games/i18n-prose-d.js", "games/i18n-standfirsts.js"
 );
 const LANGS = sandbox.LANGS || [];
 const CODES = LANGS.map((lang) => lang.code);
@@ -59,6 +59,7 @@ const PROSE_PARTS = sandbox.MGI18N_PROSE_PARTS || [];
 const GUIDE_OF = sandbox.MGI18N_GUIDE || {};
 const FAMILIES = [...new Set(Object.values(GUIDE_OF))];
 const GUIDE_POINTS = sandbox.MGI18N_GUIDE_POINTS || {};
+const STANDFIRSTS = sandbox.MGI18N_STANDFIRSTS || {};
 const HOME = sandbox.I18N || {};
 
 if (CODES.length !== 18) fail(`expected 18 languages, found ${CODES.length}`);
@@ -305,6 +306,26 @@ for (const code of CODES) {
     if (!text(value).trim()) fail(`${code}: empty instruction for ${SLUGS[index]}`);
     else if (code !== "en" && value === (HOWTO.en || [])[index] && !sameAsEnglish(value)) fail(`${code}: instruction for ${SLUGS[index]} is still English`);
     else if (NON_LATIN.includes(code) && latinWords(value).length) fail(`${code}: instruction for ${SLUGS[index]} leaks English (${latinWords(value)[0]})`);
+  });
+
+  /* One-line standfirsts under each game heading. English is the page's own
+     wording, so the comparison is against the English table rather than the
+     markup: a translated page must not fall back to the English sentence. */
+  const stand = STANDFIRSTS[code] || {};
+  const missingStandfirst = SLUGS.filter((slug) => !text(stand[slug]).trim());
+  if (missingStandfirst.length) {
+    fail(`${code}: ${missingStandfirst.length} missing standfirst(s): ${missingStandfirst.slice(0, 6).join(", ")}`);
+  }
+  if (code !== "en") {
+    const english = STANDFIRSTS.en || {};
+    const same = SLUGS.filter((slug) => text(stand[slug]) && text(stand[slug]) === text(english[slug])).length;
+    if (same) fail(`${code}: ${same} standfirst(s) are still the English sentence`);
+  }
+  SLUGS.forEach((slug) => {
+    const value = text(stand[slug]);
+    if (!value) return;
+    if (NON_LATIN.includes(code) && latinWords(value).length) fail(`${code}: standfirst for ${slug} leaks English (${latinWords(value)[0]})`);
+    if (unbalanced(value)) fail(`${code}: standfirst for ${slug} has unbalanced brackets`);
   });
 
   const cats = CATS_BY_LANG[code] || [];
@@ -632,8 +653,18 @@ if (untranslated.size) {
 }
 {
   const html = await Promise.all(gamePages.map((file) => readFile(join(ROOT, "games", file), "utf8")));
-  const withUpdated = html.filter((page) => /class="updated"/.test(page)).length;
-  if (withUpdated) note(`ui coverage: ${withUpdated} game page(s) show an English standfirst (\`.updated\`) in every language`);
+  /* Every game page carries a standfirst, and every standfirst is wired to a
+     real slug: the runtime fills it from games/i18n-standfirsts.js, so an
+     unwired page would be the only English left under a translated heading. */
+  /* The hub lives in the same directory and carries game links, so the test is
+     the page's own <h1 data-mg-title>, not the folder it sits in. */
+  const gameHtml = html.filter((page) => /<h1[^>]*data-mg-title=/.test(page));
+  const unwired = gameHtml.filter((page) => !/data-mg-standfirst="/.test(page)).length;
+  if (unwired) fail(`${unwired} game page(s) have no data-mg-standfirst hook`);
+  for (const page of html) {
+    const slug = (page.match(/data-mg-standfirst="([a-z0-9-]+)"/) || [])[1];
+    if (slug && !SLUGS.includes(slug)) fail(`a game page declares data-mg-standfirst="${slug}", which is not a game slug`);
+  }
   const withRelated = html.filter((page) => /<!-- mg-related:start/.test(page)).length;
   if (withRelated) note(`ui coverage: ${withRelated} game page(s) carry a generated "More in …" block in English only`);
   const tagCount = html.reduce((total, page) => total + (page.match(/class="tag"/g) || []).length, 0);

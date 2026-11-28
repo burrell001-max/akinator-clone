@@ -78,6 +78,7 @@
   button.sec { background: #e7e5e4; color: #292524; }
   button:hover { filter: brightness(1.05); }
   .solved-line { font-size: 0.9rem; color: #57534e; }
+  .updated { color: #57534e; font-size: 0.92rem; margin: 0 0 0.9rem; }
   #grid { --sg-max: 450px; }
   .msg { margin-top: 0.85rem; font-weight: 700; min-height: 1.4rem; text-align: center; }
   a:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid #c2410c; outline-offset: 2px; }
@@ -152,6 +153,7 @@
   <div class="card">
     <span class="badge">Sudoku</span>
     <h1 data-mg-title="pocket-sudoku" data-title-en="Pocket Sudoku (Sudoku) | MindGenieAI">Pocket Sudoku</h1>
+    <p class="updated" data-mg-standfirst="pocket-sudoku">A nine-by-nine grid with a numpad built for a phone. Easy, Medium or Hard.</p>
     <div class="controls">
       <select id="diffSelect" aria-label="Difficulty">
         <option value="32" data-i18n="easy">Easy</option>
@@ -251,6 +253,7 @@
     <script src="/games/i18n-data-g.js"></script>
     <script src="/games/i18n-data-h.js"></script>
     <script src="/games/i18n-data-i.js?v=5"></script>
+<script src="/games/i18n-standfirsts.js?v=1"></script>
     <script src="/games/i18n.js?v=7"></script>
 <script src="/games/games.js"></script>
 <script src="/games/sudoku-core.js"></script>
